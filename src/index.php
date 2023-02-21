@@ -29,14 +29,14 @@ session_start();
         <span class="wave">👋🏼</span>
       </h1>
     </div>
-    <div class="iconConnect" tabindex="0">
+    <div class="iconConnect">
       <button aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
     </div>
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
     </div>
-    <div class="icon" tabindex="0">
+    <div class="icon">
       <button aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
     </div>
     <?php } ?>
@@ -106,7 +106,7 @@ session_start();
     <?php } else { ?>
     <div class="info">
       <span class="seconnecter linkp" tabindex="0">Connectez-vous</span> pour synchroniser vos notes entre tous vos appareils et les
-      <abbr data-title="Chiffrement AES-256-GCM">chiffrer</abbr>🔒.<br>Aucune donnée personnelle n'est collectée et seul vous avez accès à vos notes.
+      <abbr data-title="Chiffrement AES-256-GCM">chiffrer</abbr>🔒. Aucune donnée personnelle n'est collectée et seul vous avez accès à vos notes.
     </div>
     <div class="popup-box">
       <div class="popup">
@@ -149,7 +149,7 @@ session_start();
             <div class="row">
               <input id="mdpConnect" placeholder="Mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
             </div>
-            <p class="creercompte linkp" tabindex="0">Pas encore de compte ?</p><br>
+            <p class="creercompte linkp" tabindex="0">Pas encore de compte ?</p>
             <button id="submitSeConnecter" type="submit" aria-label="Se connecter">Se connecter</button>
           </form>
         </div>
@@ -174,7 +174,7 @@ session_start();
             <p>
               <i class="fa-solid fa-circle-info"></i>
               Vos notes ainsi que votre mot de passe sont chiffrés et sockés dans une base de données sécurisée, aucune donnée personnelle n'est collectée (RGPD)
-            </p><br>
+            </p>
             <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
           </form>
         </div>

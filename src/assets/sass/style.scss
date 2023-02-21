@@ -195,7 +195,7 @@ select {
   height: 50px;
   width: 100%;
   font-size: 17px;
-  padding: 0 15px;
+  padding: 0 1rem;
   border: 2px solid #666;
 
   &:focus {
@@ -246,7 +246,7 @@ p.welcome {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 15px;
+  border-radius: 1rem;
   clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%, 0 30px);
   transition: clip-path .5s;
   width: 400px;
@@ -264,7 +264,7 @@ p.welcome {
     left: 0;
     width: 30px;
     height: 30px;
-    border-radius: 0 0 15px;
+    border-radius: 0 0 1rem;
     transition: transform .4s
   }
 
@@ -410,7 +410,7 @@ select {
 }
 
 .info {
-  text-align: center;
+  text-align: justify;
   max-width: 400px;
 }
 
@@ -449,7 +449,7 @@ select {
 .gestion-popup-box,
 .popup,
 .popup-box {
-  opacity: 0;
+  display: none;
   pointer-events: none;
   transition: .2s
 }
@@ -464,7 +464,7 @@ select {
 .gestion-popup-box.show .popup,
 .popup-box.show,
 .popup-box.show .popup {
-  opacity: 1;
+  display: flex;
   pointer-events: auto
 }
 
@@ -486,7 +486,8 @@ select {
 
 .content form,
 .sedeconnecter,
-.supprimerCompte {
+.supprimerCompte,
+.creercompte {
   margin: 20px
 }
 
@@ -518,12 +519,8 @@ select {
 }
 
 @media(max-width: 1100px) {
-  nav {
-    position: relative;
-  }
-
   main {
-    margin: 1rem auto;
+    margin: 15rem auto 1rem;
     padding: 0 1rem;
     gap: 1rem;
   }
@@ -537,17 +534,17 @@ select {
   .creer-box .popup,
   .gestion-popup-box .popup,
   .popup-box .popup {
-    max-width: 92vw;
-    min-width: 92vw
+    max-width: 94vw;
+    min-width: 94vw
   }
 
   .popup .content {
-    max-width: 92vw;
-    min-width: 92vw
+    max-width: 94vw;
+    min-width: 94vw
   }
 
   .note {
-    max-width: 92vw;
-    min-width: 92vw
+    max-width: 94vw;
+    min-width: 94vw
   }
 }
