@@ -251,7 +251,7 @@ p.welcome {
   transition: clip-path .5s;
   width: 400px;
   max-height: 400px;
-  padding: 40px 20px 10px;
+  padding: 30px 20px 10px;
   background: #282828;
 
   &:hover {
@@ -276,13 +276,7 @@ p.welcome {
     font-size: 1.4rem;
     text-align: right;
     font-weight: 700;
-    margin-right: 10px
-  }
-
-  span {
-    display: block;
-    margin-top: 10px;
-    padding-right: 7px
+    margin: 10px
   }
 
   .details {
@@ -295,7 +289,7 @@ p.welcome {
   .bottom-content {
     -webkit-user-select: none;
     user-select: none;
-    margin-top: 7px;
+    margin-top: 5px;
     border-top: 1px solid #666
   }
 }
@@ -395,14 +389,17 @@ select {
   border-radius: 5px
 }
 
+.bottom-content {
+  padding: 5px 0;
+}
+
 .bottom-content span {
   color: #c6c6c6;
-  font-size: .8rem
+  font-size: .8rem;
 }
 
 .settings i {
-  top: 2px;
-  margin: 3px;
+  margin: 0 4px;
 
   &:hover {
     opacity: .8;
@@ -411,6 +408,8 @@ select {
 
 .info {
   text-align: justify;
+  -webkit-user-select: none;
+  user-select: none;
   max-width: 400px;
 }
 
