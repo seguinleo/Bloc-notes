@@ -6,7 +6,7 @@ if (!isset($_SESSION["nom"])) {
 } else {
   require_once "config.php";
   require_once "functions.php";
-  $query = $PDO->prepare("SELECT * FROM notes WHERE user=:CurrentUser ORDER BY id DESC");
+  $query = $PDO->prepare("SELECT * FROM `TABLE_NAME` WHERE user=:CurrentUser ORDER BY id DESC");
   $query->execute([':CurrentUser' => htmlspecialchars($_SESSION["nom"], ENT_QUOTES)]);
   while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $title = $row['titre'];

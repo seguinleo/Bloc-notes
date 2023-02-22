@@ -25,7 +25,10 @@ session_start();
     <?php if (isset($_SESSION["nom"])) { ?>
     <div>
       <h1 class="welcome">
-        <span class="gestionCompte linkp" tabindex="0"><?php echo $_SESSION["nom"]; ?></span>
+        <span class="gestionCompte linkp" tabindex="0">
+          <i class="fa-solid fa-user"></i>
+          <?php echo $_SESSION["nom"]; ?>
+        </span>
         <span class="wave">👋🏼</span>
       </h1>
     </div>
@@ -171,10 +174,10 @@ session_start();
             <div class="row">
               <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
             </div>
-            <p>
+            <div class="row">
               <i class="fa-solid fa-circle-info"></i>
               Vos notes ainsi que votre mot de passe sont chiffrés et sockés dans une base de données sécurisée, aucune donnée personnelle n'est collectée (RGPD)
-            </p>
+            </div>
             <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
           </form>
         </div>
