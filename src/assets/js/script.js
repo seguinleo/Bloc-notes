@@ -57,14 +57,14 @@ document.querySelectorAll(".creercompte").forEach((element) => {
   });
 });
 document.querySelector("#submitCreer").addEventListener("click", async () => {
-  const e = encodeURIComponent(document.querySelector("#nomCreer").value.trim()),
-  t = encodeURIComponent(document.querySelector("#mdpCreer").value),
-  o = encodeURIComponent(document.querySelector("#mdpCreerValid").value);
+  const e = document.querySelector("#nomCreer").value.trim(),
+  t = document.querySelector("#mdpCreer").value,
+  o = document.querySelector("#mdpCreerValid").value;
   if (!e || !t || !o) {
     alert("Un ou plusieurs champs sont vides...");
     return;
   }
-  if (!/^[A-zÀ-ú]+$/.test(e)) {
+  if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     alert("Le nom ne peut contenir que des lettres...");
     return;
   }
@@ -76,6 +76,14 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     alert("Mot de passe trop faible (<6)...");
     return;
   }
+  if (/^[0-9]+$/.test(t)) {
+    alert("Le mot de passe ne peut pas contenir que des chiffres...");
+    return;
+  }
+  if (/^[a-zA-Z]+$/.test(t)) {
+    alert("Le mot de passe ne peut pas contenir que des lettres...");
+    return;
+  }
   if (t !== o) {
     alert("Les mots de passe ne correspondent pas...");
     return;
@@ -84,6 +92,8 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     alert("Le mot de passe doit être différent du nom...");
     return;
   }
+  const nomCreer = encodeURIComponent(e),
+  mdpCreer = encodeURIComponent(t);
   try {
     const response = await fetch("assets/php/formCreer.php", {
       method: "POST",
@@ -91,7 +101,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: "nomCreer=" + e + "&mdpCreer=" + t
+      body: "nomCreer=" + nomCreer + "&mdpCreer=" + mdpCreer
     });
     if (response.ok) {
       alert("Compte créé ! Veuillez vous connecter.");
@@ -108,13 +118,13 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
   }
 });
 document.querySelector("#submitSeConnecter").addEventListener("click", () => {
-  const e = encodeURIComponent(document.querySelector("#nomConnect").value.trim()),
-  t = encodeURIComponent(document.querySelector("#mdpConnect").value);
+  const e = document.querySelector("#nomConnect").value.trim(),
+  t = document.querySelector("#mdpConnect").value;
   if (!e || !t) {
     alert("Un ou plusieurs champs sont vides...");
     return;
   }
-  if (!/^[A-zÀ-ú]+$/.test(e)) {
+  if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     alert("Le nom ne peut contenir que des lettres...");
     return;
   }
@@ -126,13 +136,15 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
     alert("Mot de passe trop faible (<6)...");
     return;
   }
+  const nomConnect = encodeURIComponent(e),
+  mdpConnect = encodeURIComponent(t);
   fetch("assets/php/formConnect.php", {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: "nomConnect=" + e + "&mdpConnect=" + t
+    body: "nomConnect=" + nomConnect + "&mdpConnect=" + mdpConnect
   })
     .then(response => {
       if (response.status === 200) {
