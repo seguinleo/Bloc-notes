@@ -17,10 +17,6 @@ function showNotesConnect() {
     .then(data => {
       notesContainer.insertAdjacentHTML("beforeend", data);
       return;
-    })
-    .catch(error => {
-      alert("Une erreur est survenue lors de la récupération de vos notes...");
-      return;
     });
 }
 function updateNoteConnect(e, t, o, v) {

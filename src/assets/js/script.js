@@ -10,9 +10,9 @@ let isUpdate = false, updateId;
 function showNotes() {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
   notes.forEach((e, t) => {
-    const v = e.couleur.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;"),
-    o = e.description.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;"),
-    s = `<div class="note ${v}"><div class="details"><p>${e.title.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;")}</p><span>${o}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${e.title.replaceAll(/'/g, "\\'").replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;")}','${o.replaceAll(/'/g, "\\'")}','${e.couleur}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stock\xe9e sur l'appareil</span></div></div>`;
+    const v = e.couleur.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
+    o = e.description.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
+    s = `<div class="note ${v}"><div class="details"><p>${e.title.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;")}</p><span>${o}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${e.title.replaceAll(/'/g, "&lsquo;").replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/")}','${o.replaceAll(/'/g, "&lsquo;").replace(/\\/g, "/")}','${e.couleur}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
     notesContainer.insertAdjacentHTML("beforeend", s)
   }))
 }
