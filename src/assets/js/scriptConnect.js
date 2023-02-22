@@ -146,8 +146,8 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
     });
 });
 document.querySelector("#submitChangeMDP").addEventListener("click", () => {
-  const e = encodeURIComponent(document.querySelector("#mdpModifNew").value),
-  t = encodeURIComponent(document.querySelector("#mdpModifNewValid").value);
+  const e = document.querySelector("#mdpModifNew").value,
+  t = document.querySelector("#mdpModifNewValid").value;
   if (!e || !t) {
     alert("Un ou plusieurs champs sont vides...");
     return;
@@ -156,21 +156,26 @@ document.querySelector("#submitChangeMDP").addEventListener("click", () => {
     alert("Mot de passe trop faible (<6)...");
     return;
   }
+  if (/^[0-9]+$/.test(e)) {
+    alert("Le mot de passe ne peut pas contenir que des chiffres...");
+    return;
+  }
+  if (/^[a-zA-Z]+$/.test(e)) {
+    alert("Le mot de passe ne peut pas contenir que des lettres...");
+    return;
+  }
   if (e !== t) {
     alert("Les mots de passe ne correspondent pas...");
     return;
   }
-  if (e === "<?php echo $_SESSION['nom']; ?>") {
-    alert("Le mot de passe doit être différent du nom...");
-    return;
-  }
+  const mdpNew = encodeURIComponent(e);
   fetch("assets/php/formChangeMDP.php", {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: "mdpNew=" + e
+    body: "mdpNew=" + mdpNew
   })
     .then(response => {
       if (response.status === 200) {
