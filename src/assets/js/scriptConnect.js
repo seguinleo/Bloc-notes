@@ -25,7 +25,7 @@ function updateNoteConnect(e, t, o, v) {
   document.querySelector("#idNoteInput").value = e,
   couleurTagConnect.value = v,
   titleTagConnect.value = t,
-  descTagConnect.value = o.replaceAll("<br />", "\r\n")
+  descTagConnect.value = o.replaceAll("<br />", "\n")
 }
 function deleteNoteConnect(e) {
   if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
@@ -109,12 +109,12 @@ document.querySelectorAll(".supprimerCompte").forEach((element) => {
   });
 });
 document.querySelector("#submitNoteConnect").addEventListener("click", () => {
-  const e = encodeURIComponent(document.querySelector("#titleConnect").value.trim()),
-  v = encodeURIComponent(document.querySelector("#couleurConnect").value.trim()),
-  t = encodeURIComponent(document.querySelector("#descConnect").value.trim()),
+  const e = encodeURIComponent(document.querySelector("#titleConnect").value),
+  v = encodeURIComponent(document.querySelector("#couleurConnect").value),
+  t = encodeURIComponent(document.querySelector("#descConnect").value),
   url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
-  data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value.trim()}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
-  if (!e || !t || !v) {
+  data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
+  if (!e) {
     return;
   }
   fetch(url, {

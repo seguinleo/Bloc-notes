@@ -10,14 +10,15 @@ let isUpdate = false, updateId;
 function showNotes() {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
   notes.forEach((e, t) => {
-    const v = e.couleur.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
-    o = e.description.replaceAll("\n", "<br>").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
-    s = `<div class="note ${v}"><div class="details"><p>${e.title.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;")}</p><span>${o}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${e.title.replaceAll(/'/g, "&lsquo;").replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/")}','${o.replaceAll(/'/g, "&lsquo;").replace(/\\/g, "/")}','${e.couleur}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
+    const v = e.couleur,
+    f = e.title.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
+    o = e.description.replaceAll("\n", "<br />").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
+    s = `<div class="note ${v}"><div class="details"><p>${f}</p><span>${o}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${f}','${o}','${v}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
     notesContainer.insertAdjacentHTML("beforeend", s)
   }))
 }
 function updateNote(e, t, o, v) {
-  const s = o.replaceAll("<br>", "\r\n");
+  const s = o.replaceAll("<br />", "\n");
   updateId = e,
   isUpdate = true,
   document.querySelector(".icon").click(),
@@ -177,10 +178,10 @@ document.querySelectorAll(".icon").forEach((element) => {
   });
 });
 document.querySelector("#submitNote").addEventListener("click", () => {
-  const v = couleurTag.value.trim().replace(/"/g, "&lsquo;&lsquo;").replace(/</g, "&#x2190;").replace(/>/g, "&#x2192;"),
-  e = titleTag.value.trim().replace(/"/g, "&lsquo;&lsquo;").replace(/</g, "&#x2190;").replace(/>/g, "&#x2192;"),
-  t = descTag.value.trim().replace(/"/g, "&lsquo;&lsquo;").replace(/</g, "&#x2190;").replace(/>/g, "&#x2192;");
-  if (!e || !t || !v) {
+  const v = couleurTag.value,
+  e = titleTag.value.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
+  t = descTag.value.replaceAll("\n", "<br />").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;");
+  if (!e) {
     return;
   }
   const c = {

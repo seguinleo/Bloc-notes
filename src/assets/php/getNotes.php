@@ -12,9 +12,8 @@ if (!isset($_SESSION["nom"])) {
     $title = $row['titre'];
     $title = strtr($title, array("&quot;" => "&lsquo;&lsquo;", "&lt;" => "&#x2190;", "&gt;" => "&#x2192;", "\\" => "/"));
     $couleur = $row['couleur'];
-    $couleur = strtr($couleur, array("&quot;" => "&lsquo;&lsquo;", "&lt;" => "&#x2190;", "&gt;" => "&#x2192;", "\\" => "/"));
     $desc = decrypt_data($row['content'], $key);
-    $desc = strtr($desc, array("\r\n" => "<br />", "\r" => "<br />", "\n" => "<br />", "&quot;" => "&lsquo;&lsquo;", "&lt;" => "&#x2190;", "&gt;" => "&#x2192;", "\\" => "/"));
+    $desc = strtr($desc, array("\n" => "<br />", "&quot;" => "&lsquo;&lsquo;", "&lt;" => "&#x2190;", "&gt;" => "&#x2192;", "\\" => "/"));
     echo "<div class=\"note " . $couleur . "\">
             <div class=\"details\">
                 <p>" . $title . "</p>
