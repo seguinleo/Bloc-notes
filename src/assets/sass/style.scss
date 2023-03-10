@@ -51,13 +51,13 @@
 html {
   background: #171717;
   color: #c6c6c6;
+  accent-color: #8AB4F8;
   -webkit-tap-highlight-color: transparent
 }
 
 * {
   font-family: "OpenSans";
   margin: 0;
-  padding: 0;
   box-sizing: border-box
 }
 
@@ -76,6 +76,14 @@ h1 {
   color: #8AB4F8
 }
 
+h2 {
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
 a {
   color: #8AB4F8;
   text-decoration: none;
@@ -87,7 +95,7 @@ a {
   }
 }
 
-p {
+p.title {
   color: #8AB4F8
 }
 
@@ -99,6 +107,24 @@ kbd {
   font-size: 0.9rem;
   font-weight: 700;
   padding: 2px 4px;
+}
+
+input[type="checkbox"] {
+  max-width: 1rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+li {
+  list-style: square;
+  margin: 10px -10px;
+}
+
+img {
+  max-width: 98%;
 }
 
 abbr {
@@ -207,6 +233,10 @@ select {
   }
 }
 
+select {
+  font-family: "Arial", sans-serif;
+}
+
 textarea {
   height: 250px;
   resize: none;
@@ -276,7 +306,7 @@ p.welcome {
     transform: translate(-100%, -100%)
   }
 
-  p {
+  p.title {
     font-size: 1.4rem;
     text-align: right;
     font-weight: 700;
@@ -359,22 +389,39 @@ select {
   color: #c6c6c6
 }
 
+.note.Jaune h1,
 .note.Jaune p,
 .note.Jaune span,
 .note.Jaune i,
+.note.Bleu h1,
 .note.Bleu p,
 .note.Bleu span,
 .note.Bleu i,
+.note.Violet h1,
 .note.Violet p,
 .note.Violet span,
 .note.Violet i,
+.note.Rouge h1,
 .note.Rouge p,
 .note.Rouge span,
 .note.Rouge i,
+.note.Vert h1,
 .note.Vert p,
 .note.Vert span,
 .note.Vert i {
   color: #171717;
+}
+
+.note.Jaune a,
+.note.Bleu a,
+.note.Violet a,
+.note.Rouge a,
+.note.Vert a {
+  color: #461cbb;
+
+  &:hover {
+    color: #6b43da
+  }
 }
 
 .bottom-content,
@@ -489,8 +536,7 @@ select {
 
 .content form,
 .sedeconnecter,
-.supprimerCompte,
-.creercompte {
+.supprimerCompte {
   margin: 20px
 }
 
@@ -522,13 +568,21 @@ select {
 }
 
 @media(max-width: 1100px) {
+
   nav {
-    margin-top: 1rem;
-    border-radius: 1rem;
+    position: relative;
+
+    .search-input {
+      width: 274px;
+
+      input {
+        width: 200px;
+      }
+    }
   }
 
   main {
-    margin: 18rem auto 1rem;
+    margin-top: 1rem;
     padding: 0 1rem;
     gap: 1rem;
   }

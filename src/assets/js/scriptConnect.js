@@ -13,19 +13,37 @@ function showNotesConnect() {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-      notesContainer.insertAdjacentHTML("beforeend", data);
+      data.forEach(row => {
+        const { id, title, couleur, desc, date } = row,
+        titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+        descFilter = desc.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+        taskListEnablerExtension = () => {
+          return [{
+            type: 'output',
+            regex: /<input type="checkbox"?/g,
+            replace: '<input type="checkbox"'
+          }];
+        },
+        converter = new showdown.Converter({
+          tasklists: true,
+          smoothLivePreview: true,
+          extensions: [taskListEnablerExtension]
+        }),
+        s = `<div class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><span>${date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNoteConnect(${id})"></i></div></div><div><span class="status"><i class=\"fa-solid fa-cloud\"></i> Note chiffrée et stockée sur le cloud</span></div></div>`;
+        notesContainer.insertAdjacentHTML("beforeend", s);
+      });
       return;
     });
 }
-function updateNoteConnect(e, t, o, v) {
+function updateNoteConnect(id, title, descFilter, couleur) {
   isUpdate = true,
   document.querySelector(".iconConnect").click(),
-  document.querySelector("#idNoteInput").value = e,
-  couleurTagConnect.value = v,
-  titleTagConnect.value = t,
-  descTagConnect.value = o.replaceAll("<br />", "\n")
+  document.querySelector("#idNoteInput").value = id,
+  couleurTagConnect.value = couleur,
+  titleTagConnect.value = title,
+  descTagConnect.value = descFilter.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
 }
 function deleteNoteConnect(e) {
   if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
@@ -109,9 +127,9 @@ document.querySelectorAll(".supprimerCompte").forEach((element) => {
   });
 });
 document.querySelector("#submitNoteConnect").addEventListener("click", () => {
-  const e = encodeURIComponent(document.querySelector("#titleConnect").value),
-  v = encodeURIComponent(document.querySelector("#couleurConnect").value),
-  t = encodeURIComponent(document.querySelector("#descConnect").value),
+  const e = encodeURIComponent(document.querySelector("#titleConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+  t = encodeURIComponent(document.querySelector("#descConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+  v = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
   url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
   data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
   if (!e) {

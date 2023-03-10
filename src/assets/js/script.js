@@ -11,20 +11,32 @@ function showNotes() {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
   notes.forEach((e, t) => {
     const v = e.couleur,
-    f = e.title.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
-    o = e.description.replaceAll("\n", "<br />").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
-    s = `<div class="note ${v}"><div class="details"><p>${f}</p><span>${o}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${f}','${o}','${v}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
-    notesContainer.insertAdjacentHTML("beforeend", s)
+    f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+    o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+    taskListEnablerExtension = () => {
+      return [{
+        type: 'output',
+        regex: /<input type="checkbox"?/g,
+        replace: '<input type="checkbox"'
+      }];
+    },
+    converter = new showdown.Converter({
+      tasklists: true,
+      smoothLivePreview: true,
+      extensions: [taskListEnablerExtension]
+    }),
+    s = `<div class="note ${v}"><div class="details"><p class="title">${f}</p><span>${converter.makeHtml(o).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${f}','${o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${v}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
+    notesContainer.insertAdjacentHTML("beforeend", s);
   }))
 }
 function updateNote(e, t, o, v) {
-  const s = o.replaceAll("<br />", "\n");
+  const s = o.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   updateId = e,
   isUpdate = true,
   document.querySelector(".icon").click(),
   couleurTag.value = v,
   titleTag.value = t,
-  descTag.value = s
+  descTag.value = s;
 }
 function deleteNote(e) {
   if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
@@ -178,9 +190,9 @@ document.querySelectorAll(".icon").forEach((element) => {
   });
 });
 document.querySelector("#submitNote").addEventListener("click", () => {
-  const v = couleurTag.value,
-  e = titleTag.value.replaceAll(/"/g, "&lsquo;&lsquo;").replaceAll(/</g, "&#x2190;").replaceAll(/>/g, "&#x2192;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;"),
-  t = descTag.value.replaceAll("\n", "<br />").replaceAll(/"/g, "&lsquo;&lsquo;").replace(/\\/g, "/").replaceAll(/'/g, "&lsquo;");
+  const v = couleurTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
+  e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
+  t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
   if (!e) {
     return;
   }

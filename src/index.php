@@ -1,5 +1,11 @@
 <?php
-session_set_cookie_params(array('path' => '/projets/notes/', 'lifetime' => 460800));
+session_set_cookie_params(array(
+  'path' => '/projets/notes/',
+  'lifetime' => 460800,
+  'secure' => true,
+  'httponly' => true,
+  'samesite' => 'Strict'
+));
 session_name('__Secure-PHPSESSID');
 session_start();
 ?>
@@ -67,7 +73,7 @@ session_start();
               <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
             </div>
             <div class="row">
-              <textarea id="descConnect" placeholder="Contenu" aria-label="contenu" maxlength="2000"></textarea>
+              <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
             </div>
             <div class="row">
               <select id="couleurConnect" aria-label="couleur">
@@ -122,7 +128,7 @@ session_start();
               <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
             </div>
             <div class="row">
-              <textarea id="content" placeholder="Contenu" aria-label="contenu" maxlength="2000"></textarea>
+              <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
             </div>
             <div class="row">
               <select id="couleur" aria-label="couleur">
@@ -152,7 +158,12 @@ session_start();
             <div class="row">
               <input id="mdpConnect" placeholder="Mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
             </div>
-            <p class="creercompte linkp" tabindex="0">Pas encore de compte ?</p>
+            <div class="row">
+              <span class="creercompte linkp" tabindex="0">Pas encore de compte ?</span>
+            </div>
+            <div class="row">
+              <a class="linkp" href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales">Mentions légales</a>
+            </div>
             <button id="submitSeConnecter" type="submit" aria-label="Se connecter">Se connecter</button>
           </form>
         </div>
@@ -175,8 +186,7 @@ session_start();
               <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
             </div>
             <div class="row">
-              <i class="fa-solid fa-circle-info"></i>
-              Vos notes ainsi que votre mot de passe sont chiffrés et sockés dans une base de données sécurisée, aucune donnée personnelle n'est collectée (RGPD)
+              <a class="linkp" href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales">Mentions légales</a>
             </div>
             <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
           </form>
@@ -187,9 +197,10 @@ session_start();
   </main>
   <script>'serviceWorker' in navigator && navigator.serviceWorker.register('sw.js');</script>
   <?php if (isset($_SESSION["nom"])) { ?>
-  <script src="./assets/js/scriptConnect.js"></script>
+  <script src="./assets/js/scriptConnect.js" defer></script>
   <?php } else { ?>
-  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/script.js" defer></script>
   <?php } ?>
+  <script src="./assets/js/showdown.min.js" defer></script>
 </body>
 </html>
