@@ -39,14 +39,14 @@ session_start();
       </h1>
     </div>
     <div class="iconConnect">
-      <button aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
+      <button type="button" aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
     </div>
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
     </div>
     <div class="icon">
-      <button aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
+      <button type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
     </div>
     <?php } ?>
     <div class="search-input">
@@ -79,8 +79,10 @@ session_start();
               <select id="couleurConnect" aria-label="couleur">
                 <option value="Noir">Noir</option>
                 <option value="Rouge">Rouge</option>
+                <option value="Orange">Orange</option>
                 <option value="Jaune">Jaune</option>
                 <option value="Vert">Vert</option>
+                <option value="Cyan">Cyan</option>
                 <option value="Bleu">Bleu</option>
                 <option value="Violet">Violet</option>
               </select>
@@ -115,7 +117,9 @@ session_start();
     <?php } else { ?>
     <div class="info">
       <span class="seconnecter linkp" tabindex="0">Connectez-vous</span> pour synchroniser vos notes entre tous vos appareils et les
-      <abbr data-title="Chiffrement AES-256-GCM">chiffrer</abbr>🔒. Aucune donnée personnelle n'est collectée et seul vous avez accès à vos notes.
+      <div class="tooltip">chiffrer🔒
+        <span class="tooltiptext">Chiffrement AES-256-GCM</span>
+      </div>
     </div>
     <div class="popup-box">
       <div class="popup">
@@ -134,8 +138,10 @@ session_start();
               <select id="couleur" aria-label="couleur">
                 <option value="Noir">Noir</option>
                 <option value="Rouge">Rouge</option>
+                <option value="Orange">Orange</option>
                 <option value="Jaune">Jaune</option>
                 <option value="Vert">Vert</option>
+                <option value="Cyan">Cyan</option>
                 <option value="Bleu">Bleu</option>
                 <option value="Violet">Violet</option>
               </select>

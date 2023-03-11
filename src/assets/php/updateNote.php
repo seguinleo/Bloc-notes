@@ -12,8 +12,8 @@ if (!isset($_SESSION["nom"])) {
   $filterDesc = htmlspecialchars($_POST['filterDesc'], ENT_QUOTES);
   $filterDesc = encrypt_data($filterDesc, $key);
   $dateNote = date('d/m/Y');
-  if ($noteId && $title && $filterDesc && ($couleur == "Noir" || $couleur == "Rouge" || $couleur == "Jaune" || $couleur == "Vert" || $couleur == "Bleu" || $couleur == "Violet")) {
-    $query = $PDO->prepare("UPDATE `TABLE_NAME` SET titre=:Title, content=:FilterDesc, dateNote=:DateNote, couleur=:Couleur WHERE id=:NoteId AND user=:CurrentUser");
+  if ($noteId && $title && $filterDesc && ($couleur == "Noir" || $couleur == "Rouge" || $couleur == "Orange" || $couleur == "Jaune" || $couleur == "Vert" || $couleur == "Cyan" || $couleur == "Bleu" || $couleur == "Violet")) {
+    $query = $PDO->prepare("UPDATE `YOUR_TABLE` SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur WHERE id=:NoteId AND user=:CurrentUser");
     $query->execute([
       ':Title' => $title,
       ':FilterDesc' => $filterDesc,

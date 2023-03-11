@@ -52,7 +52,7 @@ html {
   background: #171717;
   color: #c6c6c6;
   accent-color: #8AB4F8;
-  -webkit-tap-highlight-color: transparent
+  -webkit-tap-highlight-color: transparent;
 }
 
 * {
@@ -67,7 +67,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 100, .5)
+  background: rgba(255, 255, 255, .1)
 }
 
 h1 {
@@ -120,30 +120,11 @@ input[type="checkbox"] {
 
 li {
   list-style: square;
-  margin: 10px -10px;
+  margin: 10px 5px 10px -14px;
 }
 
 img {
-  max-width: 98%;
-}
-
-abbr {
-  border-bottom: 1px dotted #8AB4F8;
-  cursor: help;
-
-  &:hover::after {
-    content: attr(data-title);
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, .2);
-    position: absolute;
-    background: #282828;
-    color: #8AB4F8;
-    padding: 3px 6px;
-    font-size: .8rem;
-    z-index: 1;
-    text-align: left;
-    margin-top: 20px;
-    margin-left: -75px
-  }
+  max-width: 100%;
 }
 
 nav {
@@ -317,7 +298,8 @@ p.welcome {
     max-height: 300px;
     overflow-y: auto;
     overflow-wrap: break-word;
-    overflow-x: hidden
+    overflow-x: hidden;
+    padding-right: 5px;
   }
 
   .bottom-content {
@@ -325,6 +307,18 @@ p.welcome {
     user-select: none;
     margin-top: 5px;
     border-top: 1px solid #666
+  }
+}
+
+.note.Rouge,
+.note.Orange,
+.note.Jaune,
+.note.Vert,
+.note.Bleu,
+.note.Cyan,
+.note.Violet {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .2)
   }
 }
 
@@ -336,16 +330,24 @@ p.welcome {
   background: #ffa1a1
 }
 
+.note.Orange {
+  background: #ffbb73
+}
+
 .note.Jaune {
   background: #fff588
 }
 
 .note.Vert {
-  background: #a5ffb4
+  background: #79d26f
+}
+
+.note.Cyan {
+  background: #9ef9ff
 }
 
 .note.Bleu {
-  background: #9ed3ff
+  background: #88c3ff
 }
 
 .note.Violet {
@@ -397,6 +399,10 @@ select {
 .note.Bleu p,
 .note.Bleu span,
 .note.Bleu i,
+.note.Cyan h1,
+.note.Cyan p,
+.note.Cyan span,
+.note.Cyan i,
 .note.Violet h1,
 .note.Violet p,
 .note.Violet span,
@@ -405,6 +411,10 @@ select {
 .note.Rouge p,
 .note.Rouge span,
 .note.Rouge i,
+.note.Orange h1,
+.note.Orange p,
+.note.Orange span,
+.note.Orange i,
 .note.Vert h1,
 .note.Vert p,
 .note.Vert span,
@@ -414,13 +424,15 @@ select {
 
 .note.Jaune a,
 .note.Bleu a,
+.note.Cyan a,
+.note.Orange a,
 .note.Violet a,
 .note.Rouge a,
 .note.Vert a {
-  color: #461cbb;
+  color: #2f157c;
 
   &:hover {
-    color: #6b43da
+    color: #3d1ba2
   }
 }
 
@@ -458,10 +470,45 @@ select {
 }
 
 .info {
-  text-align: justify;
   -webkit-user-select: none;
   user-select: none;
-  max-width: 400px;
+  max-width: 350px;
+
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted #8AB4F8;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background: #424242;
+    color: #c6c6c6;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #424242 transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
 }
 
 .connect-box,
@@ -575,9 +622,14 @@ select {
 
   nav {
     position: relative;
+    margin-top: 10px;
+
+    button {
+      width: 80vw;
+    }
 
     .search-input {
-      width: 274px;
+      width: 80vw;
 
       input {
         width: 200px;
@@ -589,6 +641,10 @@ select {
     margin-top: 1rem;
     padding: 0 1rem;
     gap: 1rem;
+
+    .info {
+      margin: 1rem 0
+    }
   }
 
   kbd {
