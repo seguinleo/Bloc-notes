@@ -71,7 +71,6 @@ html {
 }
 
 h1 {
-  display: inline-block;
   font-size: 1.4rem;
   color: #8AB4F8
 }
@@ -111,7 +110,6 @@ kbd {
 
 input[type="checkbox"] {
   max-width: 1rem;
-  cursor: pointer;
 
   &:focus {
     outline: none;
@@ -125,6 +123,7 @@ li {
 
 img {
   max-width: 100%;
+  border-radius: 1rem;
 }
 
 nav {
@@ -139,6 +138,10 @@ nav {
   -webkit-user-select: none;
   user-select: none;
   box-shadow: 2px 2px 4px #171717;
+
+  h1 {
+    display: inline-block;
+  }
 
   div {
     margin: 10px 2rem;
@@ -306,7 +309,7 @@ p.welcome {
     -webkit-user-select: none;
     user-select: none;
     margin-top: 5px;
-    border-top: 1px solid #666
+    border-top: 1px solid rgba(255, 255, 255, .1)
   }
 }
 
@@ -319,6 +322,10 @@ p.welcome {
 .note.Violet {
   ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, .2)
+  }
+  
+  .bottom-content {
+    border-top: 1px solid rgba(0, 0, 0, .2)
   }
 }
 
