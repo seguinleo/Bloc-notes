@@ -28,25 +28,27 @@ session_start();
 </head>
 <body>
   <nav>
-    <?php if (isset($_SESSION["nom"])) { ?>
+    <?php if (isset($_SESSION["nom_secure"])) { ?>
     <div>
       <h1 class="welcome">
         <span class="gestionCompte linkp" tabindex="0">
           <i class="fa-solid fa-user"></i>
-          <?php echo $_SESSION["nom"]; ?>
+          <?php echo $_SESSION["nom_secure"]; ?>
         </span>
         <span class="wave">👋🏼</span>
       </h1>
     </div>
     <div class="iconConnect">
-      <button type="button" aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
+      <button id="iconButtonConnect" type="button" aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
+      <button id="iconButtonConnectFloat" type="button" aria-label="Ajouter une note sur le cloud">+</button>
     </div>
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
     </div>
     <div class="icon">
-      <button type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
+      <button id="iconButton" type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
+      <button id="iconButtonFloat" type="button" aria-label="Ajouter une note sur l'appareil">+</button>
     </div>
     <?php } ?>
     <div class="search-input">
@@ -60,7 +62,7 @@ session_start();
     </div>
   </nav>
   <main>
-    <?php if (isset($_SESSION["nom"])) { ?>
+    <?php if (isset($_SESSION["nom_secure"])) { ?>
     <div class="connect-popup-box">
       <div class="popup">
         <div class="content">
@@ -202,7 +204,7 @@ session_start();
     <?php } ?>
   </main>
   <script>'serviceWorker' in navigator && navigator.serviceWorker.register('sw.js');</script>
-  <?php if (isset($_SESSION["nom"])) { ?>
+  <?php if (isset($_SESSION["nom_secure"])) { ?>
   <script src="./assets/js/scriptConnect.js" defer></script>
   <?php } else { ?>
   <script src="./assets/js/script.js" defer></script>

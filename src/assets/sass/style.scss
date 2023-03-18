@@ -148,10 +148,24 @@ nav {
     display: inline-block;
   }
 
-  button {
+  #iconButton {
     display: inline-block;
     padding: 0 1rem;
     margin: 0;
+  }
+
+  #iconButtonFloat {
+    display: none;
+  }
+
+  #iconButtonConnect {
+    display: inline-block;
+    padding: 0 1rem;
+    margin: 0;
+  }
+
+  #iconButtonConnectFloat {
+    display: none;
   }
 
   .search-input {
@@ -236,11 +250,6 @@ button {
   border-radius: 5px;
   background: #8AB4F8;
   transition: .2s;
-
-  &:disabled {
-    color: #fff;
-    background: #666
-  }
 
   &:hover {
     background: #9ec3ff;
@@ -629,10 +638,45 @@ select {
 
   nav {
     position: relative;
-    margin-top: 10px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 1rem;
 
-    button {
-      width: 80vw;
+    div{
+      margin: 10px 0;
+      display: block;
+    }
+
+    .icon, .iconConnect {
+      position: absolute;
+    }
+
+    #iconButton, #iconButtonConnect {
+      display: none;
+    }
+
+    #iconButtonFloat, #iconButtonConnectFloat {
+      display: block;
+      position: fixed;
+      bottom: 1.4rem;
+      right: 1.4rem;
+      width: 60px;
+      height: 60px;
+      color: #000;
+      border: none;
+      font-size: 2rem;
+      border-radius: 50%;
+      background: #8AB4F8;
+      box-shadow: 1px 1px 4px #171717;
+      transition: .2s;
+
+      &:hover {
+        background: #9ec3ff;
+      }
+
+      &:focus {
+        background: #8AB4F8;
+      }
     }
 
     .search-input {
