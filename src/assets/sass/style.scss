@@ -656,7 +656,6 @@ select {
     }
 
     #iconButtonFloat, #iconButtonConnectFloat {
-      display: block;
       position: fixed;
       bottom: 1.4rem;
       right: 1.4rem;
@@ -668,6 +667,9 @@ select {
       border-radius: 50%;
       background: #8AB4F8;
       box-shadow: 1px 1px 4px #171717;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       transition: .2s;
 
       &:hover {
