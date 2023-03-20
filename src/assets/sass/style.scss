@@ -110,6 +110,13 @@ kbd {
   padding: 2px 4px
 }
 
+pre, code {
+  background: #383a59;
+  color: #8be9fd;
+  border-radius: 5px;
+  padding: 5px
+}
+
 input[type="checkbox"] {
   max-width: 1rem;
 
