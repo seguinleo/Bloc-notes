@@ -1,0 +1,28 @@
+#----v23.3.5----#
+-Add copy to clipboard
+-Change Material Design UI
+
+#----v23.3.4----#
+-Improve UI/UX on safari iOS
+
+#----v23.3.3----#
+-Improve mobile UI/UX
+
+#----v23.3.2----#
+-Add Orange and Cyan notes
+
+#----v23.3.1----#
+-Add Markdown support
+
+#----v23.2.4----#
+-Improve code structure
+
+#----v23.2.3----#
+-Improve security
+
+#----v23.2.2----#
+-Bug fixes
+-Improve UI/UX
+
+#----v23.2.1----#
+-First commit

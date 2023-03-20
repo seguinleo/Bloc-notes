@@ -28,12 +28,12 @@ session_start();
 </head>
 <body>
   <nav>
-    <?php if (isset($_SESSION["nom_secure"])) { ?>
+    <?php if (isset($_SESSION["nom"])) { ?>
     <div>
       <h1 class="welcome">
         <span class="gestionCompte linkp" tabindex="0">
-          <i class="fa-solid fa-user"></i>
-          <?php echo $_SESSION["nom_secure"]; ?>
+          <i class="fa-solid fa-circle-user"></i>
+          <?php echo $_SESSION["nom"]; ?>
         </span>
         <span class="wave">👋🏼</span>
       </h1>
@@ -57,12 +57,13 @@ session_start();
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      &copy;2020-<?php echo date('Y') . " "; ?>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" target="_blank" rel="noreferrer">v23.3.5</a>
+      &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
   </nav>
   <main>
-    <?php if (isset($_SESSION["nom_secure"])) { ?>
+    <?php if (isset($_SESSION["nom"])) { ?>
     <div class="connect-popup-box">
       <div class="popup">
         <div class="content">
@@ -204,7 +205,7 @@ session_start();
     <?php } ?>
   </main>
   <script>'serviceWorker' in navigator && navigator.serviceWorker.register('sw.js');</script>
-  <?php if (isset($_SESSION["nom_secure"])) { ?>
+  <?php if (isset($_SESSION["nom"])) { ?>
   <script src="./assets/js/scriptConnect.js" defer></script>
   <?php } else { ?>
   <script src="./assets/js/script.js" defer></script>

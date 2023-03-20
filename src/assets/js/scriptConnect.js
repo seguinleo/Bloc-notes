@@ -1,9 +1,9 @@
 const notesContainer = document.querySelector("main"),
-popupBoxConnect = document.querySelector(".connect-popup-box"),
-popupBoxGestion = document.querySelector(".gestion-popup-box"),
-couleurTagConnect = popupBoxConnect.querySelector("#couleurConnect"),
-titleTagConnect = popupBoxConnect.querySelector("#titleConnect"),
-descTagConnect = popupBoxConnect.querySelector("textarea");
+  popupBoxConnect = document.querySelector(".connect-popup-box"),
+  popupBoxGestion = document.querySelector(".gestion-popup-box"),
+  couleurTagConnect = popupBoxConnect.querySelector("#couleurConnect"),
+  titleTagConnect = popupBoxConnect.querySelector("#titleConnect"),
+  descTagConnect = popupBoxConnect.querySelector("textarea");
 let isUpdate = false, updateId;
 function showNotesConnect() {
   fetch("assets/php/getNotes.php", {
@@ -17,21 +17,33 @@ function showNotesConnect() {
     .then(data => {
       data.forEach(row => {
         const { id, title, couleur, desc, date } = row,
-        titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-        descFilter = desc.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-        taskListEnablerExtension = () => {
-          return [{
-            type: 'output',
-            regex: /<input type="checkbox"?/g,
-            replace: '<input type="checkbox"'
-          }];
-        },
-        converter = new showdown.Converter({
-          tasklists: true,
-          smoothLivePreview: true,
-          extensions: [taskListEnablerExtension]
-        }),
-        s = `<div class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><span>${date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNoteConnect(${id})"></i></div></div><div><span class="status"><i class=\"fa-solid fa-cloud\"></i> Note chiffrée et stockée sur le cloud</span></div></div>`;
+          titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+          descFilter = desc.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+          taskListEnablerExtension = () => {
+            return [{
+              type: 'output',
+              regex: /<input type="checkbox"?/g,
+              replace: '<input type="checkbox"'
+            }];
+          },
+          converter = new showdown.Converter({
+            tasklists: true,
+            smoothLivePreview: true,
+            extensions: [taskListEnablerExtension]
+          }),
+          s = `<div class="note ${couleur}">
+              <div class="details">
+                <p class="title">${titleFilter}</p>
+                <span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span>
+              </div>
+              <div class="bottom-content">
+                <span>${date}</span>
+                <i title="Modifier" class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i>
+                <i title="Copier" class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i>
+                <i title="Supprimer" class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i>
+                <i title="Note chiffrée" class="fa-solid fa-lock" onclick="alert('Note chiffrée et sauvegardée dans le cloud')"></i>
+              </div>
+            </div>`;
         notesContainer.insertAdjacentHTML("beforeend", s);
       });
       return;
@@ -39,11 +51,16 @@ function showNotesConnect() {
 }
 function updateNoteConnect(id, title, descFilter, couleur) {
   isUpdate = true,
-  document.querySelector(".iconConnect").click(),
-  document.querySelector("#idNoteInput").value = id,
-  couleurTagConnect.value = couleur,
-  titleTagConnect.value = title,
-  descTagConnect.value = descFilter.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+    document.querySelector(".iconConnect").click(),
+    document.querySelector("#idNoteInput").value = id,
+    couleurTagConnect.value = couleur,
+    titleTagConnect.value = title,
+    descTagConnect.value = descFilter.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+}
+function copy(e) {
+  const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+  navigator.clipboard.writeText(copyText);
+  alert("Note copiée dans le presse-papiers !");
 }
 function deleteNoteConnect(e) {
   if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
@@ -128,10 +145,10 @@ document.querySelectorAll(".supprimerCompte").forEach((element) => {
 });
 document.querySelector("#submitNoteConnect").addEventListener("click", () => {
   const e = encodeURIComponent(document.querySelector("#titleConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-  t = encodeURIComponent(document.querySelector("#descConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-  v = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-  url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
-  data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
+    t = encodeURIComponent(document.querySelector("#descConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    v = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
+    data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
   if (!e) {
     return;
   }
@@ -165,7 +182,7 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
 });
 document.querySelector("#submitChangeMDP").addEventListener("click", () => {
   const e = document.querySelector("#mdpModifNew").value,
-  t = document.querySelector("#mdpModifNewValid").value;
+    t = document.querySelector("#mdpModifNewValid").value;
   if (!e || !t) {
     alert("Un ou plusieurs champs sont vides...");
     return;

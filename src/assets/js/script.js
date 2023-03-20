@@ -1,48 +1,64 @@
 const notesContainer = document.querySelector("main"),
-popupBox = document.querySelector(".popup-box"),
-connectBox = document.querySelector(".connect-box"),
-creerBox = document.querySelector(".creer-box"),
-couleurTag = popupBox.querySelector("#couleur"),
-titleTag = popupBox.querySelector("#title"),
-descTag = popupBox.querySelector("#content"),
-notes = JSON.parse(localStorage.getItem("notes") || "[]");
+  popupBox = document.querySelector(".popup-box"),
+  connectBox = document.querySelector(".connect-box"),
+  creerBox = document.querySelector(".creer-box"),
+  couleurTag = popupBox.querySelector("#couleur"),
+  titleTag = popupBox.querySelector("#title"),
+  descTag = popupBox.querySelector("#content"),
+  notes = JSON.parse(localStorage.getItem("notes") || "[]");
 let isUpdate = false, updateId;
 function showNotes() {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
-  notes.forEach((e, t) => {
-    const v = e.couleur,
-    f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-    o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-    taskListEnablerExtension = () => {
-      return [{
-        type: 'output',
-        regex: /<input type="checkbox"?/g,
-        replace: '<input type="checkbox"'
-      }];
-    },
-    converter = new showdown.Converter({
-      tasklists: true,
-      smoothLivePreview: true,
-      extensions: [taskListEnablerExtension]
-    }),
-    s = `<div class="note ${v}"><div class="details"><p class="title">${f}</p><span>${converter.makeHtml(o).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><span>${e.date}</span><div class="settings"><i title="Modifier" class="fa-solid fa-pen-to-square" onclick="updateNote(${t},'${f}','${o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${v}')"></i><i title="Supprimer" class="fa-solid fa-trash" onclick="deleteNote(${t})"></i></div></div><div><span class="status">Note stockée sur l'appareil</span></div></div>`;
-    notesContainer.insertAdjacentHTML("beforeend", s);
-  }))
+    notes.forEach((e, t) => {
+      const v = e.couleur,
+        f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+        o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+        taskListEnablerExtension = () => {
+          return [{
+            type: 'output',
+            regex: /<input type="checkbox"?/g,
+            replace: '<input type="checkbox"'
+          }];
+        },
+        converter = new showdown.Converter({
+          tasklists: true,
+          smoothLivePreview: true,
+          extensions: [taskListEnablerExtension]
+        }),
+        s = `<div class="note ${v}">
+          <div class="details">
+            <p class="title">${f}</p>
+            <span>${converter.makeHtml(o).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span>
+          </div>
+          <div class="bottom-content">
+            <span>${e.date}</span>
+            <i title="Modifier" class="fa-solid fa-pen" onclick="updateNote(${t},'${f}','${o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${v}')"></i>
+            <i title="Copier" class="fa-solid fa-clipboard" onclick="copy('${o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i>
+            <i title="Supprimer" class="fa-solid fa-trash-can" onclick="deleteNote(${t})"></i>
+          </div>
+        </div>`;
+      notesContainer.insertAdjacentHTML("beforeend", s);
+    }))
 }
 function updateNote(e, t, o, v) {
   const s = o.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   updateId = e,
-  isUpdate = true,
-  document.querySelector(".icon").click(),
-  couleurTag.value = v,
-  titleTag.value = t,
-  descTag.value = s;
+    isUpdate = true,
+    document.querySelector(".icon").click(),
+    couleurTag.value = v,
+    titleTag.value = t,
+    descTag.value = s;
+}
+function copy(e) {
+  const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+  navigator.clipboard.writeText(copyText);
+  alert("Note copiée dans le presse-papiers !");
 }
 function deleteNote(e) {
   if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
     notes.splice(e, 1),
-    localStorage.setItem("notes", JSON.stringify(notes)),
-    showNotes();
+      localStorage.setItem("notes", JSON.stringify(notes)),
+      showNotes();
   }
 }
 document.querySelectorAll(".seconnecter").forEach((element) => {
@@ -71,8 +87,8 @@ document.querySelectorAll(".creercompte").forEach((element) => {
 });
 document.querySelector("#submitCreer").addEventListener("click", async () => {
   const e = document.querySelector("#nomCreer").value.trim(),
-  t = document.querySelector("#mdpCreer").value,
-  o = document.querySelector("#mdpCreerValid").value;
+    t = document.querySelector("#mdpCreer").value,
+    o = document.querySelector("#mdpCreerValid").value;
   if (!e || !t || !o) {
     alert("Un ou plusieurs champs sont vides...");
     return;
@@ -106,7 +122,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     return;
   }
   const nomCreer = encodeURIComponent(e),
-  mdpCreer = encodeURIComponent(t);
+    mdpCreer = encodeURIComponent(t);
   try {
     const response = await fetch("assets/php/formCreer.php", {
       method: "POST",
@@ -132,7 +148,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
 });
 document.querySelector("#submitSeConnecter").addEventListener("click", () => {
   const e = document.querySelector("#nomConnect").value.trim(),
-  t = document.querySelector("#mdpConnect").value;
+    t = document.querySelector("#mdpConnect").value;
   if (!e || !t) {
     alert("Un ou plusieurs champs sont vides...");
     return;
@@ -150,7 +166,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
     return;
   }
   const nomConnect = encodeURIComponent(e),
-  mdpConnect = encodeURIComponent(t);
+    mdpConnect = encodeURIComponent(t);
   fetch("assets/php/formConnect.php", {
     method: "POST",
     credentials: "same-origin",
@@ -191,8 +207,8 @@ document.querySelectorAll(".icon").forEach((element) => {
 });
 document.querySelector("#submitNote").addEventListener("click", () => {
   const v = couleurTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
-  e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
-  t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
+    e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
+    t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
   if (!e) {
     return;
   }
