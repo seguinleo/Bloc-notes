@@ -1,3 +1,8 @@
+const url = window.location.href;
+if (url == "https://leoseguin.fr/projets/notes/en.php" && localStorage.getItem("lang") == null) { localStorage.setItem("lang", "en"); }
+if (url == "https://leoseguin.fr/projets/notes/" && localStorage.getItem("lang") == null) { localStorage.setItem("lang", "fr"); }
+if (url == "https://leoseguin.fr/projets/notes/en.php" && localStorage.getItem("lang") == "fr") { window.open("./", "_self"); }
+if (url == "https://leoseguin.fr/projets/notes/" && localStorage.getItem("lang") == "en") { window.open("./en.php", "_self"); }
 const notesContainer = document.querySelector("main"),
   popupBoxConnect = document.querySelector(".connect-popup-box"),
   popupBoxGestion = document.querySelector(".gestion-popup-box"),
@@ -37,11 +42,10 @@ function showNotesConnect() {
                 <span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span>
               </div>
               <div class="bottom-content">
-                <span>${date}</span>
-                <i title="Modifier" class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i>
-                <i title="Copier" class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i>
-                <i title="Supprimer" class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i>
-                <i title="Note chiffrée" class="fa-solid fa-lock" onclick="alert('Note chiffrée et sauvegardée dans le cloud')"></i>
+                <i class="fa-solid fa-calendar-days"></i><span>${date}</span>
+                <i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i>
+                <i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i>
+                <i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i>
               </div>
             </div>`;
         notesContainer.insertAdjacentHTML("beforeend", s);
@@ -60,30 +64,54 @@ function updateNoteConnect(id, title, descFilter, couleur) {
 function copy(e) {
   const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   navigator.clipboard.writeText(copyText);
-  alert("Note copiée dans le presse-papiers !");
 }
 function deleteNoteConnect(e) {
-  if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
-    fetch("assets/php/deleteNote.php", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: "noteId=" + e
-    })
-      .then(response => {
-        if (response.ok) {
-          document.querySelectorAll(".note").forEach(function (note) {
-            note.remove();
-          });
-          showNotesConnect();
-          return;
-        } else {
-          alert("Une erreur est survenue...");
-          return;
-        }
+  if ("fr" === localStorage.getItem("lang")) {
+    if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
+      fetch("assets/php/deleteNote.php", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "noteId=" + e
       })
+        .then(response => {
+          if (response.ok) {
+            document.querySelectorAll(".note").forEach(function (note) {
+              note.remove();
+            });
+            showNotesConnect();
+            return;
+          } else {
+            alert("Une erreur est survenue...");
+            return;
+          }
+        })
+    }
+  } else {
+    if (confirm("Do you really want to delete this note?")) {
+      fetch("assets/php/deleteNote.php", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "noteId=" + e
+      })
+        .then(response => {
+          if (response.ok) {
+            document.querySelectorAll(".note").forEach(function (note) {
+              note.remove();
+            });
+            showNotesConnect();
+            return;
+          } else {
+            alert("An error occurred...");
+            return;
+          }
+        })
+    }
   }
 }
 function deleteAccount() {
@@ -98,13 +126,23 @@ function deleteAccount() {
       if (response.status === 200) {
         location.reload();
       } else {
-        alert("Une erreur est survenue lors de la suppression de votre compte...");
-        return;
+        if ("fr" === localStorage.getItem("lang")) {
+          alert("Une erreur est survenue lors de la suppression de votre compte...");
+          return;
+        } else {
+          alert("An error occurred while deleting your account...");
+          return;
+        }
       }
     })
     .catch(error => {
-      alert("Une erreur est survenue lors de la suppression de votre compte...");
-      return;
+      if ("fr" === localStorage.getItem("lang")) {
+        alert("Une erreur est survenue lors de la suppression de votre compte...");
+        return;
+      } else {
+        alert("An error occurred while deleting your account...");
+        return;
+      }
     });
 }
 document.querySelectorAll(".iconConnect").forEach((element) => {
@@ -116,6 +154,38 @@ document.querySelectorAll(".iconConnect").forEach((element) => {
     if (event.key === 'Enter') {
       popupBoxConnect.classList.add("show");
       document.querySelector("#titleConnect").focus();
+    }
+  });
+});
+document.querySelectorAll(".sedeconnecter").forEach((element) => {
+  element.addEventListener("click", () => {
+    fetch("assets/php/logout.php", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          location.reload();
+        }
+      })
+  });
+  element.addEventListener("keydown", (event) => {
+    if (event.key === 'Enter') {
+      fetch("assets/php/logout.php", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      })
+        .then(response => {
+          if (response.status === 200) {
+            location.reload();
+          }
+        })
     }
   });
 });
@@ -131,13 +201,12 @@ document.querySelectorAll(".gestionCompte").forEach((element) => {
 });
 document.querySelectorAll(".supprimerCompte").forEach((element) => {
   element.addEventListener("click", () => {
-    if (confirm("Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ?")) {
-      deleteAccount();
-    }
-  });
-  element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      if (confirm("Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ?")) {
+    if (localStorage.getItem("lang") === "fr") {
+      if (confirm("Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d'utilisateur redeviendra disponible pour les autres utilisateurs.")) {
+        deleteAccount();
+      }
+    } else {
+      if (confirm("Do you really want to delete your account and all your notes saved in the cloud? Your username will become available to other users again.")) {
         deleteAccount();
       }
     }
@@ -171,37 +240,72 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
         document.querySelectorAll("form").forEach(form => form.reset());
         return;
       } else {
-        alert("Une erreur est survenue...");
-        return;
+        if ("fr" === localStorage.getItem("lang")) {
+          alert("Une erreur est survenue...");
+          return;
+        } else {
+          alert("An error occurred...");
+          return;
+        }
       }
     })
     .catch(error => {
-      alert("Une erreur est survenue...");
-      return;
+      if ("fr" === localStorage.getItem("lang")) {
+        alert("Une erreur est survenue...");
+        return;
+      } else {
+        alert("An error occurred...");
+        return;
+      }
     });
 });
 document.querySelector("#submitChangeMDP").addEventListener("click", () => {
   const e = document.querySelector("#mdpModifNew").value,
     t = document.querySelector("#mdpModifNewValid").value;
   if (!e || !t) {
-    alert("Un ou plusieurs champs sont vides...");
-    return;
+    if ("fr" === localStorage.getItem("lang")) {
+      alert("Un ou plusieurs champs sont vides...");
+      return;
+    } else {
+      alert("One or more fields are empty...");
+      return;
+    }
   }
   if (e.length < 6) {
-    alert("Mot de passe trop faible (<6)...");
-    return;
+    if ("fr" === localStorage.getItem("lang")) {
+      alert("Mot de passe trop faible (<6)...");
+      return;
+    } else {
+      alert("Password too weak (<6)...");
+      return;
+    }
   }
   if (/^[0-9]+$/.test(e)) {
-    alert("Le mot de passe ne peut pas contenir que des chiffres...");
-    return;
+    if ("fr" === localStorage.getItem("lang")) {
+      alert("Mot de passe trop faible (que des chiffres)...");
+      return;
+    } else {
+      alert("Password too weak (only numbers)...");
+      return;
+    }
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    alert("Le mot de passe ne peut pas contenir que des lettres...");
-    return;
+    if ("fr" === localStorage.getItem("lang")) {
+      alert("Mot de passe trop faible (que des lettres)...");
+      return;
+    } else {
+      alert("Password too weak (only letters)...");
+      return;
+    }
   }
   if (e !== t) {
-    alert("Les mots de passe ne correspondent pas...");
-    return;
+    if ("fr" === localStorage.getItem("lang")) {
+      alert("Les mots de passe ne correspondent pas...");
+      return;
+    } else {
+      alert("Passwords do not match...");
+      return;
+    }
   }
   const mdpNew = encodeURIComponent(e);
   fetch("assets/php/formChangeMDP.php", {
@@ -214,18 +318,32 @@ document.querySelector("#submitChangeMDP").addEventListener("click", () => {
   })
     .then(response => {
       if (response.status === 200) {
-        alert("Mot de passe modifié !");
+        if (localStorage.getItem("lang") === "fr") {
+          alert("Mot de passe modifié !");
+        } else {
+          alert("Password changed !");
+        }
         popupBoxGestion.classList.remove("show");
         document.querySelectorAll("form").forEach(form => form.reset());
         return;
       } else {
-        alert("Une erreur est survenue...");
-        return;
+        if ("fr" === localStorage.getItem("lang")) {
+          alert("Une erreur est survenue...");
+          return;
+        } else {
+          alert("An error occurred...");
+          return;
+        }
       }
     })
     .catch(error => {
-      alert("Une erreur est survenue...");
-      return;
+      if ("fr" === localStorage.getItem("lang")) {
+        alert("Une erreur est survenue...");
+        return;
+      } else {
+        alert("An error occurred...");
+        return;
+      }
     });
 });
 document.querySelectorAll("form").forEach((element) => {
@@ -264,6 +382,20 @@ document.addEventListener("keydown", e => {
   e.ctrlKey && "k" === e.key && (e.preventDefault(),
     document.querySelector('#search-input').focus())
 });
+document.querySelector(".lang").addEventListener("click", () => {
+  if ("en" === localStorage.getItem("lang")) {
+    localStorage.setItem("lang", "fr");
+    window.open('./', '_self');
+    return;
+  } else {
+    localStorage.setItem("lang", "en");
+    window.open('./en.php', '_self');
+    return;
+  }
+});
 document.addEventListener("DOMContentLoaded", () => {
   showNotesConnect();
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+  }
 });

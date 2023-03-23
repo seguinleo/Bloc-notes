@@ -10,11 +10,11 @@ session_name('__Secure-PHPSESSID');
 session_start();
 ?>
 <!DOCTYPE html>
-<html lang="fr-FR">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Bloc-notes &#8211; Léo SEGUIN</title>
-  <meta name="description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
+  <meta name="description" content="Save notes to your device or sign in to sync and encrypt your notes.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#171717">
@@ -39,24 +39,24 @@ session_start();
       </h1>
     </div>
     <div class="iconConnect">
-      <button id="iconButtonConnect" type="button" aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
-      <button id="iconButtonConnectFloat" type="button" aria-label="Ajouter une note sur le cloud">+</button>
+      <button id="iconButtonConnect" type="button" aria-label="Add a cloud note">Add a cloud note <i class="fa-solid fa-cloud"></i></button>
+      <button id="iconButtonConnectFloat" type="button" aria-label="Add a cloud note">+</button>
     </div>
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
       <span class="lang">
-        <img src="assets/icons/fr.svg" alt="flag" width="20" height="15">
+        <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
       </span>
     </div>
     <div class="icon">
-      <button id="iconButton" type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
-      <button id="iconButtonFloat" type="button" aria-label="Ajouter une note sur l'appareil">+</button>
+      <button id="iconButton" type="button" aria-label="Add a local note">Add a local note</button>
+      <button id="iconButtonFloat" type="button" aria-label="Add a local note">+</button>
     </div>
     <?php } ?>
     <div class="search-input">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="search-input" maxlength="30" aria-label="Rechercher une note" placeholder="Rechercher une note">
+      <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search for a note">
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
@@ -76,24 +76,24 @@ session_start();
           <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
             <input id="idNoteInput" type="hidden">
             <div class="row">
-              <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
+              <input id="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title">
             </div>
             <div class="row">
-              <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
+              <textarea id="descConnect" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
-              <select id="couleurConnect" aria-label="couleur">
-                <option value="Noir">Noir</option>
-                <option value="Rouge">Rouge</option>
+              <select id="couleurConnect" aria-label="color">
+                <option value="Noir">Black</option>
+                <option value="Rouge">Red</option>
                 <option value="Orange">Orange</option>
-                <option value="Jaune">Jaune</option>
-                <option value="Vert">Vert</option>
+                <option value="Jaune">Yellow</option>
+                <option value="Vert">Green</option>
                 <option value="Cyan">Cyan</option>
-                <option value="Bleu">Bleu</option>
-                <option value="Violet">Violet</option>
+                <option value="Bleu">Blue</option>
+                <option value="Violet">Purple</option>
               </select>
             </div>
-            <button id="submitNoteConnect" type="submit" aria-label="Enregistrer la note">Enregistrer la note <i class="fa-solid fa-cloud"></i></button>
+            <button id="submitNoteConnect" type="submit" aria-label="Save note">Save note <i class="fa-solid fa-cloud"></i></button>
           </form>
         </div>
       </div>
@@ -105,34 +105,34 @@ session_start();
             <i class="fa-solid fa-xmark" tabindex="0"></i>
           </header>
           <div class="row">
-          <span class="lang linkp">
-            <img src="assets/icons/fr.svg" alt="flag" width="20" height="15">
-          </span>
+            <span class="lang linkp">
+              <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
+            </span>
           </div>
           <div class="row">
             <p>
-              <span class="sedeconnecter linkp" tabindex="0">Se déconnecter</span>
+              <span class="sedeconnecter linkp" tabindex="0">Sign out</span>
             </p>
           </div>
           <div class="row">
             <p>
               <span class="linkp">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
+                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Legal Notice / Privacy">Legal Notice / Privacy</a>
               </span>
             </p>
           </div>
           <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
             <div class="row">
-              <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" maxlength="50" aria-label="mdp">
+              <input id="mdpModifNew" placeholder="New password" type="password" maxlength="50" aria-label="password">
             </div>
             <div class="row">
-              <input id="mdpModifNewValid" placeholder="Retaper le nouveau mot de passe" type="password" maxlength="50" aria-label="mdp">
+              <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" maxlength="50" aria-label="password">
             </div>
-            <button id="submitChangeMDP" type="submit" aria-label="Modifier le mot de passe">Modifier le mot de passe</button>
+            <button id="submitChangeMDP" type="submit" aria-label="Change password">Change password</button>
           </form>
           <div class="row">
             <p>
-              <span class="supprimerCompte linkp" tabindex="0">Supprimer mon compte</span>
+              <span class="supprimerCompte linkp" tabindex="0">Delete my account</span>
             </p>
           </div>
         </div>
@@ -140,9 +140,9 @@ session_start();
     </div>
     <?php } else { ?>
     <div class="info">
-      <span class="seconnecter" tabindex="0">Connectez-vous</span> pour synchroniser vos notes entre tous vos appareils et les
-      <div class="tooltip">chiffrer🔒
-        <span class="tooltiptext">Chiffrement AES-256-GCM</span>
+      <span class="seconnecter" tabindex="0">Sign in</span> to sync your notes between all your devices and
+      <div class="tooltip">encrypt🔒
+        <span class="tooltiptext">AES-256-GCM encryption</span>
       </div>
     </div>
     <div class="popup-box">
@@ -153,24 +153,24 @@ session_start();
           </header>
           <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
             <div class="row">
-              <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
+              <input id="title" placeholder="Title" type="text" maxlength="30" aria-label="title">
             </div>
             <div class="row">
-              <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
+              <textarea id="content" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
-              <select id="couleur" aria-label="couleur">
-                <option value="Noir">Noir</option>
-                <option value="Rouge">Rouge</option>
+              <select id="couleur" aria-label="color">
+                <option value="Noir">Black</option>
+                <option value="Rouge">Red</option>
                 <option value="Orange">Orange</option>
-                <option value="Jaune">Jaune</option>
-                <option value="Vert">Vert</option>
+                <option value="Jaune">Yellow</option>
+                <option value="Vert">Green</option>
                 <option value="Cyan">Cyan</option>
-                <option value="Bleu">Bleu</option>
-                <option value="Violet">Violet</option>
+                <option value="Bleu">Blue</option>
+                <option value="Violet">Purple</option>
               </select>
             </div>
-            <button id="submitNote" type="submit" aria-label="Enregistrer la note">Enregistrer la note</button>
+            <button id="submitNote" type="submit" aria-label="Save note">Save note</button>
           </form>
         </div>
       </div>
@@ -182,16 +182,16 @@ session_start();
             <i class="fa-solid fa-xmark" tabindex="0"></i>
           </header>
           <p>
-            <span class="creercompte linkp" tabindex="0">Pas encore de compte ?</span>
+            <span class="creercompte linkp" tabindex="0">No account yet?</span>
           </p>
           <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
             <div class="row">
-              <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom">
+              <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="username">
             </div>
             <div class="row">
-              <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="mdp">
+              <input id="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="password">
             </div>
-            <button id="submitSeConnecter" type="submit" aria-label="Se connecter">Se connecter</button>
+            <button id="submitSeConnecter" type="submit" aria-label="Sign in">Sign in</button>
           </form>
         </div>
       </div>
@@ -204,20 +204,20 @@ session_start();
           </header>
           <p>
             <span class="linkp">
-              <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
+              <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Legal Notice / Privacy">Legal Notice / Privacy</a>
             </span>
           </p>
           <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
             <div class="row">
-              <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom">
+              <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="username">
             </div>
             <div class="row">
-              <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+              <input id="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="password">
             </div>
             <div class="row">
-              <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+              <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="password">
             </div>
-            <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
+            <button id="submitCreer" type="submit" aria-label="Sign up">Sign up</button>
           </form>
         </div>
       </div>

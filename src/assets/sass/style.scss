@@ -51,9 +51,9 @@
 html {
   background: #171717;
   color: #c6c6c6;
-  accent-color: #8AB4F8;
+  accent-color: #8ab4f8;
   -webkit-tap-highlight-color: transparent;
-  scrollbar-color: rgba(255, 255, 255, .1) rgba(0,0,0,0);
+  scrollbar-color: rgba(255, 255, 255, .1) rgba(0, 0, 0, 0);
   scrollbar-width: thin
 }
 
@@ -74,7 +74,7 @@ html {
 
 h1 {
   font-size: 1.4rem;
-  color: #8AB4F8
+  color: #8ab4f8
 }
 
 h2 {
@@ -86,7 +86,7 @@ h3 {
 }
 
 a {
-  color: #8AB4F8;
+  color: #8ab4f8;
   text-decoration: none;
   display: inline;
   font-weight: 700;
@@ -97,7 +97,7 @@ a {
 }
 
 p.title {
-  color: #8AB4F8
+  color: #8ab4f8
 }
 
 kbd {
@@ -110,15 +110,22 @@ kbd {
   padding: 2px 4px
 }
 
-pre, code {
+pre,
+code {
   background: #383a59;
   color: #8be9fd;
   border-radius: 5px;
-  padding: 5px
+  padding: 5px;
+
+  &::selection {
+    color: #8be9fd;
+    background-color: rgba(255, 255, 255, .1)
+  }
 }
 
 input[type="checkbox"] {
   max-width: 1rem;
+  vertical-align: middle;
 
   &:focus {
     outline: none
@@ -193,7 +200,7 @@ nav {
       padding: 0 10px;
 
       &:focus {
-        outline: 2px solid #8AB4F8
+        outline: 2px solid #8ab4f8
       }
     }
   }
@@ -244,7 +251,7 @@ select {
   border: 2px solid #666;
 
   &:focus {
-    outline: #8AB4F8 solid 2px
+    outline: #8ab4f8 solid 2px
   }
 }
 
@@ -258,11 +265,11 @@ button {
   cursor: pointer;
   width: 100%;
   height: 50px;
-  color: #000;
+  color: #171717;
   border: none;
   font-size: 1rem;
   border-radius: 5px;
-  background: #8AB4F8;
+  background: #8ab4f8;
   transition: .2s;
 
   &:hover {
@@ -270,7 +277,12 @@ button {
   }
 
   &:focus {
-    background: #8AB4F8
+    background: #8ab4f8
+  }
+
+  &:disabled {
+    background: #aaaaaa;
+    cursor: not-allowed
   }
 }
 
@@ -338,20 +350,6 @@ p.welcome {
   }
 }
 
-.note.Rouge,
-.note.Orange,
-.note.Jaune,
-.note.Vert,
-.note.Bleu,
-.note.Cyan,
-.note.Violet {
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, .2)
-  }
-  scrollbar-color: rgba(0, 0, 0, .2) rgba(0,0,0,0);
-  scrollbar-width: thin
-}
-
 .note.Noir {
   background: #282828
 }
@@ -384,19 +382,61 @@ p.welcome {
   background: #c7a6ff
 }
 
-.linkp {
+.note.Rouge,
+.note.Orange,
+.note.Jaune,
+.note.Vert,
+.note.Bleu,
+.note.Cyan,
+.note.Violet {
+  scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, 0);
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .2)
+  }
+}
+
+.linkp,
+.seconnecter {
   cursor: pointer;
   text-align: center;
   font-weight: 700;
-  color: #8AB4F8;
+  color: #8ab4f8;
 
   &:hover {
     color: #9ec3ff
   }
 }
 
+.linkp {
+  margin-left: 20px;
+}
+
+.svgPart {
+  position: fixed;
+  width: 60%;
+  bottom: 0;
+  z-index: -1;
+
+  svg {
+    fill: #171717;
+  }
+
+  path,
+  polyline {
+    fill: #171717;
+    stroke: #424242;
+    stroke-width: 1;
+  }
+
+  path {
+    stroke-dasharray: 10, 5;
+  }
+}
+
 .content header i {
-  color: rgba(255, 255, 255, .7);
+  color: #c6c6c6;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -426,7 +466,8 @@ select {
   transition: opacity .2s;
 
   span {
-    margin: 0 6px;
+    margin: 0 4px 0 -6px;
+    font-size: .9rem;
     transition: .2s
   }
 
@@ -435,7 +476,7 @@ select {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin: 0 6px;
+    margin: 0 4px;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -450,32 +491,48 @@ select {
 .note.Cyan,
 .note.Bleu,
 .note.Violet {
+  ::selection {
+    background-color: rgba(0, 0, 0, .2)
+  }
+
   .bottom-content {
     span {
       color: rgba(0, 0, 0, .7)
     }
 
     i {
-      color: rgba(0, 0, 0, 0.7);
+      color: rgba(0, 0, 0, .7);
 
       &:hover {
-        background: rgba(0, 0, 0, 0.1)
+        background: rgba(0, 0, 0, .1)
+      }
+
+      &:active {
+        background: rgba(0, 0, 0, .2)
       }
     }
   }
 }
 
 .note.Noir {
+  ::selection {
+    background-color: rgba(255, 255, 255, .2)
+  }
+
   .bottom-content {
     span {
-      color: rgba(255, 255, 255, 0.7)
+      color: rgba(255, 255, 255, .7)
     }
 
     i {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, .7);
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1)
+        background: rgba(255, 255, 255, .1)
+      }
+
+      &:active {
+        background: rgba(255, 255, 255, .2)
       }
     }
   }
@@ -529,11 +586,12 @@ select {
   -webkit-user-select: none;
   user-select: none;
   max-width: 350px;
+  text-align: center;
 
   .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted #8AB4F8
+    border-bottom: 1px dotted #8ab4f8
   }
 
   .tooltip .tooltiptext {
@@ -652,9 +710,7 @@ select {
   }
 }
 
-.content form,
-.sedeconnecter,
-.supprimerCompte {
+.content form {
   margin: 20px
 }
 
@@ -668,6 +724,16 @@ select {
   &:hover {
     color: #ffb4b4;
   }
+}
+
+.task-list-item {
+  list-style-type: none;
+  margin: 0;
+  margin-left: -2rem;
+}
+
+.lang {
+  cursor: pointer;
 }
 
 #changeMDP {
@@ -713,11 +779,11 @@ select {
       right: 1.4rem;
       width: 60px;
       height: 60px;
-      color: #000;
+      color: #171717;
       border: none;
       font-size: 2rem;
       border-radius: 50%;
-      background: #8AB4F8;
+      background: #8ab4f8;
       box-shadow: 1px 1px 4px #171717;
       display: flex;
       justify-content: center;
@@ -729,7 +795,7 @@ select {
       }
 
       &:focus {
-        background: #8AB4F8
+        background: #8ab4f8
       }
     }
   }
@@ -748,21 +814,28 @@ select {
     display: none
   }
 
+  .svgPart {
+    width: 85%
+  }
+
+  .note {
+    width: 100%
+  }
+}
+
+@media(max-width: 550px) {
+
   .connect-box .popup,
   .connect-popup-box .popup,
   .creer-box .popup,
   .gestion-popup-box .popup,
   .popup-box .popup {
+    min-width: 94vw;
     max-width: 94vw;
-    min-width: 94vw
   }
 
   .popup .content {
+    min-width: 94vw;
     max-width: 94vw;
-    min-width: 94vw
-  }
-
-  .note {
-    width: 100%
   }
 }

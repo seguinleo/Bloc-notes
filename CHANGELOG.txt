@@ -1,3 +1,9 @@
+#----v23.3.6----#
+-English support
+-Improve PWA performance
+-Improve security
+-Improve UI/UX
+
 #----v23.3.5----#
 -Add copy to clipboard
 -Change Material Design UI
