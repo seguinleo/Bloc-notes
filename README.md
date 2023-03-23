@@ -38,5 +38,4 @@ No personal data is collected (GDPR).
 ## Community
 If you have any suggestions to improve this project or if you find issues, feel free to discuss!
 
-![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/src/assets/img/notes.png)
-![Mobile preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/src/assets/img/notesmobile.png)
+![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)
