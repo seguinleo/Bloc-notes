@@ -1,18 +1,42 @@
 # Bloc-notes
-<img src="https://img.shields.io/github/contributors/PouletEnSlip/Bloc-notes" alt="">
-<img src="https://img.shields.io/github/commit-activity/m/PouletEnSlip/Bloc-notes" alt="">
-<img src="https://img.shields.io/github/issues/PouletEnSlip/Bloc-notes" alt="">
+![Issues](https://img.shields.io/github/issues/PouletEnSlip/Bloc-notes)
+![License](https://img.shields.io/github/license/PouletEnSlip/Bloc-notes)
+[![CodeQL](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql)
 
-> __COMING__ Sorting with drag and drop, shared notes, and more!
+> **Note** Coming soon: sorting with drag and drop, shared notes, and more!
 
-Encrypted notebook PWA developed with PHP and JavaScript Ajax.
+[![Icon](https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon48.png)](https://leoseguin.fr/projets/notes/)
 
-User can save notes locally or sign in to sync all notes between their devices and encrypt content with AES-256-GCM in a database.
+Bloc-notes is an open source and encrypted notebook website developed with PHP and JavaScript Ajax.
 
-User can also use Markdown to create titles, lists, links, images and checkboxes thanks to [Showdownjs](https://github.com/showdownjs/showdown).
+## Table of contents
+- [Features](#features)
+- [Design](#design)
+- [PWA](#pwa)
+- [Security/Privacy](#security-and-privacy)
+- [Languages](#languages)
+- [Community](#community)
 
-Security measures are in place against XSS flaws and SQL injections.
+## Features
+The user can save and edit notes locally in JSON, change notes color, copy notes and use Markdown to create titles, lists, links, images and checkboxes thanks to [Showdownjs](https://github.com/showdownjs/showdown). See the Markdown [guide](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown).
 
-![0](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)
+The user can also sign in to sync all notes between their devices or browsers (supports Windows, macOS, Android, iOS, Chromium, Firefox and Safari) and encrypt content with ``AES-256-GCM`` in a SQL database. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
 
-Made by **PouletEnSlip** © - All Rights Reserved
+## Design
+Styles made with Sass. The website is fully responsible for mobile devices and UI/UX inspired by Material Design. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome).
+
+## PWA
+The website is a PWA, the user can install it as an application with a Chromium-based browser. Service Worker has automatic update.
+
+## Security and Privacy
+Passwords are hashed with bcrypt before being sent to the database. Once logged in, the user can change their password or delete their account. Security measures are in place against XSS, CSRF and SQL injections.
+No personal data is collected (GDPR).
+
+## Languages
+🇫🇷French, 🇬🇧English
+
+## Community
+If you have any suggestions to improve this project or if you find issues, feel free to discuss!
+
+![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/src/assets/img/notes.png)
+![Mobile preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/src/assets/img/notesmobile.png)
