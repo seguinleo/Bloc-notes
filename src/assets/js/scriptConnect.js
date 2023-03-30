@@ -36,18 +36,7 @@ function showNotesConnect() {
             smoothLivePreview: true,
             extensions: [taskListEnablerExtension]
           }),
-          s = `<div class="note ${couleur}">
-              <div class="details">
-                <p class="title">${titleFilter}</p>
-                <span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span>
-              </div>
-              <div class="bottom-content">
-                <i class="fa-solid fa-calendar-days"></i><span>${date}</span>
-                <i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i>
-                <i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i>
-                <i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i>
-              </div>
-            </div>`;
+          s = `<div class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i></div></div>`;
         notesContainer.insertAdjacentHTML("beforeend", s);
       });
       return;
@@ -135,7 +124,7 @@ function deleteAccount() {
         }
       }
     })
-    .catch(error => {
+    .catch(() => {
       if ("fr" === localStorage.getItem("lang")) {
         alert("Une erreur est survenue lors de la suppression de votre compte...");
         return;
@@ -211,6 +200,41 @@ document.querySelectorAll(".supprimerCompte").forEach((element) => {
       }
     }
   });
+  element.addEventListener("keydown", (event) => {
+    if (event.key === 'Enter') {
+      if (localStorage.getItem("lang") === "fr") {
+        if (confirm("Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d'utilisateur redeviendra disponible pour les autres utilisateurs.")) {
+          deleteAccount();
+        }
+      } else {
+        if (confirm("Do you really want to delete your account and all your notes saved in the cloud? Your username will become available to other users again.")) {
+          deleteAccount();
+        }
+      }
+    }
+  });
+});
+document.querySelector("#tri").addEventListener("change", () => {
+  fetch("assets/php/sort.php", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "tri=" + document.querySelector("#tri").value
+  })
+    .then(response => {
+      if (response.ok) {
+        document.querySelectorAll(".note").forEach(function (note) {
+          note.remove();
+        });
+        showNotesConnect();
+        return;
+      } else {
+        alert("Une erreur est survenue...");
+        return;
+      }
+    })
 });
 document.querySelector("#submitNoteConnect").addEventListener("click", () => {
   const e = encodeURIComponent(document.querySelector("#titleConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
@@ -218,7 +242,7 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
     v = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
     url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
     data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
-  if (!e) {
+  if (!e || e.length > 2000) {
     return;
   }
   fetch(url, {
@@ -249,7 +273,7 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
         }
       }
     })
-    .catch(error => {
+    .catch(() => {
       if ("fr" === localStorage.getItem("lang")) {
         alert("Une erreur est survenue...");
         return;
@@ -336,7 +360,7 @@ document.querySelector("#submitChangeMDP").addEventListener("click", () => {
         }
       }
     })
-    .catch(error => {
+    .catch(() => {
       if ("fr" === localStorage.getItem("lang")) {
         alert("Une erreur est survenue...");
         return;
@@ -391,6 +415,19 @@ document.querySelector(".lang").addEventListener("click", () => {
     localStorage.setItem("lang", "en");
     window.open('./en.php', '_self');
     return;
+  }
+});
+document.querySelector(".lang").addEventListener("keydown", (event) => {
+  if (event.key === 'Enter') {
+    if ("en" === localStorage.getItem("lang")) {
+      localStorage.setItem("lang", "fr");
+      window.open('./', '_self');
+      return;
+    } else {
+      localStorage.setItem("lang", "en");
+      window.open('./en.php', '_self');
+      return;
+    }
   }
 });
 document.addEventListener("DOMContentLoaded", () => {

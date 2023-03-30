@@ -1,3 +1,10 @@
+#----v23.3.7----#
+-Add note sorting
+-Improve accessibility
+-Improve security
+-Bug fixes
+-Minify JavaScript
+
 #----v23.3.6----#
 -English support
 -Improve PWA performance

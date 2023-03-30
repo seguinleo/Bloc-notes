@@ -45,7 +45,7 @@ session_start();
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
-      <span class="lang">
+      <span class="lang" tabindex="0">
         <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
       </span>
     </div>
@@ -60,7 +60,7 @@ session_start();
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.3.6</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.3.7</a>
       &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
@@ -105,7 +105,7 @@ session_start();
             <i class="fa-solid fa-xmark" tabindex="0"></i>
           </header>
           <div class="row">
-            <span class="lang linkp">
+            <span class="lang linkp" tabindex="0">
               <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
             </span>
           </div>
@@ -120,6 +120,14 @@ session_start();
                 <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Legal Notice / Privacy">Legal Notice / Privacy</a>
               </span>
             </p>
+          </div>
+          <div class="row rowTri">
+            <select id="tri" aria-label="tri">
+              <option value="Titre" selected>Sort notes by:</option>
+              <option value="Titre">Title</option>
+              <option value="Date de création">Creation date</option>
+              <option value="Date de modification">Modification date</option>
+            </select>
           </div>
           <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
             <div class="row">
@@ -235,9 +243,9 @@ session_start();
     </svg>
   </div>
   <?php if (isset($_SESSION["nom"])) { ?>
-  <script src="./assets/js/scriptConnect.js" defer></script>
+  <script src="./assets/js/scriptConnect.min.js" defer></script>
   <?php } else { ?>
-  <script src="./assets/js/script.js" defer></script>
+  <script src="./assets/js/script.min.js" defer></script>
   <?php } ?>
   <script src="./assets/js/showdown.min.js" defer></script>
 </body>

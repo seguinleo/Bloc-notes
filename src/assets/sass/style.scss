@@ -415,7 +415,7 @@ p.welcome {
 
 .svgPart {
   position: fixed;
-  width: 60%;
+  width: 40%;
   bottom: 0;
   z-index: -1;
 
@@ -716,6 +716,14 @@ select {
 
 .row {
   margin-bottom: 20px
+}
+
+.rowTri {
+  margin: 20px;
+
+  select {
+    width: 100%
+  }
 }
 
 .supprimerCompte {

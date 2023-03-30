@@ -1,26 +1,31 @@
 <?php
 session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"])) {
+if (!isset($_SESSION["nom"]) && !isset($_SESSION['userId'])) {
   header('HTTP/2.0 403 Forbidden');
+  exit();
 } else {
   require_once "config.php";
   require_once "functions.php";
+  $descriptionConnect = htmlspecialchars($_POST['filterDesc'], ENT_QUOTES);
+  $descriptionConnect = encrypt_data($descriptionConnect, $key);
+  if (strlen($descriptionConnect) >= 65535) {
+    header('HTTP/2.0 403 Forbidden');
+    exit();
+  }
   $noteId = htmlspecialchars($_POST['noteId'], ENT_QUOTES);
-  $title = htmlspecialchars($_POST['title'], ENT_QUOTES);
-  $couleur = htmlspecialchars($_POST['couleur'], ENT_QUOTES);
-  $filterDesc = htmlspecialchars($_POST['filterDesc'], ENT_QUOTES);
-  $filterDesc = encrypt_data($filterDesc, $key);
+  $titleConnect = htmlspecialchars($_POST['title'], ENT_QUOTES);
+  $couleurConnect = htmlspecialchars($_POST['couleur'], ENT_QUOTES);
   $dateNote = date('d/m/Y');
-  if ($noteId && $title && $filterDesc && ($couleur == "Noir" || $couleur == "Rouge" || $couleur == "Orange" || $couleur == "Jaune" || $couleur == "Vert" || $couleur == "Cyan" || $couleur == "Bleu" || $couleur == "Violet")) {
-    $query = $PDO->prepare("UPDATE `YOUR_TABLE` SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur WHERE id=:NoteId AND user=:CurrentUser");
+  if ($noteId && $titleConnect && $descriptionConnect && ($couleurConnect == "Noir" || $couleurConnect == "Rouge" || $couleurConnect == "Orange" || $couleurConnect == "Jaune" || $couleurConnect == "Vert" || $couleurConnect == "Cyan" || $couleurConnect == "Bleu" || $couleurConnect == "Violet")) {
+    $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur WHERE id=:NoteId AND user=:CurrentUser");
     $query->execute([
-      ':Title' => $title,
-      ':FilterDesc' => $filterDesc,
-      ':Couleur' => $couleur,
+      ':Title' => $titleConnect,
+      ':FilterDesc' => $descriptionConnect,
+      ':Couleur' => $couleurConnect,
       ':NoteId' => $noteId,
       ':DateNote' => $dateNote,
-      ':CurrentUser' => htmlspecialchars($_SESSION["nom"], ENT_QUOTES)
+      ':CurrentUser' => $_SESSION["nom"]
     ]);
     $query->closeCursor();
   }

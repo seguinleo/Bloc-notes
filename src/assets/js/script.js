@@ -133,13 +133,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     t = document.querySelector("#mdpCreer").value,
     o = document.querySelector("#mdpCreerValid").value;
   if (!e || !t || !o) {
-    if ("fr" === localStorage.getItem("lang")) {
-      alert("Un ou plusieurs champs sont vides...");
-      return;
-    } else {
-      alert("One or more fields are empty...");
-      return;
-    }
+    return;
   }
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     if ("fr" === localStorage.getItem("lang")) {
@@ -247,13 +241,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
   const e = document.querySelector("#nomConnect").value.trim(),
     t = document.querySelector("#mdpConnect").value;
   if (!e || !t) {
-    if ("fr" === localStorage.getItem("lang")) {
-      alert("Un ou plusieurs champs sont vides...");
-      return;
-    } else {
-      alert("One or more fields are empty...");
-      return;
-    }
+    return;
   }
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     if ("fr" === localStorage.getItem("lang")) {
@@ -315,7 +303,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
         }
       }
     })
-    .catch(error => {
+    .catch(() => {
       if ("fr" === localStorage.getItem("lang")) {
         alert("Une erreur est survenue...");
         return;
@@ -408,6 +396,19 @@ document.querySelector(".lang").addEventListener("click", () => {
     localStorage.setItem("lang", "en");
     window.open('./en.php', '_self');
     return;
+  }
+});
+document.querySelector(".lang").addEventListener("keydown", (event) => {
+  if (event.key === 'Enter') {
+    if ("en" === localStorage.getItem("lang")) {
+      localStorage.setItem("lang", "fr");
+      window.open('./', '_self');
+      return;
+    } else {
+      localStorage.setItem("lang", "en");
+      window.open('./en.php', '_self');
+      return;
+    }
   }
 });
 document.addEventListener("DOMContentLoaded", () => {
