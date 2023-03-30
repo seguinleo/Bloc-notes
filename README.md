@@ -3,11 +3,9 @@
 ![License](https://img.shields.io/github/license/PouletEnSlip/Bloc-notes)
 [![CodeQL](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql)
 
-> **Note** Coming soon: sorting with drag and drop, shared notes, and more!
-
 [![Icon](https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon48.png)](https://leoseguin.fr/projets/notes/)
 
-Bloc-notes is an open source and encrypted notebook website developed with PHP and JavaScript Ajax.
+Bloc-notes is an open source and encrypted notebook website developed with PHP and JavaScript.
 
 ## Table of contents
 - [Features](#features)
@@ -26,11 +24,11 @@ The user can also sign in to sync all notes between their devices or browsers (s
 Styles made with Sass. The website is fully responsible for mobile devices and UI/UX inspired by Material Design. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome).
 
 ## PWA
-The website is a PWA, the user can install it as an application with a Chromium-based browser. Service Worker has automatic update.
+This website is a PWA (Progressive Web App), the user can install it as an application with a Chromium-based browser. Service Worker has automatic update.
 
 ## Security and Privacy
 Passwords are hashed with bcrypt before being sent to the database. Once logged in, the user can change their password or delete their account. Security measures are in place against XSS, CSRF and SQL injections.
-No personal data is collected (GDPR).
+No personal data is collected, no one but the user can see the content of their notes, even the website creator (GDPR).
 
 ## Languages
 🇫🇷French, 🇬🇧English
