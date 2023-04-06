@@ -354,6 +354,10 @@ p.welcome {
   background: #282828
 }
 
+.note.Blanc {
+  background: #ffffff
+}
+
 .note.Rouge {
   background: #ffa1a1
 }
@@ -382,6 +386,7 @@ p.welcome {
   background: #c7a6ff
 }
 
+.note.Blanc,
 .note.Rouge,
 .note.Orange,
 .note.Jaune,
@@ -484,6 +489,7 @@ select {
   }
 }
 
+.note.Blanc,
 .note.Rouge,
 .note.Orange,
 .note.Jaune,
@@ -543,6 +549,10 @@ select {
   opacity: 1
 }
 
+.note.Blanc h1,
+.note.Blanc p,
+.note.Blanc span,
+.note.Blanc a,
 .note.Jaune h1,
 .note.Jaune p,
 .note.Jaune span,
@@ -582,6 +592,35 @@ select {
   }
 }
 
+.fullscreen {
+  position: fixed;
+  z-index: 3;
+  width: 80vw;
+  min-height: 80vh;
+  height: 80vh;
+  top: 10%;
+
+  .details {
+    min-height: 65vh;
+  }
+}
+
+.darken {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, .5);
+  backdrop-filter: blur(10px)
+}
+
+.darken.show {
+  display: block
+}
+
 .info {
   -webkit-user-select: none;
   user-select: none;
@@ -589,6 +628,7 @@ select {
   text-align: center;
 
   .tooltip {
+    cursor: pointer;
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted #8ab4f8
@@ -651,7 +691,8 @@ select {
   z-index: 2;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, .5)
+  background: rgba(0, 0, 0, .5);
+  backdrop-filter: blur(10px)
 }
 
 .connect-box .popup,
@@ -845,5 +886,9 @@ select {
   .popup .content {
     min-width: 94vw;
     max-width: 94vw;
+  }
+
+  .note .bottom-content i {
+    margin: 0;
   }
 }

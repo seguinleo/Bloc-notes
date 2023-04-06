@@ -1,8 +1,15 @@
+#----v23.4.1----#
+-Add fullscreen
+-Add white notes
+-Bug fixes
+-Change date format to GMT
+-Improve UI/UX
+
 #----v23.3.7----#
 -Add note sorting
+-Bug fixes
 -Improve accessibility
 -Improve security
--Bug fixes
 -Minify JavaScript
 
 #----v23.3.6----#

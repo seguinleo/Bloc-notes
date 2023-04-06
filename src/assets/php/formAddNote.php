@@ -15,9 +15,9 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   }
   $titleConnect = htmlspecialchars($_POST['titleConnect'], ENT_QUOTES);
   $couleurConnect = htmlspecialchars($_POST['couleurConnect'], ENT_QUOTES);
-  $dateNote = date('d/m/Y');
-  if ($titleConnect && $descriptionConnect && ($couleurConnect == "Noir" || $couleurConnect == "Rouge" || $couleurConnect == "Orange" || $couleurConnect == "Jaune" || $couleurConnect == "Vert" || $couleurConnect == "Cyan" || $couleurConnect == "Bleu" || $couleurConnect == "Violet")) {
-    $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user) VALUES (:TitleConnect,:DescriptionConnect,:DateNote,:CouleurConnect,:CurrentUser)");
+  $dateNote = $_POST['date'];
+  if ($titleConnect && $descriptionConnect && ($couleurConnect == "Noir" || $couleurConnect == "Blanc" || $couleurConnect == "Rouge" || $couleurConnect == "Orange" || $couleurConnect == "Jaune" || $couleurConnect == "Vert" || $couleurConnect == "Cyan" || $couleurConnect == "Bleu" || $couleurConnect == "Violet")) {
+    $query = $PDO->prepare("INSERT INTO `TABLE_NAME` (titre,content,dateNote,couleur,user) VALUES (:TitleConnect,:DescriptionConnect,:DateNote,:CouleurConnect,:CurrentUser)");
     $query->execute([
       ':TitleConnect' => $titleConnect,
       ':DescriptionConnect' => $descriptionConnect,

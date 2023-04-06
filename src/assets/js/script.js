@@ -14,7 +14,7 @@ const notesContainer = document.querySelector("main"),
 let isUpdate = false, updateId;
 function showNotes() {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
-    notes.forEach((e, t) => {
+  notes.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach((e, t) => {
       const v = e.couleur,
         f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
         o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
@@ -31,6 +31,7 @@ function showNotes() {
           extensions: [taskListEnablerExtension]
         });
       const noteDiv = document.createElement("div");
+      noteDiv.setAttribute("id", "note" + t);
       noteDiv.classList.add("note", v);
       const detailsDiv = document.createElement("div");
       detailsDiv.classList.add("details");
@@ -46,33 +47,48 @@ function showNotes() {
       bottomContentDiv.classList.add("bottom-content");
       const lastModificationIcon = document.createElement("i");
       lastModificationIcon.classList.add("fa-solid", "fa-calendar-days");
+      lastModificationIcon.setAttribute("title", "Date (GMT)");
       const dateSpan = document.createElement("span");
       dateSpan.textContent = e.date;
       const modifyIcon = document.createElement("i");
       modifyIcon.classList.add("fa-solid", "fa-pen");
-      modifyIcon.onclick = function () {
+      modifyIcon.onclick = () => {
         updateNote(t, f, o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />"), v);
       };
       const copyIcon = document.createElement("i");
       copyIcon.classList.add("fa-solid", "fa-clipboard");
-      copyIcon.onclick = function () {
+      copyIcon.onclick = () => {
         copy(o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />"));
       };
       const deleteIcon = document.createElement("i");
       deleteIcon.classList.add("fa-solid", "fa-trash-can");
-      deleteIcon.onclick = function () {
+      deleteIcon.onclick = () => {
         deleteNote(t);
+      };
+      const fullscreenIcon = document.createElement("i");
+      fullscreenIcon.classList.add("fa-solid", "fa-expand");
+      fullscreenIcon.onclick = () => {
+        toggleFullscreen(t);
       };
       bottomContentDiv.appendChild(lastModificationIcon);
       bottomContentDiv.appendChild(dateSpan);
       bottomContentDiv.appendChild(modifyIcon);
       bottomContentDiv.appendChild(copyIcon);
       bottomContentDiv.appendChild(deleteIcon);
+      bottomContentDiv.appendChild(fullscreenIcon);
       noteDiv.appendChild(bottomContentDiv);
       notesContainer.appendChild(noteDiv);
     }));
 }
+function toggleFullscreen(id) {
+  const note = document.querySelector('#note' + id);
+  const body = document.querySelector('.darken');
+  note.classList.toggle('fullscreen');
+  body.classList.toggle('show');
+}
 function updateNote(e, t, o, v) {
+  document.querySelectorAll('.note')[0].classList.remove("fullscreen");
+  document.querySelector('.darken').classList.remove("show");
   const s = o.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   updateId = e,
     isUpdate = true,
@@ -89,14 +105,16 @@ function deleteNote(e) {
   if ("fr" === localStorage.getItem("lang")) {
     if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
       notes.splice(e, 1),
-        localStorage.setItem("local_notes", JSON.stringify(notes)),
+        localStorage.setItem("local_notes", JSON.stringify(notes));
+        document.querySelector('.darken').classList.remove("show");
         showNotes();
         return;
     }
   } else {
     if (confirm("Do you really want to delete this note?")) {
       notes.splice(e, 1),
-        localStorage.setItem("local_notes", JSON.stringify(notes)),
+        localStorage.setItem("local_notes", JSON.stringify(notes));
+        document.querySelector('.darken').classList.remove("show");
         showNotes();
         return;
     }
@@ -336,7 +354,7 @@ document.querySelector("#submitNote").addEventListener("click", () => {
     couleur: v,
     title: e,
     description: t,
-    date: new Date().toLocaleDateString()
+    date: new Date().toISOString().slice(0, 19).replace('T', ' ')
   };
   if (isUpdate) {
     isUpdate = false;

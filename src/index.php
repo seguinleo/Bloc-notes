@@ -60,12 +60,13 @@ session_start();
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.3.7</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.1</a>
       &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
   </nav>
   <main>
+    <div class="darken"></div>
     <?php if (isset($_SESSION["nom"])) { ?>
     <div class="connect-popup-box">
       <div class="popup">
@@ -84,6 +85,7 @@ session_start();
             <div class="row">
               <select id="couleurConnect" aria-label="couleur">
                 <option value="Noir">Noir</option>
+                <option value="Blanc">Blanc</option>
                 <option value="Rouge">Rouge</option>
                 <option value="Orange">Orange</option>
                 <option value="Jaune">Jaune</option>
@@ -169,6 +171,7 @@ session_start();
             <div class="row">
               <select id="couleur" aria-label="couleur">
                 <option value="Noir">Noir</option>
+                <option value="Blanc">Blanc</option>
                 <option value="Rouge">Rouge</option>
                 <option value="Orange">Orange</option>
                 <option value="Jaune">Jaune</option>

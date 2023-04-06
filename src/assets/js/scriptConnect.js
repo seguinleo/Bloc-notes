@@ -36,13 +36,21 @@ function showNotesConnect() {
             smoothLivePreview: true,
             extensions: [taskListEnablerExtension]
           }),
-          s = `<div class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i></div></div>`;
+          s = `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>`;
         notesContainer.insertAdjacentHTML("beforeend", s);
       });
       return;
     });
 }
+function toggleFullscreen(id) {
+  const note = document.querySelector('#note' + id);
+  const body = document.querySelector('.darken');
+  note.classList.toggle('fullscreen');
+  body.classList.toggle('show');
+}
 function updateNoteConnect(id, title, descFilter, couleur) {
+  document.querySelectorAll('.note')[0].classList.remove("fullscreen");
+  document.querySelector('.darken').classList.remove("show");
   isUpdate = true,
     document.querySelector(".iconConnect").click(),
     document.querySelector("#idNoteInput").value = id,
@@ -70,6 +78,7 @@ function deleteNoteConnect(e) {
             document.querySelectorAll(".note").forEach(function (note) {
               note.remove();
             });
+            document.querySelector('.darken').classList.remove("show");
             showNotesConnect();
             return;
           } else {
@@ -94,6 +103,7 @@ function deleteNoteConnect(e) {
               note.remove();
             });
             showNotesConnect();
+            document.querySelector('.darken').classList.remove("show");
             return;
           } else {
             alert("An error occurred...");
@@ -237,12 +247,16 @@ document.querySelector("#tri").addEventListener("change", () => {
     })
 });
 document.querySelector("#submitNoteConnect").addEventListener("click", () => {
-  const e = encodeURIComponent(document.querySelector("#titleConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-    t = encodeURIComponent(document.querySelector("#descConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-    v = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+  const titreBrut = document.querySelector("#titleConnect").value,
+    contentBrut = document.querySelector("#descConnect").value,
+    titre = encodeURIComponent(titreBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    content = encodeURIComponent(contentBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    couleur = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    date = new Date().toISOString().slice(0, 19).replace('T', ' '),
     url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
-    data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${e}&filterDesc=${t}&couleur=${v}` : `titleConnect=${e}&descriptionConnect=${t}&couleurConnect=${v}`;
-  if (!e || e.length > 2000) {
+    data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}`;
+    console.log(date);
+  if (!titreBrut || contentBrut.length > 2000) {
     return;
   }
   fetch(url, {
