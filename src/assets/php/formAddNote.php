@@ -5,8 +5,7 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   header('HTTP/2.0 403 Forbidden');
   exit();
 } else {
-  require_once "config.php";
-  require_once "functions.php";
+  require_once "./functions.php";
   $descriptionConnect = htmlspecialchars($_POST['descriptionConnect'], ENT_QUOTES);
   $descriptionConnect = encrypt_data($descriptionConnect, $key);
   if (strlen($descriptionConnect) >= 65535) {

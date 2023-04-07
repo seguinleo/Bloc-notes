@@ -1,9 +1,7 @@
-const url = window.location.href;
-if (url == "https://leoseguin.fr/projets/notes/en.php" && localStorage.getItem("lang") == null) { localStorage.setItem("lang", "en"); }
-if (url == "https://leoseguin.fr/projets/notes/" && localStorage.getItem("lang") == null) { localStorage.setItem("lang", "fr"); }
-if (url == "https://leoseguin.fr/projets/notes/en.php" && localStorage.getItem("lang") == "fr") { window.open("./", "_self"); }
-if (url == "https://leoseguin.fr/projets/notes/" && localStorage.getItem("lang") == "en") { window.open("./en.php", "_self"); }
-const notesContainer = document.querySelector("main"),
+let isUpdate = false, updateId;
+const url = window.location.href,
+  lang = localStorage.getItem("lang"),
+  notesContainer = document.querySelector("main"),
   popupBox = document.querySelector(".popup-box"),
   connectBox = document.querySelector(".connect-box"),
   creerBox = document.querySelector(".creer-box"),
@@ -11,20 +9,17 @@ const notesContainer = document.querySelector("main"),
   titleTag = popupBox.querySelector("#title"),
   descTag = popupBox.querySelector("#content"),
   notes = JSON.parse(localStorage.getItem("local_notes") || "[]");
-let isUpdate = false, updateId;
-function showNotes() {
+if (url == "https://leoseguin.fr/projets/notes/en.php" && lang == null) { localStorage.setItem("lang", "en"); }
+if (url == "https://leoseguin.fr/projets/notes/" && lang == null) { localStorage.setItem("lang", "fr"); }
+if (url == "https://leoseguin.fr/projets/notes/en.php" && lang == "fr") { window.open("./", "_self"); }
+if (url == "https://leoseguin.fr/projets/notes/" && lang == "en") { window.open("./en.php", "_self"); }
+
+const showNotes = async () => {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
-  notes.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach((e, t) => {
+    notes.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((e, t) => {
       const v = e.couleur,
         f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
         o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-        taskListEnablerExtension = () => {
-          return [{
-            type: 'output',
-            regex: /<input type="checkbox"?/g,
-            replace: '<input type="checkbox"'
-          }];
-        },
         converter = new showdown.Converter({
           tasklists: true,
           smoothLivePreview: true,
@@ -79,13 +74,15 @@ function showNotes() {
       noteDiv.appendChild(bottomContentDiv);
       notesContainer.appendChild(noteDiv);
     }));
-}
+};
+
 function toggleFullscreen(id) {
-  const note = document.querySelector('#note' + id);
-  const body = document.querySelector('.darken');
+  const note = document.querySelector('#note' + id),
+  body = document.querySelector('.darken');
   note.classList.toggle('fullscreen');
   body.classList.toggle('show');
 }
+
 function updateNote(e, t, o, v) {
   const notes = document.querySelectorAll('.note');
   notes.forEach(note => {
@@ -100,34 +97,45 @@ function updateNote(e, t, o, v) {
     titleTag.value = t,
     descTag.value = s;
 }
+
+function taskListEnablerExtension() {
+  return [{
+    type: 'output',
+    regex: /<input type="checkbox"?/g,
+    replace: '<input type="checkbox"'
+  }];
+}
+
 function copy(e) {
   const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   navigator.clipboard.writeText(copyText);
   const notification = document.getElementById("copyNotification");
   notification.classList.add("show");
-  setTimeout(function() {
+  setTimeout(function () {
     notification.classList.remove("show");
   }, 2000);
 }
+
 function deleteNote(e) {
   if ("fr" === localStorage.getItem("lang")) {
     if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
       notes.splice(e, 1),
         localStorage.setItem("local_notes", JSON.stringify(notes));
-        document.querySelector('.darken').classList.remove("show");
-        showNotes();
-        return;
+      document.querySelector('.darken').classList.remove("show");
+      showNotes();
+      return;
     }
   } else {
     if (confirm("Do you really want to delete this note?")) {
       notes.splice(e, 1),
         localStorage.setItem("local_notes", JSON.stringify(notes));
-        document.querySelector('.darken').classList.remove("show");
-        showNotes();
-        return;
+      document.querySelector('.darken').classList.remove("show");
+      showNotes();
+      return;
     }
   }
 }
+
 document.querySelectorAll(".seconnecter").forEach((element) => {
   element.addEventListener("click", () => {
     connectBox.classList.add("show");
@@ -140,6 +148,7 @@ document.querySelectorAll(".seconnecter").forEach((element) => {
     }
   });
 });
+
 document.querySelectorAll(".creercompte").forEach((element) => {
   element.addEventListener("click", () => {
     connectBox.classList.remove("show");
@@ -154,6 +163,7 @@ document.querySelectorAll(".creercompte").forEach((element) => {
     }
   });
 });
+
 document.querySelector("#submitCreer").addEventListener("click", async () => {
   const e = document.querySelector("#nomCreer").value.trim(),
     t = document.querySelector("#mdpCreer").value,
@@ -227,7 +237,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
   const nomCreer = encodeURIComponent(e),
     mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch("assets/php/formCreer.php", {
+    const response = await fetch("./assets/php/formCreer.php", {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -263,7 +273,8 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
 });
-document.querySelector("#submitSeConnecter").addEventListener("click", () => {
+
+document.querySelector("#submitSeConnecter").addEventListener("click", async () => {
   const e = document.querySelector("#nomConnect").value.trim(),
     t = document.querySelector("#mdpConnect").value;
   if (!e || !t) {
@@ -280,7 +291,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
   }
   const nomConnect = encodeURIComponent(e),
     mdpConnect = encodeURIComponent(t);
-  fetch("assets/php/formConnect.php", {
+  fetch("./assets/php/formConnect.php", {
     method: "POST",
     credentials: "same-origin",
     headers: {
@@ -329,16 +340,8 @@ document.querySelector("#submitSeConnecter").addEventListener("click", () => {
         }
       }
     })
-    .catch(() => {
-      if ("fr" === localStorage.getItem("lang")) {
-        alert("Une erreur est survenue...");
-        return;
-      } else {
-        alert("An error occurred...");
-        return;
-      }
-    });
 });
+
 document.querySelectorAll(".icon").forEach((element) => {
   element.addEventListener("click", () => {
     popupBox.classList.add("show");
@@ -351,6 +354,7 @@ document.querySelectorAll(".icon").forEach((element) => {
     }
   });
 });
+
 document.querySelector("#submitNote").addEventListener("click", () => {
   const v = couleurTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
     e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
@@ -375,11 +379,13 @@ document.querySelector("#submitNote").addEventListener("click", () => {
   showNotes();
   popupBox.classList.remove("show");
 });
+
 document.querySelectorAll("form").forEach((element) => {
   element.addEventListener("submit", (event) => {
     event.preventDefault();
   });
 });
+
 document.querySelectorAll("header i").forEach((element) => {
   element.addEventListener("click", () => {
     isUpdate = false;
@@ -400,6 +406,7 @@ document.querySelectorAll("header i").forEach((element) => {
     }
   });
 });
+
 document.querySelector("#search-input").addEventListener("keyup", () => {
   const e = document.querySelector("#search-input").value.trim().toLowerCase();
   document.querySelectorAll(".note").forEach((element) => {
@@ -411,10 +418,12 @@ document.querySelector("#search-input").addEventListener("keyup", () => {
     }
   });
 });
+
 document.addEventListener("keydown", e => {
   e.ctrlKey && "k" === e.key && (e.preventDefault(),
     document.querySelector('#search-input').focus())
 });
+
 document.querySelector(".lang").addEventListener("click", () => {
   if ("en" === localStorage.getItem("lang")) {
     localStorage.setItem("lang", "fr");
@@ -426,6 +435,7 @@ document.querySelector(".lang").addEventListener("click", () => {
     return;
   }
 });
+
 document.querySelector(".lang").addEventListener("keydown", (event) => {
   if (event.key === 'Enter') {
     if ("en" === localStorage.getItem("lang")) {
@@ -439,6 +449,7 @@ document.querySelector(".lang").addEventListener("keydown", (event) => {
     }
   }
 });
+
 document.addEventListener("DOMContentLoaded", () => {
   showNotes();
   if ("serviceWorker" in navigator) {

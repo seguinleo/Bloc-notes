@@ -1,6 +1,6 @@
 <?php
-require_once('config.php');
-$key = `YOUR_KEY`;
+require_once('./config.php');
+$key = YOUR_KEY;
 function encrypt_data($plaintext, $key) {
   $key = base64_decode($key);
   $ivlen = openssl_cipher_iv_length($cipher = "AES-256-GCM");

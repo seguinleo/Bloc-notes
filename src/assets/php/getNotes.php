@@ -1,32 +1,31 @@
 <?php
 session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
+if (!isset($_SESSION["nom"], $_SESSION['userId'], $_SESSION['tri'])) {
   header('HTTP/2.0 403 Forbidden');
   exit();
 } else {
-  require_once "config.php";
-  require_once "functions.php";
+  require "./functions.php";
   if ($_SESSION['tri'] == "Date de création") {
-    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY id DESC, titre");
+    $orderBy = "ORDER BY id DESC, titre";
   } else if ($_SESSION['tri'] == "Date de modification") {
-    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY dateNote DESC, id DESC, titre");
+    $orderBy = "ORDER BY dateNote DESC, id DESC, titre";
   } else {
-    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY titre");
+    $orderBy = "ORDER BY titre";
   }
+  $query = $PDO->prepare("SELECT id, titre, couleur, content, dateNote, hiddenNote FROM `YOUR_TABLE` WHERE user=:CurrentUser $orderBy LIMIT 150");
   $query->execute([':CurrentUser' => $_SESSION["nom"]]);
-  $items = array();
+  $items = [];
   while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $desc = decrypt_data($row['content'], $key);
-    $item = array(
+    $items[] = [
       'id' => $row['id'],
       'title' => $row['titre'],
       'couleur' => $row['couleur'],
       'desc' => $desc,
       'date' => $row['dateNote'],
       'hidden' => $row['hiddenNote']
-    );
-    array_push($items, $item);
+    ];
   }
   echo json_encode($items);
   $query->closeCursor();
