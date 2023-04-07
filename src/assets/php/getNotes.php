@@ -1,18 +1,18 @@
 <?php
 session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"]) && !isset($_SESSION['userId'])) {
+if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   header('HTTP/2.0 403 Forbidden');
   exit();
 } else {
   require_once "config.php";
   require_once "functions.php";
-  if ($_SESSION['tri_secure'] == "Date de création") {
-    $query = $PDO->prepare("SELECT * FROM notes WHERE user=:CurrentUser ORDER BY id DESC, titre");
-  } else if ($_SESSION['tri_secure'] == "Date de modification") {
-    $query = $PDO->prepare("SELECT * FROM notes WHERE user=:CurrentUser ORDER BY dateNote DESC, id DESC, titre");
+  if ($_SESSION['tri'] == "Date de création") {
+    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY id DESC, titre");
+  } else if ($_SESSION['tri'] == "Date de modification") {
+    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY dateNote DESC, id DESC, titre");
   } else {
-    $query = $PDO->prepare("SELECT * FROM notes WHERE user=:CurrentUser ORDER BY titre");
+    $query = $PDO->prepare("SELECT * FROM `YOUR_TABLE` WHERE user=:CurrentUser ORDER BY titre");
   }
   $query->execute([':CurrentUser' => $_SESSION["nom"]]);
   $items = array();
@@ -23,7 +23,8 @@ if (!isset($_SESSION["nom"]) && !isset($_SESSION['userId'])) {
       'title' => $row['titre'],
       'couleur' => $row['couleur'],
       'desc' => $desc,
-      'date' => $row['dateNote']
+      'date' => $row['dateNote'],
+      'hidden' => $row['hiddenNote']
     );
     array_push($items, $item);
   }

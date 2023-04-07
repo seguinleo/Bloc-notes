@@ -60,13 +60,14 @@ session_start();
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.1</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.2</a>
       &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
   </nav>
   <main>
     <div class="darken"></div>
+    <div id="copyNotification">Note copied!</div>
     <?php if (isset($_SESSION["nom"])) { ?>
     <div class="connect-popup-box">
       <div class="popup">
@@ -94,6 +95,13 @@ session_start();
                 <option value="Bleu">Blue</option>
                 <option value="Violet">Purple</option>
               </select>
+            </div>
+            Hidden note
+            <div class="row">
+              <label class="switch">
+                <input type="checkbox" id="checkHidden" aria-label="Hidden note">
+                <span class="slider round"></span>
+              </label>
             </div>
             <button id="submitNoteConnect" type="submit" aria-label="Save note">Save note <i class="fa-solid fa-cloud"></i></button>
           </form>

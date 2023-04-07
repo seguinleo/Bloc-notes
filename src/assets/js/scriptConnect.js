@@ -21,7 +21,7 @@ function showNotesConnect() {
     .then(response => response.json())
     .then(data => {
       data.forEach(row => {
-        const { id, title, couleur, desc, date } = row,
+        const { id, title, couleur, desc, date, hidden } = row,
           titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
           descFilter = desc.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
           taskListEnablerExtension = () => {
@@ -35,8 +35,13 @@ function showNotesConnect() {
             tasklists: true,
             smoothLivePreview: true,
             extensions: [taskListEnablerExtension]
-          }),
-          s = `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>`;
+          });
+        let s;
+        if (hidden == 0) {
+          s = `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>`;
+        } else {
+          s = `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>******</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>`;
+        }
         notesContainer.insertAdjacentHTML("beforeend", s);
       });
       return;
@@ -48,8 +53,11 @@ function toggleFullscreen(id) {
   note.classList.toggle('fullscreen');
   body.classList.toggle('show');
 }
-function updateNoteConnect(id, title, descFilter, couleur) {
-  document.querySelectorAll('.note')[0].classList.remove("fullscreen");
+function updateNoteConnect(id, title, descFilter, couleur, hidden) {
+  const notes = document.querySelectorAll('.note');
+  notes.forEach(note => {
+    note.classList.remove('fullscreen');
+  });
   document.querySelector('.darken').classList.remove("show");
   isUpdate = true,
     document.querySelector(".iconConnect").click(),
@@ -57,10 +65,20 @@ function updateNoteConnect(id, title, descFilter, couleur) {
     couleurTagConnect.value = couleur,
     titleTagConnect.value = title,
     descTagConnect.value = descFilter.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+  if (hidden == 0) {
+    document.getElementById("checkHidden").checked = false;
+  } else {
+    document.getElementById("checkHidden").checked = true;
+  }
 }
 function copy(e) {
   const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   navigator.clipboard.writeText(copyText);
+  const notification = document.getElementById("copyNotification");
+  notification.classList.add("show");
+  setTimeout(function () {
+    notification.classList.remove("show");
+  }, 2000);
 }
 function deleteNoteConnect(e) {
   if ("fr" === localStorage.getItem("lang")) {
@@ -75,7 +93,7 @@ function deleteNoteConnect(e) {
       })
         .then(response => {
           if (response.ok) {
-            document.querySelectorAll(".note").forEach(function (note) {
+            document.querySelectorAll(".note").forEach((note) => {
               note.remove();
             });
             document.querySelector('.darken').classList.remove("show");
@@ -99,7 +117,7 @@ function deleteNoteConnect(e) {
       })
         .then(response => {
           if (response.ok) {
-            document.querySelectorAll(".note").forEach(function (note) {
+            document.querySelectorAll(".note").forEach((note) => {
               note.remove();
             });
             showNotesConnect();
@@ -235,7 +253,7 @@ document.querySelector("#tri").addEventListener("change", () => {
   })
     .then(response => {
       if (response.ok) {
-        document.querySelectorAll(".note").forEach(function (note) {
+        document.querySelectorAll(".note").forEach((note) => {
           note.remove();
         });
         showNotesConnect();
@@ -252,10 +270,17 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
     titre = encodeURIComponent(titreBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
     content = encodeURIComponent(contentBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
     couleur = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-    date = new Date().toISOString().slice(0, 19).replace('T', ' '),
-    url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
-    data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}`;
-    console.log(date);
+    date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const checkBox = document.getElementById("checkHidden");
+  let hidden;
+  if (checkBox.checked) {
+    hidden = 1;
+  } else {
+    hidden = 0;
+  }
+  const url = isUpdate ? "assets/php/updateNote.php" : "assets/php/formAddNote.php",
+    data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}`;
+  console.log(date);
   if (!titreBrut || contentBrut.length > 2000) {
     return;
   }
@@ -269,7 +294,7 @@ document.querySelector("#submitNoteConnect").addEventListener("click", () => {
   })
     .then(response => {
       if (response.status === 200) {
-        document.querySelectorAll(".note").forEach(function (note) {
+        document.querySelectorAll(".note").forEach((note) => {
           note.remove();
         });
         showNotesConnect();
@@ -395,6 +420,7 @@ document.querySelectorAll("header i").forEach((element) => {
     document.querySelectorAll("form").forEach(form => form.reset());
     popupBoxConnect.classList.remove("show");
     popupBoxGestion.classList.remove("show");
+    document.querySelector('.darken').classList.remove("show");
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
@@ -402,6 +428,7 @@ document.querySelectorAll("header i").forEach((element) => {
       document.querySelectorAll("form").forEach(form => form.reset());
       popupBoxConnect.classList.remove("show");
       popupBoxGestion.classList.remove("show");
+      document.querySelector('.darken').classList.remove("show");
     }
   });
 });

@@ -17,15 +17,17 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   $titleConnect = htmlspecialchars($_POST['title'], ENT_QUOTES);
   $couleurConnect = htmlspecialchars($_POST['couleur'], ENT_QUOTES);
   $dateNote = $_POST['date'];
+  $hidden = $_POST['hidden'];
   if ($noteId && $titleConnect && $descriptionConnect && ($couleurConnect == "Noir" || $couleurConnect == "Blanc" || $couleurConnect == "Rouge" || $couleurConnect == "Orange" || $couleurConnect == "Jaune" || $couleurConnect == "Vert" || $couleurConnect == "Cyan" || $couleurConnect == "Bleu" || $couleurConnect == "Violet")) {
-    $query = $PDO->prepare("UPDATE `TABLE_NAME` SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur WHERE id=:NoteId AND user=:CurrentUser");
+    $query = $PDO->prepare("UPDATE `YOUR_TABLE` SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:CurrentUser");
     $query->execute([
       ':Title' => $titleConnect,
       ':FilterDesc' => $descriptionConnect,
       ':Couleur' => $couleurConnect,
       ':NoteId' => $noteId,
       ':DateNote' => $dateNote,
-      ':CurrentUser' => $_SESSION["nom"]
+      ':CurrentUser' => $_SESSION["nom"],
+      ':HiddenNote' => $hidden
     ]);
     $query->closeCursor();
   }

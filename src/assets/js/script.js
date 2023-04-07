@@ -87,7 +87,10 @@ function toggleFullscreen(id) {
   body.classList.toggle('show');
 }
 function updateNote(e, t, o, v) {
-  document.querySelectorAll('.note')[0].classList.remove("fullscreen");
+  const notes = document.querySelectorAll('.note');
+  notes.forEach(note => {
+    note.classList.remove('fullscreen');
+  });
   document.querySelector('.darken').classList.remove("show");
   const s = o.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   updateId = e,
@@ -100,6 +103,11 @@ function updateNote(e, t, o, v) {
 function copy(e) {
   const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
   navigator.clipboard.writeText(copyText);
+  const notification = document.getElementById("copyNotification");
+  notification.classList.add("show");
+  setTimeout(function() {
+    notification.classList.remove("show");
+  }, 2000);
 }
 function deleteNote(e) {
   if ("fr" === localStorage.getItem("lang")) {
@@ -379,6 +387,7 @@ document.querySelectorAll("header i").forEach((element) => {
     popupBox.classList.remove("show");
     connectBox.classList.remove("show");
     creerBox.classList.remove("show");
+    document.querySelector('.darken').classList.remove("show");
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
@@ -387,6 +396,7 @@ document.querySelectorAll("header i").forEach((element) => {
       popupBox.classList.remove("show");
       connectBox.classList.remove("show");
       creerBox.classList.remove("show");
+      document.querySelector('.darken').classList.remove("show");
     }
   });
 });

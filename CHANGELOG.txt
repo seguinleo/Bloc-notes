@@ -1,3 +1,7 @@
+#----v23.4.2----#
+-Add hidden notes
+-Bug fixes
+
 #----v23.4.1----#
 -Add fullscreen
 -Add white notes
