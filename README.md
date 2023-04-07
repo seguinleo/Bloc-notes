@@ -5,7 +5,7 @@
 
 [![Icon](https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon48.png)](https://leoseguin.fr/projets/notes/)
 
-Bloc-notes is a free and open source and encrypted notebook website developed with PHP and JavaScript.
+Bloc-notes is a free, open source and encrypted notebook website developed with PHP and JavaScript.
 
 ## Table of contents
 - [Why?](#why)
