@@ -1,7 +1,7 @@
 <?php
 session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"]) || !isset($_SESSION["nom"])) {
+if (!isset($_SESSION["nom"]) || !isset($_SESSION["userId"])) {
   header('HTTP/2.0 403 Forbidden');
   exit();
 } else {
