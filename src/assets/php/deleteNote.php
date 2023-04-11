@@ -8,7 +8,7 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   require_once "./config.php";
   $noteId = htmlspecialchars($_POST['noteId'], ENT_QUOTES);
   if ($noteId) {
-    $query = $PDO->prepare("DELETE FROM `YOUR_TABLE` WHERE id=:NoteId AND user=:CurrentUser");
+    $query = $PDO->prepare("DELETE FROM notes WHERE id=:NoteId AND user=:CurrentUser");
     $query->execute([':NoteId' => $noteId, ':CurrentUser' => $_SESSION["nom"]]);
     $query->closeCursor();
   }

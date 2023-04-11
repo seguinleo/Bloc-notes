@@ -8,7 +8,7 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   require_once "./config.php";
   $tri = htmlspecialchars($_POST['tri'], ENT_QUOTES);
   if ($tri == "Titre" || $tri == "Date de création" || $tri == "Date de modification") {
-    $query = $PDO->prepare("UPDATE `YOUR_TABLE` SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
+    $query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
     $query->execute([
       ':Tri' => $tri,
       ':CurrentUser' => $_SESSION["nom"],

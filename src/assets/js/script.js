@@ -243,7 +243,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: "nomCreer=" + nomCreer + "&mdpCreer=" + mdpCreer
+      body: "nomCreer=" + nomCreer + "&mdpCreer=" + mdpCreer + "&csrf_token_creer=" + document.getElementById("csrf_token_creer").value
     });
     if (response.ok) {
       if ("fr" === localStorage.getItem("lang")) {
@@ -297,7 +297,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: "nomConnect=" + nomConnect + "&mdpConnect=" + mdpConnect
+    body: "nomConnect=" + nomConnect + "&mdpConnect=" + mdpConnect + "&csrf_token_connect=" + document.getElementById("csrf_token_connect").value
   })
     .then(response => {
       if (response.status === 200) {
@@ -356,10 +356,10 @@ document.querySelectorAll(".icon").forEach((element) => {
 });
 
 document.querySelector("#submitNote").addEventListener("click", () => {
-  const v = couleurTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
+  const v = couleurTag.value,
     e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
     t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
-  if (!e) {
+  if (!e || !t || t.length > 2000) {
     return;
   }
   const c = {

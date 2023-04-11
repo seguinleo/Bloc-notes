@@ -1,13 +1,15 @@
 <?php
 session_set_cookie_params(array(
-  'path' => '/projets/notes/',
+  'path' => './projets/notes/',
   'lifetime' => 460800,
   'secure' => true,
   'httponly' => true,
-  'samesite' => 'Strict'
+  'samesite' => 'Lax'
 ));
 session_name('__Secure-PHPSESSID');
 session_start();
+$_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
+$_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +62,7 @@ session_start();
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.2</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.3</a>
       &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
@@ -81,7 +83,7 @@ session_start();
               <input id="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title">
             </div>
             <div class="row">
-              <textarea id="descConnect" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
+              <textarea id="descConnect" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
               <select id="couleurConnect" aria-label="color">
@@ -174,7 +176,7 @@ session_start();
               <input id="title" placeholder="Title" type="text" maxlength="30" aria-label="title">
             </div>
             <div class="row">
-              <textarea id="content" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
+              <textarea id="content" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
               <select id="couleur" aria-label="color">
@@ -204,6 +206,7 @@ session_start();
             <span class="creercompte linkp" tabindex="0">No account yet?</span>
           </p>
           <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" id="csrf_token_connect" value="<?php echo $_SESSION['csrf_token_connect']; ?>">
             <div class="row">
               <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="username">
             </div>
@@ -227,6 +230,7 @@ session_start();
             </span>
           </p>
           <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" id="csrf_token_creer" value="<?php echo $_SESSION['csrf_token_creer']; ?>">
             <div class="row">
               <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="username">
             </div>

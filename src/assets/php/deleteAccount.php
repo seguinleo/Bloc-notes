@@ -6,7 +6,7 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   exit();
 } else {
   require_once "./config.php";
-  $query = $PDO->prepare("DELETE FROM `YOUR_TABLE` WHERE nom=:CurrentUser AND id=:UserId");
+  $query = $PDO->prepare("DELETE FROM users WHERE nom=:CurrentUser AND id=:UserId");
   $query->execute([
     ':CurrentUser' => $_SESSION["nom"],
     ':UserId' => $_SESSION["userId"]

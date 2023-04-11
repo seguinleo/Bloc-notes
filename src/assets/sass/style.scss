@@ -141,15 +141,6 @@ code {
   }
 }
 
-input[type="checkbox"] {
-  max-width: 1rem;
-  vertical-align: middle;
-
-  &:focus {
-    outline: none
-  }
-}
-
 li {
   margin: 10px 5px 10px -14px
 }
@@ -319,7 +310,7 @@ p.welcome {
   flex-direction: column;
   justify-content: space-between;
   border-radius: 1rem;
-  clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%, 0 30px);
+  clip-path: polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px);
   transition: clip-path .5s;
   width: 400px;
   max-height: 460px;
@@ -336,8 +327,8 @@ p.welcome {
     content: '';
     top: 0;
     left: 0;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border-radius: 0 0 1rem;
     transition: transform .4s
   }
@@ -631,6 +622,7 @@ select {
   height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, .5);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px)
 }
 
@@ -709,6 +701,7 @@ select {
   height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, .5);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px)
 }
 
@@ -806,18 +799,32 @@ select {
   transition: .2s
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background: #8ab4f8
 }
 
-input:focus + .slider {
+input:focus+.slider {
   box-shadow: 0 0 1px #8ab4f8
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px)
+}
+
+.switch {
+  position: relative;
+  margin-top: 8px;
+  display: inline-block;
+  width: 60px;
+  height: 2rem;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0
+  }
 }
 
 .slider.round {
@@ -826,6 +833,28 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%
+}
+
+.check {
+  position: relative;
+  margin-left: -40px;
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+  opacity: 0;
+}
+
+.path1 {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+}
+
+.check:checked+label svg g path {
+  stroke-dashoffset: 0;
+}
+
+.label {
+  vertical-align: middle;
 }
 
 .supprimerCompte {
@@ -872,8 +901,8 @@ input:checked + .slider:before {
 
   nav {
     position: relative;
-    margin: 1rem;
-    padding: 1rem;
+    margin: 10px;
+    padding: 10px;
     border-radius: 1rem;
 
     div {
@@ -929,12 +958,12 @@ input:checked + .slider:before {
   }
 
   main {
-    margin-top: 1rem;
-    padding: 0 1rem;
-    gap: 1rem;
+    margin-top: 10px;
+    padding: 0 10px;
+    gap: 10px;
 
     .info {
-      margin: 1rem 0
+      margin: 10px 0
     }
   }
 
@@ -947,50 +976,56 @@ input:checked + .slider:before {
   }
 
   .note {
-    width: 95vw
+    width: 98vw;
+    max-height: 300px;
+
+    .details {
+      overflow-y: hidden;
+    }
   }
 
   .fullscreen {
-    min-height: 85vh;
-    top: 5%;
+    min-height: 90vh;
+    top: 1rem;
 
     .details {
-      min-height: 75vh
+      min-height: 75vh;
+      overflow-y: auto;
     }
+  }
+
+  .content form {
+    margin: 10px
   }
 }
 
 @media(max-width: 550px) {
+
+  textarea {
+    height: 30vh
+  }
 
   .connect-box .popup,
   .connect-popup-box .popup,
   .creer-box .popup,
   .gestion-popup-box .popup,
   .popup-box .popup {
-    min-width: 94vw;
-    max-width: 94vw
+    min-width: 98vw;
+    max-width: 98vw
   }
 
   .popup .content {
-    min-width: 94vw;
-    max-width: 94vw
+    min-width: 98vw;
+    max-width: 98vw
   }
 
-  .note .bottom-content i {
-    margin: 0
-  }
-}
+  .note .bottom-content {
+    span {
+      font-size: .8rem;
+    }
 
-.switch {
-  position: relative;
-  margin-top: 8px;
-  display: inline-block;
-  width: 60px;
-  height: 2rem;
-
-  input { 
-    opacity: 0;
-    width: 0;
-    height: 0
+    i {
+      margin: 0
+    }
   }
 }

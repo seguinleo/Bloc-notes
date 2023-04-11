@@ -27,8 +27,9 @@ const showNotesConnect = async () => {
       extensions: [taskListEnablerExtension]
     });
   const notesHtml = data.map((row) => {
-    const { id, title, couleur, desc, date, hidden } = row,
-      titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+    let { id, title, couleur, desc, date, hidden } = row;
+    desc == false ? desc = "" : desc = desc;
+    const titleFilter = title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
       descFilter = desc.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
       s = hidden === 0 ? `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>${converter.makeHtml(descFilter).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" class="note ${couleur}"><div class="details"><p class="title">${titleFilter}</p><span>******</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" onclick="updateNoteConnect(${id},'${titleFilter}','${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" onclick="copy('${descFilter.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />")}')"></i><i class="fa-solid fa-trash-can" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" onclick="toggleFullscreen(${id})"></i></div></div>`;
     return s;
@@ -295,10 +296,13 @@ document.querySelector("#tri").addEventListener("change", async () => {
 
 document.querySelector("#submitNoteConnect").addEventListener("click", async () => {
   const titreBrut = document.querySelector("#titleConnect").value,
-    contentBrut = document.querySelector("#descConnect").value,
-    titre = encodeURIComponent(titreBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    contentBrut = document.querySelector("#descConnect").value;
+  if (!titreBrut || !contentBrut || contentBrut.length > 2000) {
+    return;
+  }
+  const titre = encodeURIComponent(titreBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
     content = encodeURIComponent(contentBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
-    couleur = encodeURIComponent(document.querySelector("#couleurConnect").value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/")),
+    couleur = document.querySelector("#couleurConnect").value,
     date = new Date().toISOString().slice(0, 19).replace('T', ' '),
     checkBox = document.getElementById("checkHidden");
   let hidden;
@@ -309,9 +313,6 @@ document.querySelector("#submitNoteConnect").addEventListener("click", async () 
   }
   const url = isUpdate ? "./assets/php/updateNote.php" : "./assets/php/formAddNote.php",
     data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}`;
-  if (!titreBrut || contentBrut.length > 2000) {
-    return;
-  }
   fetch(url, {
     method: "POST",
     credentials: "same-origin",
