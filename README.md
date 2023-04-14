@@ -22,16 +22,16 @@ So I decided to create my own notebook that respects users' privacy and is end-t
 
 ## Features
 The user can save and edit notes locally in JSON, change notes color, copy notes and use Markdown to create titles, lists, links, images and checkboxes thanks to [Showdownjs](https://github.com/showdownjs/showdown). See the Markdown [guide](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown).
-The user can also sign in to sync all notes between their devices or browsers (supports Windows, macOS, Android, iOS, Chromium, Firefox and Safari) and encrypt content with ``AES-256-GCM`` in a SQL database. The user can also hide his notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
+The user can also sign in to sync all notes between their devices or browsers (supports Windows, macOS, Android, iOS, Chromium, Firefox and Safari) and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
 
 ## Design
-Styles made with Sass. The website is fully responsible for mobile devices and UI/UX inspired by Material Design. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities.
+The website is fully responsible for mobile devices and UI/UX inspired by Material Design. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities.
 
 ## PWA
-This website is a PWA (Progressive Web App), the user can install it as an application with a Chromium-based browser. Service Worker has automatic update.
+This website is a PWA (Progressive Web App), the user can install it as an application with a Chromium-based browser. Service Worker has automatic updates.
 
 ## Security and Privacy
-Passwords are hashed with bcrypt before being sent to the database. Each user has their own randomly generated 32-byte encryption key as well as a PBKDF2 key derivation function that uses SHA256 as the hash function and the randomly generated salt.
+Passwords are hashed with bcrypt before being sent to the database. Each user has their own randomly generated 32-byte encryption key that uses SHA256 as the hash function and the randomly generated salt.
 Once logged in, the user can change their password or delete their account. Security measures are in place against XSS, CSRF and SQL injections.
 No personal data is collected in accordance with the GDPR.
 
