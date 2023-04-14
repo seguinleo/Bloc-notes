@@ -9,7 +9,6 @@ if (isset($_SESSION["nom"]) || isset($_SESSION['userId'])) {
   header('HTTP/2.0 500 Internal Server');
   exit();
 }
-require_once "./config.php";
 $nomCreer = htmlspecialchars($_POST['nomCreer'], ENT_QUOTES);
 $mdpCreer = password_hash(htmlspecialchars($_POST['mdpCreer'], ENT_QUOTES), PASSWORD_DEFAULT);
 $key = openssl_random_pseudo_bytes(32);

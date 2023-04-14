@@ -1,3 +1,8 @@
+#----v23.4.4----#
+-Add light blue and pink notes
+-Bug fixes
+-Change color selector
+
 #----v23.4.3----#
 -Add CSRF tokens
 -Change checkboxes styles

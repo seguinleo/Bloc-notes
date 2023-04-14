@@ -1,66 +1,63 @@
-let isUpdate = false, updateId;
+let isUpdate, updateId;
 const url = window.location.href,
-  lang = localStorage.getItem("lang"),
   notesContainer = document.querySelector("main"),
   popupBox = document.querySelector(".popup-box"),
   connectBox = document.querySelector(".connect-box"),
   creerBox = document.querySelector(".creer-box"),
-  couleurTag = popupBox.querySelector("#couleur"),
   titleTag = popupBox.querySelector("#title"),
   descTag = popupBox.querySelector("#content"),
+  couleurs = document.querySelectorAll('.couleurs span'),
+  darken = document.querySelector('.darken'),
   notes = JSON.parse(localStorage.getItem("local_notes") || "[]");
-if (url == "https://leoseguin.fr/projets/notes/en.php" && lang == null) { localStorage.setItem("lang", "en"); }
-if (url == "https://leoseguin.fr/projets/notes/" && lang == null) { localStorage.setItem("lang", "fr"); }
-if (url == "https://leoseguin.fr/projets/notes/en.php" && lang == "fr") { window.open("./", "_self"); }
-if (url == "https://leoseguin.fr/projets/notes/" && lang == "en") { window.open("./en.php", "_self"); }
 
 const showNotes = async () => {
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
     notes.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((e, t) => {
       const v = e.couleur,
-        f = e.title.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
-        o = e.description.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n"),
+        g = e.hidden,
+        f = replaceAllStart(e.title),
+        o = replaceAllStart(e.description),
         converter = new showdown.Converter({
           tasklists: true,
           smoothLivePreview: true,
           extensions: [taskListEnablerExtension]
-        });
-      const noteDiv = document.createElement("div");
+        }),
+        noteDiv = document.createElement("div"),
+        detailsDiv = document.createElement("div"),
+        titleP = document.createElement("p"),
+        descriptionSpan = document.createElement("span"),
+        bottomContentDiv = document.createElement("div"),
+        lastModificationIcon = document.createElement("i"),
+        dateSpan = document.createElement("span"),
+        modifyIcon = document.createElement("i"),
+        copyIcon = document.createElement("i"),
+        deleteIcon = document.createElement("i"),
+        fullscreenIcon = document.createElement("i");
       noteDiv.setAttribute("id", "note" + t);
       noteDiv.classList.add("note", v);
-      const detailsDiv = document.createElement("div");
       detailsDiv.classList.add("details");
-      const titleP = document.createElement("p");
       titleP.classList.add("title");
       titleP.textContent = f;
-      const descriptionSpan = document.createElement("span");
-      descriptionSpan.innerHTML = converter.makeHtml(o).replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />");
+      g ? descriptionSpan.innerHTML = "*****" : descriptionSpan.innerHTML = replaceAllEnd(converter.makeHtml(o));
       detailsDiv.appendChild(titleP);
       detailsDiv.appendChild(descriptionSpan);
       noteDiv.appendChild(detailsDiv);
-      const bottomContentDiv = document.createElement("div");
       bottomContentDiv.classList.add("bottom-content");
-      const lastModificationIcon = document.createElement("i");
       lastModificationIcon.classList.add("fa-solid", "fa-calendar-days");
       lastModificationIcon.setAttribute("title", "Date (GMT)");
-      const dateSpan = document.createElement("span");
       dateSpan.textContent = e.date;
-      const modifyIcon = document.createElement("i");
       modifyIcon.classList.add("fa-solid", "fa-pen");
       modifyIcon.onclick = () => {
-        updateNote(t, f, o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />"), v);
+        updateNote(t, f, o, v, g);
       };
-      const copyIcon = document.createElement("i");
       copyIcon.classList.add("fa-solid", "fa-clipboard");
       copyIcon.onclick = () => {
-        copy(o.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />"));
+        copy(replaceAllStart(o));
       };
-      const deleteIcon = document.createElement("i");
       deleteIcon.classList.add("fa-solid", "fa-trash-can");
       deleteIcon.onclick = () => {
         deleteNote(t);
       };
-      const fullscreenIcon = document.createElement("i");
       fullscreenIcon.classList.add("fa-solid", "fa-expand");
       fullscreenIcon.onclick = () => {
         toggleFullscreen(t);
@@ -77,25 +74,29 @@ const showNotes = async () => {
 };
 
 function toggleFullscreen(id) {
-  const note = document.querySelector('#note' + id),
-  body = document.querySelector('.darken');
+  const note = document.querySelector('#note' + id);
   note.classList.toggle('fullscreen');
-  body.classList.toggle('show');
+  darken.classList.toggle('show');
+  document.body.classList.toggle('noscroll');
 }
 
-function updateNote(e, t, o, v) {
-  const notes = document.querySelectorAll('.note');
+function updateNote(e, t, o, v, g) {
+  const notes = document.querySelectorAll('.note'),
+    s = replaceAllStart(o);
   notes.forEach(note => {
     note.classList.remove('fullscreen');
   });
-  document.querySelector('.darken').classList.remove("show");
-  const s = o.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
-  updateId = e,
-    isUpdate = true,
-    document.querySelector(".icon").click(),
-    couleurTag.value = v,
-    titleTag.value = t,
-    descTag.value = s;
+  darken.classList.remove("show");
+  document.body.classList.add('noscroll');
+  updateId = e;
+  isUpdate = true;
+  document.querySelector(".icon").click();
+  titleTag.value = t;
+  descTag.value = s;
+  couleurs.forEach((couleurSpan) => {
+    couleurSpan.classList.contains(v) ? couleurSpan.classList.add('selectionne') : couleurSpan.classList.remove('selectionne');
+  });
+  g ? document.getElementById("checkHidden").checked = true : document.getElementById("checkHidden").checked = false;
 }
 
 function taskListEnablerExtension() {
@@ -106,30 +107,40 @@ function taskListEnablerExtension() {
   }];
 }
 
+function replaceAllStart(e) {
+  return e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+}
+
+function replaceAllEnd(e) {
+  return e.replaceAll("\n\n", "<br /><br />").replaceAll("\n", "<br />");
+}
+
 function copy(e) {
-  const copyText = e.replaceAll("<br /><br />", "\n\n").replaceAll("<br />", "\n");
+  const copyText = replaceAllStart(e),
+    notification = document.getElementById("copyNotification");
   navigator.clipboard.writeText(copyText);
-  const notification = document.getElementById("copyNotification");
   notification.classList.add("show");
-  setTimeout(function () {
+  setTimeout(() => {
     notification.classList.remove("show");
   }, 2000);
 }
 
 function deleteNote(e) {
-  if ("fr" === localStorage.getItem("lang")) {
+  if (url == "https://leoseguin.fr/projets/notes/") {
     if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
-      notes.splice(e, 1),
-        localStorage.setItem("local_notes", JSON.stringify(notes));
-      document.querySelector('.darken').classList.remove("show");
+      notes.splice(e, 1);
+      localStorage.setItem("local_notes", JSON.stringify(notes));
+      darken.classList.remove("show");
+      document.body.classList.remove('noscroll');
       showNotes();
       return;
     }
   } else {
     if (confirm("Do you really want to delete this note?")) {
-      notes.splice(e, 1),
-        localStorage.setItem("local_notes", JSON.stringify(notes));
-      document.querySelector('.darken').classList.remove("show");
+      notes.splice(e, 1);
+      localStorage.setItem("local_notes", JSON.stringify(notes));
+      darken.classList.remove("show");
+      document.body.classList.remove('noscroll');
       showNotes();
       return;
     }
@@ -139,11 +150,13 @@ function deleteNote(e) {
 document.querySelectorAll(".seconnecter").forEach((element) => {
   element.addEventListener("click", () => {
     connectBox.classList.add("show");
+    document.body.classList.add('noscroll');
     document.querySelector("#nomConnect").focus();
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
       connectBox.classList.add("show");
+      document.body.classList.add('noscroll');
       document.querySelector("#nomConnect").focus();
     }
   });
@@ -153,12 +166,14 @@ document.querySelectorAll(".creercompte").forEach((element) => {
   element.addEventListener("click", () => {
     connectBox.classList.remove("show");
     creerBox.classList.add("show");
+    document.body.classList.add('noscroll');
     document.querySelector("#nomCreer").focus();
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
       connectBox.classList.remove("show");
       creerBox.classList.add("show");
+      document.body.classList.add('noscroll');
       document.querySelector("#nomCreer").focus();
     }
   });
@@ -172,7 +187,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     return;
   }
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Le nom ne peut contenir que des lettres...");
       return;
     } else {
@@ -181,7 +196,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (e.length < 4) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Nom trop court (<4)...");
       return;
     } else {
@@ -190,7 +205,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (t.length < 6) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Mot de passe trop faible (<6)...");
       return;
     } else {
@@ -199,7 +214,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (/^[0-9]+$/.test(t)) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Le mot de passe ne peut pas contenir que des chiffres...");
       return;
     } else {
@@ -208,7 +223,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Le mot de passe ne peut pas contenir que des lettres...");
       return;
     } else {
@@ -217,7 +232,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (t !== o) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Les mots de passe ne correspondent pas...");
       return;
     } else {
@@ -226,7 +241,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     }
   }
   if (e === t) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Le mot de passe doit être différent du nom...");
       return;
     } else {
@@ -246,16 +261,17 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
       body: "nomCreer=" + nomCreer + "&mdpCreer=" + mdpCreer + "&csrf_token_creer=" + document.getElementById("csrf_token_creer").value
     });
     if (response.ok) {
-      if ("fr" === localStorage.getItem("lang")) {
+      if (url == "https://leoseguin.fr/projets/notes/") {
         alert("Compte créé ! Veuillez vous connecter.");
       } else {
         alert("Account created! Please log in.");
       }
       creerBox.classList.remove("show");
+      document.body.classList.remove('noscroll');
       document.querySelectorAll("form").forEach(form => form.reset());
       return;
     } else {
-      if ("fr" === localStorage.getItem("lang")) {
+      if (url == "https://leoseguin.fr/projets/notes/") {
         alert("Utilisateur déjà existant...");
         return;
       } else {
@@ -264,7 +280,7 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
       }
     }
   } catch (error) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Une erreur est survenue lors de la création du compte...");
       return;
     } else {
@@ -281,7 +297,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
     return;
   }
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if ("fr" === localStorage.getItem("lang")) {
+    if (url == "https://leoseguin.fr/projets/notes/") {
       alert("Le nom ne peut contenir que des lettres...");
       return;
     } else {
@@ -303,7 +319,7 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
       if (response.status === 200) {
         location.reload();
       } else {
-        if ("fr" === localStorage.getItem("lang")) {
+        if (url == "https://leoseguin.fr/projets/notes/") {
           alert("Mauvais identifiants...");
           document.querySelector("#mdpConnect").value = "";
           const button = document.querySelector("#submitSeConnecter");
@@ -345,20 +361,36 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
 document.querySelectorAll(".icon").forEach((element) => {
   element.addEventListener("click", () => {
     popupBox.classList.add("show");
+    document.body.classList.add('noscroll');
     document.querySelector("#title").focus();
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
       popupBox.classList.add("show");
+      document.body.classList.add('noscroll');
       document.querySelector("#title").focus();
     }
   });
 });
 
+couleurs.forEach((couleurSpan, index) => {
+  couleurSpan.addEventListener('click', (event) => {
+    couleurs.forEach((couleurSpan) => {
+      couleurSpan.classList.remove('selectionne');
+    });
+    event.target.classList.add('selectionne');
+  });
+  if (index === 0) {
+    couleurSpan.classList.add('selectionne');
+  }
+});
+
 document.querySelector("#submitNote").addEventListener("click", () => {
-  const v = couleurTag.value,
+  const couleurSpan = document.querySelector('.couleurs span.selectionne'),
+    v = couleurSpan.classList[0],
     e = titleTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
-    t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
+    t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
+    g = document.getElementById("checkHidden").checked;
   if (!e || !t || t.length > 2000) {
     return;
   }
@@ -366,7 +398,8 @@ document.querySelector("#submitNote").addEventListener("click", () => {
     couleur: v,
     title: e,
     description: t,
-    date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    hidden: g
   };
   if (isUpdate) {
     isUpdate = false;
@@ -376,8 +409,9 @@ document.querySelector("#submitNote").addEventListener("click", () => {
   }
   localStorage.setItem("local_notes", JSON.stringify(notes));
   document.querySelectorAll("form").forEach(form => form.reset());
-  showNotes();
   popupBox.classList.remove("show");
+  document.body.classList.remove('noscroll');
+  showNotes();
 });
 
 document.querySelectorAll("form").forEach((element) => {
@@ -393,7 +427,8 @@ document.querySelectorAll("header i").forEach((element) => {
     popupBox.classList.remove("show");
     connectBox.classList.remove("show");
     creerBox.classList.remove("show");
-    document.querySelector('.darken').classList.remove("show");
+    document.body.classList.remove('noscroll');
+    darken.classList.remove("show");
   });
   element.addEventListener("keydown", (event) => {
     if (event.key === 'Enter') {
@@ -402,7 +437,8 @@ document.querySelectorAll("header i").forEach((element) => {
       popupBox.classList.remove("show");
       connectBox.classList.remove("show");
       creerBox.classList.remove("show");
-      document.querySelector('.darken').classList.remove("show");
+      document.body.classList.remove('noscroll');
+      darken.classList.remove("show");
     }
   });
 });
@@ -411,43 +447,13 @@ document.querySelector("#search-input").addEventListener("keyup", () => {
   const e = document.querySelector("#search-input").value.trim().toLowerCase();
   document.querySelectorAll(".note").forEach((element) => {
     const t = element.querySelector(".note p").innerText.toLowerCase();
-    if (t.includes(e)) {
-      element.style.display = "flex";
-    } else {
-      element.style.display = "none";
-    }
+    t.includes(e) ? element.style.display = "flex" : element.style.display = "none";
   });
 });
 
 document.addEventListener("keydown", e => {
   e.ctrlKey && "k" === e.key && (e.preventDefault(),
     document.querySelector('#search-input').focus())
-});
-
-document.querySelector(".lang").addEventListener("click", () => {
-  if ("en" === localStorage.getItem("lang")) {
-    localStorage.setItem("lang", "fr");
-    window.open('./', '_self');
-    return;
-  } else {
-    localStorage.setItem("lang", "en");
-    window.open('./en.php', '_self');
-    return;
-  }
-});
-
-document.querySelector(".lang").addEventListener("keydown", (event) => {
-  if (event.key === 'Enter') {
-    if ("en" === localStorage.getItem("lang")) {
-      localStorage.setItem("lang", "fr");
-      window.open('./', '_self');
-      return;
-    } else {
-      localStorage.setItem("lang", "en");
-      window.open('./en.php', '_self');
-      return;
-    }
-  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

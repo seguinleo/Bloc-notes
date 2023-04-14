@@ -9,7 +9,6 @@ if (isset($_SESSION["nom"]) || isset($_SESSION['userId'])) {
   header('HTTP/2.0 500 Internal Server');
   exit();
 }
-require_once "./config.php";
 $nomConnect = htmlspecialchars($_POST['nomConnect'], ENT_QUOTES);
 $mdpConnect = htmlspecialchars($_POST['mdpConnect'], ENT_QUOTES);
 if ($nomConnect && $mdpConnect) {

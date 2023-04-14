@@ -8,8 +8,10 @@ session_set_cookie_params(array(
 ));
 session_name('__Secure-PHPSESSID');
 session_start();
-$_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
-$_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
+if (!isset($_SESSION["nom"])) {
+  $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
+  $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,11 +24,11 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
   <meta name="theme-color" content="#171717">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+  <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="../../assets/fontawesome/css/all.min.css">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
   <nav>
@@ -42,18 +44,15 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
     </div>
     <div class="iconConnect">
       <button id="iconButtonConnect" type="button" aria-label="Add a cloud note">Add a cloud note <i class="fa-solid fa-cloud"></i></button>
-      <button id="iconButtonConnectFloat" type="button" aria-label="Add a cloud note">+</button>
+      <button id="iconButtonConnectFloat" type="button" aria-label="Add a cloud note"><i class="fa-solid fa-plus"></i></button>
     </div>
     <?php } else { ?>
     <div>
       <h1>Bloc-notes</h1>
-      <span class="lang" tabindex="0">
-        <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
-      </span>
     </div>
     <div class="icon">
       <button id="iconButton" type="button" aria-label="Add a local note">Add a local note</button>
-      <button id="iconButtonFloat" type="button" aria-label="Add a local note">+</button>
+      <button id="iconButtonFloat" type="button" aria-label="Add a local note"><i class="fa-solid fa-plus"></i></button>
     </div>
     <?php } ?>
     <div class="search-input">
@@ -62,10 +61,17 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.3</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.4</a>
       &copy;
       <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
+    <?php if (!isset($_SESSION["nom"])) { ?>
+    <div class="lang">
+      <a href="./" aria-label="lang">
+        <img src="./assets/icons/gb.svg" alt="flag" width="20" height="15">
+      </a>
+    </div>
+    <?php } ?>
   </nav>
   <main>
     <div class="darken"></div>
@@ -86,23 +92,25 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
               <textarea id="descConnect" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
-              <select id="couleurConnect" aria-label="color">
-                <option value="Noir">Black</option>
-                <option value="Blanc">White</option>
-                <option value="Rouge">Red</option>
-                <option value="Orange">Orange</option>
-                <option value="Jaune">Yellow</option>
-                <option value="Vert">Green</option>
-                <option value="Cyan">Cyan</option>
-                <option value="Bleu">Blue</option>
-                <option value="Violet">Purple</option>
-              </select>
+              <div class="couleurs">
+                <span class="Noir"></span>
+                <span class="Blanc"></span>
+                <span class="Rouge"></span>
+                <span class="Orange"></span>
+                <span class="Jaune"></span>
+                <span class="Vert"></span>
+                <span class="Cyan"></span>
+                <span class="BleuCiel"></span>
+                <span class="Bleu"></span>
+                <span class="Violet"></span>
+                <span class="Rose"></span>
+              </div>
             </div>
             Hidden note
             <div class="row">
               <label class="switch">
                 <input type="checkbox" id="checkHidden" aria-label="Hidden note">
-                <span class="slider round"></span>
+                <span class="slider"></span>
               </label>
             </div>
             <button id="submitNoteConnect" type="submit" aria-label="Save note">Save note <i class="fa-solid fa-cloud"></i></button>
@@ -117,8 +125,10 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
             <i class="fa-solid fa-xmark" tabindex="0"></i>
           </header>
           <div class="row">
-            <span class="lang linkp" tabindex="0">
-              <img src="assets/icons/gb.svg" alt="flag" width="20" height="15">
+            <span class="lang linkp">
+              <a href="./" aria-label="lang">
+                <img src="./assets/icons/gb.svg" alt="flag" width="20" height="15">
+              </a>
             </span>
           </div>
           <div class="row">
@@ -141,15 +151,18 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
               <option value="Date de modification">Modification date</option>
             </select>
           </div>
-          <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-            <div class="row">
-              <input id="mdpModifNew" placeholder="New password" type="password" maxlength="50" aria-label="password">
-            </div>
-            <div class="row">
-              <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" maxlength="50" aria-label="password">
-            </div>
-            <button id="submitChangeMDP" type="submit" aria-label="Change password">Change password</button>
-          </form>
+          <details>
+            <summary>Change password</summary>
+            <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
+              <div class="row">
+                <input id="mdpModifNew" placeholder="New password" type="password" maxlength="50" aria-label="password">
+              </div>
+              <div class="row">
+                <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" maxlength="50" aria-label="password">
+              </div>
+              <button id="submitChangeMDP" type="submit" aria-label="Change password">Change password</button>
+            </form>
+          </details>
           <div class="row">
             <p>
               <span class="supprimerCompte linkp" tabindex="0">Delete my account</span>
@@ -160,7 +173,7 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
     </div>
     <?php } else { ?>
     <div class="info">
-      <span class="seconnecter" tabindex="0">Sign in</span> to sync your notes between all your devices and
+      <span class="seconnecter" tabindex="0">Sign in</span> to sync your notes and
       <div class="tooltip">encrypt🔒
         <span class="tooltiptext">AES-256-GCM encryption</span>
       </div>
@@ -179,17 +192,26 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
               <textarea id="content" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
             </div>
             <div class="row">
-              <select id="couleur" aria-label="color">
-                <option value="Noir">Black</option>
-                <option value="Blanc">White</option>
-                <option value="Rouge">Red</option>
-                <option value="Orange">Orange</option>
-                <option value="Jaune">Yellow</option>
-                <option value="Vert">Green</option>
-                <option value="Cyan">Cyan</option>
-                <option value="Bleu">Blue</option>
-                <option value="Violet">Purple</option>
-              </select>
+              <div class="couleurs">
+                <span class="Noir"></span>
+                <span class="Blanc"></span>
+                <span class="Rouge"></span>
+                <span class="Orange"></span>
+                <span class="Jaune"></span>
+                <span class="Vert"></span>
+                <span class="Cyan"></span>
+                <span class="BleuCiel"></span>
+                <span class="Bleu"></span>
+                <span class="Violet"></span>
+                <span class="Rose"></span>
+              </div>
+            </div>
+            Hidden note
+            <div class="row">
+              <label class="switch">
+                <input type="checkbox" id="checkHidden" aria-label="Hidden note">
+                <span class="slider"></span>
+              </label>
             </div>
             <button id="submitNote" type="submit" aria-label="Save note">Save note</button>
           </form>
@@ -239,6 +261,9 @@ $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
             </div>
             <div class="row">
               <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="password">
+            </div>
+            <div class="row">
+              <i class="fa-solid fa-circle-info"></i> Your password is stored securely.
             </div>
             <button id="submitCreer" type="submit" aria-label="Sign up">Sign up</button>
           </form>

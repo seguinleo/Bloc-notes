@@ -5,7 +5,6 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   header('HTTP/2.0 403 Forbidden');
   exit();
 } else {
-  require_once "./config.php";
   require_once "./functions.php";
   if (!isset($_POST['title']) || !isset($_POST['filterDesc'])) {
     header('HTTP/2.0 403 Forbidden');
@@ -22,7 +21,23 @@ if (!isset($_SESSION["nom"]) || !isset($_SESSION['userId'])) {
   $couleurConnect = $_POST['couleur'];
   $dateNote = $_POST['date'];
   $hidden = $_POST['hidden'];
-  if ($noteId && $titleConnect && $descriptionConnect && ($couleurConnect == "Noir" || $couleurConnect == "Blanc" || $couleurConnect == "Rouge" || $couleurConnect == "Orange" || $couleurConnect == "Jaune" || $couleurConnect == "Vert" || $couleurConnect == "Cyan" || $couleurConnect == "Bleu" || $couleurConnect == "Violet")) {
+  if ($noteId &&
+      $titleConnect &&
+      $descriptionConnect && (
+        $couleurConnect == "Noir" ||
+        $couleurConnect == "Blanc" ||
+        $couleurConnect == "Rouge" ||
+        $couleurConnect == "Orange" ||
+        $couleurConnect == "Jaune" ||
+        $couleurConnect == "Vert" ||
+        $couleurConnect == "Cyan" ||
+        $couleurConnect == "BleuCiel" ||
+        $couleurConnect == "Bleu" ||
+        $couleurConnect == "Violet" ||
+        $couleurConnect == "Rose"
+      )
+    )
+  {
     $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:FilterDesc,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:CurrentUser");
     $query->execute([
       ':Title' => $titleConnect,
