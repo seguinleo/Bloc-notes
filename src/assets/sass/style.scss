@@ -47,7 +47,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../../../../assets/fonts/OpenSans.woff2') format('woff2')
+  src: url('/assets/fonts/OpenSans.woff2') format('woff2')
 }
 
 @font-face {
@@ -55,15 +55,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../../../../assets/fonts/OpenSans-700.woff2') format('woff2')
-}
-
-@font-face {
-  font-family: 'OpenSans';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../../../../assets/fonts/OpenSans-italic.woff2') format('woff2')
+  src: url('/assets/fonts/OpenSans-700.woff2') format('woff2')
 }
 
 html {
@@ -544,7 +536,7 @@ p.welcome {
 
 .svgPart {
   position: fixed;
-  width: 40%;
+  width: 700px;
   bottom: 0;
   z-index: -1;
 

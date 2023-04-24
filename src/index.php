@@ -1,6 +1,6 @@
 <?php
 session_set_cookie_params(array(
-  'path' => './projets/notes/',
+  'path' => '/projets/notes/',
   'lifetime' => 460800,
   'secure' => true,
   'httponly' => true,
@@ -27,7 +27,7 @@ if (!isset($_SESSION["nom"])) {
   <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
   <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="stylesheet" href="../../assets/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
   <link rel="manifest" href="./manifest.json">
 </head>
 <body>
@@ -63,7 +63,7 @@ if (!isset($_SESSION["nom"])) {
     <div class="copyright">
       <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.4</a>
       &copy;
-      <a href="https://leoseguin.fr/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
+      <a href="/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
     <?php if (!isset($_SESSION["nom"])) { ?>
     <div class="lang">
@@ -139,7 +139,7 @@ if (!isset($_SESSION["nom"])) {
           <div class="row">
             <p>
               <span class="linkp">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
+                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
               </span>
             </p>
           </div>
@@ -248,7 +248,7 @@ if (!isset($_SESSION["nom"])) {
           </header>
           <p>
             <span class="linkp">
-              <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
+              <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
             </span>
           </p>
           <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
@@ -272,14 +272,14 @@ if (!isset($_SESSION["nom"])) {
     </div>
     <?php } ?>
   </main>
-  <div class="svgPart">
+  <div class="svgPart" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
       <defs>
         <marker id="pointer" markerWidth="10" markerHeight="8" refX="7" refY="5" orient="-45">
           <polyline points="1 1, 8 5, 1 7"></polyline>
         </marker>
       </defs>
-      <path d="M16,178 c87-46,162-185,227-136C307,90,195,158,111,108C71,85,92,30,126,7" marker-end="url(#pointer)"></path>
+      <path d="M16,178 c87-46,162-185,227-136C307,90,195,158,111,108C71,85,92,30,126,7" marker-end="url(#pointer)" opacity=".4"></path>
     </svg>
   </div>
   <?php if (isset($_SESSION["nom"])) { ?>
