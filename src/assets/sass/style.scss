@@ -1,3 +1,10 @@
+$color1: #171717;
+$color2: #272727;
+$color3: #424242;
+$color4: #c6c6c6;
+$color5: #8ab4f8;
+$color6: #9ec3ff;
+
 @keyframes wave-animation {
 
   0%,
@@ -25,6 +32,7 @@
 }
 
 @keyframes fadeInOut {
+
   0% {
     opacity: 0;
   }
@@ -59,9 +67,9 @@
 }
 
 html {
-  background: #171717;
-  color: #c6c6c6;
-  accent-color: #8ab4f8;
+  background: $color1;
+  color: $color4;
+  accent-color: $color5;
   -webkit-tap-highlight-color: transparent;
   scrollbar-color: rgba(255, 255, 255, .1) rgba(0, 0, 0, 0);
   scrollbar-width: thin
@@ -84,7 +92,7 @@ html {
 
 h1 {
   font-size: 1.4rem;
-  color: #8ab4f8
+  color: $color5
 }
 
 h2 {
@@ -96,26 +104,26 @@ h3 {
 }
 
 a {
-  color: #8ab4f8;
+  color: $color5;
   text-decoration: none;
   display: inline;
   font-weight: 700;
 
   &:hover {
-    color: #9ec3ff
+    color: $color6
   }
 }
 
 p.title {
-  color: #8ab4f8
+  color: $color5
 }
 
 kbd {
-  background: #666666;
+  background: $color2;
   border-radius: 5px;
-  color: #c6c6c6;
+  color: $color4;
   margin: 0 2px;
-  font-size: 0.9rem;
+  font-size: .8rem;
   font-weight: 700;
   padding: 2px 4px
 }
@@ -149,12 +157,12 @@ nav {
   top: 0;
   text-align: center;
   position: fixed;
-  background: #282828;
-  color: #c6c6c6;
+  background: $color2;
+  color: $color4;
   z-index: 2;
   -webkit-user-select: none;
   user-select: none;
-  box-shadow: 2px 2px 4px #171717;
+  box-shadow: 2px 2px 4px $color1;
 
   h1 {
     display: inline-block
@@ -171,18 +179,18 @@ nav {
     animation-iteration-count: infinite;
     transform-origin: 70% 70%;
     display: inline-block;
-    font-size: 1.5rem
+    font-size: 1.4rem
   }
 
   .search-input {
-    background: #424242;
+    background: $color3;
     width: 300px;
     max-height: 40px;
     border-radius: 24px;
     display: inline-block;
 
     ::placeholder {
-      color: #c6c6c6
+      color: $color4
     }
 
     i {
@@ -192,8 +200,8 @@ nav {
 
     input {
       font-size: 1rem;
-      background: #424242;
-      color: #c6c6c6;
+      background: $color3;
+      color: $color4;
       height: 40px;
       width: 180px;
       border: none;
@@ -202,7 +210,7 @@ nav {
       padding: 0 10px;
 
       &:focus {
-        outline: 2px solid #8ab4f8
+        outline: 2px solid $color5
       }
     }
   }
@@ -254,11 +262,11 @@ select {
   width: 100%;
   font-size: 1rem;
   padding: 0 1rem;
-  color: #c6c6c6;
-  border: 2px solid #666666;
+  color: $color4;
+  border: 2px solid $color3;
 
   &:focus {
-    outline: #8ab4f8 solid 2px
+    outline: $color5 solid 2px
   }
 }
 
@@ -277,23 +285,19 @@ button {
   cursor: pointer;
   width: 100%;
   height: 50px;
-  color: #171717;
+  color: $color1;
   border: none;
   font-size: 1rem;
   border-radius: 5px;
-  background: #8ab4f8;
+  background: $color5;
   transition: .2s;
 
   &:hover {
-    background: #9ec3ff
-  }
-
-  &:focus {
-    background: #8ab4f8
+    background: $color6
   }
 
   &:disabled {
-    background: #aaaaaa;
+    background: $color4;
     cursor: not-allowed
   }
 }
@@ -323,10 +327,11 @@ p.welcome {
   width: 400px;
   max-height: 460px;
   padding: 30px 20px 10px;
-  background: #282828;
+  background: $color2;
 
-  &:hover {
+  &:hover, &:focus {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+    outline: none;
 
     .bottom-content {
       visibility: visible;
@@ -346,7 +351,7 @@ p.welcome {
     transition: transform .4s
   }
 
-  &:hover:after {
+  &:hover:after, &:focus:after {
     transform: translate(-100%, -100%)
   }
 
@@ -383,6 +388,11 @@ p.welcome {
     visibility: hidden;
     transition: opacity .2s;
 
+    &:focus-within {
+      opacity: 1;
+      visibility: visible
+    }
+
     i {
       display: inline-flex;
       align-items: center;
@@ -397,14 +407,13 @@ p.welcome {
 
     span {
       font-size: .8rem;
-      transition: .2s;
-      margin: 0 4px 0 -6px
+      transition: .2s
     }
   }
 }
 
 .Noir {
-  background: #282828
+  background: $color2
 }
 
 .Blanc {
@@ -472,17 +481,13 @@ p.welcome {
   h1,
   p,
   span {
-    color: #171717
+    color: $color1
   }
 
   .bottom-content {
-    span {
-      color: rgba(0, 0, 0, .7)
-    }
+    color: $color2;
 
     i {
-      color: rgba(0, 0, 0, .7);
-
       &:hover {
         background: rgba(0, 0, 0, .1)
       }
@@ -501,11 +506,11 @@ p.welcome {
 
   .bottom-content {
     span {
-      color: rgba(255, 255, 255, .7)
+      color: $color4
     }
 
     i {
-      color: rgba(255, 255, 255, .7);
+      color: $color4;
 
       &:hover {
         background: rgba(255, 255, 255, .1)
@@ -523,10 +528,10 @@ p.welcome {
   cursor: pointer;
   text-align: center;
   font-weight: 700;
-  color: #8ab4f8;
+  color: $color5;
 
   &:hover {
-    color: #9ec3ff
+    color: $color6
   }
 }
 
@@ -541,13 +546,13 @@ p.welcome {
   z-index: -1;
 
   svg {
-    fill: #171717
+    fill: $color1
   }
 
   path,
   polyline {
-    fill: #171717;
-    stroke: #424242;
+    fill: $color1;
+    stroke: $color3;
     stroke-width: 1
   }
 
@@ -557,7 +562,7 @@ p.welcome {
 }
 
 .content header i {
-  color: #c6c6c6;
+  color: $color4;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -614,7 +619,7 @@ p.welcome {
     cursor: pointer;
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted #8ab4f8;
+    border-bottom: 1px dotted $color5;
 
     &:hover .tooltiptext {
       visibility: visible
@@ -623,8 +628,8 @@ p.welcome {
     .tooltiptext {
       visibility: hidden;
       width: 120px;
-      background: #424242;
-      color: #c6c6c6;
+      background: $color2;
+      color: $color4;
       text-align: center;
       border-radius: 6px;
       padding: 5px 0;
@@ -642,7 +647,7 @@ p.welcome {
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: transparent transparent #424242 transparent
+        border-color: transparent transparent $color2 transparent
       }
     }
   }
@@ -659,7 +664,7 @@ header {
 input,
 textarea,
 select {
-  background: #282828;
+  background: $color2;
   border-radius: 5px
 }
 
@@ -672,7 +677,7 @@ select {
     width: 20px;
     height: 20px;
     margin: 0 10px;
-    border: 1px solid #666666;
+    border: 1px solid $color3;
     border-radius: 50%;
     cursor: pointer;
     transition: .2s
@@ -767,11 +772,11 @@ select {
     height: 0;
 
     &:focus+.slider {
-      box-shadow: 0 0 1px #8ab4f8
+      box-shadow: 0 0 1px $color5
     }
 
     &:checked+.slider {
-      background: #8ab4f8;
+      background: $color5;
 
       &:before {
         -webkit-transform: translateX(26px);
@@ -789,7 +794,7 @@ select {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #ccc;
+    background: $color4;
     transition: .2s;
 
     &:before {
@@ -838,8 +843,8 @@ select {
   top: 8%;
   left: 50%;
   transform: translateX(-50%);
-  background: #666666;
-  color: #c6c6c6;
+  background: $color3;
+  color: $color4;
   padding: 10px;
   border-radius: 5px
 }
@@ -852,7 +857,6 @@ select {
 
 .task-list-item {
   list-style-type: none;
-  margin: 0;
   margin-left: -2rem;
 
   * {
@@ -865,12 +869,12 @@ select {
 
   img {
     border-radius: 0;
-    border: 1px solid #c6c6c6;
+    border: 1px solid $color4;
     vertical-align: middle
   }
 }
 
-@media(max-width: 940px) {
+@media(width <= 992px) {
 
   nav {
     position: relative;
@@ -905,13 +909,13 @@ select {
     #iconButtonFloat,
     #iconButtonConnectFloat {
       position: fixed;
-      bottom: 1.4rem;
-      right: 1.4rem;
+      bottom: 1.5rem;
+      right: 1.5rem;
       width: 60px;
       height: 60px;
       font-size: 1.4rem;
-      border-radius: 50%;
-      box-shadow: 1px 1px 4px #171717;
+      border-radius: 48px;
+      box-shadow: 1px 1px 6px $color2;
       display: flex;
       justify-content: center;
       align-items: center
@@ -926,6 +930,10 @@ select {
     .info {
       margin: 10px 0
     }
+  }
+
+  textarea {
+    height: 30vh
   }
 
   kbd {
@@ -966,13 +974,6 @@ select {
 
   .content form {
     margin: 10px
-  }
-}
-
-@media(max-width: 550px) {
-
-  textarea {
-    height: 30vh
   }
 
   .popup {

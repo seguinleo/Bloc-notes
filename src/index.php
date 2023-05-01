@@ -24,11 +24,11 @@ if (!isset($_SESSION["nom"])) {
   <meta name="theme-color" content="#171717">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
-  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
-  <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/projets/notes/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/projets/notes/assets/css/style.css">
   <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="/projets/notes/manifest.json">
 </head>
 <body>
   <nav>
@@ -61,14 +61,14 @@ if (!isset($_SESSION["nom"])) {
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
     <div class="copyright">
-      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.4.4</a>
+      <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.1</a>
       &copy;
       <a href="/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
     </div>
     <?php if (!isset($_SESSION["nom"])) { ?>
     <div class="lang">
-      <a href="./en.php" aria-label="lang">
-        <img src="./assets/icons/fr.svg" alt="flag" width="20" height="15">
+      <a href="/projets/notes/en.php" aria-label="lang">
+        <img src="/projets/notes/assets/icons/fr.svg" alt="flag" width="20" height="15">
       </a>
     </div>
     <?php } ?>
@@ -93,23 +93,23 @@ if (!isset($_SESSION["nom"])) {
             </div>
             <div class="row">
               <div class="couleurs">
-                <span class="Noir"></span>
-                <span class="Blanc"></span>
-                <span class="Rouge"></span>
-                <span class="Orange"></span>
-                <span class="Jaune"></span>
-                <span class="Vert"></span>
-                <span class="Cyan"></span>
-                <span class="BleuCiel"></span>
-                <span class="Bleu"></span>
-                <span class="Violet"></span>
-                <span class="Rose"></span>
+                <span class="Noir" tabindex="0"></span>
+                <span class="Blanc" tabindex="0"></span>
+                <span class="Rouge" tabindex="0"></span>
+                <span class="Orange" tabindex="0"></span>
+                <span class="Jaune" tabindex="0"></span>
+                <span class="Vert" tabindex="0"></span>
+                <span class="Cyan" tabindex="0"></span>
+                <span class="BleuCiel" tabindex="0"></span>
+                <span class="Bleu" tabindex="0"></span>
+                <span class="Violet" tabindex="0"></span>
+                <span class="Rose" tabindex="0"></span>
               </div>
             </div>
             Note masquée
             <div class="row">
-              <label class="switch">
-                <input type="checkbox" id="checkHidden" aria-label="Note masquée">
+              <label for="checkHidden" class="switch" aria-label="Note masquée">
+                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée">
                 <span class="slider"></span>
               </label>
             </div>
@@ -126,8 +126,8 @@ if (!isset($_SESSION["nom"])) {
           </header>
           <div class="row">
             <span class="lang linkp">
-              <a href="./en.php" aria-label="lang">
-                <img src="./assets/icons/fr.svg" alt="flag" width="20" height="15">
+              <a href="/projets/notes/en.php" aria-label="lang">
+                <img src="/projets/notes/assets/icons/fr.svg" alt="flag" width="20" height="15">
               </a>
             </span>
           </div>
@@ -193,23 +193,23 @@ if (!isset($_SESSION["nom"])) {
             </div>
             <div class="row">
               <div class="couleurs">
-                <span class="Noir"></span>
-                <span class="Blanc"></span>
-                <span class="Rouge"></span>
-                <span class="Orange"></span>
-                <span class="Jaune"></span>
-                <span class="Vert"></span>
-                <span class="Cyan"></span>
-                <span class="BleuCiel"></span>
-                <span class="Bleu"></span>
-                <span class="Violet"></span>
-                <span class="Rose"></span>
+                <span class="Noir" tabindex="0"></span>
+                <span class="Blanc" tabindex="0"></span>
+                <span class="Rouge" tabindex="0"></span>
+                <span class="Orange" tabindex="0"></span>
+                <span class="Jaune" tabindex="0"></span>
+                <span class="Vert" tabindex="0"></span>
+                <span class="Cyan" tabindex="0"></span>
+                <span class="BleuCiel" tabindex="0"></span>
+                <span class="Bleu" tabindex="0"></span>
+                <span class="Violet" tabindex="0"></span>
+                <span class="Rose" tabindex="0"></span>
               </div>
             </div>
             Note masquée
             <div class="row">
-              <label class="switch">
-                <input type="checkbox" id="checkHidden" aria-label="Note masquée">
+              <label for="checkHidden" class="switch" aria-label="Note masquée">
+                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée">
                 <span class="slider"></span>
               </label>
             </div>
@@ -283,10 +283,10 @@ if (!isset($_SESSION["nom"])) {
     </svg>
   </div>
   <?php if (isset($_SESSION["nom"])) { ?>
-  <script src="./assets/js/scriptConnect.min.js" defer></script>
+  <script src="/projets/notes/assets/js/scriptConnect.min.js" defer></script>
   <?php } else { ?>
-  <script src="./assets/js/script.min.js" defer></script>
+  <script src="/projets/notes/assets/js/script.js" defer></script>
   <?php } ?>
-  <script src="./assets/js/showdown.min.js" defer></script>
+  <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
 </body>
 </html>
