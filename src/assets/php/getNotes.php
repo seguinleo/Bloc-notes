@@ -17,6 +17,7 @@ if ($tri == "Date de création") {
 }
 $query = $PDO->prepare("SELECT id, titre, couleur, content, dateNote, hiddenNote FROM notes WHERE user=:CurrentUser $orderBy");
 $query->execute([':CurrentUser' => $_SESSION["nom"]]);
+$items = [];
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   $items[] = [
     'id' => $row['id'],
