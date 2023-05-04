@@ -6,8 +6,8 @@ if ($_POST['csrf_token_connect'] !== $_SESSION['csrf_token_connect'] || !isset($
   exit();
 }
 require_once "./config.php";
-$nomConnect = htmlspecialchars($_POST['nomConnect'], ENT_QUOTES);
-$mdpConnect = htmlspecialchars($_POST['mdpConnect'], ENT_QUOTES);
+$nomConnect = $_POST['nomConnect'];
+$mdpConnect = $_POST['mdpConnect'];
 $query = $PDO->prepare("SELECT * FROM users WHERE nom=:NomConnect");
 $query->execute([':NomConnect' => $nomConnect]);
 $row = $query->fetch(PDO::FETCH_ASSOC);
@@ -17,7 +17,7 @@ if (!password_verify($mdpConnect, $row['mdp'])) {
 }
 $_SESSION['nom'] = $row['nom'];
 $_SESSION['userId'] = $row['id'];
-$_SESSION['tri_secure'] = $row['tri'];
-$_SESSION['key_secure'] = $row['one_key'];
+$_SESSION['tri'] = $row['tri'];
+$_SESSION['key'] = $row['one_key'];
 $query->closeCursor();
 $PDO = null;

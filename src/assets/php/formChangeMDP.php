@@ -6,12 +6,12 @@ if (!isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew'])) {
   exit();
 }
 require_once "./config.php";
-$mdpNew = password_hash(htmlspecialchars($_POST['mdpNew'], ENT_QUOTES), PASSWORD_DEFAULT);
+$mdpNew = password_hash($_POST['mdpNew'], PASSWORD_DEFAULT);
 $query = $PDO->prepare("UPDATE users SET mdp=:MdpHash WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute([
   ':MdpHash' => $mdpNew,
-  ':CurrentUser' => htmlspecialchars($_SESSION["nom"], ENT_QUOTES),
-  ':UserId' => htmlspecialchars($_SESSION["userId"], ENT_QUOTES)
+  ':CurrentUser' => $_SESSION["nom"],
+  ':UserId' => $_SESSION["userId"]
 ]);
 $query->closeCursor();
 $PDO = null;

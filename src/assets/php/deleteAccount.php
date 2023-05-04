@@ -8,8 +8,8 @@ if (!isset($_SESSION["nom"], $_SESSION['userId'])) {
 require_once "./config.php";
 $query = $PDO->prepare("DELETE FROM users WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute([
-  ':CurrentUser' => htmlspecialchars($_SESSION["nom"], ENT_QUOTES),
-  ':UserId' => htmlspecialchars($_SESSION["userId"], ENT_QUOTES)
+  ':CurrentUser' => $_SESSION["nom"],
+  ':UserId' => $_SESSION["userId"]
 ]);
 session_unset();
 session_destroy();

@@ -355,6 +355,13 @@ p.welcome {
     transform: translate(-100%, -100%)
   }
 
+  &:focus-within {
+    .bottom-content {
+      visibility: visible;
+      opacity: 1
+    }
+  }
+
   p.title {
     font-size: 1.4rem;
     text-align: right;

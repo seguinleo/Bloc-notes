@@ -7,14 +7,14 @@ if (!isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['filte
 } 
 require_once "./config.php";
 require_once "./functions.php";
-$descriptionConnect = htmlspecialchars($_POST['filterDesc'], ENT_QUOTES);
+$descriptionConnect = $_POST['filterDesc'];
 $descriptionConnect = encrypt_data($descriptionConnect, $_SESSION['key']);
-$noteId = htmlspecialchars($_POST['noteId'], ENT_QUOTES);
-$titleConnect = htmlspecialchars($_POST['title'], ENT_QUOTES);
+$noteId = $_POST['noteId'];
+$titleConnect = $_POST['title'];
 $titleConnect = encrypt_data($titleConnect, $_SESSION['key']);
-$couleurConnect = htmlspecialchars($_POST['couleur'], ENT_QUOTES);
-$dateNote = htmlspecialchars($_POST['date'], ENT_QUOTES);
-$hidden = htmlspecialchars($_POST['hidden'], ENT_QUOTES);
+$couleurConnect = $_POST['couleur'];
+$dateNote = $_POST['date'];
+$hidden = $_POST['hidden'];
 $couleursAutorisees = array("Noir", "Blanc", "Rouge", "Orange", "Jaune", "Vert", "Cyan", "BleuCiel", "Bleu", "Violet", "Rose");
 if (!in_array($couleurConnect, $couleursAutorisees)) {
   $couleurConnect = "Noir";

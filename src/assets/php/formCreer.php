@@ -6,8 +6,8 @@ if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer'] || !isset($_POS
   exit();
 }
 require_once "./config.php";
-$nomCreer = htmlspecialchars($_POST['nomCreer'], ENT_QUOTES);
-$mdpCreer = password_hash(htmlspecialchars($_POST['mdpCreer'], ENT_QUOTES), PASSWORD_DEFAULT);
+$nomCreer = $_POST['nomCreer'];
+$mdpCreer = password_hash($_POST['mdpCreer'], PASSWORD_DEFAULT);
 $key = openssl_random_pseudo_bytes(32);
 $query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:MdpHash,:OneKey)");
 $query->execute([':NomCreer' => $nomCreer, ':MdpHash' => $mdpCreer, ':OneKey' => $key]);

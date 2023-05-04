@@ -1,45 +1,49 @@
+'use strict';
+
 let isUpdate, updateId;
-const notesContainer = document.querySelector("main"),
-  popupBox = document.querySelector(".popup-box"),
-  connectBox = document.querySelector(".connect-box"),
-  creerBox = document.querySelector(".creer-box"),
-  titleTag = popupBox.querySelector("#title"),
-  descTag = popupBox.querySelector("#content"),
-  couleurs = document.querySelectorAll('.couleurs span'),
-  darken = document.querySelector('.darken'),
-  switchElement = document.querySelector('.switch'),
-  notes = JSON.parse(localStorage.getItem("local_notes") || "[]");
+const notesContainer = document.querySelector("main");
+const popupBox = document.querySelector(".popup-box");
+const connectBox = document.querySelector(".connect-box");
+const creerBox = document.querySelector(".creer-box");
+const titleTag = popupBox.querySelector("#title");
+const descTag = popupBox.querySelector("#content");
+const couleurs = document.querySelectorAll('.couleurs span');
+const darken = document.querySelector('.darken');
+const switchElement = document.querySelector('.switch');
+const notes = JSON.parse(localStorage.getItem("local_notes") || "[]");
 
 const showNotes = async () => {
+  const converter = new showdown.Converter({
+    tasklists: true,
+    smoothLivePreview: true,
+    extensions: [taskListEnablerExtension]
+  });
+
   notes && (document.querySelectorAll(".note").forEach(e => e.remove()),
     notes.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((e, t) => {
-      const v = e.couleur,
-        g = e.hidden,
-        f = e.title,
-        o = replaceAllStart(e.description),
-        converter = new showdown.Converter({
-          tasklists: true,
-          smoothLivePreview: true,
-          extensions: [taskListEnablerExtension]
-        }),
-        noteDiv = document.createElement("div"),
-        detailsDiv = document.createElement("div"),
-        titleP = document.createElement("p"),
-        descriptionSpan = document.createElement("span"),
-        bottomContentDiv = document.createElement("div"),
-        lastModificationIcon = document.createElement("i"),
-        dateSpan = document.createElement("span"),
-        modifyIcon = document.createElement("i"),
-        copyIcon = document.createElement("i"),
-        deleteIcon = document.createElement("i"),
-        fullscreenIcon = document.createElement("i");
+      const v = e.couleur;
+      const g = e.hidden;
+      const f = e.title;
+      const o = replaceAllStart(e.description);
+      const noteDiv = document.createElement("div");
+      const detailsDiv = document.createElement("div");
+      const titleP = document.createElement("p");
+      const descriptionSpan = document.createElement("span");
+      const bottomContentDiv = document.createElement("div");
+      const lastModificationIcon = document.createElement("i");
+      const dateSpan = document.createElement("span");
+      const modifyIcon = document.createElement("i");
+      const copyIcon = document.createElement("i");
+      const deleteIcon = document.createElement("i");
+      const fullscreenIcon = document.createElement("i");
+
       noteDiv.setAttribute("id", "note" + t);
       noteDiv.classList.add("note", v);
       noteDiv.setAttribute("tabindex", "0");
       detailsDiv.classList.add("details");
       titleP.classList.add("title");
       titleP.textContent = f;
-      g ? descriptionSpan.innerHTML = "*****" : descriptionSpan.innerHTML = replaceAllEnd(converter.makeHtml(o));
+      g ? descriptionSpan.textContent = "*****" : descriptionSpan.innerHTML = replaceAllEnd(converter.makeHtml(o));
       detailsDiv.appendChild(titleP);
       detailsDiv.appendChild(descriptionSpan);
       noteDiv.appendChild(detailsDiv);
@@ -52,6 +56,15 @@ const showNotes = async () => {
         updateNote(t, f, o, v, g);
       };
       modifyIcon.setAttribute("tabindex", "0");
+      deleteIcon.classList.add("fa-solid", "fa-trash-can");
+      deleteIcon.onclick = () => {
+        deleteNote(t, f);
+      };
+      deleteIcon.setAttribute("tabindex", "0");
+      bottomContentDiv.appendChild(lastModificationIcon);
+      bottomContentDiv.appendChild(dateSpan);
+      bottomContentDiv.appendChild(modifyIcon);
+
       if (!g) {
         copyIcon.classList.add("fa-solid", "fa-clipboard");
         copyIcon.onclick = () => {
@@ -63,22 +76,13 @@ const showNotes = async () => {
           toggleFullscreen(t);
         };
         fullscreenIcon.setAttribute("tabindex", "0");
-      }
-      deleteIcon.classList.add("fa-solid", "fa-trash-can");
-      deleteIcon.onclick = () => {
-        deleteNote(t, f);
-      };
-      deleteIcon.setAttribute("tabindex", "0");
-      bottomContentDiv.appendChild(lastModificationIcon);
-      bottomContentDiv.appendChild(dateSpan);
-      bottomContentDiv.appendChild(modifyIcon);
-      if (!g) {
         bottomContentDiv.appendChild(copyIcon);
-      }
-      bottomContentDiv.appendChild(deleteIcon);
-      if (!g) {
+        bottomContentDiv.appendChild(deleteIcon);
         bottomContentDiv.appendChild(fullscreenIcon);
+      } else {
+        bottomContentDiv.appendChild(deleteIcon);
       }
+
       noteDiv.appendChild(bottomContentDiv);
       notesContainer.appendChild(noteDiv);
     }));
@@ -92,8 +96,8 @@ function toggleFullscreen(id) {
 }
 
 function updateNote(e, t, o, v, g) {
-  const notes = document.querySelectorAll('.note'),
-    s = replaceAllStart(o);
+  const notes = document.querySelectorAll('.note');
+  const s = replaceAllStart(o);
   notes.forEach(note => {
     note.classList.remove('fullscreen');
   });
@@ -107,7 +111,9 @@ function updateNote(e, t, o, v, g) {
   couleurs.forEach((couleurSpan) => {
     couleurSpan.classList.contains(v) ? couleurSpan.classList.add('selectionne') : couleurSpan.classList.remove('selectionne');
   });
-  g ? document.getElementById("checkHidden").checked = true : document.getElementById("checkHidden").checked = false;
+  if (g) {
+    document.getElementById("checkHidden").checked = true;
+  }
   descTag.focus();
 }
 
@@ -145,17 +151,15 @@ function deleteNote(e, f) {
       darken.classList.remove("show");
       document.body.classList.remove('noscroll');
       showNotes();
-      return;
     }
-  } else {
-    if (confirm(`Do you really want to delete the note ${f}?`)) {
-      notes.splice(e, 1);
-      localStorage.setItem("local_notes", JSON.stringify(notes));
-      darken.classList.remove("show");
-      document.body.classList.remove('noscroll');
-      showNotes();
-      return;
-    }
+    return;
+  }
+  if (confirm(`Do you really want to delete the note ${f}?`)) {
+    notes.splice(e, 1);
+    localStorage.setItem("local_notes", JSON.stringify(notes));
+    darken.classList.remove("show");
+    document.body.classList.remove('noscroll');
+    showNotes();
   }
 }
 
@@ -227,9 +231,9 @@ document.querySelectorAll(".creercompte").forEach((element) => {
 });
 
 document.querySelector("#submitCreer").addEventListener("click", async () => {
-  const e = document.querySelector("#nomCreer").value.trim(),
-    t = document.querySelector("#mdpCreer").value,
-    o = document.querySelector("#mdpCreerValid").value;
+  const e = document.querySelector("#nomCreer").value.trim();
+  const t = document.querySelector("#mdpCreer").value;
+  const o = document.querySelector("#mdpCreerValid").value;
   if (!e || !t || !o) {
     return;
   }
@@ -237,75 +241,67 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Le nom ne peut contenir que des lettres...");
       return;
-    } else {
-      alert("The name can only contain letters...");
-      return;
     }
+    alert("The name can only contain letters...");
+    return;
   }
   if (e.length < 4) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Nom trop court (<4)...");
       return;
-    } else {
-      alert("Name too short (<4)...");
-      return;
     }
+    alert("Name too short (<4)...");
+    return;
   }
   if (t.length < 6) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Mot de passe trop faible (<6)...");
       return;
-    } else {
-      alert("Password too weak (<6)...");
-      return;
     }
+    alert("Password too weak (<6)...");
+    return;
   }
   if (/^[0-9]+$/.test(t)) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Le mot de passe ne peut pas contenir que des chiffres...");
       return;
-    } else {
-      alert("Password too weak (only numbers)...");
-      return;
     }
+    alert("Password too weak (only numbers)...");
+    return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Le mot de passe ne peut pas contenir que des lettres...");
       return;
-    } else {
-      alert("Password too weak (only letters)...");
-      return;
     }
+    alert("Password too weak (only letters)...");
+    return;
   }
   if (t !== o) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Les mots de passe ne correspondent pas...");
       return;
-    } else {
-      alert("Passwords do not match...");
-      return;
     }
+    alert("Passwords do not match...");
+    return;
   }
   if (e === t) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Le mot de passe doit être différent du nom...");
       return;
-    } else {
-      alert("The password must be different from the username...");
-      return;
     }
+    alert("The password must be different from the username...");
+    return;
   }
-  const nomCreer = encodeURIComponent(e),
-    mdpCreer = encodeURIComponent(t);
+  const nomCreer = encodeURIComponent(e);
+  const mdpCreer = encodeURIComponent(t);
   try {
     const response = await fetch("/projets/notes/assets/php/formCreer.php", {
       method: "POST",
-      credentials: "same-origin",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: "nomCreer=" + nomCreer + "&mdpCreer=" + mdpCreer + "&csrf_token_creer=" + document.getElementById("csrf_token_creer").value
+      body: `nomCreer=${nomCreer}&mdpCreer=${mdpCreer}&csrf_token_creer=${document.getElementById("csrf_token_creer").value}`
     });
     if (response.ok) {
       if (!window.location.pathname.endsWith('en.php')) {
@@ -317,29 +313,24 @@ document.querySelector("#submitCreer").addEventListener("click", async () => {
       document.body.classList.remove('noscroll');
       document.querySelectorAll("form").forEach(form => form.reset());
       return;
-    } else {
-      if (!window.location.pathname.endsWith('en.php')) {
-        alert("Utilisateur déjà existant...");
-        return;
-      } else {
-        alert("User already exists...");
-        return;
-      }
     }
+    if (!window.location.pathname.endsWith('en.php')) {
+      alert("Utilisateur déjà existant...");
+      return;
+    }
+    alert("User already exists...");
   } catch (error) {
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Une erreur est survenue lors de la création du compte...");
       return;
-    } else {
-      alert("An error occurred while creating the account...");
-      return;
     }
+    alert("An error occurred while creating the account...");
   }
 });
 
 document.querySelector("#submitSeConnecter").addEventListener("click", async () => {
-  const e = document.querySelector("#nomConnect").value.trim(),
-    t = document.querySelector("#mdpConnect").value;
+  const e = document.querySelector("#nomConnect").value.trim();
+  const t = document.querySelector("#mdpConnect").value;
   if (!e || !t) {
     return;
   }
@@ -347,62 +338,60 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
     if (!window.location.pathname.endsWith('en.php')) {
       alert("Le nom ne peut contenir que des lettres...");
       return;
-    } else {
-      alert("The name can only contain letters...");
+    }
+    alert("The name can only contain letters...");
+    return;
+  }
+  const nomConnect = encodeURIComponent(e);
+  const mdpConnect = encodeURIComponent(t);
+  try {
+    const response = await fetch("/projets/notes/assets/php/formConnect.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.getElementById("csrf_token_connect").value}`
+    });
+    if (response.ok) {
+      location.reload();
       return;
     }
+    document.querySelector("#mdpConnect").value = "";
+    let time = 10;
+    const button = document.querySelector("#submitSeConnecter");
+    button.disabled = true;
+    if (!window.location.pathname.endsWith('en.php')) {
+      alert("Mauvais identifiants...");
+      const interval = setInterval(() => {
+        time--;
+        button.textContent = `Se connecter (${time})`;
+      }, 1000);
+      button.textContent = `Se connecter (${time})`;
+      setTimeout(() => {
+        clearInterval(interval);
+        button.disabled = false;
+        button.textContent = 'Se connecter';
+      }, 11000);
+      return;
+    }
+    alert("Wrong credentials...");
+    const interval = setInterval(() => {
+      time--;
+      button.textContent = `Se connecter (${time})`;
+    }, 1000);
+    button.textContent = `Sign in (${time})`;
+    setTimeout(() => {
+      clearInterval(interval);
+      button.disabled = false;
+      button.textContent = 'Sign in';
+    }, 11000);
+  } catch (error) {
+    if (!window.location.pathname.endsWith('en.php')) {
+      alert("Une erreur est survenue lors de la connexion...");
+      return;
+    }
+    alert("An error occurred while logging in...");
   }
-  const nomConnect = encodeURIComponent(e),
-    mdpConnect = encodeURIComponent(t);
-  fetch("/projets/notes/assets/php/formConnect.php", {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: "nomConnect=" + nomConnect + "&mdpConnect=" + mdpConnect + "&csrf_token_connect=" + document.getElementById("csrf_token_connect").value
-  })
-    .then(response => {
-      if (response.status === 200) {
-        location.reload();
-      } else {
-        if (!window.location.pathname.endsWith('en.php')) {
-          alert("Mauvais identifiants...");
-          document.querySelector("#mdpConnect").value = "";
-          const button = document.querySelector("#submitSeConnecter");
-          button.disabled = true;
-          let time = 10;
-          button.textContent = `Se connecter (${time})`;
-          const interval = setInterval(() => {
-            time--;
-            button.textContent = `Se connecter (${time})`;
-          }, 1000);
-          setTimeout(() => {
-            clearInterval(interval);
-            button.disabled = false;
-            button.textContent = 'Se connecter';
-          }, 11000);
-          return;
-        } else {
-          alert("Wrong credentials...");
-          document.querySelector("#mdpConnect").value = "";
-          const button = document.querySelector("#submitSeConnecter");
-          button.disabled = true;
-          let time = 10;
-          button.textContent = `Sign in (${time})`;
-          const interval = setInterval(() => {
-            time--;
-            button.textContent = `Sign in (${time})`;
-          }, 1000);
-          setTimeout(() => {
-            clearInterval(interval);
-            button.disabled = false;
-            button.textContent = 'Sign in';
-          }, 11000);
-          return;
-        }
-      }
-    })
 });
 
 document.querySelectorAll(".icon").forEach((element) => {
@@ -436,11 +425,11 @@ couleurs.forEach((couleurSpan, index) => {
 });
 
 document.querySelector("#submitNote").addEventListener("click", () => {
-  const couleurSpan = document.querySelector('.couleurs span.selectionne'),
-    v = couleurSpan.classList[0],
-    e = titleTag.value.trim().replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
-    t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘"),
-    g = document.getElementById("checkHidden").checked;
+  const couleurSpan = document.querySelector('.couleurs span.selectionne');
+  const v = couleurSpan.classList[0];
+  const e = titleTag.value.trim().replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
+  const t = descTag.value.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/").replaceAll(/"/g, "‘‘");
+  const g = document.getElementById("checkHidden").checked;
   if (!e || !t || t.length > 2000) {
     return;
   }
@@ -490,7 +479,7 @@ document.querySelectorAll("header i").forEach((element) => {
 document.querySelector("#search-input").addEventListener("keyup", () => {
   const e = document.querySelector("#search-input").value.trim().toLowerCase();
   document.querySelectorAll(".note").forEach((element) => {
-    const t = element.querySelector(".note p").innerText.toLowerCase();
+    const t = element.querySelector(".note p").textContent.toLowerCase();
     t.includes(e) ? element.style.display = "flex" : element.style.display = "none";
   });
 });

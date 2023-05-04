@@ -20,10 +20,10 @@ $query->execute([':CurrentUser' => $_SESSION["nom"]]);
 $items = [];
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   $items[] = [
-    'id' => $row['id'],
-    'title' => decrypt_data($row['titre'], $_SESSION['key']),
+    'id' => htmlspecialchars($row['id'], ENT_QUOTES),
+    'title' => htmlspecialchars(decrypt_data($row['titre'], $_SESSION['key']), ENT_QUOTES),
     'couleur' => $row['couleur'],
-    'desc' => decrypt_data($row['content'], $_SESSION['key']),
+    'desc' => htmlspecialchars(decrypt_data($row['content'], $_SESSION['key']), ENT_QUOTES),
     'date' => $row['dateNote'],
     'hidden' => $row['hiddenNote']
   ];

@@ -109,8 +109,8 @@ if (!isset($_SESSION["nom"])) {
             Note masquée
             <div class="row">
               <label for="checkHidden" class="switch" aria-label="Note masquée">
-                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée">
-                <span class="slider"></span>
+                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée" tabindex="-1">
+                <span class="slider" tabindex="0"></span>
               </label>
             </div>
             <button id="submitNoteConnect" type="submit" aria-label="Enregistrer la note">Enregistrer la note <i class="fa-solid fa-cloud"></i></button>
@@ -209,8 +209,8 @@ if (!isset($_SESSION["nom"])) {
             Note masquée
             <div class="row">
               <label for="checkHidden" class="switch" aria-label="Note masquée">
-                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée">
-                <span class="slider"></span>
+                <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Note masquée" tabindex="-1">
+                <span class="slider" tabindex="0"></span>
               </label>
             </div>
             <button id="submitNote" type="submit" aria-label="Enregistrer la note">Enregistrer la note</button>
@@ -283,7 +283,7 @@ if (!isset($_SESSION["nom"])) {
     </svg>
   </div>
   <?php if (isset($_SESSION["nom"])) { ?>
-  <script src="/projets/notes/assets/js/scriptConnect.min.js" defer></script>
+  <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
   <?php } else { ?>
   <script src="/projets/notes/assets/js/script.js" defer></script>
   <?php } ?>
