@@ -366,7 +366,6 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
         time--;
         button.textContent = `Se connecter (${time})`;
       }, 1000);
-      button.textContent = `Se connecter (${time})`;
       setTimeout(() => {
         clearInterval(interval);
         button.disabled = false;
@@ -377,9 +376,8 @@ document.querySelector("#submitSeConnecter").addEventListener("click", async () 
     alert("Wrong credentials...");
     const interval = setInterval(() => {
       time--;
-      button.textContent = `Se connecter (${time})`;
+      button.textContent = `Sign in (${time})`;
     }, 1000);
-    button.textContent = `Sign in (${time})`;
     setTimeout(() => {
       clearInterval(interval);
       button.disabled = false;
