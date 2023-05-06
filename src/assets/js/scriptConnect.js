@@ -6,11 +6,20 @@ const popupBoxConnect = document.querySelector(".connect-popup-box");
 const popupBoxGestion = document.querySelector(".gestion-popup-box");
 const titleTagConnect = popupBoxConnect.querySelector("#titleConnect");
 const descTagConnect = popupBoxConnect.querySelector("textarea");
-const darken = document.querySelector('.darken');
-const switchElement = document.querySelector('.switch');
-const couleurs = document.querySelectorAll('.couleurs span');
+const darken = document.querySelector(".darken");
+const switchElement = document.querySelector(".switch");
+const couleurs = document.querySelectorAll(".couleurs span");
+const forms = document.querySelectorAll("form");
+const converter = new showdown.Converter({
+  tasklists: true,
+  smoothLivePreview: true,
+  extensions: [taskListEnablerExtension]
+});
 
 const showNotesConnect = async () => {
+  document.querySelectorAll(".note").forEach((note) => {
+    note.remove();
+  });
   try {
     const response = await fetch("/projets/notes/assets/php/getNotes.php", {
       method: "POST",
@@ -19,23 +28,16 @@ const showNotesConnect = async () => {
       }
     });
     const data = await response.json();
-    const converter = new showdown.Converter({
-      tasklists: true,
-      smoothLivePreview: true,
-      extensions: [taskListEnablerExtension]
-    });
-    const notesHtml = data.map((row) => {
-      let { id, title, couleur, desc, date, hidden } = row;
-      if (!desc || desc === "null") {
-        desc = "";
+    data.forEach((row) => {
+      const { id, title, couleur, desc, date, hidden } = row;
+      if (desc) {
+        const descEnd = replaceAllEnd(desc);
+        const result = hidden === 0 ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>${converter.makeHtml(desc)}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${descEnd}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${descEnd}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id},'${title}')"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>*****</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${descEnd}','${couleur}','${hidden}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id},'${title}')"></i></div></div>`;
+        notesContainer.insertAdjacentHTML("beforeend", result);
       }
-      const descFilter = replaceAllStart(desc);
-      const result = hidden === 0 ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>${replaceAllEnd(converter.makeHtml(descFilter))}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${replaceAllEnd(descFilter)}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${replaceAllEnd(descFilter)}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id},'${title}')"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>*****</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${replaceAllEnd(descFilter)}','${couleur}','${hidden}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id},'${title}')"></i></div></div>`;
-      return result;
-    }).join("");
-    notesContainer.insertAdjacentHTML("beforeend", notesHtml);
+    });
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la récupération des notes...");
       return;
     }
@@ -52,14 +54,11 @@ const fetchDelete = async (e) => {
       },
       body: `noteId=${encodeURIComponent(e)}`
     });
-    document.querySelectorAll(".note").forEach((note) => {
-      note.remove();
-    });
     darken.classList.remove("show");
-    document.body.classList.remove('noscroll');
+    document.body.classList.remove("noscroll");
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la suppression de la note...");
       return;
     }
@@ -79,13 +78,13 @@ const deleteAccount = async () => {
       location.reload();
       return;
     }
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la suppression de votre compte...");
       return;
     }
     alert("An error occurred while deleting your account...");
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la suppression de votre compte...");
       return;
     }
@@ -103,7 +102,7 @@ const fetchLogout = async () => {
     });
     location.reload();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la déconnexion...");
       return;
     }
@@ -120,30 +119,27 @@ function replaceAllEnd(e) {
 }
 
 function toggleFullscreen(id) {
-  const note = document.querySelector('#note' + id);
-  note.classList.toggle('fullscreen');
-  darken.classList.toggle('show');
-  document.body.classList.toggle('noscroll');
+  const note = document.querySelector(`#note${id}`);
+  note.classList.toggle("fullscreen");
+  darken.classList.toggle("show");
+  document.body.classList.toggle("noscroll");
 }
 
-function updateNoteConnect(id, title, descFilter, couleur, hidden) {
-  const notes = document.querySelectorAll('.note');
-  notes.forEach(note => {
-    note.classList.remove('fullscreen');
+function updateNoteConnect(id, title, desc, couleur, hidden) {
+  document.querySelectorAll('.note').forEach(note => {
+    note.classList.remove("fullscreen");
   });
   darken.classList.remove("show");
-  document.body.classList.add('noscroll');
+  document.body.classList.add("noscroll");
   isUpdate = true;
   document.querySelector(".iconConnect").click();
   document.querySelector("#idNoteInput").value = id;
   titleTagConnect.value = title;
-  descTagConnect.value = replaceAllStart(descFilter);
+  descTagConnect.value = replaceAllStart(desc);
   couleurs.forEach((couleurSpan) => {
-    couleurSpan.classList.contains(couleur) ? couleurSpan.classList.add('selectionne') : couleurSpan.classList.remove('selectionne');
+    couleurSpan.classList.contains(couleur) ? couleurSpan.classList.add("selectionne") : couleurSpan.classList.remove("selectionne");
   });
-  if (hidden === "1") {
-    document.getElementById("checkHidden").checked = true;
-  }
+  if (hidden === "1") document.getElementById("checkHidden").checked = true;
   descTagConnect.focus();
 }
 
@@ -158,7 +154,7 @@ function copy(e) {
 }
 
 function deleteNoteConnect(e, f) {
-  if (!window.location.pathname.endsWith('en.php')) {
+  if (!window.location.pathname.endsWith("en.php")) {
     if (confirm(`Voulez-vous vraiment supprimer la note ${f} ?`)) {
       fetchDelete(e);
     }
@@ -210,23 +206,21 @@ document.addEventListener("keydown", (event) => {
 });
 
 switchElement.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+  if (event.key === "Enter") {
     const checkbox = switchElement.querySelector('input[type="checkbox"]');
     checkbox.checked = !checkbox.checked;
-    switchElement.classList.toggle('checked');
+    switchElement.classList.toggle("checked");
   }
 });
 
 document.querySelectorAll(".iconConnect").forEach((element) => {
   element.addEventListener("click", () => {
     popupBoxConnect.classList.add("show");
-    document.body.classList.add('noscroll');
+    document.body.classList.add("noscroll");
     titleTagConnect.focus();
   });
   element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-    }
+    if (event.key === "Enter") element.click();
   });
 });
 
@@ -235,28 +229,24 @@ document.querySelectorAll(".sedeconnecter").forEach((element) => {
     fetchLogout();
   });
   element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      fetchLogout();
-    }
+    if (event.key === "Enter") fetchLogout();
   });
 });
 
 document.querySelectorAll(".gestionCompte").forEach((element) => {
   element.addEventListener("click", () => {
     popupBoxGestion.classList.add("show");
-    document.body.classList.add('noscroll');
-    popupBoxGestion.querySelector('i').focus();
+    document.body.classList.add("noscroll");
+    popupBoxGestion.querySelector("i").focus();
   });
   element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-    }
+    if (event.key === "Enter") element.click();
   });
 });
 
 document.querySelectorAll(".supprimerCompte").forEach((element) => {
   element.addEventListener("click", () => {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       if (confirm("Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d'utilisateur redeviendra disponible pour les autres utilisateurs.")) {
         deleteAccount();
       }
@@ -267,13 +257,11 @@ document.querySelectorAll(".supprimerCompte").forEach((element) => {
     }
   });
   element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-    }
+    if (event.key === "Enter") element.click();
   });
 });
 
-document.querySelectorAll("form").forEach((element) => {
+forms.forEach((element) => {
   element.addEventListener("submit", (event) => {
     event.preventDefault();
   });
@@ -282,16 +270,14 @@ document.querySelectorAll("form").forEach((element) => {
 document.querySelectorAll("header i").forEach((element) => {
   element.addEventListener("click", () => {
     isUpdate = false;
-    document.querySelectorAll("form").forEach(form => form.reset());
+    forms.forEach(form => form.reset());
     popupBoxConnect.classList.remove("show");
     popupBoxGestion.classList.remove("show");
     darken.classList.remove("show");
-    document.body.classList.remove('noscroll');
+    document.body.classList.remove("noscroll");
   });
   element.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-    }
+    if (event.key === "Enter") element.click();
   });
 });
 
@@ -305,7 +291,7 @@ document.querySelector("#search-input").addEventListener("keyup", () => {
 
 document.addEventListener("keydown", e => {
   e.ctrlKey && "k" === e.key && (e.preventDefault(),
-    document.querySelector('#search-input').focus())
+    document.querySelector("#search-input").focus());
 });
 
 document.querySelector("#tri").addEventListener("change", async () => {
@@ -317,12 +303,9 @@ document.querySelector("#tri").addEventListener("change", async () => {
       },
       body: `tri=${encodeURIComponent(document.querySelector("#tri").value)}`
     });
-    document.querySelectorAll(".note").forEach((note) => {
-      note.remove();
-    });
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors du tri des notes...");
       return;
     }
@@ -333,35 +316,28 @@ document.querySelector("#tri").addEventListener("change", async () => {
 couleurs.forEach((couleurSpan, index) => {
   couleurSpan.addEventListener('click', (event) => {
     couleurs.forEach((couleurSpan) => {
-      couleurSpan.classList.remove('selectionne');
+      couleurSpan.classList.remove("selectionne");
     });
-    event.target.classList.add('selectionne');
+    event.target.classList.add("selectionne");
   });
   couleurSpan.addEventListener("keydown", (event) => {
-    if (event.key === 'Enter') {
-      couleurSpan.click();
-    }
+    if (event.key === "Enter") couleurSpan.click();
   });
-  if (index === 0) {
-    couleurSpan.classList.add('selectionne');
-  }
+  if (index === 0) couleurSpan.classList.add("selectionne");
 });
 
 document.querySelector("#submitNoteConnect").addEventListener("click", async () => {
   try {
     const titreBrut = document.querySelector("#titleConnect").value.trim();
     const contentBrut = document.querySelector("#descConnect").value;
-    if (!titreBrut || !contentBrut || contentBrut.length > 2000) {
-      return;
-    }
-    let hidden;
+    if (!titreBrut || !contentBrut || contentBrut.length > 2000) return;
     const titre = encodeURIComponent(titreBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/"));
     const content = encodeURIComponent(contentBrut.replaceAll(/'/g, "‘").replaceAll(/\\/g, "/"));
-    const couleurSpan = document.querySelector('.couleurs span.selectionne');
+    const couleurSpan = document.querySelector(".couleurs span.selectionne");
     const couleur = encodeURIComponent(couleurSpan.classList[0]);
-    const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const date = new Date().toISOString().slice(0, 19).replace("T", " ");
     const checkBox = document.getElementById("checkHidden");
-    checkBox.checked ? hidden = 1 : hidden = 0;
+    const hidden = checkBox.checked ? 1 : 0;
     const url = isUpdate ? "/projets/notes/assets/php/updateNote.php" : "/projets/notes/assets/php/formAddNote.php";
     const data = isUpdate ? `noteId=${document.querySelector("#idNoteInput").value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}`;
     await fetch(url, {
@@ -371,16 +347,13 @@ document.querySelector("#submitNoteConnect").addEventListener("click", async () 
       },
       body: data
     });
-    document.querySelectorAll(".note").forEach((note) => {
-      note.remove();
-    });
     isUpdate = false;
     popupBoxConnect.classList.remove("show");
-    document.body.classList.remove('noscroll');
-    document.querySelectorAll("form").forEach(form => form.reset());
+    document.body.classList.remove("noscroll");
+    forms.forEach(form => form.reset());
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de l'ajout de la note...");
       return;
     }
@@ -392,35 +365,35 @@ document.querySelector("#submitChangeMDP").addEventListener("click", async () =>
   const e = document.querySelector("#mdpModifNew").value;
   const t = document.querySelector("#mdpModifNewValid").value;
   if (!e || !t) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Un ou plusieurs champs sont vides...");
       return;
     }
     alert("One or more fields are empty...");
   }
   if (e.length < 6) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Mot de passe trop faible (<6)...");
       return;
     }
     alert("Password too weak (<6)...");
   }
   if (/^[0-9]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Mot de passe trop faible (que des chiffres)...");
       return;
     }
     alert("Password too weak (only numbers)...");
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Mot de passe trop faible (que des lettres)...");
       return;
     }
     alert("Password too weak (only letters)...");
   }
   if (e !== t) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Les mots de passe ne correspondent pas...");
       return;
     }
@@ -435,16 +408,16 @@ document.querySelector("#submitChangeMDP").addEventListener("click", async () =>
       },
       body: `mdpNew=${mdpNew}`
     });
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Mot de passe modifié !");
     } else {
       alert("Password changed!");
     }
     popupBoxGestion.classList.remove("show");
-    document.body.classList.remove('noscroll');
-    document.querySelectorAll("form").forEach(form => form.reset());
+    document.body.classList.remove("noscroll");
+    forms.forEach(form => form.reset());
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith("en.php")) {
       alert("Une erreur est survenue lors de la modification du mot de passe...");
       return;
     }
