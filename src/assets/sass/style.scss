@@ -534,15 +534,11 @@ p.welcome {
   cursor: pointer;
   text-align: center;
   font-weight: 700;
-  color: $color5;
-
-  &:hover {
-    color: $color6
-  }
+  color: $color5
 }
 
 .linkp {
-  margin-left: 20px;
+  margin-left: 20px
 }
 
 .svgPart {
@@ -841,8 +837,10 @@ select {
 
 #errorNotification {
   position: fixed;
-  top: 2rem;
-  right: 2rem;
+  top: 1rem;
+  margin: 1rem auto;
+  text-align: center;
+  max-width: 300px;
   background-color: #a93b3b;
   color: #fff;
   padding: 10px;
