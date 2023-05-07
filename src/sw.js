@@ -1,33 +1,29 @@
-const CACHE_VERSION = 'v1';
-const CACHE_NAME = `static-${CACHE_VERSION}`;
+const CACHE_NAME = 'static-v1';
 const urlsToCache = [];
-self.addEventListener('install', event => {
+this.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .then(() => self.skipWaiting())
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => this.skipWaiting()),
   );
 });
-self.addEventListener('fetch', event => {
+this.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.match(event.request).then(res => {
-        return res || fetch(event.request);
-      });
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.match(event.request)
+        .then((res) => res || fetch(event.request))),
   );
 });
-self.addEventListener('activate', event => {
+this.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(keys.map(key => {
-        if (key !== CACHE_NAME) {
-          return caches.delete(key);
-        }
-      }));
-    })
+    caches.keys().then((keys) => Promise.all(keys.map((key) => {
+      if (key !== CACHE_NAME) {
+        return caches.delete(key);
+      }
+      return null;
+    }))),
   );
-  self.registration
+  this.registration
     .update()
     .then(() => {
       console.log('Service worker updated!');

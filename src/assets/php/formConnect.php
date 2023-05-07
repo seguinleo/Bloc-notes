@@ -2,18 +2,18 @@
 session_name('__Secure-PHPSESSID');
 session_start();
 if ($_POST['csrf_token_connect'] !== $_SESSION['csrf_token_connect'] || !isset($_POST['nomConnect'], $_POST['mdpConnect']) || isset($_SESSION["nom"], $_SESSION['userId'])) {
-  header('HTTP/2.0 403 Forbidden');
-  exit();
+    header('HTTP/2.0 403 Forbidden');
+    exit();
 }
-require_once "./config.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 $nomConnect = $_POST['nomConnect'];
 $mdpConnect = $_POST['mdpConnect'];
 $query = $PDO->prepare("SELECT * FROM users WHERE nom=:NomConnect");
 $query->execute([':NomConnect' => $nomConnect]);
 $row = $query->fetch(PDO::FETCH_ASSOC);
 if (!password_verify($mdpConnect, $row['mdp'])) {
-  header('HTTP/2.0 403 Forbidden');
-  exit();
+    header('HTTP/2.0 403 Forbidden');
+    exit();
 }
 $_SESSION['nom'] = $row['nom'];
 $_SESSION['userId'] = $row['id'];

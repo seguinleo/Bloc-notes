@@ -2,14 +2,14 @@
 session_name('__Secure-PHPSESSID');
 session_start();
 if (!isset($_SESSION["nom"], $_SESSION['userId'])) {
-  header('HTTP/2.0 403 Forbidden');
-  exit();
+    header('HTTP/2.0 403 Forbidden');
+    exit();
 }
-require_once "./config.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 $query = $PDO->prepare("DELETE FROM users WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute([
-  ':CurrentUser' => $_SESSION["nom"],
-  ':UserId' => $_SESSION["userId"]
+    ':CurrentUser' => $_SESSION["nom"],
+    ':UserId' => $_SESSION["userId"]
 ]);
 session_unset();
 session_destroy();

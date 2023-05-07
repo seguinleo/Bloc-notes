@@ -15,6 +15,7 @@ Bloc-notes is a free, open source and encrypted notebook website developed with 
 - [Security/Privacy](#security-and-privacy)
 - [Languages](#languages)
 - [Community](#community)
+- [Commands](#commands)
 
 ## Why?
 When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote don't respect privacy, Standard Notes and Obsidian are very light without having to pay...
@@ -40,5 +41,18 @@ No personal data is collected in accordance with the GDPR.
 
 ## Community
 If you have any suggestions to improve this project or if you find issues, feel free to discuss!
+
+## Commands
+``npm i`` to install all js dependencies
+ 
+``composer i`` to install all php dependencies
+
+``sass --watch assets/sass/style.scss assets/css/style.css --style compressed`` to watch sass
+
+``npx eslint file.js`` to verify js files
+
+``vendor/bin/phpcs --standard=PSR2 file.php`` to verify php files
+
+``npx babel assets/js --out-dir dist`` to create backwards compatible js files
 
 ![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)

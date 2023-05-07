@@ -1,0 +1,15 @@
+{
+  "name": "bloc-notes",
+  "version": "23.5.2",
+  "description": "",
+  "author": "PouletEnSlip",
+  "license": "CC-BY-4.0",
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}

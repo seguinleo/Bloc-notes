@@ -1,32 +1,34 @@
 <?php
 session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"], $_SESSION['userId'], $_SESSION['tri'])) {
-  header('HTTP/2.0 403 Forbidden');
-  exit();
+if (!isset($_SESSION["nom"])) {
+    header('HTTP/2.0 403 Forbidden');
+    exit();
 }
-require_once "./config.php";
-require_once "./functions.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/functions.php';
 $tri = $_SESSION['tri'];
-if ($tri == "Date de création") {
-  $orderBy = "ORDER BY id DESC, titre";
-} else if ($tri == "Date de modification") {
-  $orderBy = "ORDER BY dateNote DESC, id DESC, titre";
-} else {
-  $orderBy = "ORDER BY titre";
+switch ($tri) {
+    case "Date de création":
+        $orderBy = "ORDER BY id DESC, titre";
+        break;
+    case "Date de modification":
+        $orderBy = "ORDER BY dateNote DESC, id DESC, titre";
+        break;
+    default:
+        $orderBy = "ORDER BY titre";
+        break;
 }
 $query = $PDO->prepare("SELECT id, titre, couleur, content, dateNote, hiddenNote FROM notes WHERE user=:CurrentUser $orderBy");
 $query->execute([':CurrentUser' => $_SESSION["nom"]]);
-$items = [];
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-  $items[] = [
-    'id' => htmlspecialchars($row['id'], ENT_QUOTES),
-    'title' => htmlspecialchars(decrypt_data($row['titre'], $_SESSION['key']), ENT_QUOTES),
-    'couleur' => $row['couleur'],
-    'desc' => htmlspecialchars(decrypt_data($row['content'], $_SESSION['key']), ENT_QUOTES),
-    'date' => $row['dateNote'],
-    'hidden' => $row['hiddenNote']
-  ];
+$items = $query->fetchAll(PDO::FETCH_ASSOC);
+foreach ($items as &$item) {
+    $item['id'] = htmlspecialchars($item['id'], ENT_QUOTES);
+    $item['title'] = htmlspecialchars(decrypt_data($item['titre'], $_SESSION['key']), ENT_QUOTES);
+    $item['desc'] = htmlspecialchars(decrypt_data($item['content'], $_SESSION['key']), ENT_QUOTES);
+    $item['date'] = $item['dateNote'];
+    $item['couleur'] = $item['couleur'];
+    $item['hidden'] = $item['hiddenNote'];
 }
 echo json_encode($items);
 $query->closeCursor();

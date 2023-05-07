@@ -1,0 +1,16 @@
+{
+    "name": "poulet/src",
+    "autoload": {
+        "psr-4": {
+            "Poulet\\Src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "PouletEnSlip"
+        }
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.7"
+    }
+}

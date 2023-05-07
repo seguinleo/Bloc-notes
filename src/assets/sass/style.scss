@@ -107,11 +107,7 @@ a {
   color: $color5;
   text-decoration: none;
   display: inline;
-  font-weight: 700;
-
-  &:hover {
-    color: $color6
-  }
+  font-weight: 700
 }
 
 p.title {
@@ -143,7 +139,7 @@ code {
 }
 
 li {
-  margin: 10px 5px 10px -14px
+  margin-left: -1rem
 }
 
 img {
@@ -326,10 +322,12 @@ p.welcome {
   transition: clip-path .5s;
   width: 400px;
   max-height: 460px;
+  line-height: 2;
   padding: 30px 20px 10px;
   background: $color2;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
     outline: none;
 
@@ -351,7 +349,8 @@ p.welcome {
     transition: transform .4s
   }
 
-  &:hover:after, &:focus:after {
+  &:hover:after,
+  &:focus:after {
     transform: translate(-100%, -100%)
   }
 
@@ -837,11 +836,19 @@ select {
 }
 
 .supprimerCompte {
-  color: #ff8a8a;
+  color: #fe7575
+}
 
-  &:hover {
-    color: #ffb4b4
-  }
+#errorNotification {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background-color: #a93b3b;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  display: none;
+  z-index: 999
 }
 
 #copyNotification {
@@ -881,7 +888,7 @@ select {
   }
 }
 
-@media(width <= 992px) {
+@media(width <=992px) {
 
   nav {
     position: relative;
@@ -973,6 +980,10 @@ select {
       min-height: 75vh;
       overflow-y: auto;
     }
+  }
+
+  #copyNotification.show {
+    display: none;
   }
 
   .couleurs span {

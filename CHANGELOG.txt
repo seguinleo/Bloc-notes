@@ -1,3 +1,7 @@
+#----v23.5.2----#
+-Add ESLint and PHPCS
+-Improve code structure
+
 #----v23.5.1----#
 -Encrypt notes title
 -Improve accessibility
