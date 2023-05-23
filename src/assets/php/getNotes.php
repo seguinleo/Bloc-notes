@@ -8,16 +8,14 @@ if (!isset($_SESSION["nom"])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/functions.php';
 $tri = $_SESSION['tri'];
-switch ($tri) {
-    case "Date de création":
-        $orderBy = "ORDER BY id DESC, titre";
-        break;
-    case "Date de modification":
-        $orderBy = "ORDER BY dateNote DESC, id DESC, titre";
-        break;
-    default:
-        $orderBy = "ORDER BY titre";
-        break;
+if ($tri === "Date de création") {
+    $orderBy = "ORDER BY id DESC";
+} else if ($tri === "Date de création (Z-A)") {
+    $orderBy = "ORDER BY id";
+} else if ($tri === "Date de modification") {
+    $orderBy = "ORDER BY dateNote DESC, id DESC";
+} else {
+    $orderBy = "ORDER BY dateNote, id DESC";
 }
 $query = $PDO->prepare("SELECT id, titre, couleur, content, dateNote, hiddenNote FROM notes WHERE user=:CurrentUser $orderBy");
 $query->execute([':CurrentUser' => $_SESSION["nom"]]);

@@ -20,7 +20,6 @@ if (!isset($_SESSION["nom"])) {
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
     <meta name="description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#171717">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
@@ -61,7 +60,7 @@ if (!isset($_SESSION["nom"])) {
             <kbd>CTRL</kbd><kbd>K</kbd>
         </div>
         <div class="copyright">
-            <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.2</a>
+            <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.3</a>
             &copy;
             <a href="/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
         </div>
@@ -90,7 +89,7 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>
                             <div class="row">
-                                <textarea id="descConnect" placeholder="Contenu" aria-label="contenu" maxlength="2000"></textarea>
+                                <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -146,10 +145,11 @@ if (!isset($_SESSION["nom"])) {
                         </div>
                         <div class="row rowTri">
                             <select id="tri" aria-label="tri">
-                                <option value="Titre" selected>Trier les notes par :</option>
-                                <option value="Titre">Titre</option>
+                                <option value="Date de modification" selected>Trier les notes par :</option>
                                 <option value="Date de création">Date de création</option>
+                                <option value="Date de création (Z-A)">Date de création (Z-A)</option>
                                 <option value="Date de modification">Date de modification</option>
+                                <option value="Date de modification (Z-A)">Date de modification (Z-A)</option>
                             </select>
                         </div>
                         <details>
@@ -191,7 +191,7 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>
                             <div class="row">
-                                <textarea id="content" placeholder="Contenu" aria-label="contenu" maxlength="2000"></textarea>
+                                <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -275,7 +275,7 @@ if (!isset($_SESSION["nom"])) {
         <?php } ?>
     </main>
     <div class="svgPart" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+        <svg viewBox="0 0 300 200">
             <defs>
                 <marker id="pointer" markerWidth="10" markerHeight="8" refX="7" refY="5" orient="-45">
                     <polyline points="1 1, 8 5, 1 7"></polyline>

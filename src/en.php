@@ -17,10 +17,9 @@ if (!isset($_SESSION["nom"])) {
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Bloc-notes &#8211; Léo SEGUIN</title>
+    <title>Bloc-notes (en) &#8211; Léo SEGUIN</title>
     <meta name="description" content="Save notes to your device or sign in to sync and encrypt your notes.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#171717">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
@@ -61,7 +60,7 @@ if (!isset($_SESSION["nom"])) {
             <kbd>CTRL</kbd><kbd>K</kbd>
         </div>
         <div class="copyright">
-            <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.2</a>
+            <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.3</a>
             &copy;
             <a href="/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
         </div>
@@ -90,7 +89,7 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title">
                             </div>
                             <div class="row">
-                                <textarea id="descConnect" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
+                                <textarea id="descConnect" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -146,10 +145,11 @@ if (!isset($_SESSION["nom"])) {
                         </div>
                         <div class="row rowTri">
                             <select id="tri" aria-label="tri">
-                                <option value="Titre" selected>Sort notes by:</option>
-                                <option value="Titre">Title</option>
+                                <option value="Date de modification" selected>Sort notes by:</option>
                                 <option value="Date de création">Creation date</option>
+                                <option value="Date de création (Z-A)">Creation date (Z-A)</option>
                                 <option value="Date de modification">Modification date</option>
+                                <option value="Date de modification (Z-A)">Modification date (Z-A)</option>
                             </select>
                         </div>
                         <details>
@@ -191,7 +191,7 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="title" placeholder="Title" type="text" maxlength="30" aria-label="title">
                             </div>
                             <div class="row">
-                                <textarea id="content" placeholder="Content" aria-label="content" maxlength="2000"></textarea>
+                                <textarea id="content" placeholder="Content (Markdown)" aria-label="content" maxlength="2000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -275,7 +275,7 @@ if (!isset($_SESSION["nom"])) {
         <?php } ?>
     </main>
     <div class="svgPart" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+        <svg viewBox="0 0 300 200">
             <defs>
                 <marker id="pointer" markerWidth="10" markerHeight="8" refX="7" refY="5" orient="-45">
                     <polyline points="1 1, 8 5, 1 7"></polyline>

@@ -82,8 +82,8 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
-  height: 3px
+  width: 5px;
+  height: 5px
 }
 
 ::-webkit-scrollbar-thumb {
@@ -110,7 +110,7 @@ a {
   font-weight: 700
 }
 
-p.title {
+.title {
   color: $color5
 }
 
@@ -186,7 +186,8 @@ nav {
     display: inline-block;
 
     ::placeholder {
-      color: $color4
+      color: $color4;
+      opacity: 1;
     }
 
     i {
@@ -361,7 +362,7 @@ p.welcome {
     }
   }
 
-  p.title {
+  .title {
     font-size: 1.4rem;
     text-align: right;
     font-weight: 700;
@@ -485,6 +486,7 @@ p.welcome {
 
   a,
   h1,
+  h2,
   p,
   span {
     color: $color1

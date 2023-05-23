@@ -7,9 +7,9 @@ if (!isset($_SESSION["nom"], $_SESSION['userId'])) {
 }
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 $tri = $_POST['tri'];
-$trisAutorises = array("Titre", "Date de création", "Date de modification");
+$trisAutorises = array("Date de création", "Date de modification", "Date de création (Z-A)", "Date de modification (Z-A)");
 if (!in_array($tri, $trisAutorises)) {
-    $tri = "Titre";
+    $tri = "Date de modification";
 }
 $query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute([

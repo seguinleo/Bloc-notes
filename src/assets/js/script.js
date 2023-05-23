@@ -52,7 +52,7 @@ const showNotes = () => {
         couleur, hidden, title, description, date,
       } = e;
       const descEnd = replaceAllEnd(e.description);
-      const result = hidden === false ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>${converter.makeHtml(description)}</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${descEnd}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><p class="title">${title}</p><span>*****</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i></div></div>`;
+      const result = hidden === false ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>${converter.makeHtml(description)}</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${descEnd}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>*****</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i></div></div>`;
       notesContainer.insertAdjacentHTML('beforeend', result);
     });
   }
@@ -264,6 +264,11 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
       document.body.classList.remove('noscroll');
       forms.forEach((form) => form.reset());
+      if (!window.location.pathname.endsWith('en.php')) {
+        alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+        return;
+      }
+      alert('Account created successfully! You can now log in.');
       return;
     }
     if (!window.location.pathname.endsWith('en.php')) {
@@ -428,7 +433,7 @@ document.querySelector('#search-input').addEventListener('keyup', () => {
   const e = document.querySelector('#search-input').value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((element) => {
     const note = element;
-    const t = note.querySelector('.note p').textContent.toLowerCase();
+    const t = note.querySelector('.note h2').textContent.toLowerCase();
     if (t.includes(e)) {
       note.style.display = 'flex';
     } else {
