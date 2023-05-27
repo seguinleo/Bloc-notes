@@ -1,58 +1,71 @@
-# Bloc-notes
-![Issues](https://img.shields.io/github/issues/PouletEnSlip/Bloc-notes)
-![License](https://img.shields.io/github/license/PouletEnSlip/Bloc-notes)
-[![CodeQL](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/PouletEnSlip/Bloc-notes/actions/workflows/github-code-scanning/codeql)
+<p align="center">
+<img src="https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
+</p>
+<h1 align="center">Bloc-notes</h1>
 
-[![Icon](https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon48.png)](https://leoseguin.fr/projets/notes/)
+<p align="center">
+<b>Bloc-notes</b> is a free, open source and encrypted notebook. Bloc-notes aims for optimal security and privacy.
+</p>
 
-Bloc-notes is a free, open source and encrypted notebook website developed with PHP and JavaScript.
+<p align="center">
+<img alt="" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr/projets/notes/?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/github/license/PouletEnSlip/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/github/issues/PouletEnSlip/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
+</p>
 
 ## Table of contents
 - [Why?](#why)
 - [Features](#features)
 - [Design](#design)
-- [PWA](#pwa)
 - [Security/Privacy](#security-and-privacy)
 - [Languages](#languages)
+- [Coming soon](#coming-soon)
 - [Community](#community)
-- [Commands](#commands)
+- [For developers](#for-developers)
 
 ## Why?
 When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote don't respect privacy, Standard Notes and Obsidian are very light without having to pay...
-So I decided to create my own notebook that respects users' privacy and is end-to-end encrypted.
+So I decided to create my own notebook that respects users' privacy and GDPR.
 
 ## Features
-The user can save and edit notes locally in JSON, change notes color, copy notes and use Markdown to create titles, lists, links, images and checkboxes thanks to [Showdownjs](https://github.com/showdownjs/showdown). See the Markdown [guide](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown).
-The user can also sign in to sync all notes between their devices or browsers (supports Windows, macOS, Android, iOS, Chromium, Firefox and Safari) and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
+The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown) to create titles, lists, links, checkboxes or import images from another website.
+The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week. This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
 ## Design
-The website is fully responsible for mobile devices and UI/UX inspired by Material Design. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities.
-
-## PWA
-This website is a PWA (Progressive Web App), the user can install it as an application with a Chromium-based browser. Service Worker has automatic updates.
+The website is fully responsible for mobile devices and UI/UX inspired by [Material Design](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities.
 
 ## Security and Privacy
 Passwords are hashed with bcrypt before being sent to the database. Each user has their own randomly generated 32-byte encryption key that uses SHA256 as the hash function and the randomly generated salt.
 Once logged in, the user can change their password or delete their account. Security measures are in place against XSS, CSRF and SQL injections.
-No personal data is collected in accordance with the GDPR.
+Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes via their unique keys. The website editor disclaims any responsibility for the content of user notes.
 
 ## Languages
 🇫🇷French, 🇬🇧English
 
+## Coming soon
+- [ ] Shared notes
+- [ ] Drag and drop
+- [ ] Reminders
+
 ## Community
-If you have any suggestions to improve this project or if you find issues, feel free to discuss!
+If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
 
-## Commands
-``npm i`` to install all js dependencies
- 
-``composer i`` to install all php dependencies
+## For developers
+Technologies used: <svg aria-label="JavaScript" width="14px" height="14px" viewbox="0 0 64 64">
+<circle cx="32" cy="32" r="30" fill="#ead41c"></circle>
+</svg>JavaScript
+<svg aria-label="PHP" width="14px" height="14px" viewbox="0 0 64 64">
+<circle cx="32" cy="32" r="30" fill="#557fd7"></circle>
+</svg>PHP
+<svg aria-label="MySQL" width="14px" height="14px" viewbox="0 0 64 64">
+<circle cx="32" cy="32" r="30" fill="#d88700"></circle>
+</svg>MySQL
 
-``sass --watch assets/sass/style.scss assets/css/style.css --style compressed`` to watch sass
+``npm i`` and ``composer i`` to install all dependencies
 
-``npx eslint file.js`` to verify js files
+``npx eslint file.js`` to verify JavaScript files
 
-``vendor/bin/phpcs --standard=PSR2 file.php`` to verify php files
-
-``npx babel assets/js --out-dir dist`` to create backwards compatible js files
+``vendor/bin/phpcs --standard=PSR2 file.php`` to verify PHP files
 
 ![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)

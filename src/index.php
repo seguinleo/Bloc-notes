@@ -1,7 +1,12 @@
 <?php
+$userLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : '';
+if ($userLanguage !== 'fr') {
+    header('Location: /projets/notes/en/');
+    exit();
+}
 session_set_cookie_params(array(
     'path' => '/projets/notes/',
-    'lifetime' => 460800,
+    'lifetime' => 604800,
     'secure' => true,
     'httponly' => true,
     'samesite' => 'Lax'
@@ -23,8 +28,20 @@ if (!isset($_SESSION["nom"])) {
     <meta name="theme-color" content="#171717">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN">
+    <meta name="twitter:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
+    <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes-large.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
+    <meta property="og:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
+    <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN">
+    <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
+    <meta property="og:image" content="https://leoseguin.fr/assets/img/notes-large.png">
+    <meta property="og:locale" content="fr-FR">
+    <link rel="canonical" href="https://leoseguin.fr/projets/notes/">
     <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="/projets/notes/assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/projets/notes/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/projets/notes/assets/css/style.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="manifest" href="/projets/notes/manifest.json">
@@ -42,15 +59,19 @@ if (!isset($_SESSION["nom"])) {
                 </h1>
             </div>
             <div class="iconConnect">
-                <button id="iconButtonConnect" type="button" aria-label="Ajouter une note sur le cloud">Ajouter une note sur le cloud <i class="fa-solid fa-cloud"></i></button>
                 <button id="iconButtonConnectFloat" type="button" aria-label="Ajouter une note sur le cloud"><i class="fa-solid fa-plus"></i></button>
             </div>
         <?php } else { ?>
             <div>
                 <h1>Bloc-notes</h1>
+                <span class="version">
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.6.1</a>
+                </span>
+            </div>
+            <div>
+                <button type="button" class="seconnecter" aria-label="Se connecter">Se connecter</button>
             </div>
             <div class="icon">
-                <button id="iconButton" type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
                 <button id="iconButtonFloat" type="button" aria-label="Ajouter une note sur l'appareil"><i class="fa-solid fa-plus"></i></button>
             </div>
         <?php } ?>
@@ -59,22 +80,37 @@ if (!isset($_SESSION["nom"])) {
             <input type="text" id="search-input" maxlength="30" aria-label="Rechercher une note" placeholder="Rechercher une note">
             <kbd>CTRL</kbd><kbd>K</kbd>
         </div>
-        <div class="copyright">
-            <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.5.3</a>
-            &copy;
-            <a href="/" target="_blank" rel="noreferrer">Léo SEGUIN</a>
-        </div>
-        <?php if (!isset($_SESSION["nom"])) { ?>
-            <div class="lang">
-                <a href="/projets/notes/en.php" aria-label="lang">
-                    <img src="/projets/notes/assets/icons/fr.svg" alt="flag" width="20" height="15">
-                </a>
+        <?php if (isset($_SESSION["nom"])) { ?>
+            <div class="lastSync">
+                <i id="resync" class="fa-solid fa-sync" tabindex="0"></i>
+                <span></span>
             </div>
         <?php } ?>
     </nav>
     <main>
         <div class="darken"></div>
         <div id="errorNotification"></div>
+        <div class="sideBar">
+            <h2>Notes</h2>
+            <?php if (isset($_SESSION["nom"])) { ?>
+                <div class="iconConnect">
+                    <button id="iconButtonConnect" type="button" aria-label="Ajouter une note dans le cloud">Ajouter une note dans le cloud</button>
+                </div>
+            <?php } else { ?>
+                <div class="icon">
+                    <button id="iconButton" type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
+                </div>
+            <?php } ?>
+            <div class="listNotes"></div>
+        </div>
+        <?php if (!isset($_SESSION["nom"])) { ?>
+            <div id="cookie">
+                <p>Ce site utilise un cookie nécessaire à la connexion de l'utilisateur.
+                <p>
+                    <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
+                    <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="En savoir plus">En savoir plus</a>
+            </div>
+        <?php } ?>
         <div id="copyNotification">Note copiée !</div>
         <?php if (isset($_SESSION["nom"])) { ?>
             <div class="connect-popup-box">
@@ -125,23 +161,17 @@ if (!isset($_SESSION["nom"])) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <div class="row">
-                            <span class="lang linkp">
-                                <a href="/projets/notes/en.php" aria-label="lang">
-                                    <img src="/projets/notes/assets/icons/fr.svg" alt="flag" width="20" height="15">
-                                </a>
+                            <span class="sedeconnecter linkp" tabindex="0">Se déconnecter</span>
+                        </div>
+                        <div class="row">
+                            <span class="linkp">
+                                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / Privacy policy">Mentions légales / confidentialité</a>
                             </span>
                         </div>
                         <div class="row">
-                            <p>
-                                <span class="sedeconnecter linkp" tabindex="0">Se déconnecter</span>
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p>
-                                <span class="linkp">
-                                    <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
-                                </span>
-                            </p>
+                            <span class="linkp">
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Guide Markdown">Guide Markdown</a>
+                            </span>
                         </div>
                         <div class="row rowTri">
                             <select id="tri" aria-label="tri">
@@ -153,7 +183,7 @@ if (!isset($_SESSION["nom"])) {
                             </select>
                         </div>
                         <details>
-                            <summary>Changer le mot de passe</summary>
+                            <summary>Gestion du compte</summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
                                 <div class="row">
                                     <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" maxlength="50" aria-label="mdp">
@@ -163,22 +193,19 @@ if (!isset($_SESSION["nom"])) {
                                 </div>
                                 <button id="submitChangeMDP" type="submit" aria-label="Modifier le mot de passe">Modifier le mot de passe</button>
                             </form>
+                            <div class="row">
+                                <span class="supprimerCompte" tabindex="0">Supprimer mon compte</span>
+                            </div>
                         </details>
                         <div class="row">
-                            <p>
-                                <span class="supprimerCompte linkp" tabindex="0">Supprimer mon compte</span>
+                            <p class="version">
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.6.1</a>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
         <?php } else { ?>
-            <div class="info">
-                <span class="seconnecter" tabindex="0">Connectez-vous</span> pour synchroniser vos notes et les
-                <div class="tooltip">chiffrer🔒
-                    <span class="tooltiptext">Chiffrement AES-256-GCM</span>
-                </div>
-            </div>
             <div class="popup-box">
                 <div class="popup">
                     <div class="content">
@@ -226,9 +253,7 @@ if (!isset($_SESSION["nom"])) {
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <p>
-                            <span class="creercompte linkp" tabindex="0">Pas encore de compte ?</span>
-                        </p>
+                        <span class="creercompte linkp" tabindex="0">Pas encore de compte ?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?php echo $_SESSION['csrf_token_connect']; ?>">
                             <div class="row">
@@ -248,11 +273,6 @@ if (!isset($_SESSION["nom"])) {
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <p>
-                            <span class="linkp">
-                                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / confidentialité">Mentions légales / confidentialité</a>
-                            </span>
-                        </p>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_creer" value="<?php echo $_SESSION['csrf_token_creer']; ?>">
                             <div class="row">
@@ -265,7 +285,8 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
                             </div>
                             <div class="row">
-                                <i class="fa-solid fa-circle-info"></i> Votre mot de passe est stocké en toute sécurité.
+                                <i class="fa-solid fa-circle-info"></i>
+                                Votre mot de passe est stocké en toute sécurité et vos notes chiffrées.
                             </div>
                             <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
                         </form>
@@ -274,21 +295,11 @@ if (!isset($_SESSION["nom"])) {
             </div>
         <?php } ?>
     </main>
-    <div class="svgPart" aria-hidden="true">
-        <svg viewBox="0 0 300 200">
-            <defs>
-                <marker id="pointer" markerWidth="10" markerHeight="8" refX="7" refY="5" orient="-45">
-                    <polyline points="1 1, 8 5, 1 7"></polyline>
-                </marker>
-            </defs>
-            <path d="M16,178 c87-46,162-185,227-136C307,90,195,158,111,108C71,85,92,30,126,7" marker-end="url(#pointer)" opacity=".4"></path>
-        </svg>
-    </div>
-    <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
+    <script src="/projets/notes/assets/js/showdown.min.js" nonce="sWreZ7K/76vSgX/q4FG9Nw==" defer></script>
     <?php if (isset($_SESSION["nom"])) { ?>
-        <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
+        <script src="/projets/notes/assets/js/scriptConnect.js" nonce="Alh0WoNLlsjSwaj8IQtPww==" defer></script>
     <?php } else { ?>
-        <script src="/projets/notes/assets/js/script.js" defer></script>
+        <script src="/projets/notes/assets/js/script.js" nonce="ys0TnhNOaQXMngU70orFgQ==" defer></script>
     <?php } ?>
 </body>
 </html>

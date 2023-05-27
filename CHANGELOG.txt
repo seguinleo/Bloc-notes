@@ -1,3 +1,11 @@
+#----v23.6.1----#
+-Add sidebar
+-Change icon
+-Improve UI/UX
+-Improve security (no longer inline scripts)
+-Optimize Showdown.js
+-Bug fixes
+
 #----v23.5.3----#
 -Improve code structure
 
@@ -12,8 +20,8 @@
 
 #----v23.4.4----#
 -Add light blue and pink notes
--Bug fixes
 -Change color selector
+-Bug fixes
 
 #----v23.4.3----#
 -Add CSRF tokens
@@ -28,16 +36,16 @@
 #----v23.4.1----#
 -Add fullscreen
 -Add white notes
--Bug fixes
 -Change date format to GMT
 -Improve UI/UX
+-Bug fixes
 
 #----v23.3.7----#
 -Add note sorting
--Bug fixes
 -Improve accessibility
 -Improve security
 -Minify JavaScript
+-Bug fixes
 
 #----v23.3.6----#
 -English support
@@ -68,8 +76,8 @@
 -Improve security
 
 #----v23.2.2----#
--Bug fixes
 -Improve UI/UX
+-Bug fixes
 
 #----v23.2.1----#
 -First commit

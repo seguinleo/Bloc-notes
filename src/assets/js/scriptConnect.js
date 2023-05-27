@@ -35,6 +35,24 @@ function taskListEnablerExtension() {
   }];
 }
 
+function searchSideBar() {
+  document.querySelectorAll('.listNotes p').forEach((element) => {
+    element.addEventListener('click', () => {
+      const e = element.querySelector('.titleList').textContent;
+      document.querySelectorAll('.note').forEach((note) => {
+        const t = note.querySelector('.note h2').textContent;
+        if (t === e) {
+          note.scrollIntoView();
+          note.focus();
+        }
+      });
+    });
+    element.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') element.click();
+    });
+  });
+}
+
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter({
   tasklists: true,
@@ -43,26 +61,118 @@ const converter = new showdown.Converter({
 });
 
 const showNotesConnect = async () => {
-  document.querySelectorAll('.note').forEach((note) => {
+  document.querySelector('.listNotes').textContent = '';
+
+  const notes = document.querySelectorAll('.note');
+
+  notes.forEach((note) => {
     note.remove();
   });
+
   const response = await fetch('/projets/notes/assets/php/getNotes.php', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
   });
+
   const data = await response.json();
+
+  if (data.length === 0) {
+    if (!window.location.pathname.endsWith('en/')) {
+      document.querySelector('.listNotes').textContent += 'Aucune note';
+    } else {
+      document.querySelector('.listNotes').textContent += 'No notes';
+    }
+    searchSideBar();
+    return;
+  }
+
+  document.querySelector('.lastSync span').textContent = `${new Date().toLocaleString()}`;
+
   data.forEach((row) => {
     const {
       id, title, couleur, desc, date, hidden,
     } = row;
-    if (desc) {
-      const descEnd = replaceAllEnd(desc);
-      const result = hidden === 0 ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>${converter.makeHtml(desc)}</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${descEnd}','${couleur}','${hidden}')"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${descEnd}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id})"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>*****</span></div><div class="bottom-content"><i title="Date (GMT)" class="fa-solid fa-calendar-days"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNoteConnect(${id},'${title}','${descEnd}','${couleur}','${hidden}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNoteConnect(${id})"></i></div></div>`;
-      notesContainer.insertAdjacentHTML('beforeend', result);
+
+    if (!id || !title || !desc || !date || !couleur) return;
+
+    const descEnd = replaceAllEnd(desc);
+    const descHtml = converter.makeHtml(desc);
+
+    const noteElement = document.createElement('div');
+    noteElement.id = `note${id}`;
+    noteElement.classList.add('note', couleur);
+    noteElement.tabIndex = 0;
+
+    const detailsElement = document.createElement('div');
+    detailsElement.classList.add('details');
+
+    const titleElement = document.createElement('h2');
+    titleElement.classList.add('title');
+    titleElement.innerHTML = title;
+
+    const descElement = document.createElement('span');
+
+    if (hidden === 0) {
+      descElement.innerHTML = descHtml;
+    } else {
+      descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
     }
+
+    detailsElement.appendChild(titleElement);
+    detailsElement.appendChild(descElement);
+
+    const bottomContentElement = document.createElement('div');
+    bottomContentElement.classList.add('bottom-content');
+
+    const dateIconElement = document.createElement('i');
+    dateIconElement.classList.add('fa-solid', 'fa-calendar-days');
+    dateIconElement.title = 'Date (GMT)';
+
+    const dateElement = document.createElement('span');
+    dateElement.textContent = date;
+
+    const editIconElement = document.createElement('i');
+    editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
+    editIconElement.tabIndex = 0;
+    editIconElement.setAttribute('data-note-id', id);
+    editIconElement.setAttribute('data-note-title', title);
+    editIconElement.setAttribute('data-note-desc', descEnd);
+    editIconElement.setAttribute('data-note-color', couleur);
+    editIconElement.setAttribute('data-note-hidden', hidden);
+
+    const trashIconElement = document.createElement('i');
+    trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
+    trashIconElement.tabIndex = 0;
+    trashIconElement.setAttribute('data-note-id', id);
+
+    bottomContentElement.appendChild(dateIconElement);
+    bottomContentElement.appendChild(dateElement);
+    bottomContentElement.appendChild(editIconElement);
+    bottomContentElement.appendChild(trashIconElement);
+
+    if (hidden === 0) {
+      const clipboardIconElement = document.createElement('i');
+      clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
+      clipboardIconElement.tabIndex = 0;
+      clipboardIconElement.setAttribute('data-note-desc', descEnd);
+      bottomContentElement.appendChild(clipboardIconElement);
+
+      const expandIconElement = document.createElement('i');
+      expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+      expandIconElement.tabIndex = 0;
+      expandIconElement.setAttribute('data-note-id', id);
+      bottomContentElement.appendChild(expandIconElement);
+    }
+
+    noteElement.appendChild(detailsElement);
+    noteElement.appendChild(bottomContentElement);
+    notesContainer.appendChild(noteElement);
+
+    document.querySelector('.listNotes').innerHTML += `<p tabindex="0"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
   });
+  searchSideBar();
 };
 
 const fetchDelete = async (e) => {
@@ -78,7 +188,7 @@ const fetchDelete = async (e) => {
     document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la suppression de la note...';
       showError(errorMessage);
       return;
@@ -100,7 +210,7 @@ const deleteAccount = async () => {
       window.location.reload();
       return;
     }
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la suppression de votre compte...';
       showError(errorMessage);
       return;
@@ -108,7 +218,7 @@ const deleteAccount = async () => {
     errorMessage = 'An error occurred while deleting your account...';
     showError(errorMessage);
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la suppression de votre compte...';
       showError(errorMessage);
       return;
@@ -128,7 +238,7 @@ const fetchLogout = async () => {
     });
     window.location.reload();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la déconnexion...';
       showError(errorMessage);
       return;
@@ -138,7 +248,6 @@ const fetchLogout = async () => {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 function toggleFullscreen(id) {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
@@ -146,7 +255,6 @@ function toggleFullscreen(id) {
   document.body.classList.toggle('noscroll');
 }
 
-// eslint-disable-next-line no-unused-vars
 function updateNoteConnect(id, title, desc, couleur, hidden) {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
@@ -165,11 +273,10 @@ function updateNoteConnect(id, title, desc, couleur, hidden) {
       couleurSpan.classList.remove('selectionne');
     }
   });
-  if (hidden === '1') document.getElementById('checkHidden').checked = true;
+  if (hidden === '1') { document.getElementById('checkHidden').checked = true; }
   descTagConnect.focus();
 }
 
-// eslint-disable-next-line no-unused-vars
 function copy(e) {
   const copyText = replaceAllStart(e);
   const notification = document.getElementById('copyNotification');
@@ -177,12 +284,11 @@ function copy(e) {
   notification.classList.add('show');
   setTimeout(() => {
     notification.classList.remove('show');
-  }, 2000);
+  }, 1500);
 }
 
-// eslint-disable-next-line no-unused-vars
 function deleteNoteConnect(e) {
-  if (!window.location.pathname.endsWith('en.php')) {
+  if (!window.location.pathname.endsWith('en/')) {
     if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
       fetchDelete(e);
     }
@@ -192,6 +298,26 @@ function deleteNoteConnect(e) {
     fetchDelete(e);
   }
 }
+
+notesContainer.addEventListener('click', (event) => {
+  const { target } = event;
+  if (target.classList.contains('note-action')) {
+    const noteId = target.getAttribute('data-note-id');
+    const noteTitle = target.getAttribute('data-note-title');
+    const noteDesc = target.getAttribute('data-note-desc');
+    const noteColor = target.getAttribute('data-note-color');
+    const noteHidden = target.getAttribute('data-note-hidden');
+    if (target.classList.contains('fa-pen')) {
+      updateNoteConnect(noteId, noteTitle, noteDesc, noteColor, noteHidden);
+    } else if (target.classList.contains('fa-clipboard')) {
+      copy(noteDesc);
+    } else if (target.classList.contains('fa-trash-can')) {
+      deleteNoteConnect(noteId);
+    } else if (target.classList.contains('fa-expand')) {
+      toggleFullscreen(noteId);
+    }
+  }
+});
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
@@ -266,7 +392,7 @@ document.querySelectorAll('.gestionCompte').forEach((element) => {
 
 document.querySelectorAll('.supprimerCompte').forEach((element) => {
   element.addEventListener('click', () => {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       if (window.confirm('Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.')) {
         deleteAccount();
       }
@@ -332,7 +458,7 @@ document.querySelector('#tri').addEventListener('change', async () => {
     });
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors du tri des notes...';
       showError(errorMessage);
       return;
@@ -358,10 +484,20 @@ couleurs.forEach((span, index) => {
 document.querySelector('#submitNoteConnect').addEventListener('click', async () => {
   try {
     const titreBrut = document.querySelector('#titleConnect').value.trim();
-    const contentBrut = document.querySelector('#descConnect').value;
+    const contentBrut = document.querySelector('#descConnect').value.trim();
     if (!titreBrut || !contentBrut || contentBrut.length > 2000) return;
-    const titre = encodeURIComponent(titreBrut.replaceAll(/'/g, '‘').replaceAll(/\\/g, '/'));
-    const content = encodeURIComponent(contentBrut.replaceAll(/'/g, '‘').replaceAll(/\\/g, '/'));
+    const titre = encodeURIComponent(titreBrut
+      .replaceAll(/'/g, '‘')
+      .replaceAll(/"/g, '‘‘')
+      .replaceAll(/&/g, '＆')
+      .replaceAll(/</g, '←')
+      .replaceAll(/>/g, '→'));
+    const content = encodeURIComponent(contentBrut
+      .replaceAll(/'/g, '‘')
+      .replaceAll(/"/g, '‘‘')
+      .replaceAll(/&/g, '＆')
+      .replaceAll(/</g, '←')
+      .replaceAll(/>/g, '→'));
     const couleurSpan = document.querySelector('.couleurs span.selectionne');
     const couleur = encodeURIComponent(couleurSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -382,7 +518,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     forms.forEach((form) => form.reset());
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de l\'ajout de la note...';
       showError(errorMessage);
       return;
@@ -396,7 +532,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   const e = document.querySelector('#mdpModifNew').value;
   const t = document.querySelector('#mdpModifNewValid').value;
   if (!e || !t) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Un ou plusieurs champs sont vides...';
       showError(errorMessage);
       return;
@@ -406,7 +542,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     return;
   }
   if (e.length < 6) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (<6)...';
       showError(errorMessage);
       return;
@@ -416,7 +552,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     return;
   }
   if (/^[0-9]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (que des chiffres)...';
       showError(errorMessage);
       return;
@@ -426,7 +562,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     return;
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (que des lettres)...';
       showError(errorMessage);
       return;
@@ -436,7 +572,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     return;
   }
   if (e !== t) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Les mots de passe ne correspondent pas...';
       showError(errorMessage);
       return;
@@ -458,7 +594,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     document.body.classList.remove('noscroll');
     forms.forEach((form) => form.reset());
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la modification du mot de passe...';
       showError(errorMessage);
       return;
@@ -469,6 +605,12 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  showNotesConnect();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/projets/notes/sw.js');
+  showNotesConnect();
+  document.querySelector('#resync').addEventListener('click', () => {
+    window.location.reload();
+  });
+  document.querySelector('#resync').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') window.location.reload();
+  });
 });

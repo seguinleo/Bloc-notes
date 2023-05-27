@@ -34,15 +34,15 @@ $color6: #9ec3ff;
 @keyframes fadeInOut {
 
   0% {
-    opacity: 0;
+    opacity: 0
   }
 
-  25% {
-    opacity: 1;
+  15% {
+    opacity: 1
   }
 
-  75% {
-    opacity: 1;
+  85% {
+    opacity: 1
   }
 
   100% {
@@ -70,6 +70,7 @@ html {
   background: $color1;
   color: $color4;
   accent-color: $color5;
+  scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   scrollbar-color: rgba(255, 255, 255, .1) rgba(0, 0, 0, 0);
   scrollbar-width: thin
@@ -160,6 +161,12 @@ nav {
   user-select: none;
   box-shadow: 2px 2px 4px $color1;
 
+  @media(min-width: 992px) {
+    .icon, .iconConnect {
+      display: none
+    }
+  }
+
   h1 {
     display: inline-block
   }
@@ -187,7 +194,7 @@ nav {
 
     ::placeholder {
       color: $color4;
-      opacity: 1;
+      opacity: 1
     }
 
     i {
@@ -212,40 +219,70 @@ nav {
     }
   }
 
-  .copyright {
-    font-size: .8rem
-  }
-
-  #iconButton {
-    display: inline-block;
-    padding: 0 1rem;
-    margin: 0
-  }
-
-  #iconButtonFloat {
-    display: none
-  }
-
-  #iconButtonConnect {
-    display: inline-block;
-    padding: 0 1rem;
-    margin: 0
-  }
-
-  #iconButtonConnectFloat {
-    display: none
+  .lastSync {
+    i {
+      font-size: 1rem;
+      margin: 0 5px;
+      color: #42be34;
+      cursor: pointer
+    }
   }
 }
 
 main {
   max-width: 100vw;
   margin: 8rem auto 2rem;
-  padding: 0 2rem;
+  padding: 0 2rem 0 414px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 2rem
+}
+
+.sideBar {
+  position: fixed;
+  background: $color2;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 382px;
+  padding: 100px 1rem 1rem;
+
+  * {
+    margin-bottom: 1rem
+  }
+
+  .listNotes {
+    max-height: 75vh;
+    overflow-y: scroll
+  }
+
+  p {
+    padding: 5px;
+    border-radius: 5px;
+    max-height: 2rem;
+    cursor: pointer;
+
+    &:hover, &:focus {
+      background: $color3;
+      outline: none;
+    }
+    
+    .titleList {
+      max-width: 200px;
+      overflow: hidden;
+      display: inline-block;
+      white-space: nowrap;
+      font-weight: 700
+    }
+  
+    .dateList {
+      font-size: .8rem;
+      display: inline;
+      float: right
+    }
+  }
 }
 
 label {
@@ -269,12 +306,14 @@ select {
 
 select,
 option {
-  font-family: "Arial";
+  font-family: "Arial"
 }
 
 textarea {
   height: 250px;
-  resize: none;
+  min-height: 200px;
+  max-height: 450px;
+  resize: vertical;
   padding: 10px
 }
 
@@ -284,6 +323,7 @@ button {
   height: 50px;
   color: $color1;
   border: none;
+  padding: 0 1rem;
   font-size: 1rem;
   border-radius: 5px;
   background: $color5;
@@ -301,7 +341,7 @@ button {
 
 details {
   margin: 1rem;
-  cursor: pointer;
+  cursor: pointer
 }
 
 p.welcome {
@@ -531,8 +571,7 @@ p.welcome {
   }
 }
 
-.linkp,
-.seconnecter {
+.linkp {
   cursor: pointer;
   text-align: center;
   font-weight: 700;
@@ -541,28 +580,6 @@ p.welcome {
 
 .linkp {
   margin-left: 20px
-}
-
-.svgPart {
-  position: fixed;
-  width: 700px;
-  bottom: 0;
-  z-index: -1;
-
-  svg {
-    fill: $color1
-  }
-
-  path,
-  polyline {
-    fill: $color1;
-    stroke: $color3;
-    stroke-width: 1
-  }
-
-  path {
-    stroke-dasharray: 10, 5
-  }
 }
 
 .content header i {
@@ -587,6 +604,9 @@ p.welcome {
   width: 80vw;
   min-height: 80vh;
   top: 10%;
+  left: 0;
+  right: 0;
+  margin: auto;
 
   .details {
     min-height: 70vh;
@@ -612,49 +632,6 @@ p.welcome {
 
 .darken.show {
   display: block
-}
-
-.info {
-  -webkit-user-select: none;
-  user-select: none;
-  text-align: center;
-
-  .tooltip {
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted $color5;
-
-    &:hover .tooltiptext {
-      visibility: visible
-    }
-
-    .tooltiptext {
-      visibility: hidden;
-      width: 120px;
-      background: $color2;
-      color: $color4;
-      text-align: center;
-      border-radius: 6px;
-      padding: 5px 0;
-      position: absolute;
-      z-index: 1;
-      top: 150%;
-      left: 50%;
-      margin-left: -60px;
-
-      &:after {
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: transparent transparent $color2 transparent
-      }
-    }
-  }
 }
 
 .popup,
@@ -755,6 +732,14 @@ select {
   }
 }
 
+#iconButtonFloat {
+  display: none
+}
+
+#iconButtonConnectFloat {
+  display: none
+}
+
 .row {
   margin-bottom: 20px
 }
@@ -833,8 +818,22 @@ select {
   stroke-dashoffset: 400
 }
 
+.version {
+  font-size: .8rem;
+  margin: 0 5px;
+  font-weight: 700;
+  color: $color4
+}
+
+.gestion-popup-box.show .version {
+  margin: 1rem;
+  text-align: right
+}
+
 .supprimerCompte {
-  color: #fe7575
+  color: #fe7575;
+  display: block;
+  margin-top: 2rem
 }
 
 #errorNotification {
@@ -843,8 +842,8 @@ select {
   margin: 1rem auto;
   text-align: center;
   max-width: 300px;
-  background-color: #a93b3b;
-  color: #fff;
+  background: #a93b3b;
+  color: #ffffff;
   padding: 10px;
   border-radius: 5px;
   display: none;
@@ -866,7 +865,37 @@ select {
 #copyNotification.show {
   display: block;
   z-index: 1000;
-  animation: fadeInOut 2s ease-in-out
+  animation: fadeInOut 1.5s ease-in-out
+}
+
+#cookie {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  max-width: 350px;
+  margin: 1rem;
+  background: $color2;
+  color: $color4;
+  padding: 1rem;
+  border-radius: 5px;
+  z-index: 2;
+  -webkit-user-select: none;
+  user-select: none;
+  box-shadow: 0 0 10px $color1;
+
+  button {
+    display: inline-block;
+    border: 2px solid $color5;
+    background: none;
+    color: $color5;
+    max-width: 70px;
+    margin: 10px 1rem 0 0
+  }
+}
+
+#cookie.hide {
+  display: none
 }
 
 .task-list-item {
@@ -888,7 +917,7 @@ select {
   }
 }
 
-@media(width <=992px) {
+@media(max-width: 992px) {
 
   nav {
     position: relative;
@@ -907,17 +936,16 @@ select {
     }
 
     .search-input {
-      width: 80vw;
-      max-width: 250px;
+      width: 100%;
 
       input {
-        width: 200px
-      }
-    }
+        width: 60%;
+        text-align: center;
 
-    #iconButton,
-    #iconButtonConnect {
-      display: none
+        &:focus {
+          outline: none
+        }
+      }
     }
 
     #iconButtonFloat,
@@ -939,11 +967,11 @@ select {
   main {
     margin-top: 10px;
     padding: 0 10px;
-    gap: 10px;
+    gap: 10px
+  }
 
-    .info {
-      margin: 10px 0
-    }
+  .sideBar {
+    display: none
   }
 
   textarea {
@@ -954,21 +982,22 @@ select {
     display: none
   }
 
-  .svgPart {
-    width: 85%
-  }
-
   .note {
     width: 98vw;
     max-height: 300px;
 
     &:last-child {
-      margin-bottom: 4rem;
+      margin-bottom: 4rem
     }
 
     .details {
-      overflow-y: hidden;
+      overflow-y: hidden
     }
+  }
+
+  #cookie {
+    right: 0;
+    max-width: 65vw
   }
 
   .fullscreen {
@@ -978,16 +1007,16 @@ select {
 
     .details {
       min-height: 75vh;
-      overflow-y: auto;
+      overflow-y: auto
     }
   }
 
   #copyNotification.show {
-    display: none;
+    display: none
   }
 
   .couleurs span {
-    margin: 0 4px;
+    margin: 0 4px
   }
 
   .content form {

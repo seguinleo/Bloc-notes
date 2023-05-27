@@ -10,6 +10,7 @@ const couleurs = document.querySelectorAll('.couleurs span');
 const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
+const cookie = document.querySelector('#cookie');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 
 function replaceAllStart(e) {
@@ -37,6 +38,24 @@ function taskListEnablerExtension() {
   }];
 }
 
+function searchSideBar() {
+  document.querySelectorAll('.listNotes p').forEach((element) => {
+    element.addEventListener('click', () => {
+      const e = element.querySelector('.titleList').textContent;
+      document.querySelectorAll('.note').forEach((note) => {
+        const t = note.querySelector('.note h2').textContent;
+        if (t === e) {
+          note.scrollIntoView();
+          note.focus();
+        }
+      });
+    });
+    element.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') element.click();
+    });
+  });
+}
+
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter({
   tasklists: true,
@@ -45,20 +64,103 @@ const converter = new showdown.Converter({
 });
 
 const showNotes = () => {
-  if (notesJSON) {
-    document.querySelectorAll('.note').forEach((note) => note.remove());
-    notesJSON.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((e, id) => {
+  document.querySelector('.listNotes').textContent = '';
+
+  if (notesJSON.length === 0) {
+    if (!window.location.pathname.endsWith('en/')) {
+      document.querySelector('.listNotes').textContent += 'Aucune note';
+    } else {
+      document.querySelector('.listNotes').textContent += 'No notes';
+    }
+  }
+
+  const notes = document.querySelectorAll('.note');
+  notes.forEach((note) => note.remove());
+
+  notesJSON
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach((e, id) => {
       const {
         couleur, hidden, title, description, date,
       } = e;
+
       const descEnd = replaceAllEnd(e.description);
-      const result = hidden === false ? `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>${converter.makeHtml(description)}</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-clipboard" tabindex="0" onclick="copy('${descEnd}')"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i><i class="fa-solid fa-expand" tabindex="0" onclick="toggleFullscreen(${id})"></i></div></div>` : `<div id="note${id}" tabindex="0" class="note ${couleur}"><div class="details"><h2 class="title">${title}</h2><span>*****</span></div><div class="bottom-content"><i class="fa-solid fa-calendar-days" title="Date (GMT)"></i><span>${date}</span><i class="fa-solid fa-pen" tabindex="0" onclick="updateNote(${id},'${title}','${descEnd}','${couleur}',${hidden})"></i><i class="fa-solid fa-trash-can" tabindex="0" onclick="deleteNote(${id})"></i></div></div>`;
-      notesContainer.insertAdjacentHTML('beforeend', result);
+      const descHtml = converter.makeHtml(description);
+
+      const noteElement = document.createElement('div');
+      noteElement.id = `note${id}`;
+      noteElement.classList.add('note', couleur);
+      noteElement.tabIndex = 0;
+
+      const detailsElement = document.createElement('div');
+      detailsElement.classList.add('details');
+
+      const titleElement = document.createElement('h2');
+      titleElement.classList.add('title');
+      titleElement.innerHTML = title;
+
+      const descElement = document.createElement('span');
+      if (hidden === false) {
+        descElement.innerHTML = descHtml;
+      } else {
+        descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      }
+
+      detailsElement.appendChild(titleElement);
+      detailsElement.appendChild(descElement);
+
+      const bottomContentElement = document.createElement('div');
+      bottomContentElement.classList.add('bottom-content');
+
+      const dateIconElement = document.createElement('i');
+      dateIconElement.classList.add('fa-solid', 'fa-calendar-days');
+      dateIconElement.title = 'Date (GMT)';
+
+      const dateElement = document.createElement('span');
+      dateElement.textContent = date;
+
+      const editIconElement = document.createElement('i');
+      editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
+      editIconElement.tabIndex = 0;
+      editIconElement.setAttribute('data-note-id', id);
+      editIconElement.setAttribute('data-note-title', title);
+      editIconElement.setAttribute('data-note-desc', descEnd);
+      editIconElement.setAttribute('data-note-color', couleur);
+      editIconElement.setAttribute('data-note-hidden', hidden);
+
+      const trashIconElement = document.createElement('i');
+      trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
+      trashIconElement.tabIndex = 0;
+      trashIconElement.setAttribute('data-note-id', id);
+
+      bottomContentElement.appendChild(dateIconElement);
+      bottomContentElement.appendChild(dateElement);
+      bottomContentElement.appendChild(editIconElement);
+      bottomContentElement.appendChild(trashIconElement);
+
+      if (hidden === false) {
+        const clipboardIconElement = document.createElement('i');
+        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
+        clipboardIconElement.tabIndex = 0;
+        clipboardIconElement.setAttribute('data-note-desc', descEnd);
+        bottomContentElement.appendChild(clipboardIconElement);
+
+        const expandIconElement = document.createElement('i');
+        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+        expandIconElement.tabIndex = 0;
+        expandIconElement.setAttribute('data-note-id', id);
+        bottomContentElement.appendChild(expandIconElement);
+      }
+
+      noteElement.appendChild(detailsElement);
+      noteElement.appendChild(bottomContentElement);
+      notesContainer.appendChild(noteElement);
+
+      document.querySelector('.listNotes').innerHTML += `<p tabindex="0"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
     });
-  }
+  searchSideBar();
 };
 
-// eslint-disable-next-line no-unused-vars
 function toggleFullscreen(id) {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
@@ -66,7 +168,6 @@ function toggleFullscreen(id) {
   document.body.classList.toggle('noscroll');
 }
 
-// eslint-disable-next-line no-unused-vars
 function updateNote(id, title, desc, couleur, hidden) {
   const s = replaceAllStart(desc);
   document.querySelectorAll('.note').forEach((note) => {
@@ -86,11 +187,10 @@ function updateNote(id, title, desc, couleur, hidden) {
       couleurSpan.classList.remove('selectionne');
     }
   });
-  if (hidden) document.getElementById('checkHidden').checked = true;
+  if (hidden === 'true') { document.getElementById('checkHidden').checked = true; }
   descTag.focus();
 }
 
-// eslint-disable-next-line no-unused-vars
 function copy(e) {
   const copyText = replaceAllStart(e);
   const notification = document.getElementById('copyNotification');
@@ -98,10 +198,9 @@ function copy(e) {
   notification.classList.add('show');
   setTimeout(() => {
     notification.classList.remove('show');
-  }, 2000);
+  }, 1500);
 }
 
-// eslint-disable-next-line no-unused-vars
 function deleteNote(e) {
   const confirmationMessage = window.location.pathname.endsWith('en.php') ? 'Do you really want to delete this note?' : 'Voulez-vous vraiment supprimer cette note ?';
   if (window.confirm(confirmationMessage)) {
@@ -112,6 +211,32 @@ function deleteNote(e) {
     showNotes();
   }
 }
+
+notesContainer.addEventListener('click', (event) => {
+  const { target } = event;
+  if (target.classList.contains('note-action')) {
+    const noteId = target.getAttribute('data-note-id');
+    const noteTitle = target.getAttribute('data-note-title');
+    const noteDesc = target.getAttribute('data-note-desc');
+    const noteColor = target.getAttribute('data-note-color');
+    const noteHidden = target.getAttribute('data-note-hidden');
+
+    if (target.classList.contains('fa-pen')) {
+      updateNote(noteId, noteTitle, noteDesc, noteColor, noteHidden);
+    } else if (target.classList.contains('fa-clipboard')) {
+      copy(noteDesc);
+    } else if (target.classList.contains('fa-trash-can')) {
+      deleteNote(noteId);
+    } else if (target.classList.contains('fa-expand')) {
+      toggleFullscreen(noteId);
+    }
+  }
+});
+
+document.querySelector('#cookieButton').addEventListener('click', () => {
+  cookie.style.display = 'none';
+  localStorage.setItem('cookie', 'hide');
+});
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
@@ -182,7 +307,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const o = document.querySelector('#mdpCreerValid').value;
   if (!e || !t || !o) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le nom ne peut contenir que des lettres...';
       showError(errorMessage);
       return;
@@ -192,7 +317,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (e.length < 4) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Nom trop court (<4)...';
       showError(errorMessage);
       return;
@@ -202,7 +327,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (t.length < 6) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (<6)...';
       showError(errorMessage);
       return;
@@ -212,7 +337,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (/^[0-9]+$/.test(t)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le mot de passe ne peut pas contenir que des chiffres...';
       showError(errorMessage);
       return;
@@ -222,7 +347,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le mot de passe ne peut pas contenir que des lettres...';
       showError(errorMessage);
       return;
@@ -232,7 +357,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (t !== o) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Les mots de passe ne correspondent pas...';
       showError(errorMessage);
       return;
@@ -242,7 +367,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     return;
   }
   if (e === t) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le mot de passe doit être différent du nom...';
       showError(errorMessage);
       return;
@@ -264,14 +389,14 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
       document.body.classList.remove('noscroll');
       forms.forEach((form) => form.reset());
-      if (!window.location.pathname.endsWith('en.php')) {
+      if (!window.location.pathname.endsWith('en/')) {
         alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
         return;
       }
       alert('Account created successfully! You can now log in.');
       return;
     }
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Utilisateur déjà existant...';
       showError(errorMessage);
       return;
@@ -279,7 +404,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     errorMessage = 'User already exists...';
     showError(errorMessage);
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la création du compte...';
       showError(errorMessage);
       return;
@@ -294,7 +419,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const t = document.querySelector('#mdpConnect').value;
   if (!e || !t) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le nom ne peut contenir que des lettres...';
       showError(errorMessage);
       return;
@@ -321,7 +446,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
     let time = 10;
     const button = document.querySelector('#submitSeConnecter');
     button.disabled = true;
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mauvais identifiants...';
       showError(errorMessage);
       const interval = setInterval(() => {
@@ -347,7 +472,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       button.textContent = 'Sign in';
     }, 11000);
   } catch (error) {
-    if (!window.location.pathname.endsWith('en.php')) {
+    if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la connexion...';
       showError(errorMessage);
       return;
@@ -384,8 +509,16 @@ couleurs.forEach((span, index) => {
 document.querySelector('#submitNote').addEventListener('click', () => {
   const couleurSpan = document.querySelector('.couleurs span.selectionne');
   const v = couleurSpan.classList[0];
-  const e = titleTag.value.trim().replaceAll(/'/g, '‘').replaceAll(/\\/g, '/').replaceAll(/"/g, '‘‘');
-  const t = descTag.value.replaceAll(/'/g, '‘').replaceAll(/\\/g, '/').replaceAll(/"/g, '‘‘');
+  const e = titleTag.value.trim()
+    .replaceAll(/'/g, '‘')
+    .replaceAll(/"/g, '‘‘')
+    .replaceAll(/</g, '&lt;')
+    .replaceAll(/>/g, '&gt;');
+  const t = descTag.value.trim()
+    .replaceAll(/'/g, '‘')
+    .replaceAll(/"/g, '‘‘')
+    .replaceAll(/</g, '&lt;')
+    .replaceAll(/>/g, '&gt;');
   const g = document.getElementById('checkHidden').checked;
   if (!e || !t || t.length > 2000) return;
   const c = {
@@ -450,6 +583,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  showNotes();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/projets/notes/sw.js');
+  if (localStorage.getItem('cookie') !== 'hide') cookie.style.display = 'block';
+  showNotes();
 });
