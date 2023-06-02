@@ -1,5 +1,9 @@
 let isUpdate;
 let errorMessage;
+let touchStart = 0;
+let touchEnd = 0;
+let timeoutCopy;
+let timeoutError;
 const notesContainer = document.querySelector('main');
 const popupBox = document.querySelector('.popup-box');
 const connectBox = document.querySelector('.connect-box');
@@ -11,6 +15,7 @@ const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
 const cookie = document.querySelector('#cookie');
+const sideBarMobile = document.querySelector('.sideBarMobile');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 
 function replaceAllStart(e) {
@@ -22,12 +27,13 @@ function replaceAllEnd(e) {
 }
 
 function showError(message) {
-  const notification = document.getElementById('errorNotification');
+  if (timeoutError) clearTimeout(timeoutError);
+  const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
   notification.style.display = 'block';
-  setTimeout(() => {
+  timeoutError = setTimeout(() => {
     notification.style.display = 'none';
-  }, 5000);
+  }, 3000);
 }
 
 function taskListEnablerExtension() {
@@ -64,18 +70,17 @@ const converter = new showdown.Converter({
 });
 
 const showNotes = () => {
-  document.querySelector('.listNotes').textContent = '';
-
-  if (notesJSON.length === 0) {
-    if (!window.location.pathname.endsWith('en/')) {
-      document.querySelector('.listNotes').textContent += 'Aucune note';
-    } else {
-      document.querySelector('.listNotes').textContent += 'No notes';
-    }
-  }
+  document.querySelector('.sideBar .listNotes').textContent = '';
+  document.querySelector('.sideBarMobile .listNotes').textContent = '';
 
   const notes = document.querySelectorAll('.note');
   notes.forEach((note) => note.remove());
+
+  if (notesJSON.length === 0) {
+    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBarMobile h2').textContent = 'Notes (0)';
+    return;
+  }
 
   notesJSON
     .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -112,10 +117,6 @@ const showNotes = () => {
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
 
-      const dateIconElement = document.createElement('i');
-      dateIconElement.classList.add('fa-solid', 'fa-calendar-days');
-      dateIconElement.title = 'Date (GMT)';
-
       const dateElement = document.createElement('span');
       dateElement.textContent = date;
 
@@ -127,13 +128,14 @@ const showNotes = () => {
       editIconElement.setAttribute('data-note-desc', descEnd);
       editIconElement.setAttribute('data-note-color', couleur);
       editIconElement.setAttribute('data-note-hidden', hidden);
+      editIconElement.setAttribute('role', 'button');
 
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
+      trashIconElement.setAttribute('role', 'button');
 
-      bottomContentElement.appendChild(dateIconElement);
       bottomContentElement.appendChild(dateElement);
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
@@ -143,12 +145,14 @@ const showNotes = () => {
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('data-note-desc', descEnd);
+        clipboardIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const expandIconElement = document.createElement('i');
         expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('data-note-id', id);
+        expandIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(expandIconElement);
       }
 
@@ -156,8 +160,11 @@ const showNotes = () => {
       noteElement.appendChild(bottomContentElement);
       notesContainer.appendChild(noteElement);
 
-      document.querySelector('.listNotes').innerHTML += `<p tabindex="0"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
+      document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
+      document.querySelector('.sideBarMobile .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
     });
+  document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
+  document.querySelector('.sideBarMobile h2').textContent = `Notes (${notesJSON.length})`;
   searchSideBar();
 };
 
@@ -187,27 +194,27 @@ function updateNote(id, title, desc, couleur, hidden) {
       couleurSpan.classList.remove('selectionne');
     }
   });
-  if (hidden === 'true') { document.getElementById('checkHidden').checked = true; }
+  if (hidden === 'true') { document.querySelector('#checkHidden').checked = true; }
   descTag.focus();
 }
 
 function copy(e) {
+  if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
-  const notification = document.getElementById('copyNotification');
+  const notification = document.querySelector('#copyNotification');
   navigator.clipboard.writeText(copyText);
-  notification.classList.add('show');
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 1500);
+  notification.style.display = 'block';
+  timeoutCopy = setTimeout(() => {
+    notification.style.display = 'none';
+  }, 2000);
 }
 
 function deleteNote(e) {
-  const confirmationMessage = window.location.pathname.endsWith('en.php') ? 'Do you really want to delete this note?' : 'Voulez-vous vraiment supprimer cette note ?';
+  const confirmationMessage = window.location.pathname.endsWith('en/') ? 'Do you really want to delete this note?' : 'Voulez-vous vraiment supprimer cette note ?';
   if (window.confirm(confirmationMessage)) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     darken.classList.remove('show');
-    document.body.classList.remove('noscroll');
     showNotes();
   }
 }
@@ -383,7 +390,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nomCreer=${nomCreer}&mdpCreer=${mdpCreer}&csrf_token_creer=${document.getElementById('csrf_token_creer').value}`,
+      body: `nomCreer=${nomCreer}&mdpCreer=${mdpCreer}&csrf_token_creer=${document.querySelector('#csrf_token_creer').value}`,
     });
     if (response.ok) {
       creerBox.classList.remove('show');
@@ -436,7 +443,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.getElementById('csrf_token_connect').value}`,
+      body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
     });
     if (response.ok) {
       window.location.reload();
@@ -519,7 +526,7 @@ document.querySelector('#submitNote').addEventListener('click', () => {
     .replaceAll(/"/g, '‘‘')
     .replaceAll(/</g, '&lt;')
     .replaceAll(/>/g, '&gt;');
-  const g = document.getElementById('checkHidden').checked;
+  const g = document.querySelector('#checkHidden').checked;
   if (!e || !t || t.length > 2000) return;
   const c = {
     couleur: v,
@@ -541,6 +548,52 @@ document.querySelector('#submitNote').addEventListener('click', () => {
   showNotes();
 });
 
+document.querySelectorAll('#menuIcon').forEach((element) => {
+  element.addEventListener('click', () => {
+    document.querySelector('.sideBarMobile').classList.add('show');
+    darken.classList.toggle('show');
+  });
+  element.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      element.click();
+      document.querySelector('.sideBarMobile header i').focus();
+    }
+  });
+});
+
+document.body.addEventListener('touchstart', (e) => {
+  touchStart = e.targetTouches[0].clientX;
+});
+
+document.body.addEventListener('touchmove', (e) => {
+  touchEnd = e.targetTouches[0].clientX;
+});
+
+document.body.addEventListener('touchend', () => {
+  const swipeDistance = touchEnd - touchStart;
+  if (swipeDistance > 50 && !sideBarMobile.classList.contains('show')) {
+    sideBarMobile.classList.add('show');
+    darken.classList.add('show');
+    document.querySelectorAll('.note').forEach((note) => {
+      note.classList.remove('fullscreen');
+    });
+    document.body.classList.add('noscroll');
+  } else if (swipeDistance < -50 && sideBarMobile.classList.contains('show')) {
+    sideBarMobile.classList.remove('show');
+    darken.classList.remove('show');
+    document.querySelectorAll('.note').forEach((note) => {
+      note.classList.remove('fullscreen');
+    });
+    document.body.classList.add('noscroll');
+  }
+  touchStart = 0;
+  touchEnd = 0;
+});
+
+sideBarMobile.addEventListener('touchstart', (e) => {
+  e.stopPropagation();
+});
+
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -554,8 +607,9 @@ document.querySelectorAll('header i').forEach((element) => {
     popupBox.classList.remove('show');
     connectBox.classList.remove('show');
     creerBox.classList.remove('show');
-    document.body.classList.remove('noscroll');
     darken.classList.remove('show');
+    document.body.classList.remove('noscroll');
+    document.querySelector('.sideBarMobile').classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();

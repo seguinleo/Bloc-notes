@@ -22,24 +22,24 @@ if (!isset($_SESSION["nom"])) {
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Bloc-notes &#8211; Léo SEGUIN (en)</title>
+    <title>Bloc-notes &#8211; Léo SEGUIN | English</title>
     <meta name="description" content="Save notes to your device or sign in to sync and encrypt your notes.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#171717">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN (en)">
+    <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN | English">
     <meta name="twitter:description" content="Save notes to your device or sign in to sync and encrypt your notes.">
     <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes-large.png">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN (en)">
+    <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN | English">
     <meta property="og:description" content="Save notes to your device or sign in to sync and encrypt your notes.">
-    <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN (en)">
-    <meta property="og:url" content="https://leoseguin.fr/projets/notes/en/">
+    <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN | English">
+    <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
     <meta property="og:image" content="https://leoseguin.fr/assets/img/notes-large.png">
     <meta property="og:locale" content="en">
-    <link rel="canonical" href="https://leoseguin.fr/projets/notes/en/">
+    <link rel="canonical" href="https://leoseguin.fr/projets/notes/">
     <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="/projets/notes/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/projets/notes/assets/css/style.css">
@@ -51,7 +51,7 @@ if (!isset($_SESSION["nom"])) {
         <?php if (isset($_SESSION["nom"])) { ?>
             <div>
                 <h1 class="welcome">
-                    <span class="gestionCompte linkp" tabindex="0">
+                    <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
                         <?php echo $_SESSION["nom"]; ?>
                     </span>
@@ -65,7 +65,7 @@ if (!isset($_SESSION["nom"])) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.6.1</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.2</a>
                 </span>
             </div>
             <div>
@@ -76,13 +76,24 @@ if (!isset($_SESSION["nom"])) {
             </div>
         <?php } ?>
         <div class="search-input">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search for a note">
+            <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
+            <i class="fa-solid fa-magnifying-glass" role="none"></i>
+            <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
+            <?php if (isset($_SESSION["nom"])) { ?>
+                <span class="gestionCompte linkp" aria-label="Account" tabindex="0" role="button">
+                    <i class="fa-solid fa-circle-user"></i>
+                </span>
+            <?php } else { ?>
+                <span class="seconnecter linkp" aria-label="Sign in" tabindex="0" role="button">
+                    <i class="fa-solid fa-circle-user"></i>
+                </span>
+            <?php } ?>
+            <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
         </div>
         <?php if (isset($_SESSION["nom"])) { ?>
             <div class="lastSync">
-                <i id="resync" class="fa-solid fa-sync" tabindex="0"></i>
+                <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
                 <span></span>
             </div>
         <?php } ?>
@@ -102,13 +113,24 @@ if (!isset($_SESSION["nom"])) {
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
+            &copy;<?php echo date('Y'); ?>
+        </div>
+        <div class="sideBarMobile">
+            <header>
+                <i class="fa-solid fa-xmark" tabindex="0"></i>
+            </header>
+            <h2>Notes</h2>
+            <div class="listNotes"></div>
+            <div class="copyright">
+                <a href="/" target="_blank" rel="noreferrer" aria-label="To leoseguin.fr">leoseguin.fr</a>
+                &copy;<?php echo date('Y'); ?>
+            </div>
         </div>
         <?php if (!isset($_SESSION["nom"])) { ?>
             <div id="cookie">
-                <p>This website uses a cookie that is necessary for user authentication.
-                <p>
-                    <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
-                    <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more">Learn more</a>
+                <p>This website uses a cookie that is necessary for user authentication.<p>
+                <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
+                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
             </div>
         <?php } ?>
         <div id="copyNotification">Note copied!</div>
@@ -129,17 +151,17 @@ if (!isset($_SESSION["nom"])) {
                             </div>
                             <div class="row">
                                 <div class="couleurs">
-                                    <span class="Noir" tabindex="0"></span>
-                                    <span class="Blanc" tabindex="0"></span>
-                                    <span class="Rouge" tabindex="0"></span>
-                                    <span class="Orange" tabindex="0"></span>
-                                    <span class="Jaune" tabindex="0"></span>
-                                    <span class="Vert" tabindex="0"></span>
-                                    <span class="Cyan" tabindex="0"></span>
-                                    <span class="BleuCiel" tabindex="0"></span>
-                                    <span class="Bleu" tabindex="0"></span>
-                                    <span class="Violet" tabindex="0"></span>
-                                    <span class="Rose" tabindex="0"></span>
+                                    <span class="Noir" tabindex="0" aria-label="Black" role="button"></span>
+                                    <span class="Blanc" tabindex="0" aria-label="White" role="button"></span>
+                                    <span class="Rouge" tabindex="0" aria-label="Red" role="button"></span>
+                                    <span class="Orange" tabindex="0" aria-label="Orange" role="button"></span>
+                                    <span class="Jaune" tabindex="0" aria-label="Yellow" role="button"></span>
+                                    <span class="Vert" tabindex="0" aria-label="Green" role="button"></span>
+                                    <span class="Cyan" tabindex="0" aria-label="Cyan" role="button"></span>
+                                    <span class="BleuCiel" tabindex="0" aria-label="Sky blue" role="button"></span>
+                                    <span class="Bleu" tabindex="0" aria-label="Blue" role="button"></span>
+                                    <span class="Violet" tabindex="0" aria-label="Purple" role="button"></span>
+                                    <span class="Rose" tabindex="0" aria-label="Pink" role="button"></span>
                                 </div>
                             </div>
                             Hidden note
@@ -161,7 +183,7 @@ if (!isset($_SESSION["nom"])) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <div class="row">
-                            <span class="sedeconnecter linkp" tabindex="0">Sign out</span>
+                            <span class="sedeconnecter linkp" tabindex="0" role="button">Sign out</span>
                         </div>
                         <div class="row">
                             <span class="linkp">
@@ -171,6 +193,14 @@ if (!isset($_SESSION["nom"])) {
                         <div class="row">
                             <span class="linkp">
                                 <a href="https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Markdown guide">Markdown guide</a>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="linkp">
+                                <a href="mailto:contact@leoseguin.fr" aria-label="Help" target="_blank" rel="noreferrer">
+                                    <i class="fa-solid fa-circle-question"></i>
+                                    Help
+                                </a>
                             </span>
                         </div>
                         <div class="row rowTri">
@@ -199,7 +229,7 @@ if (!isset($_SESSION["nom"])) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="GitHub" target="_blank" rel="noreferrer">v23.6.1</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.2</a>
                             </p>
                         </div>
                     </div>
@@ -222,23 +252,23 @@ if (!isset($_SESSION["nom"])) {
                             </div>
                             <div class="row">
                                 <div class="couleurs">
-                                    <span class="Noir" tabindex="0"></span>
-                                    <span class="Blanc" tabindex="0"></span>
-                                    <span class="Rouge" tabindex="0"></span>
-                                    <span class="Orange" tabindex="0"></span>
-                                    <span class="Jaune" tabindex="0"></span>
-                                    <span class="Vert" tabindex="0"></span>
-                                    <span class="Cyan" tabindex="0"></span>
-                                    <span class="BleuCiel" tabindex="0"></span>
-                                    <span class="Bleu" tabindex="0"></span>
-                                    <span class="Violet" tabindex="0"></span>
-                                    <span class="Rose" tabindex="0"></span>
+                                    <span class="Noir" tabindex="0" aria-label="Black" role="button"></span>
+                                    <span class="Blanc" tabindex="0" aria-label="White" role="button"></span>
+                                    <span class="Rouge" tabindex="0" aria-label="Red" role="button"></span>
+                                    <span class="Orange" tabindex="0" aria-label="Orange" role="button"></span>
+                                    <span class="Jaune" tabindex="0" aria-label="Yellow" role="button"></span>
+                                    <span class="Vert" tabindex="0" aria-label="Green" role="button"></span>
+                                    <span class="Cyan" tabindex="0" aria-label="Cyan" role="button"></span>
+                                    <span class="BleuCiel" tabindex="0" aria-label="Sky blue" role="button"></span>
+                                    <span class="Bleu" tabindex="0" aria-label="Blue" role="button"></span>
+                                    <span class="Violet" tabindex="0" aria-label="Purple" role="button"></span>
+                                    <span class="Rose" tabindex="0" aria-label="Pink" role="button"></span>
                                 </div>
                             </div>
                             Hidden note
                             <div class="row">
                                 <label for="checkHidden" class="switch" aria-label="Hidden note">
-                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-label="Hidden note" tabindex="-1">
+                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-hidden="true" tabindex="-1">
                                     <span class="slider" tabindex="0"></span>
                                 </label>
                             </div>
@@ -253,7 +283,7 @@ if (!isset($_SESSION["nom"])) {
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <span class="creercompte linkp" tabindex="0">No account yet?</span>
+                        <span class="creercompte linkp" tabindex="0" role="button">No account yet?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?php echo $_SESSION['csrf_token_connect']; ?>">
                             <div class="row">
@@ -285,7 +315,7 @@ if (!isset($_SESSION["nom"])) {
                                 <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="password">
                             </div>
                             <div class="row">
-                                <i class="fa-solid fa-circle-info"></i>
+                                <i class="fa-solid fa-circle-info" role="none"></i>
                                 Your password is securely stored and your notes are encrypted.
                             </div>
                             <button id="submitCreer" type="submit" aria-label="Sign up">Sign up</button>

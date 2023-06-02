@@ -5,6 +5,16 @@ $color4: #c6c6c6;
 $color5: #8ab4f8;
 $color6: #9ec3ff;
 
+@keyframes slideLeft {
+  0% {
+    left: -100%
+  }
+
+  100% {
+    left: 0
+  }
+}
+
 @keyframes wave-animation {
 
   0%,
@@ -28,25 +38,6 @@ $color6: #9ec3ff;
 
   50% {
     transform: rotate(10deg)
-  }
-}
-
-@keyframes fadeInOut {
-
-  0% {
-    opacity: 0
-  }
-
-  15% {
-    opacity: 1
-  }
-
-  85% {
-    opacity: 1
-  }
-
-  100% {
-    opacity: 0
   }
 }
 
@@ -125,6 +116,26 @@ kbd {
   padding: 2px 4px
 }
 
+header {
+  padding: 20px;
+
+  i {
+    color: $color4;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: .2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, .1)
+    }
+  }
+}
+
 pre,
 code {
   background: #383a59;
@@ -162,7 +173,9 @@ nav {
   box-shadow: 2px 2px 4px $color1;
 
   @media(min-width: 992px) {
-    .icon, .iconConnect {
+
+    .icon,
+    .iconConnect {
       display: none
     }
   }
@@ -174,6 +187,10 @@ nav {
   div {
     margin: 10px 2rem;
     display: inline-block
+  }
+
+  button {
+    max-width: 300px
   }
 
   .wave {
@@ -217,9 +234,19 @@ nav {
         outline: 2px solid $color5
       }
     }
+
+    .gestionCompte,
+    .seconnecter,
+    .fa-bars,
+    .resync {
+      display: none;
+      cursor: pointer
+    }
   }
 
   .lastSync {
+    font-size: .8rem;
+
     i {
       font-size: 1rem;
       margin: 0 5px;
@@ -242,6 +269,8 @@ main {
 
 .sideBar {
   position: fixed;
+  -webkit-user-select: none;
+  user-select: none;
   background: $color2;
   left: 0;
   top: 0;
@@ -264,11 +293,12 @@ main {
     max-height: 2rem;
     cursor: pointer;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: $color3;
       outline: none;
     }
-    
+
     .titleList {
       max-width: 200px;
       overflow: hidden;
@@ -276,13 +306,20 @@ main {
       white-space: nowrap;
       font-weight: 700
     }
-  
+
     .dateList {
       font-size: .8rem;
       display: inline;
       float: right
     }
   }
+}
+
+.sideBarMobile,
+.sideBarMobile.show {
+  display: none;
+  -webkit-user-select: none;
+  user-select: none
 }
 
 label {
@@ -573,29 +610,9 @@ p.welcome {
 
 .linkp {
   cursor: pointer;
-  text-align: center;
   font-weight: 700;
-  color: $color5
-}
-
-.linkp {
+  color: $color5;
   margin-left: 20px
-}
-
-.content header i {
-  color: $color4;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  transition: .2s;
-
-  &:hover {
-    background: rgba(255, 255, 255, .1)
-  }
 }
 
 .fullscreen {
@@ -690,12 +707,14 @@ select {
   backdrop-filter: blur(10px);
 
   .popup {
+    -webkit-user-select: none;
+    user-select: none;
     position: absolute;
     top: 50%;
     left: 50%;
     z-index: 3;
-    width: 100%;
-    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
     justify-content: center;
     transform: translate(-50%, -50%)
   }
@@ -722,10 +741,6 @@ select {
 
 .content {
   min-width: 500px;
-
-  header {
-    padding: 20px
-  }
 
   form {
     margin: 20px
@@ -838,8 +853,10 @@ select {
 
 #errorNotification {
   position: fixed;
-  top: 1rem;
-  margin: 1rem auto;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  margin: auto;
   text-align: center;
   max-width: 300px;
   background: #a93b3b;
@@ -851,21 +868,19 @@ select {
 }
 
 #copyNotification {
-  display: none;
   position: fixed;
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 5rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  max-width: 125px;
   background: $color3;
   color: $color4;
   padding: 10px;
-  border-radius: 5px
-}
-
-#copyNotification.show {
-  display: block;
-  z-index: 1000;
-  animation: fadeInOut 1.5s ease-in-out
+  border-radius: 5px;
+  display: none;
+  z-index: 999
 }
 
 #cookie {
@@ -879,7 +894,6 @@ select {
   color: $color4;
   padding: 1rem;
   border-radius: 5px;
-  z-index: 2;
   -webkit-user-select: none;
   user-select: none;
   box-shadow: 0 0 10px $color1;
@@ -907,27 +921,30 @@ select {
   }
 }
 
-.lang {
-  cursor: pointer;
-
-  img {
-    border-radius: 0;
-    border: 1px solid $color4;
-    vertical-align: middle
-  }
-}
-
 @media(max-width: 992px) {
+
+  body {
+    min-height: 100vh
+  }
 
   nav {
     position: relative;
-    margin: 10px;
+    margin: 0;
     padding: 10px;
     border-radius: 1rem;
+    background: none;
 
     div {
       margin: 10px 0;
       display: block
+    }
+
+    button.seconnecter {
+      display: none;
+    }
+
+    .welcome {
+      display: none
     }
 
     .icon,
@@ -937,22 +954,53 @@ select {
 
     .search-input {
       width: 100%;
+      max-height: 60px;
 
       input {
-        width: 60%;
-        text-align: center;
+        width: 45%;
+        height: 60px;
+        margin-left: 10px;
+        vertical-align: middle;
 
         &:focus {
           outline: none
         }
       }
+
+      .gestionCompte,
+      .seconnecter,
+      .fa-bars,
+      .resync {
+        display: inline;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+
+      .gestionCompte i,
+      .seconnecter i {
+        font-size: 1.8rem;
+        vertical-align: middle;
+        margin-right: 10px
+      }
+
+      .fa-magnifying-glass {
+        display: none
+      }
+    }
+
+    .lastSync {
+      display: none
     }
 
     #iconButtonFloat,
     #iconButtonConnectFloat {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
+      bottom: 2rem;
+      right: 2rem;
       width: 60px;
       height: 60px;
       font-size: 1.4rem;
@@ -966,12 +1014,71 @@ select {
 
   main {
     margin-top: 10px;
-    padding: 0 10px;
+    padding: 0 10px 5rem 10px;
     gap: 10px
   }
 
   .sideBar {
     display: none
+  }
+
+  .sideBarMobile {
+    display: none;
+    position: fixed;
+    background: $color2;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 90vw;
+    padding: 1rem;
+    z-index: 3;
+
+    * {
+      margin-bottom: 1rem
+    }
+
+    .listNotes {
+      max-height: 75vh;
+      margin-top: 2rem;
+      overflow-y: scroll
+    }
+
+    .copyright {
+      margin-top: 1rem;
+      font-size: .8rem
+    }
+
+    p {
+      padding: 5px;
+      border-radius: 5px;
+      max-height: 2rem;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background: $color3;
+        outline: none;
+      }
+
+      .titleList {
+        max-width: 140px;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
+        font-weight: 700
+      }
+
+      .dateList {
+        font-size: .8rem;
+        display: inline;
+        float: right
+      }
+    }
+  }
+
+  .sideBarMobile.show {
+    display: block;
+    animation: slideLeft .2s
   }
 
   textarea {
@@ -986,10 +1093,6 @@ select {
     width: 98vw;
     max-height: 300px;
 
-    &:last-child {
-      margin-bottom: 4rem
-    }
-
     .details {
       overflow-y: hidden
     }
@@ -1001,9 +1104,8 @@ select {
   }
 
   .fullscreen {
-    min-height: calc(100vh - 6rem);
+    min-height: calc(100vh - 5rem);
     top: 1rem;
-    bottom: 5rem;
 
     .details {
       min-height: 75vh;
@@ -1011,8 +1113,9 @@ select {
     }
   }
 
-  #copyNotification.show {
-    display: none
+  #copyNotification {
+    top: auto;
+    bottom: 4rem
   }
 
   .couleurs span {

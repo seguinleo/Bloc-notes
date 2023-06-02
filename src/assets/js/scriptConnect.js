@@ -1,5 +1,9 @@
 let isUpdate;
 let errorMessage;
+let touchStart = 0;
+let touchEnd = 0;
+let timeoutCopy;
+let timeoutError;
 const notesContainer = document.querySelector('main');
 const popupBoxConnect = document.querySelector('.connect-popup-box');
 const popupBoxGestion = document.querySelector('.gestion-popup-box');
@@ -9,6 +13,7 @@ const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
+const sideBarMobile = document.querySelector('.sideBarMobile');
 
 function replaceAllStart(e) {
   return e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -19,12 +24,13 @@ function replaceAllEnd(e) {
 }
 
 function showError(message) {
-  const notification = document.getElementById('errorNotification');
+  if (timeoutError) clearTimeout(timeoutError);
+  const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
   notification.style.display = 'block';
-  setTimeout(() => {
+  timeoutError = setTimeout(() => {
     notification.style.display = 'none';
-  }, 5000);
+  }, 3000);
 }
 
 function taskListEnablerExtension() {
@@ -61,7 +67,8 @@ const converter = new showdown.Converter({
 });
 
 const showNotesConnect = async () => {
-  document.querySelector('.listNotes').textContent = '';
+  document.querySelector('.sideBar .listNotes').textContent = '';
+  document.querySelector('.sideBarMobile .listNotes').textContent = '';
 
   const notes = document.querySelectorAll('.note');
 
@@ -79,12 +86,8 @@ const showNotesConnect = async () => {
   const data = await response.json();
 
   if (data.length === 0) {
-    if (!window.location.pathname.endsWith('en/')) {
-      document.querySelector('.listNotes').textContent += 'Aucune note';
-    } else {
-      document.querySelector('.listNotes').textContent += 'No notes';
-    }
-    searchSideBar();
+    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBarMobile h2').textContent = 'Notes (0)';
     return;
   }
 
@@ -97,7 +100,9 @@ const showNotesConnect = async () => {
 
     if (!id || !title || !desc || !date || !couleur) return;
 
-    const descEnd = replaceAllEnd(desc);
+    const titleEnd = title.replaceAll('&amp;', '&');
+
+    const descEnd = replaceAllEnd(desc).replaceAll('&amp;', '&');
     const descHtml = converter.makeHtml(desc);
 
     const noteElement = document.createElement('div');
@@ -110,7 +115,7 @@ const showNotesConnect = async () => {
 
     const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
-    titleElement.innerHTML = title;
+    titleElement.innerHTML = titleEnd;
 
     const descElement = document.createElement('span');
 
@@ -126,10 +131,6 @@ const showNotesConnect = async () => {
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
 
-    const dateIconElement = document.createElement('i');
-    dateIconElement.classList.add('fa-solid', 'fa-calendar-days');
-    dateIconElement.title = 'Date (GMT)';
-
     const dateElement = document.createElement('span');
     dateElement.textContent = date;
 
@@ -137,17 +138,18 @@ const showNotesConnect = async () => {
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
     editIconElement.setAttribute('data-note-id', id);
-    editIconElement.setAttribute('data-note-title', title);
+    editIconElement.setAttribute('data-note-title', titleEnd);
     editIconElement.setAttribute('data-note-desc', descEnd);
     editIconElement.setAttribute('data-note-color', couleur);
     editIconElement.setAttribute('data-note-hidden', hidden);
+    editIconElement.setAttribute('role', 'button');
 
     const trashIconElement = document.createElement('i');
     trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
     trashIconElement.tabIndex = 0;
     trashIconElement.setAttribute('data-note-id', id);
+    trashIconElement.setAttribute('role', 'button');
 
-    bottomContentElement.appendChild(dateIconElement);
     bottomContentElement.appendChild(dateElement);
     bottomContentElement.appendChild(editIconElement);
     bottomContentElement.appendChild(trashIconElement);
@@ -157,12 +159,14 @@ const showNotesConnect = async () => {
       clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
       clipboardIconElement.tabIndex = 0;
       clipboardIconElement.setAttribute('data-note-desc', descEnd);
+      clipboardIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(clipboardIconElement);
 
       const expandIconElement = document.createElement('i');
       expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
       expandIconElement.tabIndex = 0;
       expandIconElement.setAttribute('data-note-id', id);
+      expandIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(expandIconElement);
     }
 
@@ -170,12 +174,17 @@ const showNotesConnect = async () => {
     noteElement.appendChild(bottomContentElement);
     notesContainer.appendChild(noteElement);
 
-    document.querySelector('.listNotes').innerHTML += `<p tabindex="0"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
+    document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${titleEnd}</span><span class="dateList">${date}</span></p>`;
+    document.querySelector('.sideBarMobile .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${titleEnd}</span><span class="dateList">${date}</span></p>`;
   });
+  document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
+  document.querySelector('.sideBarMobile h2').textContent = `Notes (${data.length})`;
   searchSideBar();
 };
 
 const fetchDelete = async (e) => {
+  darken.classList.remove('show');
+  document.body.classList.remove('noscroll');
   try {
     await fetch('/projets/notes/assets/php/deleteNote.php', {
       method: 'POST',
@@ -184,8 +193,6 @@ const fetchDelete = async (e) => {
       },
       body: `noteId=${encodeURIComponent(e)}`,
     });
-    darken.classList.remove('show');
-    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     if (!window.location.pathname.endsWith('en/')) {
@@ -273,18 +280,19 @@ function updateNoteConnect(id, title, desc, couleur, hidden) {
       couleurSpan.classList.remove('selectionne');
     }
   });
-  if (hidden === '1') { document.getElementById('checkHidden').checked = true; }
+  if (hidden === '1') { document.querySelector('#checkHidden').checked = true; }
   descTagConnect.focus();
 }
 
 function copy(e) {
+  if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
-  const notification = document.getElementById('copyNotification');
+  const notification = document.querySelector('#copyNotification');
   navigator.clipboard.writeText(copyText);
-  notification.classList.add('show');
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 1500);
+  notification.style.display = 'block';
+  timeoutCopy = setTimeout(() => {
+    notification.style.display = 'none';
+  }, 2000);
 }
 
 function deleteNoteConnect(e) {
@@ -407,6 +415,52 @@ document.querySelectorAll('.supprimerCompte').forEach((element) => {
   });
 });
 
+document.querySelectorAll('#menuIcon').forEach((element) => {
+  element.addEventListener('click', () => {
+    sideBarMobile.classList.add('show');
+    darken.classList.toggle('show');
+  });
+  element.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      element.click();
+      document.querySelector('.sideBarMobile header i').focus();
+    }
+  });
+});
+
+document.body.addEventListener('touchstart', (e) => {
+  touchStart = e.targetTouches[0].clientX;
+});
+
+document.body.addEventListener('touchmove', (e) => {
+  touchEnd = e.targetTouches[0].clientX;
+});
+
+document.body.addEventListener('touchend', () => {
+  const swipeDistance = touchEnd - touchStart;
+  if (swipeDistance > 50 && !sideBarMobile.classList.contains('show')) {
+    sideBarMobile.classList.add('show');
+    darken.classList.add('show');
+    document.querySelectorAll('.note').forEach((note) => {
+      note.classList.remove('fullscreen');
+    });
+    document.body.classList.remove('noscroll');
+  } else if (swipeDistance < -50 && sideBarMobile.classList.contains('show')) {
+    sideBarMobile.classList.remove('show');
+    darken.classList.remove('show');
+    document.querySelectorAll('.note').forEach((note) => {
+      note.classList.remove('fullscreen');
+    });
+    document.body.classList.remove('noscroll');
+  }
+  touchStart = 0;
+  touchEnd = 0;
+});
+
+sideBarMobile.addEventListener('touchstart', (e) => {
+  e.stopPropagation();
+});
+
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -421,6 +475,7 @@ document.querySelectorAll('header i').forEach((element) => {
     popupBoxGestion.classList.remove('show');
     darken.classList.remove('show');
     document.body.classList.remove('noscroll');
+    sideBarMobile.classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -485,23 +540,21 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
   try {
     const titreBrut = document.querySelector('#titleConnect').value.trim();
     const contentBrut = document.querySelector('#descConnect').value.trim();
-    if (!titreBrut || !contentBrut || contentBrut.length > 2000) return;
+    if (!titreBrut || !contentBrut || titreBrut.length > 30 || contentBrut.length > 2000) return;
     const titre = encodeURIComponent(titreBrut
       .replaceAll(/'/g, '‘')
       .replaceAll(/"/g, '‘‘')
-      .replaceAll(/&/g, '＆')
       .replaceAll(/</g, '←')
       .replaceAll(/>/g, '→'));
     const content = encodeURIComponent(contentBrut
       .replaceAll(/'/g, '‘')
       .replaceAll(/"/g, '‘‘')
-      .replaceAll(/&/g, '＆')
       .replaceAll(/</g, '←')
       .replaceAll(/>/g, '→'));
     const couleurSpan = document.querySelector('.couleurs span.selectionne');
     const couleur = encodeURIComponent(couleurSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const checkBox = document.getElementById('checkHidden');
+    const checkBox = document.querySelector('#checkHidden');
     const hidden = checkBox.checked ? 1 : 0;
     const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/formAddNote.php';
     const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}`;
@@ -607,10 +660,12 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
 document.addEventListener('DOMContentLoaded', () => {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/projets/notes/sw.js');
   showNotesConnect();
-  document.querySelector('#resync').addEventListener('click', () => {
-    window.location.reload();
-  });
-  document.querySelector('#resync').addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') window.location.reload();
+  document.querySelectorAll('.resync').forEach((resync) => {
+    resync.addEventListener('click', () => {
+      window.location.reload();
+    });
+    resync.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') window.location.reload();
+    });
   });
 });
