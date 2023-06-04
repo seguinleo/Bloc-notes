@@ -1,19 +1,22 @@
 <?php
-$userLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : '';
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    $userLanguage = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+} else {
+    $userLanguage = '';
+}
 if ($userLanguage !== 'fr') {
     header('Location: /projets/notes/en/');
-    exit();
 }
 session_set_cookie_params(array(
-    'path' => '/projets/notes/',
-    'lifetime' => 604800,
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Lax'
+    'path'      => '/projets/notes/',
+    'lifetime'  => 604800,
+    'secure'    => true,
+    'httponly'  => true,
+    'samesite'  => 'Lax'
 ));
-session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"])) {
+$nom = $_SESSION["nom"];
+if (isset($nom) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
 }
@@ -48,12 +51,12 @@ if (!isset($_SESSION["nom"])) {
 </head>
 <body>
     <nav>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom)) { ?>
             <div>
                 <h1 class="welcome">
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?php echo $_SESSION["nom"]; ?>
+                        <?php echo htmlspecialchars($nom); ?>
                     </span>
                     <span class="wave">👋🏼</span>
                 </h1>
@@ -80,7 +83,7 @@ if (!isset($_SESSION["nom"])) {
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="text" id="search-input" maxlength="30" aria-label="Rechercher une note" placeholder="Rechercher">
             <kbd>CTRL</kbd><kbd>K</kbd>
-            <?php if (isset($_SESSION["nom"])) { ?>
+            <?php if (isset($nom)) { ?>
                 <span class="gestionCompte linkp" aria-label="Compte" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
@@ -91,7 +94,7 @@ if (!isset($_SESSION["nom"])) {
                 </span>
             <?php } ?>
         </div>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom)) { ?>
             <div class="lastSync">
                 <i class="resync fa-solid fa-sync" aria-label="Synchroniser" tabindex="0" role="button"></i>
                 <span></span>
@@ -103,7 +106,7 @@ if (!isset($_SESSION["nom"])) {
         <div id="errorNotification"></div>
         <div class="sideBar">
             <h2>Notes</h2>
-            <?php if (isset($_SESSION["nom"])) { ?>
+            <?php if (isset($nom)) { ?>
                 <div class="iconConnect">
                     <button id="iconButtonConnect" type="button" aria-label="Ajouter une note dans le cloud">Ajouter une note dans le cloud</button>
                 </div>
@@ -113,7 +116,7 @@ if (!isset($_SESSION["nom"])) {
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
-            &copy;<?php echo date('Y'); ?>
+            &copy;<?php echo htmlspecialchars(date('Y')); ?>
         </div>
         <div class="sideBarMobile">
             <header>
@@ -123,10 +126,10 @@ if (!isset($_SESSION["nom"])) {
             <div class="listNotes"></div>
             <div class="copyright">
                 <a href="/" target="_blank" rel="noreferrer" aria-label="Vers leoseguin.fr">leoseguin.fr</a>
-                &copy;<?php echo date('Y'); ?>
+                &copy;<?php echo htmlspecialchars(date('Y')); ?>
             </div>
         </div>
-        <?php if (!isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom) === false) { ?>
             <div id="cookie">
                 <p>Ce site utilise un cookie nécessaire à la connexion de l'utilisateur.<p>
                 <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
@@ -134,7 +137,7 @@ if (!isset($_SESSION["nom"])) {
             </div>
         <?php } ?>
         <div id="copyNotification">Note copiée !</div>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom)) { ?>
             <div class="connect-popup-box">
                 <div class="popup">
                     <div class="content">
@@ -285,7 +288,7 @@ if (!isset($_SESSION["nom"])) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">Pas encore de compte ?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" value="<?php echo $_SESSION['csrf_token_connect']; ?>">
+                            <input type="hidden" id="csrf_token_connect" value="<?= htmlspecialchars($_SESSION['csrf_token_connect']) ?>">
                             <div class="row">
                                 <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom">
                             </div>
@@ -304,7 +307,7 @@ if (!isset($_SESSION["nom"])) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" value="<?php echo $_SESSION['csrf_token_creer']; ?>">
+                            <input type="hidden" id="csrf_token_creer" value="<?= htmlspecialchars($_SESSION['csrf_token_creer']) ?>">
                             <div class="row">
                                 <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom">
                             </div>
@@ -326,7 +329,7 @@ if (!isset($_SESSION["nom"])) {
         <?php } ?>
     </main>
     <script src="/projets/notes/assets/js/showdown.min.js" nonce="sWreZ7K/76vSgX/q4FG9Nw==" defer></script>
-    <?php if (isset($_SESSION["nom"])) { ?>
+    <?php if (isset($nom)) { ?>
         <script src="/projets/notes/assets/js/scriptConnect.js" nonce="Alh0WoNLlsjSwaj8IQtPww==" defer></script>
     <?php } else { ?>
         <script src="/projets/notes/assets/js/script.js" nonce="ys0TnhNOaQXMngU70orFgQ==" defer></script>

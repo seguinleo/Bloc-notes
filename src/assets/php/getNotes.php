@@ -1,18 +1,17 @@
 <?php
-session_name('__Secure-PHPSESSID');
 session_start();
-if (!isset($_SESSION["nom"])) {
-    header('HTTP/2.0 403 Forbidden');
+if (isset($_SESSION["nom"]) === false) {
     exit();
 }
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/functions.php';
 $tri = $_SESSION['tri'];
+$key = $_SESSION['key'];
 if ($tri === "Date de création") {
     $orderBy = "ORDER BY id DESC";
-} else if ($tri === "Date de création (Z-A)") {
+} elseif ($tri === "Date de création (Z-A)") {
     $orderBy = "ORDER BY id";
-} else if ($tri === "Date de modification") {
+} elseif ($tri === "Date de modification") {
     $orderBy = "ORDER BY dateNote DESC, id DESC";
 } else {
     $orderBy = "ORDER BY dateNote, id DESC";
@@ -22,12 +21,12 @@ $query->execute([':CurrentUser' => $_SESSION["nom"]]);
 $items = [];
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $items[] = [
-        'id' => htmlspecialchars($row['id'], ENT_QUOTES),
-        'title' => htmlspecialchars(decrypt_data($row['titre'], $_SESSION['key']), ENT_QUOTES),
-        'couleur' => $row['couleur'],
-        'desc' => htmlspecialchars(decrypt_data($row['content'], $_SESSION['key']), ENT_QUOTES),
-        'date' => $row['dateNote'],
-        'hidden' => $row['hiddenNote']
+        'id'        => htmlspecialchars($row['id'], ENT_QUOTES),
+        'title'     => htmlspecialchars(decrypt_data($row['titre'], $key), ENT_QUOTES),
+        'couleur'   => $row['couleur'],
+        'desc'      => htmlspecialchars(decrypt_data($row['content'], $key), ENT_QUOTES),
+        'date'      => $row['dateNote'],
+        'hidden'    => $row['hiddenNote']
     ];
 }
 echo json_encode($items);

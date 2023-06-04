@@ -445,39 +445,40 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       },
       body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
     });
-    if (response.ok) {
+    const data = await response.json();
+    if (data.success) {
       window.location.reload();
-      return;
-    }
-    document.querySelector('#mdpConnect').value = '';
-    let time = 10;
-    const button = document.querySelector('#submitSeConnecter');
-    button.disabled = true;
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Mauvais identifiants...';
+    } else {
+      document.querySelector('#mdpConnect').value = '';
+      let time = 10;
+      const button = document.querySelector('#submitSeConnecter');
+      button.disabled = true;
+      if (!window.location.pathname.endsWith('en/')) {
+        errorMessage = 'Mauvais identifiants...';
+        showError(errorMessage);
+        const interval = setInterval(() => {
+          time -= 1;
+          button.textContent = `Se connecter (${time})`;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(interval);
+          button.disabled = false;
+          button.textContent = 'Se connecter';
+        }, 11000);
+        return;
+      }
+      errorMessage = 'Wrong credentials...';
       showError(errorMessage);
       const interval = setInterval(() => {
         time -= 1;
-        button.textContent = `Se connecter (${time})`;
+        button.textContent = `Sign in (${time})`;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
         button.disabled = false;
-        button.textContent = 'Se connecter';
+        button.textContent = 'Sign in';
       }, 11000);
-      return;
     }
-    errorMessage = 'Wrong credentials...';
-    showError(errorMessage);
-    const interval = setInterval(() => {
-      time -= 1;
-      button.textContent = `Sign in (${time})`;
-    }, 1000);
-    setTimeout(() => {
-      clearInterval(interval);
-      button.disabled = false;
-      button.textContent = 'Sign in';
-    }, 11000);
   } catch (error) {
     if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Une erreur est survenue lors de la connexion...';
