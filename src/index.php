@@ -20,6 +20,8 @@ $nom = $_SESSION["nom"];
 if (isset($nom) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
+} else {
+    $_SESSION['csrf_token_note'] = bin2hex(random_bytes(32));
 }
 ?>
 <!DOCTYPE html>
@@ -147,6 +149,7 @@ if (isset($nom) === false) {
                         </header>
                         <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
                             <input id="idNoteInputConnect" type="hidden">
+                            <input type="hidden" id="csrf_token_note" value="<?= htmlspecialchars($_SESSION['csrf_token_note']) ?>">
                             <div class="row">
                                 <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>

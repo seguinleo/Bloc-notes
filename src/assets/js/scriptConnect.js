@@ -557,7 +557,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const checkBox = document.querySelector('#checkHidden');
     const hidden = checkBox.checked ? 1 : 0;
     const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/formAddNote.php';
-    const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}`;
+    const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     await fetch(url, {
       method: 'POST',
       headers: {
