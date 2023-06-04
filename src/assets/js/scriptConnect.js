@@ -641,7 +641,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `mdpNew=${mdpNew}`,
+      body: `mdpNew=${mdpNew}&csrf_token_mdp=${document.querySelector('#csrf_token_mdp').value}`,
     });
     popupBoxGestion.classList.remove('show');
     document.body.classList.remove('noscroll');

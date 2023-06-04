@@ -1,7 +1,7 @@
 <?php
 session_name('__Secure-notes');
 session_start();
-if (isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew']) === false) {
+if ($_POST['csrf_token_mdp'] !== $_SESSION['csrf_token_mdp'] || isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew']) === false) {
     header('HTTP/2.0 403 Forbidden');
     exit();
 }
