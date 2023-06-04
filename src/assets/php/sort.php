@@ -1,6 +1,8 @@
 <?php
+session_name('__Secure-notes');
 session_start();
-if (!isset($_SESSION["nom"], $_SESSION['userId'])) {
+if (isset($_SESSION["nom"], $_SESSION['userId']) === false) {
+    header('HTTP/2.0 403 Forbidden');
     exit();
 }
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';

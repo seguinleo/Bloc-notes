@@ -1,12 +1,13 @@
 <?php
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-    $userLanguage = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $userLanguage = substr(htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']), 0, 2);
 } else {
     $userLanguage = '';
 }
 if ($userLanguage !== 'fr') {
     header('Location: /projets/notes/en/');
 }
+session_name('__Secure-notes');
 session_set_cookie_params(array(
     'path'      => '/projets/notes/',
     'lifetime'  => 604800,
@@ -56,7 +57,7 @@ if (isset($nom) === false) {
                 <h1 class="welcome">
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?php echo htmlspecialchars($nom); ?>
+                        <?= htmlspecialchars($nom) ?>
                     </span>
                     <span class="wave">👋🏼</span>
                 </h1>
@@ -116,7 +117,7 @@ if (isset($nom) === false) {
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
-            &copy;<?php echo htmlspecialchars(date('Y')); ?>
+            &copy;<?= htmlspecialchars(date('Y')) ?>
         </div>
         <div class="sideBarMobile">
             <header>
@@ -126,7 +127,7 @@ if (isset($nom) === false) {
             <div class="listNotes"></div>
             <div class="copyright">
                 <a href="/" target="_blank" rel="noreferrer" aria-label="Vers leoseguin.fr">leoseguin.fr</a>
-                &copy;<?php echo htmlspecialchars(date('Y')); ?>
+                &copy;<?= htmlspecialchars(date('Y')) ?>
             </div>
         </div>
         <?php if (isset($nom) === false) { ?>

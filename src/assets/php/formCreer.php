@@ -1,6 +1,8 @@
 <?php
+session_name('__Secure-notes');
 session_start();
-if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer'] || !isset($_POST['nomCreer'], $_POST['mdpCreer']) || isset($_SESSION["nom"], $_SESSION['userId'])) {
+if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer'] || isset($_POST['nomCreer'], $_POST['mdpCreer']) === false || isset($_SESSION["nom"], $_SESSION['userId'])) {
+    header('HTTP/2.0 403 Forbidden');
     exit();
 }
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';

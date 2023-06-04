@@ -1,15 +1,18 @@
 <?php
+session_name('__Secure-notes');
 session_start();
-if (!isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['filterDesc'])) {
+if (isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['filterDesc']) === false) {
+    header('HTTP/2.0 403 Forbidden');
     exit();
 }
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/functions.php';
+$key = $_SESSION['key'];
 $descriptionConnect = $_POST['filterDesc'];
-$descriptionConnect = encrypt_data($descriptionConnect, $_SESSION['key']);
+$descriptionConnect = encrypt_data($descriptionConnect, $key);
 $noteId = $_POST['noteId'];
 $titleConnect = $_POST['title'];
-$titleConnect = encrypt_data($titleConnect, $_SESSION['key']);
+$titleConnect = encrypt_data($titleConnect, $key);
 $couleurConnect = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
