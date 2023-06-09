@@ -120,7 +120,7 @@ if (isset($nom) === false) {
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
-            &copy;<?= htmlspecialchars(date('Y')) ?>
+            &copy;<?= date('Y') ?>
         </div>
         <div class="sideBarMobile">
             <header>
@@ -130,7 +130,7 @@ if (isset($nom) === false) {
             <div class="listNotes"></div>
             <div class="copyright">
                 <a href="/" target="_blank" rel="noreferrer" aria-label="Vers leoseguin.fr">leoseguin.fr</a>
-                &copy;<?= htmlspecialchars(date('Y')) ?>
+                &copy;<?= date('Y') ?>
             </div>
         </div>
         <?php if (isset($nom) === false) { ?>
@@ -150,7 +150,7 @@ if (isset($nom) === false) {
                         </header>
                         <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
                             <input id="idNoteInputConnect" type="hidden">
-                            <input type="hidden" id="csrf_token_note" value="<?= htmlspecialchars($_SESSION['csrf_token_note']) ?>">
+                            <input type="hidden" id="csrf_token_note" value="<?= $_SESSION['csrf_token_note'] ?>">
                             <div class="row">
                                 <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>
@@ -223,7 +223,7 @@ if (isset($nom) === false) {
                         <details>
                             <summary>Gestion du compte</summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-                                <input type="hidden" id="csrf_token_mdp" value="<?= htmlspecialchars($_SESSION['csrf_token_mdp']) ?>">
+                                <input type="hidden" id="csrf_token_mdp" value="<?= $_SESSION['csrf_token_mdp'] ?>">
                                 <div class="row">
                                     <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" maxlength="50" aria-label="mdp">
                                 </div>
@@ -294,7 +294,7 @@ if (isset($nom) === false) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">Pas encore de compte ?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" value="<?= htmlspecialchars($_SESSION['csrf_token_connect']) ?>">
+                            <input type="hidden" id="csrf_token_connect" value="<?= $_SESSION['csrf_token_connect'] ?>">
                             <div class="row">
                                 <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom">
                             </div>
@@ -313,7 +313,7 @@ if (isset($nom) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" value="<?= htmlspecialchars($_SESSION['csrf_token_creer']) ?>">
+                            <input type="hidden" id="csrf_token_creer" value="<?= $_SESSION['csrf_token_creer'] ?>">
                             <div class="row">
                                 <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom">
                             </div>
@@ -334,11 +334,11 @@ if (isset($nom) === false) {
             </div>
         <?php } ?>
     </main>
-    <script src="/projets/notes/assets/js/showdown.min.js" nonce="sWreZ7K/76vSgX/q4FG9Nw==" defer></script>
+    <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom)) { ?>
-        <script src="/projets/notes/assets/js/scriptConnect.js" nonce="Alh0WoNLlsjSwaj8IQtPww==" defer></script>
+        <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
-        <script src="/projets/notes/assets/js/script.js" nonce="ys0TnhNOaQXMngU70orFgQ==" defer></script>
+        <script src="/projets/notes/assets/js/script.js" defer></script>
     <?php } ?>
 </body>
 </html>
