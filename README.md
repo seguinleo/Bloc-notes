@@ -52,15 +52,7 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
 
 ## For developers
-Technologies used: <svg aria-label="JavaScript" width="14px" height="14px" viewbox="0 0 64 64">
-<circle cx="32" cy="32" r="30" fill="#ead41c"></circle>
-</svg>JavaScript
-<svg aria-label="PHP" width="14px" height="14px" viewbox="0 0 64 64">
-<circle cx="32" cy="32" r="30" fill="#557fd7"></circle>
-</svg>PHP
-<svg aria-label="MySQL" width="14px" height="14px" viewbox="0 0 64 64">
-<circle cx="32" cy="32" r="30" fill="#d88700"></circle>
-</svg>MySQL
+Technologies used: JavaScript, PHP, MySQL
 
 ``npm i`` and ``composer i`` to install all dependencies
 
