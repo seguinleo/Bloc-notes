@@ -16,8 +16,7 @@ session_set_cookie_params(array(
     'samesite'  => 'Lax'
 ));
 session_start();
-$nom = $_SESSION["nom"];
-if (isset($nom) === false) {
+if (isset($_SESSION["nom"]) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
 } else {
@@ -55,12 +54,12 @@ if (isset($nom) === false) {
 </head>
 <body>
     <nav>
-        <?php if (isset($nom)) { ?>
+        <?php if (isset($_SESSION["nom"])) { ?>
             <div>
                 <h1 class="welcome">
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?= htmlspecialchars($nom) ?>
+                        <?= htmlspecialchars($_SESSION["nom"]) ?>
                     </span>
                     <span class="wave">👋🏼</span>
                 </h1>
@@ -72,7 +71,7 @@ if (isset($nom) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.2</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.3</a>
                 </span>
             </div>
             <div>
@@ -87,7 +86,7 @@ if (isset($nom) === false) {
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
-            <?php if (isset($nom)) { ?>
+            <?php if (isset($_SESSION["nom"])) { ?>
                 <span class="gestionCompte linkp" aria-label="Account" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
@@ -98,7 +97,7 @@ if (isset($nom) === false) {
             <?php } ?>
             <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
         </div>
-        <?php if (isset($nom)) { ?>
+        <?php if (isset($_SESSION["nom"])) { ?>
             <div class="lastSync">
                 <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
                 <span></span>
@@ -110,7 +109,7 @@ if (isset($nom) === false) {
         <div id="errorNotification"></div>
         <div class="sideBar">
             <h2>Notes</h2>
-            <?php if (isset($nom)) { ?>
+            <?php if (isset($_SESSION["nom"])) { ?>
                 <div class="iconConnect">
                     <button id="iconButtonConnect" type="button" aria-label="Add a cloud note">Add a cloud note</button>
                 </div>
@@ -133,7 +132,7 @@ if (isset($nom) === false) {
                 &copy;<?= date('Y') ?>
             </div>
         </div>
-        <?php if (isset($nom) === false) { ?>
+        <?php if (isset($_SESSION["nom"]) === false) { ?>
             <div id="cookie">
                 <p>This website uses a cookie that is necessary for user authentication.<p>
                 <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
@@ -141,7 +140,7 @@ if (isset($nom) === false) {
             </div>
         <?php } ?>
         <div id="copyNotification">Note copied!</div>
-        <?php if (isset($nom)) { ?>
+        <?php if (isset($_SESSION["nom"])) { ?>
             <div class="connect-popup-box">
                 <div class="popup">
                     <div class="content">
@@ -238,7 +237,7 @@ if (isset($nom) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.2</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.3</a>
                             </p>
                         </div>
                     </div>
@@ -335,7 +334,7 @@ if (isset($nom) === false) {
         <?php } ?>
     </main>
     <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
-    <?php if (isset($nom)) { ?>
+    <?php if (isset($_SESSION["nom"])) { ?>
         <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
         <script src="/projets/notes/assets/js/script.js" defer></script>

@@ -14,8 +14,8 @@ $query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:M
 $query->execute(
     [
         ':NomCreer' => $nomCreer,
-        ':MdpHash'  => $mdpCreerSecure,
-        ':OneKey'   => $key
+        ':MdpHash' => $mdpCreerSecure,
+        ':OneKey' => htmlspecialchars($key)
     ]
 );
 $query->closeCursor();

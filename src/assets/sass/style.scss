@@ -190,7 +190,7 @@ nav {
   }
 
   button {
-    max-width: 300px;
+    width: 200px;
   }
 
   .wave {
@@ -740,7 +740,7 @@ select {
 }
 
 .content {
-  min-width: 500px;
+  width: 600px;
 
   form {
     margin: 20px;
@@ -1014,7 +1014,7 @@ select {
 
   main {
     margin-top: 10px;
-    padding: 0 10px 5rem 10px;
+    padding: 0 5px 5rem 5px;
     gap: 10px;
   }
 
@@ -1090,7 +1090,7 @@ select {
   }
 
   .note {
-    width: 98vw;
+    width: 96vw;
     max-height: 300px;
 
     .details {

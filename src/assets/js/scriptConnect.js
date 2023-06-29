@@ -119,7 +119,7 @@ const showNotesConnect = async () => {
 
     const descElement = document.createElement('span');
 
-    if (hidden === '0') {
+    if (hidden === 0) {
       descElement.innerHTML = descHtml;
     } else {
       descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
@@ -154,7 +154,7 @@ const showNotesConnect = async () => {
     bottomContentElement.appendChild(editIconElement);
     bottomContentElement.appendChild(trashIconElement);
 
-    if (hidden === '0') {
+    if (hidden === 0) {
       const clipboardIconElement = document.createElement('i');
       clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
       clipboardIconElement.tabIndex = 0;
