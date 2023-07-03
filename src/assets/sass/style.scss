@@ -15,32 +15,6 @@ $color6: #9ec3ff;
   }
 }
 
-@keyframes wave-animation {
-
-  0%,
-  100%,
-  60% {
-    transform: rotate(0);
-  }
-
-  10%,
-  30% {
-    transform: rotate(14deg);
-  }
-
-  20% {
-    transform: rotate(-8deg);
-  }
-
-  40% {
-    transform: rotate(-4deg);
-  }
-
-  50% {
-    transform: rotate(10deg);
-  }
-}
-
 @font-face {
   font-family: 'OpenSans';
   font-style: normal;
@@ -193,15 +167,6 @@ nav {
     width: 200px;
   }
 
-  .wave {
-    animation-name: wave-animation;
-    animation-duration: 2.5s;
-    animation-iteration-count: infinite;
-    transform-origin: 70% 70%;
-    display: inline-block;
-    font-size: 1.4rem;
-  }
-
   .search-input {
     background: $color3;
     width: 300px;
@@ -244,13 +209,16 @@ nav {
     }
   }
 
+  .resync {
+    color: #42be34;
+  }
+
   .lastSync {
     font-size: .8rem;
 
     i {
       font-size: 1rem;
       margin: 0 5px;
-      color: #42be34;
       cursor: pointer;
     }
   }
@@ -612,7 +580,7 @@ p.welcome {
   cursor: pointer;
   font-weight: 700;
   color: $color5;
-  margin-left: 20px;
+  margin: 0 20px;
 }
 
 .fullscreen {
@@ -840,6 +808,11 @@ select {
   color: $color4;
 }
 
+.copyright {
+  margin-top: 1rem;
+  font-size: .8rem;
+}
+
 .gestion-popup-box.show .version {
   margin: 1rem;
   text-align: right;
@@ -853,10 +826,8 @@ select {
 
 #errorNotification {
   position: fixed;
-  top: 4rem;
-  left: 0;
-  right: 0;
-  margin: auto;
+  top: .5rem;
+  right: 2rem;
   text-align: center;
   max-width: 300px;
   background: #a93b3b;
@@ -869,10 +840,8 @@ select {
 
 #copyNotification {
   position: fixed;
-  top: 5rem;
-  left: 0;
-  right: 0;
-  margin: auto;
+  top: .5rem;
+  right: 2rem;
   text-align: center;
   max-width: 125px;
   background: $color3;
@@ -896,6 +865,7 @@ select {
   border-radius: 5px;
   -webkit-user-select: none;
   user-select: none;
+  z-index: 2;
   box-shadow: 0 0 10px $color1;
 
   button {
@@ -955,6 +925,7 @@ select {
     .search-input {
       width: 100%;
       max-height: 60px;
+      border-radius: 48px;
 
       input {
         width: 45%;
@@ -965,6 +936,10 @@ select {
         &:focus {
           outline: none;
         }
+      }
+
+      .linkp {
+        margin: 0 10px;
       }
 
       .gestionCompte,
@@ -984,7 +959,6 @@ select {
       .seconnecter i {
         font-size: 1.8rem;
         vertical-align: middle;
-        margin-right: 10px;
       }
 
       .fa-magnifying-glass {
@@ -1041,11 +1015,6 @@ select {
       max-height: 75vh;
       margin-top: 2rem;
       overflow-y: scroll;
-    }
-
-    .copyright {
-      margin-top: 1rem;
-      font-size: .8rem;
     }
 
     p {

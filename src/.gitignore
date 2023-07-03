@@ -1,5 +1,6 @@
 .htaccess
 .env
+config.php
 
 node_modules/
 vendor/

@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 let isUpdate;
 let errorMessage;
 let touchStart = 0;
@@ -18,15 +19,11 @@ const cookie = document.querySelector('#cookie');
 const sideBarMobile = document.querySelector('.sideBarMobile');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 
-function replaceAllStart(e) {
-  return e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-}
+const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
 
-function replaceAllEnd(e) {
-  return e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
-}
+const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
 
-function showError(message) {
+const showError = (message) => {
   if (timeoutError) clearTimeout(timeoutError);
   const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
@@ -34,17 +31,15 @@ function showError(message) {
   timeoutError = setTimeout(() => {
     notification.style.display = 'none';
   }, 3000);
-}
+};
 
-function taskListEnablerExtension() {
-  return [{
-    type: 'output',
-    regex: /<input type="checkbox"?/g,
-    replace: '<input type="checkbox"',
-  }];
-}
+const taskListEnablerExtension = () => [{
+  type: 'output',
+  regex: /<input type="checkbox"?/g,
+  replace: '<input type="checkbox"',
+}];
 
-function searchSideBar() {
+const searchSideBar = () => {
   document.querySelectorAll('.listNotes p').forEach((element) => {
     element.addEventListener('click', () => {
       const e = element.querySelector('.titleList').textContent;
@@ -60,7 +55,7 @@ function searchSideBar() {
       if (event.key === 'Enter') element.click();
     });
   });
-}
+};
 
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter({
@@ -69,7 +64,7 @@ const converter = new showdown.Converter({
   extensions: [taskListEnablerExtension],
 });
 
-const showNotes = () => {
+const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
   document.querySelector('.sideBarMobile .listNotes').textContent = '';
 
@@ -168,14 +163,14 @@ const showNotes = () => {
   searchSideBar();
 };
 
-function toggleFullscreen(id) {
+const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
   darken.classList.toggle('show');
   document.body.classList.toggle('noscroll');
-}
+};
 
-function updateNote(id, title, desc, couleur, hidden) {
+const updateNote = (id, title, desc, couleur, hidden) => {
   const s = replaceAllStart(desc);
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
@@ -196,9 +191,9 @@ function updateNote(id, title, desc, couleur, hidden) {
   });
   if (hidden === 'true') { document.querySelector('#checkHidden').checked = true; }
   descTag.focus();
-}
+};
 
-function copy(e) {
+const copy = (e) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
@@ -207,9 +202,9 @@ function copy(e) {
   timeoutCopy = setTimeout(() => {
     notification.style.display = 'none';
   }, 2000);
-}
+};
 
-function deleteNote(e) {
+const deleteNote = (e) => {
   const confirmationMessage = window.location.pathname.endsWith('en/') ? 'Do you really want to delete this note?' : 'Voulez-vous vraiment supprimer cette note ?';
   if (window.confirm(confirmationMessage)) {
     notesJSON.splice(e, 1);
@@ -217,7 +212,7 @@ function deleteNote(e) {
     darken.classList.remove('show');
     showNotes();
   }
-}
+};
 
 notesContainer.addEventListener('click', (event) => {
   const { target } = event;
@@ -245,35 +240,20 @@ document.querySelector('#cookieButton').addEventListener('click', () => {
   localStorage.setItem('cookie', 'hide');
 });
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
     if (document.activeElement.classList.contains('fa-clipboard')) {
       document.activeElement.click();
-    }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-trash-can')) {
+    } else if (document.activeElement.classList.contains('fa-trash-can')) {
+      document.activeElement.click();
+    } else if (document.activeElement.classList.contains('fa-pen')) {
+      document.activeElement.click();
+    } else if (document.activeElement.classList.contains('fa-expand')) {
       document.activeElement.click();
     }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-pen')) {
-      document.activeElement.click();
-    }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-expand')) {
-      document.activeElement.click();
-    }
+  } else if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    document.querySelector('#search-input').focus();
   }
 });
 
@@ -333,6 +313,16 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     showError(errorMessage);
     return;
   }
+  if (e.length > 25) {
+    if (!window.location.pathname.endsWith('en/')) {
+      errorMessage = 'Nom trop long (>25)...';
+      showError(errorMessage);
+      return;
+    }
+    errorMessage = 'Name too long (>25)...';
+    showError(errorMessage);
+    return;
+  }
   if (t.length < 6) {
     if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (<6)...';
@@ -380,6 +370,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       return;
     }
     errorMessage = 'The password must be different from the username...';
+    showError(errorMessage);
     return;
   }
   const nomCreer = encodeURIComponent(e);
@@ -630,15 +621,8 @@ document.querySelector('#search-input').addEventListener('keyup', () => {
   });
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.querySelector('#search-input').focus();
-  }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/projets/notes/sw.js');
+document.addEventListener('DOMContentLoaded', async () => {
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/projets/notes/sw.js');
   if (localStorage.getItem('cookie') !== 'hide') cookie.style.display = 'block';
-  showNotes();
+  await showNotes();
 });

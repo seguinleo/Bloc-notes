@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 let isUpdate;
 let errorMessage;
 let touchStart = 0;
@@ -13,17 +14,14 @@ const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
+const cookie = document.querySelector('#cookie');
 const sideBarMobile = document.querySelector('.sideBarMobile');
 
-function replaceAllStart(e) {
-  return e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-}
+const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
 
-function replaceAllEnd(e) {
-  return e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
-}
+const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
 
-function showError(message) {
+const showError = (message) => {
   if (timeoutError) clearTimeout(timeoutError);
   const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
@@ -31,17 +29,15 @@ function showError(message) {
   timeoutError = setTimeout(() => {
     notification.style.display = 'none';
   }, 3000);
-}
+};
 
-function taskListEnablerExtension() {
-  return [{
-    type: 'output',
-    regex: /<input type="checkbox"?/g,
-    replace: '<input type="checkbox"',
-  }];
-}
+const taskListEnablerExtension = () => [{
+  type: 'output',
+  regex: /<input type="checkbox"?/g,
+  replace: '<input type="checkbox"',
+}];
 
-function searchSideBar() {
+const searchSideBar = () => {
   document.querySelectorAll('.listNotes p').forEach((element) => {
     element.addEventListener('click', () => {
       const e = element.querySelector('.titleList').textContent;
@@ -57,7 +53,7 @@ function searchSideBar() {
       if (event.key === 'Enter') element.click();
     });
   });
-}
+};
 
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter({
@@ -255,14 +251,14 @@ const fetchLogout = async () => {
   }
 };
 
-function toggleFullscreen(id) {
+const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
   darken.classList.toggle('show');
   document.body.classList.toggle('noscroll');
-}
+};
 
-function updateNoteConnect(id, title, desc, couleur, hidden) {
+const updateNoteConnect = (id, title, desc, couleur, hidden) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
@@ -282,9 +278,9 @@ function updateNoteConnect(id, title, desc, couleur, hidden) {
   });
   if (hidden === '1') { document.querySelector('#checkHidden').checked = true; }
   descTagConnect.focus();
-}
+};
 
-function copy(e) {
+const copy = (e) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
@@ -293,9 +289,9 @@ function copy(e) {
   timeoutCopy = setTimeout(() => {
     notification.style.display = 'none';
   }, 2000);
-}
+};
 
-function deleteNoteConnect(e) {
+const deleteNoteConnect = (e) => {
   if (!window.location.pathname.endsWith('en/')) {
     if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
       fetchDelete(e);
@@ -305,7 +301,7 @@ function deleteNoteConnect(e) {
   if (window.confirm('Do you really want to delete this note?')) {
     fetchDelete(e);
   }
-}
+};
 
 notesContainer.addEventListener('click', (event) => {
   const { target } = event;
@@ -327,35 +323,25 @@ notesContainer.addEventListener('click', (event) => {
   }
 });
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+document.querySelector('#cookieButton').addEventListener('click', () => {
+  cookie.style.display = 'none';
+  localStorage.setItem('cookie', 'hide');
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
     if (document.activeElement.classList.contains('fa-clipboard')) {
       document.activeElement.click();
-    }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-trash-can')) {
+    } else if (document.activeElement.classList.contains('fa-trash-can')) {
+      document.activeElement.click();
+    } else if (document.activeElement.classList.contains('fa-pen')) {
+      document.activeElement.click();
+    } else if (document.activeElement.classList.contains('fa-expand')) {
       document.activeElement.click();
     }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-pen')) {
-      document.activeElement.click();
-    }
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-expand')) {
-      document.activeElement.click();
-    }
+  } else if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    document.querySelector('#search-input').focus();
   }
 });
 
@@ -493,13 +479,6 @@ document.querySelector('#search-input').addEventListener('keyup', () => {
       note.style.display = 'none';
     }
   });
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.querySelector('#search-input').focus();
-  }
 });
 
 document.querySelector('#tri').addEventListener('change', async () => {
@@ -657,9 +636,10 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/projets/notes/sw.js');
-  showNotesConnect();
+document.addEventListener('DOMContentLoaded', async () => {
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/projets/notes/sw.js');
+  if (localStorage.getItem('cookie') !== 'hide') cookie.style.display = 'block';
+  await showNotesConnect();
   document.querySelectorAll('.resync').forEach((resync) => {
     resync.addEventListener('click', () => {
       window.location.reload();

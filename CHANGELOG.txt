@@ -1,3 +1,7 @@
+#----v23.7.1----#
+-Better PWA
+-Bug fixes
+
 #----v23.6.3----#
 -Better server configuration
 -Improve code structure

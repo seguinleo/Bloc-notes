@@ -59,9 +59,8 @@ if (isset($_SESSION["nom"]) === false) {
                 <h1 class="welcome">
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?= htmlspecialchars($_SESSION["nom"]) ?>
+                        <?= $_SESSION["nom"] ?>
                     </span>
-                    <span class="wave">👋🏼</span>
                 </h1>
             </div>
             <div class="iconConnect">
@@ -71,7 +70,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.3</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.1</a>
                 </span>
             </div>
             <div>
@@ -95,7 +94,6 @@ if (isset($_SESSION["nom"]) === false) {
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } ?>
-            <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
         </div>
         <?php if (isset($_SESSION["nom"])) { ?>
             <div class="lastSync">
@@ -119,7 +117,9 @@ if (isset($_SESSION["nom"]) === false) {
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
-            &copy;<?= date('Y') ?>
+            <div class="copyright">
+                &copy;<?= date('Y') ?>
+            </div>
         </div>
         <div class="sideBarMobile">
             <header>
@@ -128,17 +128,14 @@ if (isset($_SESSION["nom"]) === false) {
             <h2>Notes</h2>
             <div class="listNotes"></div>
             <div class="copyright">
-                <a href="/" target="_blank" rel="noreferrer" aria-label="To leoseguin.fr">leoseguin.fr</a>
                 &copy;<?= date('Y') ?>
             </div>
         </div>
-        <?php if (isset($_SESSION["nom"]) === false) { ?>
-            <div id="cookie">
-                <p>This website uses a cookie that is necessary for user authentication.<p>
-                <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
-                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
-            </div>
-        <?php } ?>
+        <div id="cookie">
+            <p>This website uses a cookie that is necessary for user authentication.<p>
+            <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
+            <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
+        </div>
         <div id="copyNotification">Note copied!</div>
         <?php if (isset($_SESSION["nom"])) { ?>
             <div class="connect-popup-box">
@@ -220,14 +217,14 @@ if (isset($_SESSION["nom"]) === false) {
                             </select>
                         </div>
                         <details>
-                            <summary>Manage account</summary>
+                            <summary>Manage <?= $_SESSION["nom"] ?> account</summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
                                 <input type="hidden" id="csrf_token_mdp" value="<?= $_SESSION['csrf_token_mdp'] ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" placeholder="New password" type="password" maxlength="50" aria-label="password">
+                                    <input id="mdpModifNew" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="password">
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" maxlength="50" aria-label="password">
+                                    <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="password">
                                 </div>
                                 <button id="submitChangeMDP" type="submit" aria-label="Change password">Change password</button>
                             </form>
@@ -237,7 +234,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.6.3</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.1</a>
                             </p>
                         </div>
                     </div>
