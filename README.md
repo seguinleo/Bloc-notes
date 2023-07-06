@@ -4,7 +4,7 @@
 <h1 align="center">Bloc-notes</h1>
 
 <p align="center">
-<b>Bloc-notes</b> is a free, open source and encrypted notebook. Bloc-notes aims for optimal security and privacy.
+<b>Bloc-notes</b> is a free, open source and encrypted notebook. Bloc-notes aims for security and privacy.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 - [Design](#design)
 - [Security/Privacy](#security-and-privacy)
 - [Languages](#languages)
-- [Coming soon](#coming-soon)
+- [Todo](#todo)
 - [Community](#community)
 - [For developers](#for-developers)
 
@@ -29,7 +29,7 @@ When I was looking for a note-taking application, I faced several difficulties: 
 So I decided to create my own notebook that respects users' privacy and GDPR.
 
 ## Features
-The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown) to create titles, lists, links, checkboxes or import images from another website.
+The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown) to create titles, lists, links, todos or import images from another website.
 The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week. This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
 ## Design
@@ -40,13 +40,14 @@ Passwords are hashed with bcrypt before being sent to the database. Each user ha
 Once logged in, the user can change their password or delete their account. Security measures are in place against XSS, CSRF and SQL injections.
 Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes via their unique keys. The website editor disclaims any responsibility for the content of user notes.
 
+> **Warning** Never store passwords or too personal data in your notes regardless of the service
+
 ## Languages
 🇫🇷French, 🇬🇧English
 
-## Coming soon
-- [ ] Shared notes
-- [ ] Drag and drop
-- [ ] Reminders
+## Todo
+- [x] Light/dark mode switch
+- [ ] Notes shared between users
 
 ## Community
 If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
