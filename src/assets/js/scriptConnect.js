@@ -16,9 +16,16 @@ const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
 const cookie = document.querySelector('#cookie');
 const sideBarMobile = document.querySelector('.sideBarMobile');
+const metaTheme = document.querySelector('#themecolor');
+const button = document.querySelector('#iconeTheme');
+
+if (localStorage.getItem('theme') === 'light') {
+  document.querySelector('html').className = 'light';
+  metaTheme.content = '#eeeeee';
+  button.className = 'fa-solid fa-lightbulb';
+}
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-
 const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
 
 const showError = (message) => {
@@ -481,6 +488,20 @@ document.querySelector('#search-input').addEventListener('keyup', () => {
   });
 });
 
+document.querySelector('#btnTheme').addEventListener('click', () => {
+  if (localStorage.getItem('theme') === 'light') {
+    document.querySelector('html').className = 'dark';
+    metaTheme.content = '#272727';
+    button.className = 'fa-solid fa-moon';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+  }
+});
+
 document.querySelector('#tri').addEventListener('change', async () => {
   try {
     await fetch('/projets/notes/assets/php/sort.php', {
@@ -519,7 +540,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
   try {
     const titreBrut = document.querySelector('#titleConnect').value.trim();
     const contentBrut = document.querySelector('#descConnect').value.trim();
-    if (!titreBrut || !contentBrut || titreBrut.length > 30 || contentBrut.length > 2000) return;
+    if (!titreBrut || !contentBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
     const titre = encodeURIComponent(titreBrut
       .replaceAll(/'/g, '‘')
       .replaceAll(/"/g, '‘‘')
@@ -580,6 +601,16 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
       return;
     }
     errorMessage = 'Password too weak (<6)...';
+    showError(errorMessage);
+    return;
+  }
+  if (e.length > 50) {
+    if (!window.location.pathname.endsWith('en/')) {
+      errorMessage = 'Mot de passe trop long (>50)...';
+      showError(errorMessage);
+      return;
+    }
+    errorMessage = 'Password too long (>50)...';
     showError(errorMessage);
     return;
   }

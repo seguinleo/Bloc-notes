@@ -25,25 +25,25 @@ if (isset($_SESSION["nom"]) === false) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="fr-FR">
+<html class="dark" lang="fr-FR">
 <head>
     <meta charset="utf-8">
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
     <meta name="description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#171717">
+    <meta name="theme-color" content="#272727" id="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta name="twitter:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
-    <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes-large.png">
+    <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta property="og:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
     <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
-    <meta property="og:image" content="https://leoseguin.fr/assets/img/notes-large.png">
+    <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:locale" content="fr-FR">
     <link rel="canonical" href="https://leoseguin.fr/projets/notes/">
     <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
@@ -70,7 +70,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.7.1</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.7.2</a>
                 </span>
             </div>
             <div>
@@ -101,6 +101,11 @@ if (isset($_SESSION["nom"]) === false) {
                 <span></span>
             </div>
         <?php } ?>
+        <div class="divTheme">
+            <button type="button" id="btnTheme" aria-label="Thème">
+                <i id="iconeTheme" class="fa-solid fa-moon"></i>
+            </button>
+        </div>
     </nav>
     <main>
         <div class="darken"></div>
@@ -151,7 +156,7 @@ if (isset($_SESSION["nom"]) === false) {
                                 <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>
                             <div class="row">
-                                <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
+                                <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -234,7 +239,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.7.1</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.7.2</a>
                             </p>
                         </div>
                     </div>
@@ -253,7 +258,7 @@ if (isset($_SESSION["nom"]) === false) {
                                 <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
                             </div>
                             <div class="row">
-                                <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="2000"></textarea>
+                                <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">

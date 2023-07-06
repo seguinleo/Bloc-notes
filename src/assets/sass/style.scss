@@ -4,6 +4,10 @@ $color3: #424242;
 $color4: #c6c6c6;
 $color5: #8ab4f8;
 $color6: #9ec3ff;
+$color7: #2b5790;
+$color8: #34629f;
+$color9: #ffffff;
+$color10: #eeeeee;
 
 @keyframes slideLeft {
   0% {
@@ -32,13 +36,14 @@ $color6: #9ec3ff;
 }
 
 html {
-  background: $color1;
-  color: $color4;
-  accent-color: $color5;
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
-  scrollbar-color: rgba(255, 255, 255, .1) rgba(0, 0, 0, 0);
   scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, .5) rgba(0, 0, 0, 0);
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, .5);
+  }
 }
 
 * {
@@ -52,13 +57,8 @@ html {
   height: 5px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, .1);
-}
-
 h1 {
   font-size: 1.4rem;
-  color: $color5;
 }
 
 h2 {
@@ -70,20 +70,13 @@ h3 {
 }
 
 a {
-  color: $color5;
   text-decoration: none;
   display: inline;
   font-weight: 700;
 }
 
-.title {
-  color: $color5;
-}
-
 kbd {
-  background: $color2;
   border-radius: 5px;
-  color: $color4;
   margin: 0 2px;
   font-size: .8rem;
   font-weight: 700;
@@ -93,8 +86,7 @@ kbd {
 header {
   padding: 20px;
 
-  .fa-solid {
-    color: $color4;
+  .fa-xmark {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -102,11 +94,7 @@ header {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    transition: .2s;
-
-    &:hover {
-      background: rgba(255, 255, 255, .1);
-    }
+    transition: .1s;
   }
 }
 
@@ -139,12 +127,9 @@ nav {
   top: 0;
   text-align: center;
   position: fixed;
-  background: $color2;
-  color: $color4;
   z-index: 2;
   -webkit-user-select: none;
   user-select: none;
-  box-shadow: 2px 2px 4px $color1;
 
   @media(min-width: 992px) {
 
@@ -168,14 +153,12 @@ nav {
   }
 
   .search-input {
-    background: $color3;
     width: 300px;
     max-height: 40px;
     border-radius: 24px;
     display: inline-block;
 
     ::placeholder {
-      color: $color4;
       opacity: 1;
     }
 
@@ -186,31 +169,20 @@ nav {
 
     input {
       font-size: 1rem;
-      background: $color3;
-      color: $color4;
       height: 40px;
       width: 180px;
       border: none;
       border-radius: 24px;
       margin-right: 5px;
       padding: 0 10px;
-
-      &:focus {
-        outline: 2px solid $color5;
-      }
     }
 
     .gestionCompte,
     .seconnecter,
-    .fa-bars,
-    .resync {
+    .fa-bars {
       display: none;
       cursor: pointer;
     }
-  }
-
-  .resync {
-    color: #42be34;
   }
 
   .lastSync {
@@ -246,26 +218,21 @@ main {
   width: 382px;
   padding: 100px 1rem 1rem;
 
-  * {
-    margin-bottom: 1rem;
-  }
-
   .listNotes {
     max-height: 75vh;
     overflow-y: scroll;
+  }
+
+  button {
+    margin: 1rem auto;
   }
 
   p {
     padding: 5px;
     border-radius: 5px;
     max-height: 2rem;
+    margin-bottom: 1rem;
     cursor: pointer;
-
-    &:hover,
-    &:focus {
-      background: $color3;
-      outline: none;
-    }
 
     .titleList {
       max-width: 200px;
@@ -283,13 +250,6 @@ main {
   }
 }
 
-.sideBarMobile,
-.sideBarMobile.show {
-  display: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
 label {
   vertical-align: middle;
 }
@@ -301,12 +261,6 @@ select {
   width: 100%;
   font-size: 1rem;
   padding: 0 1rem;
-  color: $color4;
-  border: 2px solid $color3;
-
-  &:focus {
-    outline: $color5 solid 2px;
-  }
 }
 
 select,
@@ -326,20 +280,13 @@ button {
   cursor: pointer;
   width: 100%;
   height: 50px;
-  color: $color1;
   border: none;
   padding: 0 1rem;
   font-size: 1rem;
   border-radius: 5px;
-  background: $color5;
-  transition: .2s;
-
-  &:hover {
-    background: $color6;
-  }
+  transition: .1s;
 
   &:disabled {
-    background: $color4;
     cursor: not-allowed;
   }
 }
@@ -365,17 +312,15 @@ p.welcome {
   justify-content: space-between;
   border-radius: 1rem;
   clip-path: polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px);
-  transition: clip-path .5s;
+  transition: clip-path .4s;
   width: 400px;
   max-height: 460px;
   line-height: 2;
   padding: 30px 20px 10px;
-  background: $color2;
 
   &:hover,
   &:focus {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
-    outline: none;
 
     .bottom-content {
       visibility: visible;
@@ -384,7 +329,6 @@ p.welcome {
   }
 
   &:after {
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, .2);
     position: absolute;
     content: '';
     top: 0;
@@ -438,7 +382,7 @@ p.welcome {
     text-align: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity .2s;
+    transition: opacity .1s;
 
     &:focus-within {
       opacity: 1;
@@ -454,124 +398,12 @@ p.welcome {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      transition: .2s;
+      transition: .1s;
     }
 
     span {
       font-size: .8rem;
-      transition: .2s;
-    }
-  }
-}
-
-.Noir {
-  background: $color2;
-}
-
-.Blanc {
-  background: #ffffff;
-}
-
-.Rouge {
-  background: #ff7b7b;
-}
-
-.Orange {
-  background: #ff9b4f;
-}
-
-.Jaune {
-  background: #ffea64;
-}
-
-.Vert {
-  background: #89f17e;
-}
-
-.Cyan {
-  background: #7cffe7;
-}
-
-.BleuCiel {
-  background: #a0deff;
-}
-
-.Bleu {
-  background: #72a5e9;
-}
-
-.Violet {
-  background: #a99aff;
-}
-
-.Rose {
-  background: #ffa2ff;
-}
-
-.Blanc,
-.Rouge,
-.Orange,
-.Jaune,
-.Vert,
-.Cyan,
-.BleuCiel,
-.Rose,
-.Bleu,
-.Violet {
-  scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, 0);
-  scrollbar-width: thin;
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, .2);
-  }
-
-  ::selection {
-    background: rgba(0, 0, 0, .2);
-  }
-
-  a,
-  h1,
-  h2,
-  p,
-  span {
-    color: $color1;
-  }
-
-  .bottom-content {
-    color: $color2;
-
-    i {
-      &:hover {
-        background: rgba(0, 0, 0, .1);
-      }
-
-      &:active {
-        background: rgba(0, 0, 0, .2);
-      }
-    }
-  }
-}
-
-.Noir {
-  ::selection {
-    background: rgba(255, 255, 255, .2);
-  }
-
-  .bottom-content {
-    span {
-      color: $color4;
-    }
-
-    i {
-      color: $color4;
-
-      &:hover {
-        background: rgba(255, 255, 255, .1);
-      }
-
-      &:active {
-        background: rgba(255, 255, 255, .2);
-      }
+      transition: .1s;
     }
   }
 }
@@ -579,7 +411,6 @@ p.welcome {
 .linkp {
   cursor: pointer;
   font-weight: 700;
-  color: $color5;
   margin: 0 20px;
 }
 
@@ -607,10 +438,9 @@ p.welcome {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 3;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, .5);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
@@ -630,7 +460,6 @@ header {
 input,
 textarea,
 select {
-  background: $color2;
   border-radius: 5px;
 }
 
@@ -643,10 +472,9 @@ select {
     width: 20px;
     height: 20px;
     margin: 0 10px;
-    border: 1px solid $color3;
     border-radius: 50%;
     cursor: pointer;
-    transition: .2s;
+    transition: .1s;
   }
 
   span.selectionne {
@@ -663,14 +491,11 @@ select {
   display: none;
   pointer-events: none;
   position: fixed;
-  display: none;
-  pointer-events: none;
   top: 0;
   left: 0;
   z-index: 2;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, .5);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
@@ -715,11 +540,10 @@ select {
   }
 }
 
-#iconButtonFloat {
-  display: none;
-}
-
-#iconButtonConnectFloat {
+.sideBarMobile,
+#iconButtonFloat,
+#iconButtonConnectFloat,
+#cookie.hide {
   display: none;
 }
 
@@ -743,16 +567,8 @@ select {
     width: 0;
     height: 0;
 
-    &:focus+.slider {
-      box-shadow: 0 0 1px $color5;
-    }
-
     &:checked+.slider {
-      background: $color5;
-
       &:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
     }
@@ -766,8 +582,7 @@ select {
     left: 0;
     right: 0;
     bottom: 0;
-    background: $color4;
-    transition: .2s;
+    transition: .1s;
 
     &:before {
       position: absolute;
@@ -777,8 +592,7 @@ select {
       width: 26px;
       left: 4px;
       top: 3px;
-      background: #ffffff;
-      transition: .2s;
+      transition: .1s;
     }
   }
 }
@@ -804,8 +618,6 @@ select {
 .version {
   font-size: .8rem;
   margin: 0 5px;
-  font-weight: 700;
-  color: $color4;
 }
 
 .copyright {
@@ -819,7 +631,6 @@ select {
 }
 
 .supprimerCompte {
-  color: #fe7575;
   display: block;
   margin-top: 2rem;
 }
@@ -830,10 +641,10 @@ select {
   right: 2rem;
   text-align: center;
   max-width: 300px;
-  background: #a93b3b;
-  color: #ffffff;
   padding: 10px;
   border-radius: 5px;
+  background: #a93b3b;
+  color: $color9;
   display: none;
   z-index: 999;
 }
@@ -844,8 +655,6 @@ select {
   right: 2rem;
   text-align: center;
   max-width: 125px;
-  background: $color3;
-  color: $color4;
   padding: 10px;
   border-radius: 5px;
   display: none;
@@ -859,27 +668,36 @@ select {
   left: 0;
   max-width: 350px;
   margin: 1rem;
-  background: $color2;
-  color: $color4;
   padding: 1rem;
   border-radius: 5px;
   -webkit-user-select: none;
   user-select: none;
   z-index: 2;
-  box-shadow: 0 0 10px $color1;
 
   button {
     display: inline-block;
-    border: 2px solid $color5;
     background: none;
-    color: $color5;
     max-width: 70px;
     margin: 10px 1rem 0 0;
   }
 }
 
-#cookie.hide {
-  display: none;
+#btnTheme {
+  font-size: 1.2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 42px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: .1s;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2), 0 3px 10px 0 rgba(0, 0, 0, .19);
+  }
 }
 
 .task-list-item {
@@ -901,7 +719,6 @@ select {
     position: relative;
     margin: 0;
     padding: 10px;
-    border-radius: 1rem;
     background: none;
 
     div {
@@ -909,10 +726,7 @@ select {
       display: block;
     }
 
-    button.seconnecter {
-      display: none;
-    }
-
+    button.seconnecter,
     .welcome {
       display: none;
     }
@@ -966,10 +780,6 @@ select {
       }
     }
 
-    .lastSync {
-      display: none;
-    }
-
     #iconButtonFloat,
     #iconButtonConnectFloat {
       position: fixed;
@@ -979,7 +789,6 @@ select {
       height: 60px;
       font-size: 1.4rem;
       border-radius: 48px;
-      box-shadow: 1px 1px 6px $color2;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -992,6 +801,7 @@ select {
     gap: 10px;
   }
 
+  kbd,
   .sideBar {
     display: none;
   }
@@ -999,7 +809,6 @@ select {
   .sideBarMobile {
     display: none;
     position: fixed;
-    background: $color2;
     left: 0;
     top: 0;
     bottom: 0;
@@ -1023,12 +832,6 @@ select {
       max-height: 2rem;
       cursor: pointer;
 
-      &:hover,
-      &:focus {
-        background: $color3;
-        outline: none;
-      }
-
       .titleList {
         max-width: 140px;
         overflow: hidden;
@@ -1047,15 +850,11 @@ select {
 
   .sideBarMobile.show {
     display: block;
-    animation: slideLeft .2s;
+    animation: slideLeft .1s;
   }
 
   textarea {
     height: 30vh;
-  }
-
-  kbd {
-    display: none;
   }
 
   .note {
@@ -1096,18 +895,498 @@ select {
   }
 
   .popup {
-    min-width: 98vw;
     max-width: 98vw;
+  }
 
-    .content {
-      min-width: 98vw;
-      max-width: 98vw;
+  .bottom-content i {
+    margin: 0 2px;
+  }
+
+  .lastSync {
+    display: inline-flex;
+  }
+
+  .divTheme {
+    display: inline;
+    vertical-align: middle;
+    margin-left: 10px;
+
+    #btnTheme {
+      display: inline-flex;
+    }
+  }
+}
+
+html.dark {
+  background: $color1;
+  color: $color4;
+  accent-color: $color5;
+
+  a {
+    color: $color5;
+  }
+
+  kbd {
+    background: $color2;
+  }
+
+  header .fa-xmark:hover {
+    background: rgba(255, 255, 255, .1);
+  }
+
+  nav {
+    background: $color2;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, .2);
+
+    .search-input {
+      background: $color3;
+
+      ::placeholder {
+        color: $color4;
+      }
+
+      input {
+        background: $color3;
+
+        &:focus {
+          outline: 2px solid $color5;
+        }
+      }
     }
   }
 
-  .note .bottom-content {
+  .sideBar {
+    background: $color2;
+
+    p {
+
+      &:hover,
+      &:focus {
+        background: $color3;
+      }
+    }
+  }
+
+  input,
+  textarea,
+  select {
+    border: 2px solid $color3;
+
+    &:focus {
+      outline: $color5 solid 2px;
+    }
+  }
+
+  button {
+    color: $color1;
+    background: $color5;
+
+    &:hover {
+      background: $color6;
+    }
+
+    &:disabled {
+      background: $color4;
+    }
+  }
+
+  .linkp {
+    color: $color5;
+  }
+
+  .popup .content,
+  input,
+  textarea,
+  select {
+    background: $color2;
+    color: $color4;
+  }
+
+  .couleurs span {
+    border: 1px solid $color3;
+  }
+
+  .Blanc,
+  .Rouge,
+  .Orange,
+  .Jaune,
+  .Vert,
+  .Cyan,
+  .BleuCiel,
+  .Bleu,
+  .Violet,
+  .Rose {
+    a {
+      color: $color1;
+    }
+  }
+
+  .Noir a {
+    color: $color5;
+  }
+
+  .switch {
+    input {
+
+      &:checked+.slider {
+        background: $color5;
+      }
+    }
+
+    .slider {
+      background: $color4;
+
+      &:before {
+        background: $color9;
+      }
+    }
+  }
+
+  .connect-box,
+  .connect-popup-box,
+  .creer-box,
+  .gestion-popup-box,
+  .popup-box,
+  .darken {
+    background: rgba(0, 0, 0, .5);
+  }
+
+  .supprimerCompte {
+    color: #fe7575;
+  }
+
+  #btnTheme {
+    background: $color3;
+    color: $color4;
+  }
+
+  #copyNotification {
+    background: $color3;
+    color: $color4;
+  }
+
+  #cookie {
+    background: $color2;
+    color: $color4;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+
+    button {
+      border: 2px solid $color5;
+      color: $color5;
+    }
+  }
+
+  @media(max-width: 992px) {
+    nav {
+
+      #iconButtonFloat,
+      #iconButtonConnectFloat {
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, .2);
+      }
+    }
+
+    .sideBarMobile {
+      background: $color2;
+
+      p {
+
+        &:hover,
+        &:focus {
+          background: $color3;
+        }
+      }
+    }
+  }
+}
+
+html.light {
+  background: $color9;
+  color: $color2;
+  accent-color: $color7;
+
+  a {
+    color: $color7;
+  }
+
+  kbd {
+    background: $color10;
+  }
+
+  header .fa-xmark:hover {
+    background: rgba(0, 0, 0, .2);
+  }
+
+  input,
+  textarea,
+  select {
+    border: 2px solid $color4;
+
+    &:focus {
+      outline: $color7 solid 2px;
+    }
+  }
+
+  nav {
+    background: $color10;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, .2);
+
+    .search-input {
+      background: $color9;
+
+      ::placeholder {
+        color: $color2;
+      }
+
+      input {
+        background: $color9;
+        border: none;
+
+        &:focus {
+          outline: 2px solid $color7;
+        }
+      }
+    }
+  }
+
+  .sideBar {
+    background: $color10;
+
+    p {
+
+      &:hover,
+      &:focus {
+        background: $color4;
+      }
+    }
+  }
+
+  button {
+    color: $color9;
+    background: $color7;
+
+    &:hover {
+      background: $color8;
+    }
+
+    &:disabled {
+      background: $color4;
+      color: $color1;
+    }
+  }
+
+  .linkp {
+    color: $color7;
+  }
+
+  .popup .content,
+  input,
+  textarea,
+  select {
+    background: $color9;
+    color: $color2;
+  }
+
+  .couleurs span {
+    border: 1px solid $color4;
+  }
+
+  .Blanc,
+  .Rouge,
+  .Orange,
+  .Jaune,
+  .Vert,
+  .Cyan,
+  .BleuCiel,
+  .Bleu,
+  .Violet,
+  .Rose {
+    a {
+      color: $color1;
+    }
+  }
+
+  .Noir {
+    color: $color4;
+
+    a {
+      color: $color5;
+    }
+  }
+
+  .switch {
+    input {
+
+      &:checked+.slider {
+        background: $color7;
+      }
+    }
+
+    .slider {
+      background: $color4;
+
+      &:before {
+        background: $color9;
+      }
+    }
+  }
+
+  .connect-box,
+  .connect-popup-box,
+  .creer-box,
+  .gestion-popup-box,
+  .popup-box,
+  .darken {
+    background: rgba(200, 200, 200, .4);
+  }
+
+  .supprimerCompte {
+    color: #a93b3b;
+  }
+
+  #copyNotification {
+    background: $color4;
+    color: $color2;
+  }
+
+  #btnTheme {
+    background: $color9;
+    color: $color2;
+  }
+
+  #cookie {
+    background: $color9;
+    color: $color2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+
+    button {
+      border: 2px solid $color7;
+      color: $color7;
+    }
+  }
+
+  @media(max-width: 992px) {
+    nav {
+
+      #iconButtonFloat,
+      #iconButtonConnectFloat {
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, .2);
+      }
+    }
+
+    .sideBarMobile {
+      background: $color10;
+
+      p {
+
+        &:hover,
+        &:focus {
+          background: $color4;
+        }
+      }
+    }
+  }
+}
+
+.note {
+  background: $color2;
+
+  &:after {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, .2);
+  }
+}
+
+.Noir {
+  background: $color2;
+}
+
+.Blanc {
+  background: $color9;
+}
+
+.Rouge {
+  background: #ff7b7b;
+}
+
+.Orange {
+  background: #ff9b4f;
+}
+
+.Jaune {
+  background: #ffea64;
+}
+
+.Vert {
+  background: #89f17e;
+}
+
+.Cyan {
+  background: #7cffe7;
+}
+
+.BleuCiel {
+  background: #a0deff;
+}
+
+.Bleu {
+  background: #72a5e9;
+}
+
+.Violet {
+  background: #a99aff;
+}
+
+.Rose {
+  background: #ffa2ff;
+}
+
+.Blanc,
+.Rouge,
+.Orange,
+.Jaune,
+.Vert,
+.Cyan,
+.BleuCiel,
+.Bleu,
+.Violet,
+.Rose {
+  color: $color1;
+
+  ::selection {
+    background: rgba(0, 0, 0, .2);
+  }
+
+  .bottom-content i {
+    &:hover {
+      background: rgba(0, 0, 0, .1);
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, .2);
+    }
+
+  }
+}
+
+.Noir {
+  ::selection {
+    background: rgba(255, 255, 255, .2);
+  }
+
+  .bottom-content {
+    span {
+      color: $color4;
+    }
+
     i {
-      margin: 0 2px;
+      color: $color4;
+
+      &:hover {
+        background: rgba(255, 255, 255, .1);
+      }
+
+      &:active {
+        background: rgba(255, 255, 255, .2);
+      }
     }
   }
 }

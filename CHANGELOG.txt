@@ -1,3 +1,9 @@
+#----v23.7.2----#
+-Add light/dark mode switch
+-Maximum note content from 2000 to 5000
+-Improve UI/UX
+-Bug fixes
+
 #----v23.7.1----#
 -Better PWA
 -Bug fixes

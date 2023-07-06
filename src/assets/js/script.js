@@ -18,9 +18,16 @@ const forms = document.querySelectorAll('form');
 const cookie = document.querySelector('#cookie');
 const sideBarMobile = document.querySelector('.sideBarMobile');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
+const metaTheme = document.querySelector('#themecolor');
+const button = document.querySelector('#iconeTheme');
+
+if (localStorage.getItem('theme') === 'light') {
+  document.querySelector('html').className = 'light';
+  metaTheme.content = '#eeeeee';
+  button.className = 'fa-solid fa-lightbulb';
+}
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-
 const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
 
 const showError = (message) => {
@@ -333,6 +340,16 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     showError(errorMessage);
     return;
   }
+  if (t.length > 50) {
+    if (!window.location.pathname.endsWith('en/')) {
+      errorMessage = 'Mot de passe trop long (>50)...';
+      showError(errorMessage);
+      return;
+    }
+    errorMessage = 'Password too long (>50)...';
+    showError(errorMessage);
+    return;
+  }
   if (/^[0-9]+$/.test(t)) {
     if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le mot de passe ne peut pas contenir que des chiffres...';
@@ -511,15 +528,15 @@ document.querySelector('#submitNote').addEventListener('click', () => {
   const e = titleTag.value.trim()
     .replaceAll(/'/g, '‘')
     .replaceAll(/"/g, '‘‘')
-    .replaceAll(/</g, '&lt;')
-    .replaceAll(/>/g, '&gt;');
+    .replaceAll(/</g, '←')
+    .replaceAll(/>/g, '→');
   const t = descTag.value.trim()
     .replaceAll(/'/g, '‘')
     .replaceAll(/"/g, '‘‘')
-    .replaceAll(/</g, '&lt;')
-    .replaceAll(/>/g, '&gt;');
+    .replaceAll(/</g, '←')
+    .replaceAll(/>/g, '→');
   const g = document.querySelector('#checkHidden').checked;
-  if (!e || !t || t.length > 2000) return;
+  if (!e || !t || e.length > 30 || t.length > 5000) return;
   const c = {
     couleur: v,
     title: e,
@@ -619,6 +636,20 @@ document.querySelector('#search-input').addEventListener('keyup', () => {
       note.style.display = 'none';
     }
   });
+});
+
+document.querySelector('#btnTheme').addEventListener('click', () => {
+  if (localStorage.getItem('theme') === 'light') {
+    document.querySelector('html').className = 'dark';
+    metaTheme.content = '#272727';
+    button.className = 'fa-solid fa-moon';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+  }
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
