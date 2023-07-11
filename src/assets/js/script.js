@@ -16,7 +16,7 @@ const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
 const cookie = document.querySelector('#cookie');
-const sideBarMobile = document.querySelector('.sideBarMobile');
+const sideBar = document.querySelector('.sideBar');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 const metaTheme = document.querySelector('#themecolor');
 const button = document.querySelector('#iconeTheme');
@@ -37,7 +37,7 @@ const showError = (message) => {
   notification.style.display = 'block';
   timeoutError = setTimeout(() => {
     notification.style.display = 'none';
-  }, 3000);
+  }, 5000);
 };
 
 const taskListEnablerExtension = () => [{
@@ -73,14 +73,12 @@ const converter = new showdown.Converter({
 
 const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
-  document.querySelector('.sideBarMobile .listNotes').textContent = '';
 
   const notes = document.querySelectorAll('.note');
   notes.forEach((note) => note.remove());
 
   if (notesJSON.length === 0) {
     document.querySelector('.sideBar h2').textContent = 'Notes (0)';
-    document.querySelector('.sideBarMobile h2').textContent = 'Notes (0)';
     return;
   }
 
@@ -163,10 +161,8 @@ const showNotes = async () => {
       notesContainer.appendChild(noteElement);
 
       document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
-      document.querySelector('.sideBarMobile .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
     });
   document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
-  document.querySelector('.sideBarMobile h2').textContent = `Notes (${notesJSON.length})`;
   searchSideBar();
 };
 
@@ -432,17 +428,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
 document.querySelector('#submitSeConnecter').addEventListener('click', async () => {
   const e = document.querySelector('#nomConnect').value.trim();
   const t = document.querySelector('#mdpConnect').value;
-  if (!e || !t) return;
-  if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Le nom ne peut contenir que des lettres...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'The name can only contain letters...';
-    showError(errorMessage);
-    return;
-  }
+  if (!e || !t || e.length > 25 || t.length > 50 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
@@ -559,13 +545,13 @@ document.querySelector('#submitNote').addEventListener('click', () => {
 
 document.querySelectorAll('#menuIcon').forEach((element) => {
   element.addEventListener('click', () => {
-    document.querySelector('.sideBarMobile').classList.add('show');
+    document.querySelector('.sideBar').classList.add('show');
     darken.classList.toggle('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       element.click();
-      document.querySelector('.sideBarMobile header i').focus();
+      document.querySelector('.sideBar header i').focus();
     }
   });
 });
@@ -580,15 +566,15 @@ document.body.addEventListener('touchmove', (e) => {
 
 document.body.addEventListener('touchend', () => {
   const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 50 && !sideBarMobile.classList.contains('show')) {
-    sideBarMobile.classList.add('show');
+  if (swipeDistance > 50 && !sideBar.classList.contains('show')) {
+    sideBar.classList.add('show');
     darken.classList.add('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
     document.body.classList.add('noscroll');
-  } else if (swipeDistance < -50 && sideBarMobile.classList.contains('show')) {
-    sideBarMobile.classList.remove('show');
+  } else if (swipeDistance < -50 && sideBar.classList.contains('show')) {
+    sideBar.classList.remove('show');
     darken.classList.remove('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
@@ -599,7 +585,7 @@ document.body.addEventListener('touchend', () => {
   touchEnd = 0;
 });
 
-sideBarMobile.addEventListener('touchstart', (e) => {
+sideBar.addEventListener('touchstart', (e) => {
   e.stopPropagation();
 });
 
@@ -618,7 +604,7 @@ document.querySelectorAll('header i').forEach((element) => {
     creerBox.classList.remove('show');
     darken.classList.remove('show');
     document.body.classList.remove('noscroll');
-    document.querySelector('.sideBarMobile').classList.remove('show');
+    document.querySelector('.sideBar').classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();

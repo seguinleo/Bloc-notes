@@ -15,7 +15,7 @@ const switchElement = document.querySelector('.switch');
 const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
 const cookie = document.querySelector('#cookie');
-const sideBarMobile = document.querySelector('.sideBarMobile');
+const sideBar = document.querySelector('.sideBar');
 const metaTheme = document.querySelector('#themecolor');
 const button = document.querySelector('#iconeTheme');
 
@@ -35,7 +35,7 @@ const showError = (message) => {
   notification.style.display = 'block';
   timeoutError = setTimeout(() => {
     notification.style.display = 'none';
-  }, 3000);
+  }, 5000);
 };
 
 const taskListEnablerExtension = () => [{
@@ -71,7 +71,6 @@ const converter = new showdown.Converter({
 
 const showNotesConnect = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
-  document.querySelector('.sideBarMobile .listNotes').textContent = '';
 
   const notes = document.querySelectorAll('.note');
 
@@ -90,7 +89,6 @@ const showNotesConnect = async () => {
 
   if (data.length === 0) {
     document.querySelector('.sideBar h2').textContent = 'Notes (0)';
-    document.querySelector('.sideBarMobile h2').textContent = 'Notes (0)';
     return;
   }
 
@@ -178,10 +176,8 @@ const showNotesConnect = async () => {
     notesContainer.appendChild(noteElement);
 
     document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${titleEnd}</span><span class="dateList">${date}</span></p>`;
-    document.querySelector('.sideBarMobile .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${titleEnd}</span><span class="dateList">${date}</span></p>`;
   });
   document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
-  document.querySelector('.sideBarMobile h2').textContent = `Notes (${data.length})`;
   searchSideBar();
 };
 
@@ -410,13 +406,13 @@ document.querySelectorAll('.supprimerCompte').forEach((element) => {
 
 document.querySelectorAll('#menuIcon').forEach((element) => {
   element.addEventListener('click', () => {
-    sideBarMobile.classList.add('show');
+    sideBar.classList.add('show');
     darken.classList.toggle('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       element.click();
-      document.querySelector('.sideBarMobile header i').focus();
+      document.querySelector('.sideBar header i').focus();
     }
   });
 });
@@ -431,15 +427,15 @@ document.body.addEventListener('touchmove', (e) => {
 
 document.body.addEventListener('touchend', () => {
   const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 50 && !sideBarMobile.classList.contains('show')) {
-    sideBarMobile.classList.add('show');
+  if (swipeDistance > 50 && !sideBar.classList.contains('show')) {
+    sideBar.classList.add('show');
     darken.classList.add('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
     document.body.classList.remove('noscroll');
-  } else if (swipeDistance < -50 && sideBarMobile.classList.contains('show')) {
-    sideBarMobile.classList.remove('show');
+  } else if (swipeDistance < -50 && sideBar.classList.contains('show')) {
+    sideBar.classList.remove('show');
     darken.classList.remove('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
@@ -450,7 +446,7 @@ document.body.addEventListener('touchend', () => {
   touchEnd = 0;
 });
 
-sideBarMobile.addEventListener('touchstart', (e) => {
+sideBar.addEventListener('touchstart', (e) => {
   e.stopPropagation();
 });
 
@@ -468,7 +464,7 @@ document.querySelectorAll('header i').forEach((element) => {
     popupBoxGestion.classList.remove('show');
     darken.classList.remove('show');
     document.body.classList.remove('noscroll');
-    sideBarMobile.classList.remove('show');
+    sideBar.classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();

@@ -70,7 +70,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.2</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.3</a>
                 </span>
             </div>
             <div>
@@ -111,6 +111,9 @@ if (isset($_SESSION["nom"]) === false) {
         <div class="darken"></div>
         <div id="errorNotification"></div>
         <div class="sideBar">
+            <header>
+                <i class="fa-solid fa-xmark" tabindex="0"></i>
+            </header>
             <h2>Notes</h2>
             <?php if (isset($_SESSION["nom"])) { ?>
                 <div class="iconConnect">
@@ -121,16 +124,6 @@ if (isset($_SESSION["nom"]) === false) {
                     <button id="iconButton" type="button" aria-label="Add a local note">Add a local note</button>
                 </div>
             <?php } ?>
-            <div class="listNotes"></div>
-            <div class="copyright">
-                &copy;<?= date('Y') ?>
-            </div>
-        </div>
-        <div class="sideBarMobile">
-            <header>
-                <i class="fa-solid fa-xmark" tabindex="0"></i>
-            </header>
-            <h2>Notes</h2>
             <div class="listNotes"></div>
             <div class="copyright">
                 &copy;<?= date('Y') ?>
@@ -160,17 +153,17 @@ if (isset($_SESSION["nom"]) === false) {
                             </div>
                             <div class="row">
                                 <div class="couleurs">
-                                    <span class="Noir" tabindex="0" aria-label="Black" role="button"></span>
-                                    <span class="Blanc" tabindex="0" aria-label="White" role="button"></span>
-                                    <span class="Rouge" tabindex="0" aria-label="Red" role="button"></span>
-                                    <span class="Orange" tabindex="0" aria-label="Orange" role="button"></span>
-                                    <span class="Jaune" tabindex="0" aria-label="Yellow" role="button"></span>
-                                    <span class="Vert" tabindex="0" aria-label="Green" role="button"></span>
-                                    <span class="Cyan" tabindex="0" aria-label="Cyan" role="button"></span>
-                                    <span class="BleuCiel" tabindex="0" aria-label="Sky blue" role="button"></span>
-                                    <span class="Bleu" tabindex="0" aria-label="Blue" role="button"></span>
-                                    <span class="Violet" tabindex="0" aria-label="Purple" role="button"></span>
-                                    <span class="Rose" tabindex="0" aria-label="Pink" role="button"></span>
+                                    <span class="Noir" role="button" tabindex="0" aria-label="Black"></span>
+                                    <span class="Blanc" role="button" tabindex="0" aria-label="White"></span>
+                                    <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
+                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
+                                    <span class="Jaune" role="button" tabindex="0" aria-label="Yellow"></span>
+                                    <span class="Vert" role="button" tabindex="0" aria-label="Green"></span>
+                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
+                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Sky blue"></span>
+                                    <span class="Bleu" role="button" tabindex="0" aria-label="Blue"></span>
+                                    <span class="Violet" role="button" tabindex="0" aria-label="Purple"></span>
+                                    <span class="Rose" role="button" tabindex="0" aria-label="Pink"></span>
                                 </div>
                             </div>
                             Hidden note
@@ -239,7 +232,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.2</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.3</a>
                             </p>
                         </div>
                     </div>
@@ -262,17 +255,17 @@ if (isset($_SESSION["nom"]) === false) {
                             </div>
                             <div class="row">
                                 <div class="couleurs">
-                                    <span class="Noir" tabindex="0" aria-label="Black" role="button"></span>
-                                    <span class="Blanc" tabindex="0" aria-label="White" role="button"></span>
-                                    <span class="Rouge" tabindex="0" aria-label="Red" role="button"></span>
-                                    <span class="Orange" tabindex="0" aria-label="Orange" role="button"></span>
-                                    <span class="Jaune" tabindex="0" aria-label="Yellow" role="button"></span>
-                                    <span class="Vert" tabindex="0" aria-label="Green" role="button"></span>
-                                    <span class="Cyan" tabindex="0" aria-label="Cyan" role="button"></span>
-                                    <span class="BleuCiel" tabindex="0" aria-label="Sky blue" role="button"></span>
-                                    <span class="Bleu" tabindex="0" aria-label="Blue" role="button"></span>
-                                    <span class="Violet" tabindex="0" aria-label="Purple" role="button"></span>
-                                    <span class="Rose" tabindex="0" aria-label="Pink" role="button"></span>
+                                    <span class="Noir" role="button" tabindex="0" aria-label="Black"></span>
+                                    <span class="Blanc" role="button" tabindex="0" aria-label="White"></span>
+                                    <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
+                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
+                                    <span class="Jaune" role="button" tabindex="0" aria-label="Yellow"></span>
+                                    <span class="Vert" role="button" tabindex="0" aria-label="Green"></span>
+                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
+                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Sky blue"></span>
+                                    <span class="Bleu" role="button" tabindex="0" aria-label="Blue"></span>
+                                    <span class="Violet" role="button" tabindex="0" aria-label="Purple"></span>
+                                    <span class="Rose" role="button" tabindex="0" aria-label="Pink"></span>
                                 </div>
                             </div>
                             Hidden note

@@ -17,7 +17,6 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
-      './',
       './assets/js/showdown.min.js',
     ]),
   );

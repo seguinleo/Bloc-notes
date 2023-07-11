@@ -11,11 +11,11 @@ $color10: #eeeeee;
 
 @keyframes slideLeft {
   0% {
-    left: -100%;
+    transform: translateX(-100%);
   }
 
   100% {
-    left: 0;
+    transform: translateX(0);
   }
 }
 
@@ -219,8 +219,12 @@ main {
   padding: 100px 1rem 1rem;
 
   .listNotes {
-    max-height: 75vh;
+    max-height: 70vh;
     overflow-y: scroll;
+  }
+
+  header {
+    display: none;
   }
 
   button {
@@ -232,6 +236,7 @@ main {
     border-radius: 5px;
     max-height: 2rem;
     margin-bottom: 1rem;
+    font-size: .8rem;
     cursor: pointer;
 
     .titleList {
@@ -243,7 +248,6 @@ main {
     }
 
     .dateList {
-      font-size: .8rem;
       display: inline;
       float: right;
     }
@@ -540,7 +544,6 @@ select {
   }
 }
 
-.sideBarMobile,
 #iconButtonFloat,
 #iconButtonConnectFloat,
 #cookie.hide {
@@ -582,7 +585,6 @@ select {
     left: 0;
     right: 0;
     bottom: 0;
-    transition: .1s;
 
     &:before {
       position: absolute;
@@ -592,27 +594,10 @@ select {
       width: 26px;
       left: 4px;
       top: 3px;
-      transition: .1s;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
+      transition: .3s ease-in-out;
     }
   }
-}
-
-.check {
-  position: relative;
-  margin-left: -40px;
-  width: 25px;
-  height: 25px;
-  vertical-align: middle;
-  opacity: 0;
-
-  &:checked+label svg g path {
-    stroke-dashoffset: 0;
-  }
-}
-
-.path1 {
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
 }
 
 .version {
@@ -633,6 +618,24 @@ select {
 .supprimerCompte {
   display: block;
   margin-top: 2rem;
+}
+
+.check {
+  position: relative;
+  margin-left: -40px;
+  width: 32px;
+  height: 25px;
+  vertical-align: middle;
+  opacity: 0;
+
+  &:checked+label svg g path {
+    stroke-dashoffset: 0;
+  }
+}
+
+.path1 {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
 }
 
 #errorNotification {
@@ -686,7 +689,7 @@ select {
   font-size: 1.2rem;
   width: 42px;
   height: 42px;
-  border-radius: 42px;
+  border-radius: 48px;
   border: none;
   display: flex;
   justify-content: center;
@@ -711,10 +714,6 @@ select {
 
 @media(max-width: 992px) {
 
-  body {
-    min-height: 100vh;
-  }
-
   nav {
     position: relative;
     margin: 0;
@@ -737,12 +736,12 @@ select {
     }
 
     .search-input {
-      width: 100%;
+      width: 80%;
       max-height: 60px;
       border-radius: 48px;
 
       input {
-        width: 45%;
+        width: 50%;
         height: 60px;
         margin-left: 10px;
         vertical-align: middle;
@@ -780,6 +779,10 @@ select {
       }
     }
 
+    .lastSync {
+      display: none;
+    }
+
     #iconButtonFloat,
     #iconButtonConnectFloat {
       position: fixed;
@@ -801,56 +804,36 @@ select {
     gap: 10px;
   }
 
-  kbd,
-  .sideBar {
+  kbd {
     display: none;
   }
 
-  .sideBarMobile {
+  .sideBar {
     display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
     width: 90vw;
     padding: 1rem;
     z-index: 3;
 
-    * {
-      margin-bottom: 1rem;
-    }
-
     .listNotes {
-      max-height: 75vh;
-      margin-top: 2rem;
-      overflow-y: scroll;
+      margin-top: 1rem;
     }
 
-    p {
-      padding: 5px;
-      border-radius: 5px;
-      max-height: 2rem;
-      cursor: pointer;
+    header {
+      display: flex;
+    }
 
-      .titleList {
-        max-width: 140px;
-        overflow: hidden;
-        display: inline-block;
-        white-space: nowrap;
-        font-weight: 700;
-      }
+    button {
+      display: none;
+    }
 
-      .dateList {
-        font-size: .8rem;
-        display: inline;
-        float: right;
-      }
+    .titleList {
+      max-width: 140px;
     }
   }
 
-  .sideBarMobile.show {
+  .sideBar.show {
     display: block;
-    animation: slideLeft .1s;
+    animation: slideLeft .3s ease-in-out;
   }
 
   textarea {
@@ -1034,7 +1017,7 @@ html.dark {
     }
 
     .slider {
-      background: $color4;
+      background: $color3;
 
       &:before {
         background: $color9;
@@ -1085,7 +1068,7 @@ html.dark {
       }
     }
 
-    .sideBarMobile {
+    .sideBar {
       background: $color2;
 
       p {
@@ -1273,7 +1256,7 @@ html.light {
       }
     }
 
-    .sideBarMobile {
+    .sideBar {
       background: $color10;
 
       p {
@@ -1300,7 +1283,7 @@ html.light {
 }
 
 .Blanc {
-  background: $color9;
+  background: $color10;
 }
 
 .Rouge {
