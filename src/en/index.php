@@ -6,6 +6,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 }
 if ($userLanguage === 'fr') {
     header('Location: /projets/notes/');
+    die();
 }
 session_name('__Secure-notes');
 session_set_cookie_params(array(

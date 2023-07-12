@@ -389,7 +389,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch('/projets/notes/assets/php/formCreer.php', {
+    const response = await fetch('/projets/notes/assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -432,32 +432,31 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('/projets/notes/assets/php/formConnect.php', {
+    const response = await fetch('/projets/notes/assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
     });
-    const data = await response.json();
-    if (data.success) {
+    if (response.ok) {
       window.location.reload();
     } else {
       document.querySelector('#mdpConnect').value = '';
       let time = 10;
-      const button = document.querySelector('#submitSeConnecter');
-      button.disabled = true;
+      const btn = document.querySelector('#submitSeConnecter');
+      btn.disabled = true;
       if (!window.location.pathname.endsWith('en/')) {
         errorMessage = 'Mauvais identifiants...';
         showError(errorMessage);
         const interval = setInterval(() => {
           time -= 1;
-          button.textContent = `Se connecter (${time})`;
+          btn.textContent = `Se connecter (${time})`;
         }, 1000);
         setTimeout(() => {
           clearInterval(interval);
-          button.disabled = false;
-          button.textContent = 'Se connecter';
+          btn.disabled = false;
+          btn.textContent = 'Se connecter';
         }, 11000);
         return;
       }
@@ -465,12 +464,12 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       showError(errorMessage);
       const interval = setInterval(() => {
         time -= 1;
-        button.textContent = `Sign in (${time})`;
+        btn.textContent = `Sign in (${time})`;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
-        button.disabled = false;
-        button.textContent = 'Sign in';
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
       }, 11000);
     }
   } catch (error) {

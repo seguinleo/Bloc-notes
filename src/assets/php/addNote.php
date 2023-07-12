@@ -25,21 +25,19 @@ $couleur = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $nom = $_SESSION["nom"];
-$noteId = $_POST['noteId'];
 $couleursAutorisees = ["Noir", "Blanc", "Rouge", "Orange", "Jaune", "Vert", "Cyan", "BleuCiel", "Bleu", "Violet", "Rose"];
 
 if (in_array($couleur, $couleursAutorisees) === false) {
     $couleur = "Noir";
 }
 
-$query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:CurrentUser");
+$query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:CurrentUser,:HiddenNote)");
 $query->execute(
     [
         ':Title'        => $title,
         ':Descr'        => $desc,
-        ':Couleur'      => $couleur,
-        ':NoteId'       => $noteId,
         ':DateNote'     => $dateNote,
+        ':Couleur'      => $couleur,
         ':CurrentUser'  => $nom,
         ':HiddenNote'   => $hidden
     ]

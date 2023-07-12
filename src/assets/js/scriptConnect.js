@@ -500,7 +500,7 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 
 document.querySelector('#tri').addEventListener('change', async () => {
   try {
-    await fetch('/projets/notes/assets/php/sort.php', {
+    await fetch('/projets/notes/assets/php/updateSort.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -552,8 +552,8 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const checkBox = document.querySelector('#checkHidden');
     const hidden = checkBox.checked ? 1 : 0;
-    const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/formAddNote.php';
-    const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&filterDesc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `titleConnect=${titre}&descriptionConnect=${content}&couleurConnect=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
+    const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/addNote.php';
+    const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     await fetch(url, {
       method: 'POST',
       headers: {
@@ -642,7 +642,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   }
   const mdpNew = encodeURIComponent(e);
   try {
-    await fetch('/projets/notes/assets/php/formChangeMDP.php', {
+    await fetch('/projets/notes/assets/php/updatePassword.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
