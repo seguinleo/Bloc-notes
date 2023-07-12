@@ -99,7 +99,7 @@ const showNotesConnect = async () => {
       id, title, couleur, desc, date, hidden,
     } = row;
 
-    if (!id || !title || !desc || !date || !couleur) return;
+    if (!id || !title || !date || !couleur) return;
 
     const titleEnd = title.replaceAll('&amp;', '&');
 
@@ -536,7 +536,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
   try {
     const titreBrut = document.querySelector('#titleConnect').value.trim();
     const contentBrut = document.querySelector('#descConnect').value.trim();
-    if (!titreBrut || !contentBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
+    if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
     const titre = encodeURIComponent(titreBrut
       .replaceAll(/'/g, '‘')
       .replaceAll(/"/g, '‘‘')
@@ -580,36 +580,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
 document.querySelector('#submitChangeMDP').addEventListener('click', async () => {
   const e = document.querySelector('#mdpModifNew').value;
   const t = document.querySelector('#mdpModifNewValid').value;
-  if (!e || !t) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Un ou plusieurs champs sont vides...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'One or more fields are empty...';
-    showError(errorMessage);
-    return;
-  }
-  if (e.length < 6) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Mot de passe trop faible (<6)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Password too weak (<6)...';
-    showError(errorMessage);
-    return;
-  }
-  if (e.length > 50) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Mot de passe trop long (>50)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Password too long (>50)...';
-    showError(errorMessage);
-    return;
-  }
+  if (!e || !t || e.length < 6 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
     if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Mot de passe trop faible (que des chiffres)...';

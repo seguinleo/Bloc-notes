@@ -147,7 +147,7 @@ if (isset($_SESSION["nom"]) === false) {
                             <input id="idNoteInputConnect" type="hidden">
                             <input type="hidden" id="csrf_token_note" value="<?= $_SESSION['csrf_token_note'] ?>">
                             <div class="row">
-                                <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
+                                <input id="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
                             </div>
                             <div class="row">
                                 <textarea id="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
@@ -220,10 +220,10 @@ if (isset($_SESSION["nom"]) === false) {
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
                                 <input type="hidden" id="csrf_token_mdp" value="<?= $_SESSION['csrf_token_mdp'] ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+                                    <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" placeholder="Retaper le nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+                                    <input id="mdpModifNewValid" placeholder="Retaper le nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
                                 </div>
                                 <button id="submitChangeMDP" type="submit" aria-label="Modifier le mot de passe">Modifier le mot de passe</button>
                             </form>
@@ -249,7 +249,7 @@ if (isset($_SESSION["nom"]) === false) {
                         <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input id="idNoteInput" type="hidden">
                             <div class="row">
-                                <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre">
+                                <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
                             </div>
                             <div class="row">
                                 <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
@@ -291,10 +291,10 @@ if (isset($_SESSION["nom"]) === false) {
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?= $_SESSION['csrf_token_connect'] ?>">
                             <div class="row">
-                                <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom">
+                                <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="mdp">
+                                <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="mdp" required>
                             </div>
                             <button id="submitSeConnecter" type="submit" aria-label="Se connecter">Se connecter</button>
                         </form>
@@ -310,13 +310,13 @@ if (isset($_SESSION["nom"]) === false) {
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_creer" value="<?= $_SESSION['csrf_token_creer'] ?>">
                             <div class="row">
-                                <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom">
+                                <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+                                <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp">
+                                <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>

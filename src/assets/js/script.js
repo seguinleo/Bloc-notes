@@ -295,7 +295,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const e = document.querySelector('#nomCreer').value.trim();
   const t = document.querySelector('#mdpCreer').value;
   const o = document.querySelector('#mdpCreerValid').value;
-  if (!e || !t || !o) return;
+  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     if (!window.location.pathname.endsWith('en/')) {
       errorMessage = 'Le nom ne peut contenir que des lettres...';
@@ -303,46 +303,6 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       return;
     }
     errorMessage = 'The name can only contain letters...';
-    showError(errorMessage);
-    return;
-  }
-  if (e.length < 4) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Nom trop court (<4)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Name too short (<4)...';
-    showError(errorMessage);
-    return;
-  }
-  if (e.length > 25) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Nom trop long (>25)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Name too long (>25)...';
-    showError(errorMessage);
-    return;
-  }
-  if (t.length < 6) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Mot de passe trop faible (<6)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Password too weak (<6)...';
-    showError(errorMessage);
-    return;
-  }
-  if (t.length > 50) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Mot de passe trop long (>50)...';
-      showError(errorMessage);
-      return;
-    }
-    errorMessage = 'Password too long (>50)...';
     showError(errorMessage);
     return;
   }
@@ -521,7 +481,7 @@ document.querySelector('#submitNote').addEventListener('click', () => {
     .replaceAll(/</g, '←')
     .replaceAll(/>/g, '→');
   const g = document.querySelector('#checkHidden').checked;
-  if (!e || !t || e.length > 30 || t.length > 5000) return;
+  if (!e || e.length > 30 || t.length > 5000) return;
   const c = {
     couleur: v,
     title: e,
