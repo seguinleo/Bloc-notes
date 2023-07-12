@@ -32,10 +32,10 @@ $items = [];
 
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
     $items[] = [
-        'id'        => htmlspecialchars($row['id'], ENT_QUOTES),
-        'title'     => htmlspecialchars($encryption->decryptData($row['titre'], $key), ENT_QUOTES),
+        'id'        => $row['id'],
+        'title'     => $encryption->decryptData($row['titre'], $key),
         'couleur'   => $row['couleur'],
-        'desc'      => htmlspecialchars($encryption->decryptData($row['content'], $key), ENT_QUOTES),
+        'desc'      => $encryption->decryptData($row['content'], $key),
         'date'      => $row['dateNote'],
         'hidden'    => $row['hiddenNote']
     ];
