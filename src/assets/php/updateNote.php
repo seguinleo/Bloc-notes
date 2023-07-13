@@ -48,13 +48,13 @@ if (in_array($couleur, $couleursAutorisees) === false) {
 $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
 $query->execute(
     [
-        ':Title'     => $title,
-        ':Descr'     => $desc,
-        ':Couleur'   => $couleur,
-        ':NoteId'    => $noteId,
-        ':DateNote'  => $dateNote,
-        ':User'      => $nom,
-        ':HiddenNote'=> $hidden
+        ':Title'      => $title,
+        ':Descr'      => $desc,
+        ':Couleur'    => $couleur,
+        ':NoteId'     => $noteId,
+        ':DateNote'   => $dateNote,
+        ':User'       => $nom,
+        ':HiddenNote' => $hidden
     ]
 );
 $query->closeCursor();

@@ -11,7 +11,12 @@ require_once __DIR__ . '/config/config.php';
 $nom = $_SESSION["nom"];
 $userID = $_SESSION["userId"];
 $tri = $_POST['tri'];
-$trisAutorises = ["Date de création", "Date de modification", "Date de création (Z-A)", "Date de modification (Z-A)"];
+$trisAutorises = [
+    "Date de création",
+    "Date de modification",
+    "Date de création (Z-A)",
+    "Date de modification (Z-A)"
+];
 
 if (in_array($tri, $trisAutorises) === false) {
     $tri = "Date de modification";
@@ -20,9 +25,9 @@ if (in_array($tri, $trisAutorises) === false) {
 $query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute(
     [
-        ':Tri'        => $tri,
-        ':CurrentUser'=> $nom,
-        ':UserId'     => $userID
+        ':Tri'         => $tri,
+        ':CurrentUser' => $nom,
+        ':UserId'      => $userID
     ]
 );
 $query->closeCursor();

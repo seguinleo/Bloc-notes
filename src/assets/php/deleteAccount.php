@@ -13,8 +13,8 @@ $userId = $_SESSION["userId"];
 $query = $PDO->prepare("DELETE FROM users WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute(
     [
-        ':CurrentUser'=> $nom,
-        ':UserId'     => $userId
+        ':CurrentUser' => $nom,
+        ':UserId'      => $userId
     ]
 );
 session_unset();

@@ -13,11 +13,11 @@ if ($userLanguage !== 'fr') {
 
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'    => '/projets/notes/',
-    'lifetime'=> 604800,
-    'secure'  => true,
-    'httponly'=> true,
-    'samesite'=> 'Lax'
+    'path'     => '/projets/notes/',
+    'lifetime' => 604800,
+    'secure'   => true,
+    'httponly' => true,
+    'samesite' => 'Lax'
 ];
 session_set_cookie_params($cookieParams);
 session_start();
@@ -142,9 +142,10 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         </div>
         <div id="cookie">
-            <p>Ce site utilise un cookie nécessaire à la connexion de l'utilisateur.<p>
-            <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
-            <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="En savoir plus sur leoseguin.fr">En savoir plus</a>
+            <p>Ce site utilise un cookie nécessaire à la connexion de l'utilisateur.
+            <p>
+                <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
+                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="En savoir plus sur leoseguin.fr">En savoir plus</a>
         </div>
         <div id="copyNotification">Note copiée !</div>
         <?php if (isset($nom) === true) { ?>

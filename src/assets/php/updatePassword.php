@@ -21,9 +21,9 @@ $mdpNewSecure = password_hash($mdpNew, PASSWORD_DEFAULT);
 $query = $PDO->prepare("UPDATE users SET mdp=:MdpHash WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute(
     [
-        ':MdpHash'    => $mdpNewSecure,
-        ':CurrentUser'=> $nom,
-        ':UserId'     => $userId
+        ':MdpHash'     => $mdpNewSecure,
+        ':CurrentUser' => $nom,
+        ':UserId'      => $userId
     ]
 );
 $query->closeCursor();

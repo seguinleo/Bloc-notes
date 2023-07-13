@@ -6,10 +6,10 @@ $color5: #8ab4f8;
 $color6: #9ec3ff;
 $color7: #2b5790;
 $color8: #34629f;
-$color9: #ffffff;
-$color10: #eeeeee;
+$color9: #fff;
+$color10: #eee;
 
-@keyframes slideLeft {
+@keyframes slide-left {
   0% {
     transform: translateX(-100%);
   }
@@ -20,7 +20,7 @@ $color10: #eeeeee;
 }
 
 @font-face {
-  font-family: 'OpenSans';
+  font-family: OpenSans;
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -28,7 +28,7 @@ $color10: #eeeeee;
 }
 
 @font-face {
-  font-family: 'OpenSans';
+  font-family: OpenSans;
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -39,15 +39,15 @@ html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 100, 100, .5) rgba(0, 0, 0, 0);
+  scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(100, 100, 100, .5);
+    background: rgba(100, 100, 100, 50%);
   }
 }
 
 * {
-  font-family: 'OpenSans', sans-serif;
+  font-family: OpenSans, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -108,7 +108,7 @@ code {
 
   &::selection {
     color: #8be9fd;
-    background: rgba(255, 255, 255, .1);
+    background: rgba(255, 255, 255, 10%);
   }
 }
 
@@ -131,14 +131,6 @@ nav {
   -webkit-user-select: none;
   user-select: none;
 
-  @media(min-width: 992px) {
-
-    .icon,
-    .iconConnect {
-      display: none;
-    }
-  }
-
   h1 {
     display: inline-block;
   }
@@ -154,7 +146,7 @@ nav {
 
   .search-input {
     width: 300px;
-    max-height: 40px;
+    height: 50px;
     border-radius: 24px;
     display: inline-block;
 
@@ -169,7 +161,7 @@ nav {
 
     input {
       font-size: 1rem;
-      height: 40px;
+      height: 50px;
       width: 180px;
       border: none;
       border-radius: 24px;
@@ -269,7 +261,7 @@ select {
 
 select,
 option {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 textarea {
@@ -581,10 +573,7 @@ select {
     position: absolute;
     cursor: pointer;
     border-radius: 2rem;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
 
     &:before {
       position: absolute;
@@ -594,7 +583,7 @@ select {
       width: 26px;
       left: 4px;
       top: 3px;
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
       transition: .3s ease-in-out;
     }
   }
@@ -699,7 +688,7 @@ select {
 
   &:hover,
   &:focus {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2), 0 3px 10px 0 rgba(0, 0, 0, .19);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 20%), 0 3px 10px 0 rgba(0, 0, 0, 20%);
   }
 }
 
@@ -712,8 +701,14 @@ select {
   }
 }
 
-@media(max-width: 992px) {
+@media (min-width: 993px) {
+  nav .icon,
+  nav .iconConnect {
+    display: none;
+  }
+}
 
+@media(max-width: 992px) {
   nav {
     position: relative;
     margin: 0;
@@ -737,12 +732,9 @@ select {
 
     .search-input {
       width: 80%;
-      max-height: 60px;
-      border-radius: 48px;
 
       input {
         width: 50%;
-        height: 60px;
         margin-left: 10px;
         vertical-align: middle;
 
@@ -800,7 +792,7 @@ select {
 
   main {
     margin-top: 10px;
-    padding: 0 5px 5rem 5px;
+    padding: 0 5px 5rem;
     gap: 10px;
   }
 
@@ -833,7 +825,7 @@ select {
 
   .sideBar.show {
     display: block;
-    animation: slideLeft .3s ease-in-out;
+    animation: slide-left .3s ease-in-out;
   }
 
   textarea {
@@ -914,12 +906,12 @@ html.dark {
   }
 
   header .fa-xmark:hover {
-    background: rgba(255, 255, 255, .1);
+    background: rgba(255, 255, 255, 10%);
   }
 
   nav {
     background: $color2;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, .2);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 20%);
 
     .search-input {
       background: $color3;
@@ -1031,7 +1023,7 @@ html.dark {
   .gestion-popup-box,
   .popup-box,
   .darken {
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, 50%);
   }
 
   .supprimerCompte {
@@ -1051,7 +1043,7 @@ html.dark {
   #cookie {
     background: $color2;
     color: $color4;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 20%);
 
     button {
       border: 2px solid $color5;
@@ -1064,7 +1056,7 @@ html.dark {
 
       #iconButtonFloat,
       #iconButtonConnectFloat {
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, .2);
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
       }
     }
 
@@ -1096,7 +1088,7 @@ html.light {
   }
 
   header .fa-xmark:hover {
-    background: rgba(0, 0, 0, .2);
+    background: rgba(0, 0, 0, 20%);
   }
 
   input,
@@ -1111,7 +1103,7 @@ html.light {
 
   nav {
     background: $color10;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, .2);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 20%);
 
     .search-input {
       background: $color9;
@@ -1219,7 +1211,7 @@ html.light {
   .gestion-popup-box,
   .popup-box,
   .darken {
-    background: rgba(200, 200, 200, .4);
+    background: rgba(200, 200, 200, 40%);
   }
 
   .supprimerCompte {
@@ -1239,7 +1231,7 @@ html.light {
   #cookie {
     background: $color10;
     color: $color2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 20%);
 
     button {
       border: 2px solid $color7;
@@ -1252,7 +1244,7 @@ html.light {
 
       #iconButtonFloat,
       #iconButtonConnectFloat {
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, .2);
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
       }
     }
 
@@ -1274,7 +1266,7 @@ html.light {
   background: $color2;
 
   &:after {
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, .2);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 20%);
   }
 }
 
@@ -1335,16 +1327,16 @@ html.light {
   color: $color1;
 
   ::selection {
-    background: rgba(0, 0, 0, .2);
+    background: rgba(0, 0, 0, 20%);
   }
 
   .bottom-content i {
     &:hover {
-      background: rgba(0, 0, 0, .1);
+      background: rgba(0, 0, 0, 10%);
     }
 
     &:active {
-      background: rgba(0, 0, 0, .2);
+      background: rgba(0, 0, 0, 20%);
     }
 
   }
@@ -1352,7 +1344,7 @@ html.light {
 
 .Noir {
   ::selection {
-    background: rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, 20%);
   }
 
   .bottom-content {
@@ -1364,11 +1356,11 @@ html.light {
       color: $color4;
 
       &:hover {
-        background: rgba(255, 255, 255, .1);
+        background: rgba(255, 255, 255, 10%);
       }
 
       &:active {
-        background: rgba(255, 255, 255, .2);
+        background: rgba(255, 255, 255, 20%);
       }
     }
   }

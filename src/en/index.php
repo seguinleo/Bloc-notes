@@ -6,18 +6,18 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) === true) {
     $userLanguage = '';
 }
 
-if ($userLanguage !== 'fr') {
-    header('Location: /projets/notes/en/');
+if ($userLanguage === 'fr') {
+    header('Location: /projets/notes/');
     return;
 }
 
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'    => '/projets/notes/',
-    'lifetime'=> 604800,
-    'secure'  => true,
-    'httponly'=> true,
-    'samesite'=> 'Lax'
+    'path'     => '/projets/notes/',
+    'lifetime' => 604800,
+    'secure'   => true,
+    'httponly' => true,
+    'samesite' => 'Lax'
 ];
 session_set_cookie_params($cookieParams);
 session_start();
@@ -142,9 +142,10 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         </div>
         <div id="cookie">
-            <p>This website uses a cookie that is necessary for user authentication.<p>
-            <button id="cookieButton" type="button" aria-label="Agree">OK</button>
-            <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
+            <p>This website uses a cookie that is necessary for user authentication.
+            <p>
+                <button id="cookieButton" type="button" aria-label="Agree">OK</button>
+                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
         </div>
         <div id="copyNotification">Note copied!</div>
         <?php if (isset($nom) === true) { ?>

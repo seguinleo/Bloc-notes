@@ -47,11 +47,11 @@ if (in_array($couleur, $couleursAutorisees) === false) {
 $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:User,:HiddenNote)");
 $query->execute(
     [
-        ':Title'     => $title,
-        ':Descr'     => $desc,
-        ':DateNote'  => $dateNote,
-        ':Couleur'   => $couleur,
-        ':User'      => $nom,
+        ':Title'      => $title,
+        ':Descr'      => $desc,
+        ':DateNote'   => $dateNote,
+        ':Couleur'    => $couleur,
+        ':User'       => $nom,
         ':HiddenNote' => $hidden
     ]
 );

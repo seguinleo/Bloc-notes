@@ -24,9 +24,9 @@ $key = openssl_random_pseudo_bytes(32);
 $query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:MdpHash,:OneKey)");
 $query->execute(
     [
-        ':NomCreer'=> $nomCreer,
-        ':MdpHash' => $mdpCreerSecure,
-        ':OneKey'  => htmlspecialchars($key)
+        ':NomCreer' => $nomCreer,
+        ':MdpHash'  => $mdpCreerSecure,
+        ':OneKey'   => htmlspecialchars($key)
     ]
 );
 $query->closeCursor();
