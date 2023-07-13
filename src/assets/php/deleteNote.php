@@ -3,11 +3,10 @@ session_name('__Secure-notes');
 session_start();
 
 if (isset($_SESSION["nom"], $_SESSION['userId'], $_POST['noteId']) === false) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
+require_once __DIR__ . '/config/config.php';
 
 $nom = $_SESSION["nom"];
 $noteId = $_POST['noteId'];
@@ -18,6 +17,5 @@ $query->execute(
         ':CurrentUser' => $nom
     ]
 );
-
 $query->closeCursor();
 $PDO = null;

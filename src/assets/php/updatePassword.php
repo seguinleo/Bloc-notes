@@ -2,12 +2,17 @@
 session_name('__Secure-notes');
 session_start();
 
-if ($_POST['csrf_token_mdp'] !== $_SESSION['csrf_token_mdp'] || isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew']) === false) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['csrf_token_mdp']) === false) {
+    http_response_code(403);
+}
+if ($_POST['csrf_token_mdp'] !== $_SESSION['csrf_token_mdp']) {
+    http_response_code(403);
+}
+if (isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew']) === false) {
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
+require_once __DIR__ . '/config/config.php';
 
 $nom = $_SESSION["nom"];
 $userId = $_SESSION["userId"];
@@ -21,6 +26,5 @@ $query->execute(
         ':UserId'       => $userId
     ]
 );
-
 $query->closeCursor();
 $PDO = null;

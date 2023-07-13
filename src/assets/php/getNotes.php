@@ -2,13 +2,12 @@
 session_name('__Secure-notes');
 session_start();
 
-if (!isset($_SESSION["nom"], $_SESSION['userId'], $_SESSION["tri"], $_SESSION["key"])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_SESSION["nom"], $_SESSION['userId'], $_SESSION["tri"], $_SESSION["key"]) === false) {
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/class/Encryption.php';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 
@@ -18,9 +17,9 @@ $key = $_SESSION['key'];
 
 if ($tri === "Date de création") {
     $orderBy = "ORDER BY id DESC";
-} elseif ($tri === "Date de création (Z-A)") {
+} else if ($tri === "Date de création (Z-A)") {
     $orderBy = "ORDER BY id";
-} elseif ($tri === "Date de modification") {
+} else if ($tri === "Date de modification") {
     $orderBy = "ORDER BY dateNote DESC, id DESC";
 } else {
     $orderBy = "ORDER BY dateNote, id DESC";

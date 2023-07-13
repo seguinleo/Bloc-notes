@@ -2,24 +2,21 @@
 session_name('__Secure-notes');
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['csrf_token_connect'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['csrf_token_connect']) === false) {
+    http_response_code(403);
 }
 if ($_POST['csrf_token_connect'] !== $_SESSION['csrf_token_connect']) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+    http_response_code(403);
 }
-if (!isset($_POST['nomConnect'], $_POST['mdpConnect'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['nomConnect'], $_POST['mdpConnect']) === false) {
+    http_response_code(403);
 }
-if (isset($_SESSION["nom"])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_SESSION["nom"]) === true) {
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
+require_once __DIR__ . '/config/config.php';
+
 $nomConnect = $_POST['nomConnect'];
 $mdpConnect = $_POST['mdpConnect'];
 $query = $PDO->prepare("SELECT id,nom,mdp,tri,one_key FROM users WHERE nom=:NomConnect LIMIT 1");
@@ -27,8 +24,7 @@ $query->execute([':NomConnect' => $nomConnect]);
 $row = $query->fetch(PDO::FETCH_ASSOC);
 
 if (!$row || !password_verify($mdpConnect, $row['mdp'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+    http_response_code(403);
 }
 
 session_unset();

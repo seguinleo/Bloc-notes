@@ -2,17 +2,18 @@
 session_name('__Secure-notes');
 session_start();
 
-if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['csrf_token_note']) === false) {
+    http_response_code(403);
 }
-if (!isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
+    http_response_code(403);
+}
+if (isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/class/Encryption.php';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 

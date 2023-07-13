@@ -2,24 +2,21 @@
 session_name('__Secure-notes');
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['csrf_token_creer'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['csrf_token_creer']) === false) {
+    http_response_code(403);
 }
 if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer']) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+    http_response_code(403);
 }
-if (!isset($_POST['nomCreer'], $_POST['mdpCreer'])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_POST['nomCreer'], $_POST['mdpCreer']) === false) {
+    http_response_code(403);
 }
-if (isset($_SESSION["nom"])) {
-    header('HTTP/2.0 403 Forbidden');
-    exit();
+if (isset($_SESSION["nom"]) === true) {
+    http_response_code(403);
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/projets/notes/assets/php/config/config.php';
+require_once __DIR__ . '/config/config.php';
+
 $nomCreer = $_POST['nomCreer'];
 $mdpCreer = $_POST['mdpCreer'];
 $mdpCreerSecure = password_hash($mdpCreer, PASSWORD_DEFAULT);

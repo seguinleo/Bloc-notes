@@ -1,5 +1,11 @@
-<?php namespace Encryption;
+<?php
 
+namespace Encryption;
+
+/**
+ * Class Encryption
+ * @package Encryption
+ */
 class Encryption
 {
     protected function generateSalt()
@@ -17,6 +23,11 @@ class Encryption
         return random_bytes(12);
     }
 
+    /**
+     * @param $plaintext
+     * @param $password
+     * @return string
+     */
     public function encryptData($plaintext, $password)
     {
         $salt = $this->generateSalt();
@@ -37,6 +48,11 @@ class Encryption
         return base64_encode($salt) . $cipherText;
     }
 
+    /**
+     * @param $ciphertext
+     * @param $password
+     * @return string
+     */
     public function decryptData($ciphertext, $password)
     {
         $salt = base64_decode(substr($ciphertext, 0, 24), true);

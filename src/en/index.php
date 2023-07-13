@@ -1,12 +1,12 @@
 <?php
-if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) === true) {
     $userLanguage = substr(htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']), 0, 2);
 } else {
     $userLanguage = '';
 }
 if ($userLanguage === 'fr') {
     header('Location: /projets/notes/');
-    die();
+    return;
 }
 session_name('__Secure-notes');
 session_set_cookie_params(array(
@@ -20,9 +20,15 @@ session_start();
 if (isset($_SESSION["nom"]) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
+    $csrf_token_connect = $_SESSION['csrf_token_connect'];
+    $csrf_token_creer = $_SESSION['csrf_token_creer'];
+    $nom = null;
 } else {
     $_SESSION['csrf_token_note'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_mdp'] = bin2hex(random_bytes(32));
+    $csrf_token_note = $_SESSION['csrf_token_note'];
+    $csrf_token_mdp = $_SESSION['csrf_token_mdp'];
+    $nom = $_SESSION["nom"];
 }
 ?>
 <!DOCTYPE html>
@@ -55,12 +61,12 @@ if (isset($_SESSION["nom"]) === false) {
 </head>
 <body>
     <nav>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom) === true) { ?>
             <div>
                 <h1 class="welcome">
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?= $_SESSION["nom"] ?>
+                        <?= $nom ?>
                     </span>
                 </h1>
             </div>
@@ -86,7 +92,7 @@ if (isset($_SESSION["nom"]) === false) {
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
-            <?php if (isset($_SESSION["nom"])) { ?>
+            <?php if (isset($nom) === true) { ?>
                 <span class="gestionCompte linkp" aria-label="Account" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
@@ -96,7 +102,7 @@ if (isset($_SESSION["nom"]) === false) {
                 </span>
             <?php } ?>
         </div>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom) === true) { ?>
             <div class="lastSync">
                 <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
                 <span></span>
@@ -116,7 +122,7 @@ if (isset($_SESSION["nom"]) === false) {
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
             <h2>Notes</h2>
-            <?php if (isset($_SESSION["nom"])) { ?>
+            <?php if (isset($nom) === true) { ?>
                 <div class="iconConnect">
                     <button id="iconButtonConnect" type="button" aria-label="Add a cloud note">Add a cloud note</button>
                 </div>
@@ -136,7 +142,7 @@ if (isset($_SESSION["nom"]) === false) {
             <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
         </div>
         <div id="copyNotification">Note copied!</div>
-        <?php if (isset($_SESSION["nom"])) { ?>
+        <?php if (isset($nom) === true) { ?>
             <div class="connect-popup-box">
                 <div class="popup">
                     <div class="content">
@@ -145,7 +151,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </header>
                         <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
                             <input id="idNoteInputConnect" type="hidden">
-                            <input type="hidden" id="csrf_token_note" value="<?= $_SESSION['csrf_token_note'] ?>">
+                            <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
                             <div class="row">
                                 <input id="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title" required>
                             </div>
@@ -216,9 +222,9 @@ if (isset($_SESSION["nom"]) === false) {
                             </select>
                         </div>
                         <details>
-                            <summary>Manage <?= $_SESSION["nom"] ?> account</summary>
+                            <summary>Manage <?= $nom ?> account</summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-                                <input type="hidden" id="csrf_token_mdp" value="<?= $_SESSION['csrf_token_mdp'] ?>">
+                                <input type="hidden" id="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
                                 <div class="row">
                                     <input id="mdpModifNew" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="password" required>
                                 </div>
@@ -289,7 +295,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">No account yet?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" value="<?= $_SESSION['csrf_token_connect'] ?>">
+                            <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
                                 <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="username" required>
                             </div>
@@ -308,7 +314,7 @@ if (isset($_SESSION["nom"]) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" value="<?= $_SESSION['csrf_token_creer'] ?>">
+                            <input type="hidden" id="csrf_token_creer" value="<?= $csrf_token_creer ?>">
                             <div class="row">
                                 <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="username" required>
                             </div>
@@ -330,7 +336,7 @@ if (isset($_SESSION["nom"]) === false) {
         <?php } ?>
     </main>
     <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
-    <?php if (isset($_SESSION["nom"])) { ?>
+    <?php if (isset($nom) === true) { ?>
         <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
         <script src="/projets/notes/assets/js/script.js" defer></script>
