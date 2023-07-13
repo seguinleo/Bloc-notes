@@ -15,14 +15,14 @@
 </p>
 
 ## Table of contents
-- [Why?](#why)
-- [Features](#features)
-- [Design](#design)
-- [Security/Privacy](#security-and-privacy)
-- [Languages](#languages)
-- [Todo](#todo)
-- [Community](#community)
-- [For developers](#for-developers)
+  - [Why?](#why)
+  - [Features](#features)
+  - [Design](#design)
+  - [Security/Privacy](#security-and-privacy)
+  - [Languages](#languages)
+  - [Todo](#todo)
+  - [Community](#community)
+  - [For developers](#for-developers)
 
 ## Why?
 When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote don't respect privacy, Standard Notes and Obsidian are very light without having to pay...
@@ -46,8 +46,8 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 🇫🇷French, 🇬🇧English
 
 ## Todo
-- [x] Light/dark mode switch
-- [ ] Notes shared between users
+  - [x] Light/dark mode switch
+  - [ ] Notes shared between users
 
 ## Community
 If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
