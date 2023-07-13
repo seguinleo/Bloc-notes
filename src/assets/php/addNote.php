@@ -8,7 +8,7 @@ if (isset($_POST['csrf_token_note']) === false) {
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
 }
-if (isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+if (isset($_SESSION["nom"], $_SESSION['key'], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
     http_response_code(403);
 }
 
@@ -26,21 +26,33 @@ $couleur = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $nom = $_SESSION["nom"];
-$couleursAutorisees = ["Noir", "Blanc", "Rouge", "Orange", "Jaune", "Vert", "Cyan", "BleuCiel", "Bleu", "Violet", "Rose"];
+$couleursAutorisees = [
+    "Noir",
+    "Blanc",
+    "Rouge",
+    "Orange",
+    "Jaune",
+    "Vert",
+    "Cyan",
+    "BleuCiel",
+    "Bleu",
+    "Violet",
+    "Rose"
+];
 
 if (in_array($couleur, $couleursAutorisees) === false) {
     $couleur = "Noir";
 }
 
-$query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:CurrentUser,:HiddenNote)");
+$query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:User,:HiddenNote)");
 $query->execute(
     [
-        ':Title'        => $title,
-        ':Descr'        => $desc,
-        ':DateNote'     => $dateNote,
-        ':Couleur'      => $couleur,
-        ':CurrentUser'  => $nom,
-        ':HiddenNote'   => $hidden
+        ':Title'     => $title,
+        ':Descr'     => $desc,
+        ':DateNote'  => $dateNote,
+        ':Couleur'   => $couleur,
+        ':User'      => $nom,
+        ':HiddenNote' => $hidden
     ]
 );
 $query->closeCursor();

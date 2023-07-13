@@ -1,22 +1,27 @@
 <?php
+
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) === true) {
     $userLanguage = substr(htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']), 0, 2);
 } else {
     $userLanguage = '';
 }
-if ($userLanguage === 'fr') {
-    header('Location: /projets/notes/');
+
+if ($userLanguage !== 'fr') {
+    header('Location: /projets/notes/en/');
     return;
 }
+
 session_name('__Secure-notes');
-session_set_cookie_params(array(
-    'path'      => '/projets/notes/',
-    'lifetime'  => 604800,
-    'secure'    => true,
-    'httponly'  => true,
-    'samesite'  => 'Lax'
-));
+$cookieParams = [
+    'path'    => '/projets/notes/',
+    'lifetime'=> 604800,
+    'secure'  => true,
+    'httponly'=> true,
+    'samesite'=> 'Lax'
+];
+session_set_cookie_params($cookieParams);
 session_start();
+
 if (isset($_SESSION["nom"]) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));

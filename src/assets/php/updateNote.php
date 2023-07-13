@@ -8,7 +8,7 @@ if (isset($_POST['csrf_token_note']) === false) {
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
 }
-if (isset($_SESSION["nom"], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+if (isset($_SESSION["nom"], $_SESSION['key'], $_SESSION['userId'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
     http_response_code(403);
 }
 
@@ -27,22 +27,34 @@ $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $nom = $_SESSION["nom"];
 $noteId = $_POST['noteId'];
-$couleursAutorisees = ["Noir", "Blanc", "Rouge", "Orange", "Jaune", "Vert", "Cyan", "BleuCiel", "Bleu", "Violet", "Rose"];
+$couleursAutorisees = [
+    "Noir",
+    "Blanc",
+    "Rouge",
+    "Orange",
+    "Jaune",
+    "Vert",
+    "Cyan",
+    "BleuCiel",
+    "Bleu",
+    "Violet",
+    "Rose"
+];
 
 if (in_array($couleur, $couleursAutorisees) === false) {
     $couleur = "Noir";
 }
 
-$query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:CurrentUser");
+$query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
 $query->execute(
     [
-        ':Title'        => $title,
-        ':Descr'        => $desc,
-        ':Couleur'      => $couleur,
-        ':NoteId'       => $noteId,
-        ':DateNote'     => $dateNote,
-        ':CurrentUser'  => $nom,
-        ':HiddenNote'   => $hidden
+        ':Title'     => $title,
+        ':Descr'     => $desc,
+        ':Couleur'   => $couleur,
+        ':NoteId'    => $noteId,
+        ':DateNote'  => $dateNote,
+        ':User'      => $nom,
+        ':HiddenNote'=> $hidden
     ]
 );
 $query->closeCursor();

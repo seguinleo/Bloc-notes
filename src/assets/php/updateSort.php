@@ -20,9 +20,9 @@ if (in_array($tri, $trisAutorises) === false) {
 $query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
 $query->execute(
     [
-        ':Tri'          => $tri,
-        ':CurrentUser'  => $nom,
-        ':UserId'       => $userID
+        ':Tri'        => $tri,
+        ':CurrentUser'=> $nom,
+        ':UserId'     => $userID
     ]
 );
 $query->closeCursor();

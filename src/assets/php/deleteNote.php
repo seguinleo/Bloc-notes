@@ -13,8 +13,8 @@ $noteId = $_POST['noteId'];
 $query = $PDO->prepare("DELETE FROM notes WHERE id=:NoteId AND user=:CurrentUser");
 $query->execute(
     [
-        ':NoteId' => $noteId,
-        ':CurrentUser' => $nom
+        ':NoteId'     => $noteId,
+        ':CurrentUser'=> $nom
     ]
 );
 $query->closeCursor();

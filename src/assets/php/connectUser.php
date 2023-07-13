@@ -30,13 +30,14 @@ if (!$row || !password_verify($mdpConnect, $row['mdp'])) {
 session_unset();
 session_destroy();
 session_name('__Secure-notes');
-session_set_cookie_params(array(
-    'path'      => '/projets/notes/',
-    'lifetime'  => 604800,
-    'secure'    => true,
-    'httponly'  => true,
-    'samesite'  => 'Lax'
-));
+$cookieParams = [
+    'path'    => '/projets/notes/',
+    'lifetime'=> 604800,
+    'secure'  => true,
+    'httponly'=> true,
+    'samesite'=> 'Lax'
+];
+session_set_cookie_params($cookieParams);
 session_start();
 
 $_SESSION['nom'] = $row['nom'];

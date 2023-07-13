@@ -8,16 +8,27 @@ namespace Encryption;
  */
 class Encryption
 {
+    /**
+     * @return string
+     */
     protected function generateSalt()
     {
         return openssl_random_pseudo_bytes(16);
     }
 
+    /**
+     * @param $password
+     * @param $salt
+     * @return string
+     */
     protected function deriveKey($password, $salt)
     {
         return hash('sha256', $password . $salt, true);
     }
 
+    /**
+     * @return string
+     */
     protected function generateIV()
     {
         return random_bytes(12);
