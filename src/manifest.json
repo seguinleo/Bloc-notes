@@ -6,6 +6,8 @@
 	"background_color": "#171717",
 	"theme_color": "#171717",
 	"orientation": "portrait-primary",
+	"lang": "fr",
+	"description": "Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.",
 	"icons": [
 		{
 			"src": "/projets/notes/assets/icons/icon48.png",

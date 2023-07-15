@@ -4,12 +4,15 @@ session_start();
 
 if (isset($_POST['csrf_token_note']) === false) {
     http_response_code(403);
+    return;
 }
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
+    return;
 }
 if (isset($_SESSION["nom"], $_SESSION['key'], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
     http_response_code(403);
+    return;
 }
 
 require_once __DIR__ . '/config/config.php';

@@ -84,7 +84,7 @@ kbd {
 }
 
 header {
-  padding: 20px;
+  padding: 1rem;
 
   .fa-xmark {
     cursor: pointer;
@@ -122,9 +122,9 @@ img {
 }
 
 nav {
+  top: 0;
   left: 0;
   right: 0;
-  top: 0;
   text-align: center;
   position: fixed;
   z-index: 2;
@@ -138,6 +138,7 @@ nav {
   div {
     margin: 10px 2rem;
     display: inline-block;
+    vertical-align: middle;
   }
 
   button {
@@ -149,6 +150,10 @@ nav {
     height: 50px;
     border-radius: 24px;
     display: inline-block;
+
+    &:focus-within {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
+    }
 
     ::placeholder {
       opacity: 1;
@@ -167,6 +172,10 @@ nav {
       border-radius: 24px;
       margin-right: 5px;
       padding: 0 10px;
+
+      &:focus {
+        outline: none;
+      }
     }
 
     .gestionCompte,
@@ -224,10 +233,9 @@ main {
   }
 
   p {
-    padding: 5px;
     border-radius: 5px;
-    max-height: 2rem;
-    margin-bottom: 1rem;
+    margin: 10px 0;
+    padding: 4px;
     font-size: .8rem;
     cursor: pointer;
 
@@ -287,9 +295,8 @@ button {
   }
 }
 
-details {
-  margin: 1rem;
-  cursor: pointer;
+form {
+  margin: 1rem 0;
 }
 
 p.welcome {
@@ -407,7 +414,6 @@ p.welcome {
 .linkp {
   cursor: pointer;
   font-weight: 700;
-  margin: 0 20px;
 }
 
 .fullscreen {
@@ -490,8 +496,8 @@ select {
   top: 0;
   left: 0;
   z-index: 2;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
@@ -502,7 +508,6 @@ select {
     top: 50%;
     left: 50%;
     z-index: 3;
-    max-height: 90vh;
     overflow-y: auto;
     justify-content: center;
     transform: translate(-50%, -50%);
@@ -525,15 +530,13 @@ select {
 .popup-box.show .popup {
   display: flex;
   pointer-events: auto;
+  max-height: 100vh;
   transform: translate(-50%, -50%);
 }
 
 .content {
   width: 600px;
-
-  form {
-    margin: 20px;
-  }
+  padding: 5px 1rem;
 }
 
 #iconButtonFloat,
@@ -543,11 +546,7 @@ select {
 }
 
 .row {
-  margin-bottom: 20px;
-}
-
-.rowTri {
-  margin: 20px;
+  margin-bottom: 1rem;
 }
 
 .switch {
@@ -600,13 +599,7 @@ select {
 }
 
 .gestion-popup-box.show .version {
-  margin: 1rem;
   text-align: right;
-}
-
-.supprimerCompte {
-  display: block;
-  margin-top: 2rem;
 }
 
 .check {
@@ -676,8 +669,8 @@ select {
 
 #btnTheme {
   font-size: 1.2rem;
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 48px;
   border: none;
   display: flex;
@@ -686,9 +679,8 @@ select {
   cursor: pointer;
   transition: .1s;
 
-  &:hover,
   &:focus {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 20%), 0 3px 10px 0 rgba(0, 0, 0, 20%);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
   }
 }
 
@@ -701,19 +693,24 @@ select {
   }
 }
 
-@media (min-width: 993px) {
+@media (min-width: 1131px) {
   nav .icon,
   nav .iconConnect {
     display: none;
   }
 }
 
-@media(max-width: 992px) {
+@media(max-width: 1130px) {
+  body {
+    min-height: 100vh;
+  }
+  
   nav {
-    position: relative;
+    position: fixed;
     margin: 0;
-    padding: 10px;
+    padding: 5px;
     background: none;
+    box-shadow: none;
 
     div {
       margin: 10px 0;
@@ -731,20 +728,17 @@ select {
     }
 
     .search-input {
-      width: 80%;
+      width: 60%;
 
       input {
-        width: 50%;
-        margin-left: 10px;
+        width: 45%;
         vertical-align: middle;
-
-        &:focus {
-          outline: none;
-        }
+        padding: 5px;
+        margin: 0 10px;
       }
 
       .linkp {
-        margin: 0 10px;
+        margin: 0;
       }
 
       .gestionCompte,
@@ -791,7 +785,7 @@ select {
   }
 
   main {
-    margin-top: 10px;
+    margin-top: 7rem;
     padding: 0 5px 5rem;
     gap: 10px;
   }
@@ -833,17 +827,12 @@ select {
   }
 
   .note {
-    width: 96vw;
+    width: 100vw;
     max-height: 300px;
 
     .details {
       overflow-y: hidden;
     }
-  }
-
-  #cookie {
-    right: 0;
-    max-width: 65vw;
   }
 
   .fullscreen {
@@ -856,17 +845,8 @@ select {
     }
   }
 
-  #copyNotification {
-    top: auto;
-    bottom: 4rem;
-  }
-
   .couleurs span {
     margin: 0 4px;
-  }
-
-  .content form {
-    margin: 10px;
   }
 
   .popup {
@@ -881,7 +861,16 @@ select {
     display: inline-flex;
   }
 
-  .divTheme {
+  .divLanguage {
+    display: inline;
+
+    .language {
+      width: 50px;
+      padding: 0;
+    }
+  }
+
+  .divTheme, .divLanguage {
     display: inline;
     vertical-align: middle;
     margin-left: 10px;
@@ -911,7 +900,6 @@ html.dark {
 
   nav {
     background: $color2;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 20%);
 
     .search-input {
       background: $color3;
@@ -924,7 +912,7 @@ html.dark {
         background: $color3;
 
         &:focus {
-          outline: 2px solid $color5;
+          outline: none;
         }
       }
     }
@@ -1035,6 +1023,11 @@ html.dark {
     color: $color4;
   }
 
+  .divLanguage .language {
+    border: none;
+    background: none;
+  }
+
   #copyNotification {
     background: $color3;
     color: $color4;
@@ -1051,7 +1044,7 @@ html.dark {
     }
   }
 
-  @media(max-width: 992px) {
+  @media(max-width: 1130px) {
     nav {
 
       #iconButtonFloat,
@@ -1103,7 +1096,6 @@ html.light {
 
   nav {
     background: $color10;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 20%);
 
     .search-input {
       background: $color9;
@@ -1117,7 +1109,7 @@ html.light {
         border: none;
 
         &:focus {
-          outline: 2px solid $color7;
+          outline: none;
         }
       }
     }
@@ -1228,6 +1220,11 @@ html.light {
     color: $color2;
   }
 
+  .divLanguage .language {
+    border: none;
+    background: none;
+  }
+
   #cookie {
     background: $color10;
     color: $color2;
@@ -1239,7 +1236,7 @@ html.light {
     }
   }
 
-  @media(max-width: 992px) {
+  @media(max-width: 1130px) {
     nav {
 
       #iconButtonFloat,

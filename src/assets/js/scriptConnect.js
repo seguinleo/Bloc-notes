@@ -71,10 +71,7 @@ const converter = new showdown.Converter({
 
 const showNotesConnect = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
-
-  const notes = document.querySelectorAll('.note');
-
-  notes.forEach((note) => {
+  document.querySelectorAll('.note').forEach((note) => {
     note.remove();
   });
 
@@ -96,28 +93,22 @@ const showNotesConnect = async () => {
 
   data.forEach((row) => {
     const {
-      id, title, couleur, desc, date, hidden,
+      id, title, desc, couleur, date, hidden,
     } = row;
 
     if (!id || !title || !date || !couleur) return;
 
-    const titleEnd = title.replaceAll('&amp;', '&');
-
-    const descEnd = replaceAllEnd(desc).replaceAll('&amp;', '&');
+    const descEnd = replaceAllEnd(desc);
     const descHtml = converter.makeHtml(desc);
-
     const noteElement = document.createElement('div');
     noteElement.id = `note${id}`;
     noteElement.classList.add('note', couleur);
     noteElement.tabIndex = 0;
-
     const detailsElement = document.createElement('div');
     detailsElement.classList.add('details');
-
     const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
-    titleElement.innerHTML = titleEnd;
-
+    titleElement.textContent = title;
     const descElement = document.createElement('span');
 
     if (hidden === 0) {
@@ -125,13 +116,11 @@ const showNotesConnect = async () => {
     } else {
       descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
     }
-
     detailsElement.appendChild(titleElement);
     detailsElement.appendChild(descElement);
 
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
-
     const dateElement = document.createElement('span');
     dateElement.textContent = date;
 
@@ -139,7 +128,7 @@ const showNotesConnect = async () => {
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
     editIconElement.setAttribute('data-note-id', id);
-    editIconElement.setAttribute('data-note-title', titleEnd);
+    editIconElement.setAttribute('data-note-title', title);
     editIconElement.setAttribute('data-note-desc', descEnd);
     editIconElement.setAttribute('data-note-color', couleur);
     editIconElement.setAttribute('data-note-hidden', hidden);
@@ -150,7 +139,6 @@ const showNotesConnect = async () => {
     trashIconElement.tabIndex = 0;
     trashIconElement.setAttribute('data-note-id', id);
     trashIconElement.setAttribute('role', 'button');
-
     bottomContentElement.appendChild(dateElement);
     bottomContentElement.appendChild(editIconElement);
     bottomContentElement.appendChild(trashIconElement);
@@ -170,12 +158,23 @@ const showNotesConnect = async () => {
       expandIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(expandIconElement);
     }
-
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
     notesContainer.appendChild(noteElement);
 
-    document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${titleEnd}</span><span class="dateList">${date}</span></p>`;
+    const paragraph = document.createElement('p');
+    paragraph.setAttribute('tabindex', '0');
+    paragraph.setAttribute('role', 'button');
+    const titleSpan = document.createElement('span');
+    titleSpan.classList.add('titleList');
+    titleSpan.textContent = title;
+    const dateSpan = document.createElement('span');
+    dateSpan.classList.add('dateList');
+    dateSpan.textContent = date;
+    paragraph.appendChild(titleSpan);
+    paragraph.appendChild(dateSpan);
+
+    document.querySelector('.sideBar .listNotes').appendChild(paragraph);
   });
   document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
   searchSideBar();
@@ -495,6 +494,15 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.content = '#eeeeee';
     button.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
+  }
+});
+
+document.querySelector('.language').addEventListener('change', () => {
+  const e = document.querySelector('.language').value;
+  if (e === 'en') {
+    window.location.href = '/projets/notes/en/';
+  } else {
+    window.location.href = '/projets/notes/';
   }
 });
 

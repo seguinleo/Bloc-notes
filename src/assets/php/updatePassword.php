@@ -4,12 +4,15 @@ session_start();
 
 if (isset($_POST['csrf_token_mdp']) === false) {
     http_response_code(403);
+    return;
 }
 if ($_POST['csrf_token_mdp'] !== $_SESSION['csrf_token_mdp']) {
     http_response_code(403);
+    return;
 }
 if (isset($_SESSION["nom"], $_SESSION["userId"], $_POST['mdpNew']) === false) {
     http_response_code(403);
+    return;
 }
 
 require_once __DIR__ . '/config/config.php';

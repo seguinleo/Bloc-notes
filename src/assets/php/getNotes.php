@@ -4,6 +4,7 @@ session_start();
 
 if (isset($_SESSION["nom"], $_SESSION['userId'], $_SESSION["tri"], $_SESSION["key"]) === false) {
     http_response_code(403);
+    return;
 }
 
 require_once __DIR__ . '/config/config.php';

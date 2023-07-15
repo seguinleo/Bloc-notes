@@ -4,15 +4,19 @@ session_start();
 
 if (isset($_POST['csrf_token_creer']) === false) {
     http_response_code(403);
+    return;
 }
 if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer']) {
     http_response_code(403);
+    return;
 }
 if (isset($_POST['nomCreer'], $_POST['mdpCreer']) === false) {
     http_response_code(403);
+    return;
 }
 if (isset($_SESSION["nom"]) === true) {
     http_response_code(403);
+    return;
 }
 
 require_once __DIR__ . '/config/config.php';

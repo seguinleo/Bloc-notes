@@ -1,16 +1,4 @@
 <?php
-
-if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) === true) {
-    $userLanguage = substr(htmlspecialchars($_SERVER['HTTP_ACCEPT_LANGUAGE']), 0, 2);
-} else {
-    $userLanguage = '';
-}
-
-if ($userLanguage === 'fr') {
-    header('Location: /projets/notes/');
-    return;
-}
-
 session_name('__Secure-notes');
 $cookieParams = [
     'path'     => '/projets/notes/',
@@ -57,12 +45,15 @@ if (isset($_SESSION["nom"]) === false) {
     <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
     <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:locale" content="en">
+    <link rel="alternate" hreflang="en" href="https://leoseguin.fr/projets/notes/en/">
+    <link rel="alternate" hreflang="fr" href="https://leoseguin.fr/projets/notes/">
+    <link rel="alternate" hreflang="x-default" href="https://leoseguin.fr/projets/notes/en/">
     <link rel="canonical" href="https://leoseguin.fr/projets/notes/">
     <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="/projets/notes/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/projets/notes/assets/css/style.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
-    <link rel="manifest" href="/projets/notes/manifest.json">
+    <link rel="manifest" href="/projets/notes/en/manifest.json">
 </head>
 <body>
     <nav>
@@ -82,7 +73,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.3</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.4</a>
                 </span>
             </div>
             <div>
@@ -95,7 +86,7 @@ if (isset($_SESSION["nom"]) === false) {
         <div class="search-input">
             <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
-            <input type="text" id="search-input" maxlength="30" aria-label="Search for a note" placeholder="Search">
+            <input type="text" id="search-input" name="search-input" maxlength="30" aria-label="Search" placeholder="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
             <?php if (isset($nom) === true) { ?>
                 <span class="gestionCompte linkp" aria-label="Account" tabindex="0" role="button">
@@ -118,6 +109,14 @@ if (isset($_SESSION["nom"]) === false) {
                 <i id="iconeTheme" class="fa-solid fa-moon"></i>
             </button>
         </div>
+        <?php if (isset($nom) === false) { ?>
+        <div class="divLanguage">
+            <select class="language" name="language" aria-label="Langue">
+                <option value="fr">🇫🇷</option>
+                <option value="en" selected>🇬🇧</option>
+            </select>
+        </div>
+        <?php } ?>
     </nav>
     <main>
         <div class="darken"></div>
@@ -142,10 +141,9 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         </div>
         <div id="cookie">
-            <p>This website uses a cookie that is necessary for user authentication.
-            <p>
-                <button id="cookieButton" type="button" aria-label="Agree">OK</button>
-                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
+            <p>This website uses a cookie that is necessary for user authentication.</p>
+            <button id="cookieButton" type="button" aria-label="Agree">OK</button>
+            <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Learn more on leoseguin.fr">Learn more</a>
         </div>
         <div id="copyNotification">Note copied!</div>
         <?php if (isset($nom) === true) { ?>
@@ -156,13 +154,13 @@ if (isset($_SESSION["nom"]) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInputConnect" type="hidden">
-                            <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
+                            <input id="idNoteInputConnect" name="idNoteInputConnect" type="hidden">
+                            <input type="hidden" id="csrf_token_note" name="csrf_token_note" value="<?= $csrf_token_note ?>">
                             <div class="row">
-                                <input id="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title" required>
+                                <input id="titleConnect" name="titleConnect" placeholder="Title" type="text" maxlength="30" aria-label="title" required>
                             </div>
                             <div class="row">
-                                <textarea id="descConnect" placeholder="Content (Markdown)" aria-label="content" maxlength="5000"></textarea>
+                                <textarea id="descConnect" name="descConnect" placeholder="Content (Markdown)" aria-label="content" maxlength="5000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -218,24 +216,30 @@ if (isset($_SESSION["nom"]) === false) {
                                 </a>
                             </span>
                         </div>
-                        <div class="row rowTri">
-                            <select id="tri" aria-label="sort">
-                                <option value="Date de modification" selected>Sort notes by:</option>
+                        <div class="row">
+                            <select id="tri" name="tri" aria-label="sort">
+                                <option value="Date de modification" selected>Sort notes</option>
                                 <option value="Date de création">Creation date</option>
                                 <option value="Date de création (Z-A)">Creation date (Z-A)</option>
                                 <option value="Date de modification">Modification date</option>
                                 <option value="Date de modification (Z-A)">Modification date (Z-A)</option>
                             </select>
                         </div>
+                        <div class="row">
+                            <select class="language" name="language" aria-label="Langue">
+                                <option value="fr">🇫🇷 Français</option>
+                                <option value="en" selected>🇬🇧 English</option>
+                            </select>
+                        </div>
                         <details>
                             <summary>Manage <?= $nom ?> account</summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-                                <input type="hidden" id="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
+                                <input type="hidden" id="csrf_token_mdp" name="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="password" required>
+                                    <input id="mdpModifNew" name="mdpModifNew" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="password" required>
+                                    <input id="mdpModifNewValid" name="mdpModifNewValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="password" required>
                                 </div>
                                 <button id="submitChangeMDP" type="submit" aria-label="Change password">Change password</button>
                             </form>
@@ -245,7 +249,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.3</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="See on GitHub" target="_blank" rel="noreferrer">v23.7.4</a>
                             </p>
                         </div>
                     </div>
@@ -259,12 +263,12 @@ if (isset($_SESSION["nom"]) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInput" type="hidden">
+                            <input id="idNoteInput" name="idNoteInput" type="hidden">
                             <div class="row">
-                                <input id="title" placeholder="Title" type="text" maxlength="30" aria-label="title" required>
+                                <input id="title" name="title" placeholder="Title" type="text" maxlength="30" aria-label="title" required>
                             </div>
                             <div class="row">
-                                <textarea id="content" placeholder="Content (Markdown)" aria-label="content" maxlength="5000"></textarea>
+                                <textarea id="content" name="content" placeholder="Content (Markdown)" aria-label="content" maxlength="5000"></textarea>
                             </div>
                             <div class="row">
                                 <div class="couleurs">
@@ -301,12 +305,12 @@ if (isset($_SESSION["nom"]) === false) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">No account yet?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
+                            <input type="hidden" id="csrf_token_connect" name="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
-                                <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="username" required>
+                                <input id="nomConnect" name="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="password" required>
+                                <input id="mdpConnect" name="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="password" required>
                             </div>
                             <button id="submitSeConnecter" type="submit" aria-label="Sign in">Sign in</button>
                         </form>
@@ -320,15 +324,15 @@ if (isset($_SESSION["nom"]) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" value="<?= $csrf_token_creer ?>">
+                            <input type="hidden" id="csrf_token_creer" name="csrf_token_creer" value="<?= $csrf_token_creer ?>">
                             <div class="row">
-                                <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="username" required>
+                                <input id="nomCreer" name="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="password" required>
+                                <input id="mdpCreer" name="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="password" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="password" required>
+                                <input id="mdpCreerValid" name="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="password" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>

@@ -73,9 +73,7 @@ const converter = new showdown.Converter({
 
 const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
-
-  const notes = document.querySelectorAll('.note');
-  notes.forEach((note) => note.remove());
+  document.querySelectorAll('.note').forEach((note) => note.remove());
 
   if (notesJSON.length === 0) {
     document.querySelector('.sideBar h2').textContent = 'Notes (0)';
@@ -84,39 +82,36 @@ const showNotes = async () => {
 
   notesJSON
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .forEach((e, id) => {
+    .forEach((row, id) => {
       const {
-        couleur, hidden, title, description, date,
-      } = e;
+        title, desc, couleur, date, hidden,
+      } = row;
 
-      const descEnd = replaceAllEnd(e.description);
-      const descHtml = converter.makeHtml(description);
+      if (!title || !date || !couleur) return;
 
+      const descEnd = replaceAllEnd(desc);
+      const descHtml = converter.makeHtml(desc);
       const noteElement = document.createElement('div');
       noteElement.id = `note${id}`;
       noteElement.classList.add('note', couleur);
       noteElement.tabIndex = 0;
-
       const detailsElement = document.createElement('div');
       detailsElement.classList.add('details');
-
       const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
-      titleElement.innerHTML = title;
-
+      titleElement.textContent = title;
       const descElement = document.createElement('span');
+
       if (hidden === false) {
         descElement.innerHTML = descHtml;
       } else {
         descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
       }
-
       detailsElement.appendChild(titleElement);
       detailsElement.appendChild(descElement);
 
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
-
       const dateElement = document.createElement('span');
       dateElement.textContent = date;
 
@@ -135,7 +130,6 @@ const showNotes = async () => {
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
-
       bottomContentElement.appendChild(dateElement);
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
@@ -155,12 +149,23 @@ const showNotes = async () => {
         expandIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(expandIconElement);
       }
-
       noteElement.appendChild(detailsElement);
       noteElement.appendChild(bottomContentElement);
       notesContainer.appendChild(noteElement);
 
-      document.querySelector('.sideBar .listNotes').innerHTML += `<p tabindex="0" role="button"><span class="titleList">${title}</span><span class="dateList">${date}</span></p>`;
+      const paragraph = document.createElement('p');
+      paragraph.setAttribute('tabindex', '0');
+      paragraph.setAttribute('role', 'button');
+      const titleSpan = document.createElement('span');
+      titleSpan.classList.add('titleList');
+      titleSpan.textContent = title;
+      const dateSpan = document.createElement('span');
+      dateSpan.classList.add('dateList');
+      dateSpan.textContent = date;
+      paragraph.appendChild(titleSpan);
+      paragraph.appendChild(dateSpan);
+
+      document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
   document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
   searchSideBar();
@@ -483,9 +488,9 @@ document.querySelector('#submitNote').addEventListener('click', () => {
   const g = document.querySelector('#checkHidden').checked;
   if (!e || e.length > 30 || t.length > 5000) return;
   const c = {
-    couleur: v,
     title: e,
-    description: t,
+    desc: t,
+    couleur: v,
     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
     hidden: g,
   };
@@ -594,6 +599,15 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.content = '#eeeeee';
     button.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
+  }
+});
+
+document.querySelector('.language').addEventListener('change', () => {
+  const e = document.querySelector('.language').value;
+  if (e === 'en') {
+    window.location.href = '/projets/notes/en/';
+  } else {
+    window.location.href = '/projets/notes/';
   }
 });
 

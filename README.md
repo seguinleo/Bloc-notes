@@ -33,7 +33,7 @@ The user can save and edit notes locally in JSON, change notes color, copy notes
 The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week. This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
 ## Design
-The website is fully responsible for mobile devices and UI/UX inspired by [Material Design](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities.
+The website is fully responsible for mobile devices and UI/UX inspired by [Material Design v3](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements.
 
 ## Security and Privacy
 Passwords are hashed with bcrypt before being sent to the database. Each user has their own randomly generated 32-byte encryption key that uses SHA256 as the hash function and the randomly generated salt.
@@ -53,7 +53,9 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
 
 ## For developers
-Technologies used: JavaScript, PHP, MySQL
+Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
+
+Technologies: JavaScript, PHP, MySQL
 
 ``npm i`` and ``composer i`` to install all dependencies
 
