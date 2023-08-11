@@ -72,6 +72,7 @@ h3 {
 a {
   text-decoration: none;
   display: inline;
+  word-wrap: break-word;
   font-weight: 700;
 }
 
@@ -539,8 +540,6 @@ select {
   padding: 5px 1rem;
 }
 
-#iconButtonFloat,
-#iconButtonConnectFloat,
 #cookie.hide {
   display: none;
 }
@@ -694,8 +693,9 @@ select {
 }
 
 @media (min-width: 1131px) {
-  nav .icon,
-  nav .iconConnect {
+
+  .iconFloat,
+  .iconConnectFloat {
     display: none;
   }
 }
@@ -704,11 +704,10 @@ select {
   body {
     min-height: 100vh;
   }
-  
+
   nav {
     position: fixed;
     margin: 0;
-    padding: 5px;
     background: none;
     box-shadow: none;
 
@@ -768,26 +767,31 @@ select {
     .lastSync {
       display: none;
     }
-
-    #iconButtonFloat,
-    #iconButtonConnectFloat {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 60px;
-      height: 60px;
-      font-size: 1.4rem;
-      border-radius: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   }
 
   main {
-    margin-top: 7rem;
+    margin-top: 6rem;
     padding: 0 5px 5rem;
     gap: 10px;
+  }
+
+  .iconFloat,
+  .iconConnectFloat {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+  }
+
+  #iconButtonFloat,
+  #iconButtonConnectFloat {
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+    border-radius: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   kbd {
@@ -827,7 +831,7 @@ select {
   }
 
   .note {
-    width: 100vw;
+    width: 100%;
     max-height: 300px;
 
     .details {
@@ -840,7 +844,6 @@ select {
     top: 1rem;
 
     .details {
-      min-height: 75vh;
       overflow-y: auto;
     }
   }
@@ -870,7 +873,8 @@ select {
     }
   }
 
-  .divTheme, .divLanguage {
+  .divTheme,
+  .divLanguage {
     display: inline;
     vertical-align: middle;
     margin-left: 10px;
@@ -878,6 +882,10 @@ select {
     #btnTheme {
       display: inline-flex;
     }
+  }
+
+  #copyNotification {
+    display: none;
   }
 }
 
@@ -1045,12 +1053,10 @@ html.dark {
   }
 
   @media(max-width: 1130px) {
-    nav {
 
-      #iconButtonFloat,
-      #iconButtonConnectFloat {
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
-      }
+    #iconButtonFloat,
+    #iconButtonConnectFloat {
+      box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
     }
 
     .sideBar {
@@ -1237,12 +1243,10 @@ html.light {
   }
 
   @media(max-width: 1130px) {
-    nav {
 
-      #iconButtonFloat,
-      #iconButtonConnectFloat {
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
-      }
+    #iconButtonFloat,
+    #iconButtonConnectFloat {
+      box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
     }
 
     .sideBar {

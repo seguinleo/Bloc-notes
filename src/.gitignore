@@ -1,5 +1,7 @@
-.htaccess
 .env
+.env.local
+.sql
+.htaccess
 config.php
 
 node_modules/

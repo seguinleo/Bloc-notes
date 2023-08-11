@@ -36,10 +36,11 @@ The user can also sign in to sync all notes between their devices or browsers an
 This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
 ## Design
-The website is fully responsible for mobile devices and UI/UX inspired by [Material Design v3](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements.
+The website is fully responsible for mobile devices and UI/UX inspired by [Material Design v3](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available.
 
 ## Security and Privacy
-The website is hosted in France.
+The website is hosted in France by OVHcloud on my personal server. The website is always up to date with the latest security patches.
+
 Passwords are hashed with bcrypt before being sent to the database.
 
 Each user has their own randomly generated 32-byte encryption key that uses SHA256 as the hash function and the randomly generated salt.
@@ -47,10 +48,13 @@ Once logged in, the user can change their password or delete their account. Secu
 
 Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes via their unique keys. The website editor disclaims any responsibility for the content of user notes.
 
-> **Warning** Never store passwords or too personal data in your notes regardless of the service
+[Legal Notice / Privacy policy](https://leoseguin.fr/mentionslegales/)
+
+> [!WARNING]
+> Never store passwords or too personal data in your notes regardless of the service
 
 ## Languages
-🇫🇷French, 🇬🇧English
+🇫🇷French, 🇬🇧English, 🇩🇪Deutsch
 
 ## Todo
 Shared notes
@@ -59,14 +63,20 @@ Shared notes
 If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
 
 ## For developers
-Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
+Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
-Technologies: JavaScript, PHP, MySQL
+Technologies: JavaScript, PHP, MySQL and Saas
+
+Dependencies: ESLint, PHP_CodeSniffer and Showdownjs
 
 ``npm i`` and ``composer i`` to install all dependencies
 
 ``npx eslint file.js`` to verify JavaScript files
 
 ``vendor/bin/phpcs --standard=PSR2 file.php`` to verify PHP files
+
+You can run and edit the website locally and create a new MySQL database.
+
+[CC-BY-4.0 license ](https://github.com/PouletEnSlip/Bloc-notes/blob/main/LICENSE)
 
 ![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)

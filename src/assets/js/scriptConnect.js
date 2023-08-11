@@ -1,10 +1,11 @@
 /* eslint-disable no-alert */
-let isUpdate;
-let errorMessage;
+let isUpdate = false;
+let errorMessage = '';
 let touchStart = 0;
 let touchEnd = 0;
-let timeoutCopy;
-let timeoutError;
+let timeoutCopy = null;
+let timeoutError = null;
+let lang = '';
 const notesContainer = document.querySelector('main');
 const popupBoxConnect = document.querySelector('.connect-popup-box');
 const popupBoxGestion = document.querySelector('.gestion-popup-box');
@@ -23,6 +24,14 @@ if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.content = '#eeeeee';
   button.className = 'fa-solid fa-lightbulb';
+}
+
+if (window.location.pathname.endsWith('en/')) {
+  lang = 'en';
+} else if (window.location.pathname.endsWith('de/')) {
+  lang = 'de';
+} else {
+  lang = 'fr';
 }
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -85,7 +94,7 @@ const showNotesConnect = async () => {
   const data = await response.json();
 
   if (data.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBar h2').textContent += ' (0)';
     return;
   }
 
@@ -176,7 +185,7 @@ const showNotesConnect = async () => {
 
     document.querySelector('.sideBar .listNotes').appendChild(paragraph);
   });
-  document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
+  document.querySelector('.sideBar h2').textContent += ` (${data.length})`;
   searchSideBar();
 };
 
@@ -193,13 +202,20 @@ const fetchDelete = async (e) => {
     });
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la suppression de la note...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while deleting the note...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while deleting the note...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Löschen der Notiz ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 };
 
@@ -215,21 +231,35 @@ const deleteAccount = async () => {
       window.location.reload();
       return;
     }
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la suppression de votre compte...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while deleting your account...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while deleting your account...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Löschen Ihres Kontos ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la suppression de votre compte...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while deleting your account...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while deleting your account...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Löschen Ihres Kontos ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 };
 
@@ -243,13 +273,20 @@ const fetchLogout = async () => {
     });
     window.location.reload();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la déconnexion...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while logging out...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while logging out...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Abmelden ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 };
 
@@ -294,14 +331,22 @@ const copy = (e) => {
 };
 
 const deleteNoteConnect = (e) => {
-  if (!window.location.pathname.endsWith('en/')) {
+  if (lang === 'fr') {
     if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
       fetchDelete(e);
     }
     return;
   }
-  if (window.confirm('Do you really want to delete this note?')) {
-    fetchDelete(e);
+  if (lang === 'en') {
+    if (window.confirm('Do you really want to delete this note?')) {
+      fetchDelete(e);
+    }
+    return;
+  }
+  if (lang === 'de') {
+    if (window.confirm('Möchten Sie diese Notiz wirklich löschen?')) {
+      fetchDelete(e);
+    }
   }
 };
 
@@ -355,7 +400,7 @@ switchElement.addEventListener('keydown', (event) => {
   }
 });
 
-document.querySelectorAll('.iconConnect').forEach((element) => {
+document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) => {
   element.addEventListener('click', () => {
     popupBoxConnect.classList.add('show');
     document.body.classList.add('noscroll');
@@ -388,14 +433,22 @@ document.querySelectorAll('.gestionCompte').forEach((element) => {
 
 document.querySelectorAll('.supprimerCompte').forEach((element) => {
   element.addEventListener('click', () => {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       if (window.confirm('Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.')) {
         deleteAccount();
       }
       return;
     }
-    if (window.confirm('Do you really want to delete your account and all your notes saved in the cloud? Your username will become available to other users again.')) {
-      deleteAccount();
+    if (lang === 'en') {
+      if (window.confirm('Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.')) {
+        deleteAccount();
+      }
+      return;
+    }
+    if (lang === 'de') {
+      if (window.confirm('Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.')) {
+        deleteAccount();
+      }
     }
   });
   element.addEventListener('keydown', (event) => {
@@ -499,10 +552,16 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
+  if (e === 'fr') {
+    window.location.href = '/projets/notes/';
+    return;
+  }
   if (e === 'en') {
     window.location.href = '/projets/notes/en/';
-  } else {
-    window.location.href = '/projets/notes/';
+    return;
+  }
+  if (e === 'de') {
+    window.location.href = '/projets/notes/de/';
   }
 });
 
@@ -517,13 +576,20 @@ document.querySelector('#tri').addEventListener('change', async () => {
     });
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors du tri des notes...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while sorting the notes...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while sorting notes...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Sortieren von Notizen ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 });
 
@@ -562,26 +628,50 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const hidden = checkBox.checked ? 1 : 0;
     const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/addNote.php';
     const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
-    await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
+    if (response.status !== 200) {
+      if (lang === 'fr') {
+        errorMessage = 'Une erreur est survenue lors de l\'ajout de la note...';
+        showError(errorMessage);
+        return;
+      }
+      if (lang === 'en') {
+        errorMessage = 'An error occurred while adding the note...';
+        showError(errorMessage);
+        return;
+      }
+      if (lang === 'de') {
+        errorMessage = 'Beim Hinzufügen der Notiz ist ein Fehler aufgetreten...';
+        showError(errorMessage);
+        return;
+      }
+    }
     isUpdate = false;
     popupBoxConnect.classList.remove('show');
     document.body.classList.remove('noscroll');
     forms.forEach((form) => form.reset());
     await showNotesConnect();
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de l\'ajout de la note...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while adding the note...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while adding the note...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Hinzufügen der Notiz ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 });
 
@@ -590,34 +680,55 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   const t = document.querySelector('#mdpModifNewValid').value;
   if (!e || !t || e.length < 6 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Mot de passe trop faible (que des chiffres)...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Password too weak (only numbers)...';
-    showError(errorMessage);
-    return;
+    if (lang === 'en') {
+      errorMessage = 'Password too weak (only numbers)...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Passwort zu schwach (nur Zahlen)...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Mot de passe trop faible (que des lettres)...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Password too weak (only letters)...';
-    showError(errorMessage);
-    return;
+    if (lang === 'en') {
+      errorMessage = 'Password too weak (only letters)...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Passwort zu schwach (nur Buchstaben)...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (e !== t) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Les mots de passe ne correspondent pas...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Passwords do not match...';
-    showError(errorMessage);
-    return;
+    if (lang === 'en') {
+      errorMessage = 'Passwords do not match...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Passwörter stimmen nicht überein...';
+      showError(errorMessage);
+      return;
+    }
   }
   const mdpNew = encodeURIComponent(e);
   try {
@@ -632,13 +743,20 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     document.body.classList.remove('noscroll');
     forms.forEach((form) => form.reset());
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la modification du mot de passe...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while changing the password...';
-    showError(errorMessage);
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while changing the password...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Beim Ändern des Passworts ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+    }
   }
 });
 

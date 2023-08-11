@@ -47,16 +47,21 @@ if (in_array($couleur, $couleursAutorisees) === false) {
     $couleur = "Noir";
 }
 
-$query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:User,:HiddenNote)");
-$query->execute(
-    [
-        ':Title'      => $title,
-        ':Descr'      => $desc,
-        ':DateNote'   => $dateNote,
-        ':Couleur'    => $couleur,
-        ':User'       => $nom,
-        ':HiddenNote' => $hidden
-    ]
-);
-$query->closeCursor();
-$PDO = null;
+try {
+    $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:User,:HiddenNote)");
+    $query->execute(
+        [
+            ':Title'      => $title,
+            ':Descr'      => $desc,
+            ':DateNote'   => $dateNote,
+            ':Couleur'    => $couleur,
+            ':User'       => $nom,
+            ':HiddenNote' => $hidden
+        ]
+    );
+    $query->closeCursor();
+    $PDO = null;
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
+}

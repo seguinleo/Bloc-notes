@@ -48,17 +48,22 @@ if (in_array($couleur, $couleursAutorisees) === false) {
     $couleur = "Noir";
 }
 
-$query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
-$query->execute(
-    [
-        ':Title'      => $title,
-        ':Descr'      => $desc,
-        ':Couleur'    => $couleur,
-        ':NoteId'     => $noteId,
-        ':DateNote'   => $dateNote,
-        ':User'       => $nom,
-        ':HiddenNote' => $hidden
-    ]
-);
-$query->closeCursor();
-$PDO = null;
+try {
+    $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
+    $query->execute(
+        [
+            ':Title'      => $title,
+            ':Descr'      => $desc,
+            ':Couleur'    => $couleur,
+            ':NoteId'     => $noteId,
+            ':DateNote'   => $dateNote,
+            ':User'       => $nom,
+            ':HiddenNote' => $hidden
+        ]
+    );
+    $query->closeCursor();
+    $PDO = null;
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
+}

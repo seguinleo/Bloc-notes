@@ -1,10 +1,11 @@
 /* eslint-disable no-alert */
-let isUpdate;
-let errorMessage;
+let isUpdate = false;
+let errorMessage = '';
 let touchStart = 0;
 let touchEnd = 0;
-let timeoutCopy;
-let timeoutError;
+let timeoutCopy = null;
+let timeoutError = null;
+let lang = '';
 const notesContainer = document.querySelector('main');
 const popupBox = document.querySelector('.popup-box');
 const connectBox = document.querySelector('.connect-box');
@@ -25,6 +26,14 @@ if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.content = '#eeeeee';
   button.className = 'fa-solid fa-lightbulb';
+}
+
+if (window.location.pathname.endsWith('en/')) {
+  lang = 'en';
+} else if (window.location.pathname.endsWith('de/')) {
+  lang = 'de';
+} else {
+  lang = 'fr';
 }
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -76,7 +85,7 @@ const showNotes = async () => {
   document.querySelectorAll('.note').forEach((note) => note.remove());
 
   if (notesJSON.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBar h2').textContent += ' (0)';
     return;
   }
 
@@ -167,7 +176,7 @@ const showNotes = async () => {
 
       document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
-  document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
+  document.querySelector('.sideBar h2').textContent += ` (${notesJSON.length})`;
   searchSideBar();
 };
 
@@ -213,7 +222,14 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  const confirmationMessage = window.location.pathname.endsWith('en/') ? 'Do you really want to delete this note?' : 'Voulez-vous vraiment supprimer cette note ?';
+  let confirmationMessage;
+  if (lang === 'en') {
+    confirmationMessage = 'Do you really want to delete this note?';
+  } else if (lang === 'de') {
+    confirmationMessage = 'Möchten Sie diese Notiz wirklich löschen?';
+  } else {
+    confirmationMessage = 'Voulez-vous vraiment supprimer cette note ?';
+  }
   if (window.confirm(confirmationMessage)) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
@@ -302,54 +318,89 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const o = document.querySelector('#mdpCreerValid').value;
   if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Le nom ne peut contenir que des lettres...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'The name can only contain letters...';
-    showError(errorMessage);
-    return;
+    if (lang === 'de') {
+      errorMessage = 'Der Name darf nur Buchstaben enthalten...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'The name can only contain letters...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (/^[0-9]+$/.test(t)) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Le mot de passe ne peut pas contenir que des chiffres...';
+    if (lang === 'fr') {
+      errorMessage = 'Mot de passe trop faible (que des chiffres)...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Password too weak (only numbers)...';
-    showError(errorMessage);
-    return;
+    if (lang === 'en') {
+      errorMessage = 'Password too weak (only numbers)...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Passwort zu schwach (nur Zahlen)...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    if (!window.location.pathname.endsWith('en/')) {
-      errorMessage = 'Le mot de passe ne peut pas contenir que des lettres...';
+    if (lang === 'fr') {
+      errorMessage = 'Mot de passe trop faible (que des lettres)...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Password too weak (only letters)...';
-    showError(errorMessage);
-    return;
+    if (lang === 'en') {
+      errorMessage = 'Password too weak (only letters)...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'de') {
+      errorMessage = 'Passwort zu schwach (nur Buchstaben)...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (t !== o) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Les mots de passe ne correspondent pas...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'Passwords do not match...';
-    showError(errorMessage);
-    return;
+    if (lang === 'de') {
+      errorMessage = 'Die Passwörter stimmen nicht überein...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'Passwords do not match...';
+      showError(errorMessage);
+      return;
+    }
   }
   if (e === t) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Le mot de passe doit être différent du nom...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'The password must be different from the username...';
-    showError(errorMessage);
-    return;
+    if (lang === 'de') {
+      errorMessage = 'Das Passwort muss sich vom Namen unterscheiden...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'The password must be different from the name...';
+      showError(errorMessage);
+      return;
+    }
   }
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
@@ -365,28 +416,48 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
       document.body.classList.remove('noscroll');
       forms.forEach((form) => form.reset());
-      if (!window.location.pathname.endsWith('en/')) {
+      if (lang === 'fr') {
         alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
         return;
       }
-      alert('Account created successfully! You can now log in.');
-      return;
+      if (lang === 'de') {
+        alert('Konto erfolgreich erstellt! Sie können sich jetzt anmelden.');
+        return;
+      }
+      if (lang === 'en') {
+        alert('Account created successfully! You can now log in.');
+        return;
+      }
     }
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Utilisateur déjà existant...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'User already exists...';
-    showError(errorMessage);
+    if (lang === 'de') {
+      errorMessage = 'Benutzer bereits vorhanden...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'User already exists...';
+      showError(errorMessage);
+    }
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la création du compte...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while creating the account...';
-    showError(errorMessage);
+    if (lang === 'de') {
+      errorMessage = 'Beim Erstellen des Kontos ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while creating the account...';
+      showError(errorMessage);
+    }
   }
 });
 
@@ -411,7 +482,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       let time = 10;
       const btn = document.querySelector('#submitSeConnecter');
       btn.disabled = true;
-      if (!window.location.pathname.endsWith('en/')) {
+      if (lang === 'fr') {
         errorMessage = 'Mauvais identifiants...';
         showError(errorMessage);
         const interval = setInterval(() => {
@@ -425,30 +496,53 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
         }, 11000);
         return;
       }
-      errorMessage = 'Wrong credentials...';
-      showError(errorMessage);
-      const interval = setInterval(() => {
-        time -= 1;
-        btn.textContent = `Sign in (${time})`;
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(interval);
-        btn.disabled = false;
-        btn.textContent = 'Sign in';
-      }, 11000);
+      if (lang === 'de') {
+        errorMessage = 'Falsche Anmeldeinformationen...';
+        showError(errorMessage);
+        const interval = setInterval(() => {
+          time -= 1;
+          btn.textContent = `Anmelden (${time})`;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.textContent = 'Anmelden';
+        }, 11000);
+        return;
+      }
+      if (lang === 'en') {
+        errorMessage = 'Wrong credentials...';
+        showError(errorMessage);
+        const interval = setInterval(() => {
+          time -= 1;
+          btn.textContent = `Sign in (${time})`;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }, 11000);
+      }
     }
   } catch (error) {
-    if (!window.location.pathname.endsWith('en/')) {
+    if (lang === 'fr') {
       errorMessage = 'Une erreur est survenue lors de la connexion...';
       showError(errorMessage);
       return;
     }
-    errorMessage = 'An error occurred while logging in...';
-    showError(errorMessage);
+    if (lang === 'de') {
+      errorMessage = 'Beim Anmelden ist ein Fehler aufgetreten...';
+      showError(errorMessage);
+      return;
+    }
+    if (lang === 'en') {
+      errorMessage = 'An error occurred while signing in...';
+      showError(errorMessage);
+    }
   }
 });
 
-document.querySelectorAll('.icon').forEach((element) => {
+document.querySelectorAll('.icon, .iconFloat').forEach((element) => {
   element.addEventListener('click', () => {
     popupBox.classList.add('show');
     document.body.classList.add('noscroll');
@@ -604,10 +698,16 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
+  if (e === 'fr') {
+    window.location.href = '/projets/notes/';
+    return;
+  }
   if (e === 'en') {
     window.location.href = '/projets/notes/en/';
-  } else {
-    window.location.href = '/projets/notes/';
+    return;
+  }
+  if (e === 'de') {
+    window.location.href = '/projets/notes/de/';
   }
 });
 
