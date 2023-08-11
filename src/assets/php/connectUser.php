@@ -40,7 +40,7 @@ $cookieParams = [
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'Strict'
 ];
 session_set_cookie_params($cookieParams);
 session_start();

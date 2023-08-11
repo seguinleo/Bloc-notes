@@ -94,8 +94,14 @@ const showNotesConnect = async () => {
   const data = await response.json();
 
   if (data.length === 0) {
-    document.querySelector('.sideBar h2').textContent += ' (0)';
-    return;
+    if (lang === 'fr' || lang === 'en') {
+      document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+      return;
+    }
+    if (lang === 'de') {
+      document.querySelector('.sideBar h2').textContent = 'Notizen (0)';
+      return;
+    }
   }
 
   document.querySelector('.lastSync span').textContent = `${new Date().toLocaleString()}`;
@@ -185,7 +191,12 @@ const showNotesConnect = async () => {
 
     document.querySelector('.sideBar .listNotes').appendChild(paragraph);
   });
-  document.querySelector('.sideBar h2').textContent += ` (${data.length})`;
+  if (lang === 'fr' || lang === 'en') {
+    document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
+  }
+  if (lang === 'de') {
+    document.querySelector('.sideBar h2').textContent = `Notizen (${data.length})`;
+  }
   searchSideBar();
 };
 
@@ -324,9 +335,9 @@ const copy = (e) => {
   const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
   navigator.clipboard.writeText(copyText);
-  notification.style.display = 'block';
+  notification.classList.add('show');
   timeoutCopy = setTimeout(() => {
-    notification.style.display = 'none';
+    notification.classList.remove('show');
   }, 2000);
 };
 

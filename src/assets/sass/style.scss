@@ -446,10 +446,10 @@ p.welcome {
   width: 100%;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-}
 
-.darken.show {
-  display: block;
+  &.show {
+    display: block;
+  }
 }
 
 .popup,
@@ -538,10 +538,6 @@ select {
 .content {
   width: 600px;
   padding: 5px 1rem;
-}
-
-#cookie.hide {
-  display: none;
 }
 
 .row {
@@ -643,6 +639,10 @@ select {
   border-radius: 5px;
   display: none;
   z-index: 999;
+
+  &.show {
+    display: block;
+  }
 }
 
 #cookie {
@@ -884,7 +884,7 @@ select {
     }
   }
 
-  #copyNotification {
+  #copyNotification.show {
     display: none;
   }
 }

@@ -85,8 +85,14 @@ const showNotes = async () => {
   document.querySelectorAll('.note').forEach((note) => note.remove());
 
   if (notesJSON.length === 0) {
-    document.querySelector('.sideBar h2').textContent += ' (0)';
-    return;
+    if (lang === 'fr' || lang === 'en') {
+      document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+      return;
+    }
+    if (lang === 'de') {
+      document.querySelector('.sideBar h2').textContent = 'Notizen (0)';
+      return;
+    }
   }
 
   notesJSON
@@ -176,8 +182,13 @@ const showNotes = async () => {
 
       document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
-  document.querySelector('.sideBar h2').textContent += ` (${notesJSON.length})`;
-  searchSideBar();
+    if (lang === 'fr' || lang === 'en') {
+      document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
+    }
+    if (lang === 'de') {
+      document.querySelector('.sideBar h2').textContent = `Notizen (${notesJSON.length})`;
+    }
+    searchSideBar();
 };
 
 const toggleFullscreen = (id) => {
@@ -215,9 +226,9 @@ const copy = (e) => {
   const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
   navigator.clipboard.writeText(copyText);
-  notification.style.display = 'block';
+  notification.classList.add('show');
   timeoutCopy = setTimeout(() => {
-    notification.style.display = 'none';
+    notification.classList.remove('show');
   }, 2000);
 };
 
