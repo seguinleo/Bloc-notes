@@ -1,11 +1,11 @@
 <?php
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => '/projets/notes/',
+    'path'     => '/notes',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Strict'
+    'samesite' => 'Lax'
 ];
 session_set_cookie_params($cookieParams);
 session_start();
@@ -35,10 +35,17 @@ if (isset($_SESSION["nom"]) === false) {
     <meta name="theme-color" content="#272727" id="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
+    <!-- TWITTER ("""X""")
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta name="twitter:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
     <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
+    -->
+    <link rel="alternate" hreflang="en" href="/en/">
+    <link rel="alternate" hreflang="fr" href="/">
+    <link rel="alternate" hreflang="de" href="/de/">
+    <link rel="alternate" hreflang="x-default" href="/en/">
+    <!-- Open Graph
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta property="og:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
@@ -46,16 +53,12 @@ if (isset($_SESSION["nom"]) === false) {
     <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
     <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:locale" content="fr-FR">
-    <link rel="alternate" hreflang="en" href="https://leoseguin.fr/projets/notes/en/">
-    <link rel="alternate" hreflang="fr" href="https://leoseguin.fr/projets/notes/">
-    <link rel="alternate" hreflang="de" href="https://leoseguin.fr/projets/notes/de/">
-    <link rel="alternate" hreflang="x-default" href="https://leoseguin.fr/projets/notes/en/">
-    <link rel="canonical" href="https://leoseguin.fr/projets/notes/">
-    <link rel="apple-touch-icon" href="/projets/notes/assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="/projets/notes/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/projets/notes/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
-    <link rel="manifest" href="/projets/notes/app.webmanifest">
+    -->
+    <link rel="apple-touch-icon" href="/notes/assets/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/notes/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/notes/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="manifest" href="/notes/app.webmanifest">
 </head>
 
 <body>
@@ -73,7 +76,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div>
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.8.1</a>
+                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.8.2</a>
                 </span>
             </div>
             <div>
@@ -144,13 +147,9 @@ if (isset($_SESSION["nom"]) === false) {
             <?php } ?>
             <div class="listNotes"></div>
             <div class="copyright">
-                &copy;<?= date('Y') ?>
+                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / Privacy policy">Mentions légales / confidentialité</a>
+                <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
             </div>
-        </div>
-        <div id="cookie">
-            <p>Ce site utilise un cookie nécessaire à la connexion de l'utilisateur.</p>
-            <button id="cookieButton" type="button" aria-label="Accepter">OK</button>
-            <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="En savoir plus sur leoseguin.fr">En savoir plus</a>
         </div>
         <div id="copyNotification">Note copiée !</div>
         <?php if (isset($nom) === true) { ?>
@@ -207,17 +206,12 @@ if (isset($_SESSION["nom"]) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / Privacy policy">Mentions légales / confidentialité</a>
-                            </span>
-                        </div>
-                        <div class="row">
-                            <span class="linkp">
                                 <a href="https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Guide Markdown">Guide Markdown</a>
                             </span>
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="mailto:contact@leoseguin.fr" aria-label="Aide" target="_blank" rel="noreferrer">
+                                <a href="#" aria-label="Aide" target="_blank" rel="noreferrer">
                                     <i class="fa-solid fa-circle-question"></i>
                                     Aide
                                 </a>
@@ -225,7 +219,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </div>
                         <div class="row">
                             <select id="tri" name="tri" aria-label="tri">
-                                <option value="Date de modification" selected>Trier les notes</option>
+                                <option disabled selected value>Trier les notes</option>
                                 <option value="Date de création">Date de création</option>
                                 <option value="Date de création (Z-A)">Date de création (Z-A)</option>
                                 <option value="Date de modification">Date de modification</option>
@@ -257,7 +251,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.8.1</a>
+                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.8.2</a>
                             </p>
                         </div>
                     </div>
@@ -353,11 +347,11 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         <?php } ?>
     </main>
-    <script src="/projets/notes/assets/js/showdown.min.js" defer></script>
+    <script src="/notes/assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>
-        <script src="/projets/notes/assets/js/scriptConnect.js" defer></script>
+        <script src="/notes/assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
-        <script src="/projets/notes/assets/js/script.js" defer></script>
+        <script src="/notes/assets/js/script.js" defer></script>
     <?php } ?>
 </body>
 

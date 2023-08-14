@@ -19,22 +19,6 @@ $color10: #eee;
   }
 }
 
-@font-face {
-  font-family: OpenSans;
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/assets/fonts/OpenSans.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: OpenSans;
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/assets/fonts/OpenSans-700.woff2') format('woff2');
-}
-
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
@@ -47,7 +31,7 @@ html {
 }
 
 * {
-  font-family: OpenSans, sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -221,7 +205,7 @@ main {
   padding: 100px 1rem 1rem;
 
   .listNotes {
-    max-height: 70vh;
+    max-height: 65vh;
     overflow-y: scroll;
   }
 
@@ -589,8 +573,14 @@ select {
 }
 
 .copyright {
-  margin-top: 1rem;
+  position: absolute;
+  bottom: 1rem;
   font-size: .8rem;
+
+  .license {
+    margin-top: 1rem;
+    display: block;
+  }
 }
 
 .gestion-popup-box.show .version {
@@ -642,27 +632,6 @@ select {
 
   &.show {
     display: block;
-  }
-}
-
-#cookie {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  max-width: 350px;
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 5px;
-  -webkit-user-select: none;
-  user-select: none;
-  z-index: 2;
-
-  button {
-    display: inline-block;
-    background: none;
-    max-width: 70px;
-    margin: 10px 1rem 0 0;
   }
 }
 
@@ -770,7 +739,6 @@ select {
   }
 
   main {
-    margin-top: 6rem;
     padding: 0 5px 5rem;
     gap: 10px;
   }
@@ -836,6 +804,7 @@ select {
 
     .details {
       overflow-y: hidden;
+      max-height: 75vh;
     }
   }
 
@@ -1041,17 +1010,6 @@ html.dark {
     color: $color4;
   }
 
-  #cookie {
-    background: $color2;
-    color: $color4;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 20%);
-
-    button {
-      border: 2px solid $color5;
-      color: $color5;
-    }
-  }
-
   @media(max-width: 1130px) {
 
     #iconButtonFloat,
@@ -1229,17 +1187,6 @@ html.light {
   .divLanguage .language {
     border: none;
     background: none;
-  }
-
-  #cookie {
-    background: $color10;
-    color: $color2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 20%);
-
-    button {
-      border: 2px solid $color7;
-      color: $color7;
-    }
   }
 
   @media(max-width: 1130px) {

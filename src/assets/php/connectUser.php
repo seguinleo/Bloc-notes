@@ -36,11 +36,11 @@ session_unset();
 session_destroy();
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => '/projets/notes/',
+    'path'     => '/notes',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Strict'
+    'samesite' => 'Lax'
 ];
 session_set_cookie_params($cookieParams);
 session_start();

@@ -15,7 +15,6 @@ const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
-const cookie = document.querySelector('#cookie');
 const sideBar = document.querySelector('.sideBar');
 const metaTheme = document.querySelector('#themecolor');
 const button = document.querySelector('#iconeTheme');
@@ -84,7 +83,7 @@ const showNotesConnect = async () => {
     note.remove();
   });
 
-  const response = await fetch('/projets/notes/assets/php/getNotes.php', {
+  const response = await fetch('/notes/assets/php/getNotes.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -204,7 +203,7 @@ const fetchDelete = async (e) => {
   darken.classList.remove('show');
   document.body.classList.remove('noscroll');
   try {
-    await fetch('/projets/notes/assets/php/deleteNote.php', {
+    await fetch('/notes/assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -232,7 +231,7 @@ const fetchDelete = async (e) => {
 
 const deleteAccount = async () => {
   try {
-    const response = await fetch('/projets/notes/assets/php/deleteAccount.php', {
+    const response = await fetch('/notes/assets/php/deleteAccount.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -276,7 +275,7 @@ const deleteAccount = async () => {
 
 const fetchLogout = async () => {
   try {
-    await fetch('/projets/notes/assets/php/logout.php', {
+    await fetch('/notes/assets/php/logout.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -379,11 +378,6 @@ notesContainer.addEventListener('click', (event) => {
       toggleFullscreen(noteId);
     }
   }
-});
-
-document.querySelector('#cookieButton').addEventListener('click', () => {
-  cookie.style.display = 'none';
-  localStorage.setItem('cookie', 'hide');
 });
 
 document.addEventListener('keydown', (e) => {
@@ -564,21 +558,21 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/projets/notes/';
+    window.location.href = '/notes/';
     return;
   }
   if (e === 'en') {
-    window.location.href = '/projets/notes/en/';
+    window.location.href = '/notes/en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = '/projets/notes/de/';
+    window.location.href = '/notes/de/';
   }
 });
 
 document.querySelector('#tri').addEventListener('change', async () => {
   try {
-    await fetch('/projets/notes/assets/php/updateSort.php', {
+    await fetch('/notes/assets/php/updateSort.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -637,7 +631,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const checkBox = document.querySelector('#checkHidden');
     const hidden = checkBox.checked ? 1 : 0;
-    const url = isUpdate ? '/projets/notes/assets/php/updateNote.php' : '/projets/notes/assets/php/addNote.php';
+    const url = isUpdate ? '/notes/assets/php/updateNote.php' : '/notes/assets/php/addNote.php';
     const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const response = await fetch(url, {
       method: 'POST',
@@ -743,7 +737,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   }
   const mdpNew = encodeURIComponent(e);
   try {
-    await fetch('/projets/notes/assets/php/updatePassword.php', {
+    await fetch('/notes/assets/php/updatePassword.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -772,8 +766,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/projets/notes/sw.js');
-  if (localStorage.getItem('cookie') !== 'hide') cookie.style.display = 'block';
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/notes/sw.js');
   await showNotesConnect();
   document.querySelectorAll('.resync').forEach((resync) => {
     resync.addEventListener('click', () => {

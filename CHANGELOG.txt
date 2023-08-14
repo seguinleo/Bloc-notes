@@ -1,5 +1,11 @@
+#----v23.8.2----#
+-Better self-hosting
+-Change license (CC-BY-4.0 to GPL-3.0)
+-Improve code structure
+(Thanks for your suggestions!)
+
 #----v23.8.1----#
--Add Deutsch language
+-Add German support
 -Better error handling
 -Improve UI/UX
 
@@ -82,7 +88,7 @@
 -Bug fixes
 
 #----v23.3.6----#
--English support
+-Add English support
 -Improve PWA performance
 -Improve security
 -Improve UI/UX

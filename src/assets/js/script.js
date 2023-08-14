@@ -16,7 +16,6 @@ const couleurs = document.querySelectorAll('.couleurs span');
 const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
-const cookie = document.querySelector('#cookie');
 const sideBar = document.querySelector('.sideBar');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 const metaTheme = document.querySelector('#themecolor');
@@ -182,13 +181,13 @@ const showNotes = async () => {
 
       document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
-    if (lang === 'fr' || lang === 'en') {
-      document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
-    }
-    if (lang === 'de') {
-      document.querySelector('.sideBar h2').textContent = `Notizen (${notesJSON.length})`;
-    }
-    searchSideBar();
+  if (lang === 'fr' || lang === 'en') {
+    document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
+  }
+  if (lang === 'de') {
+    document.querySelector('.sideBar h2').textContent = `Notizen (${notesJSON.length})`;
+  }
+  searchSideBar();
 };
 
 const toggleFullscreen = (id) => {
@@ -268,11 +267,6 @@ notesContainer.addEventListener('click', (event) => {
       toggleFullscreen(noteId);
     }
   }
-});
-
-document.querySelector('#cookieButton').addEventListener('click', () => {
-  cookie.style.display = 'none';
-  localStorage.setItem('cookie', 'hide');
 });
 
 document.addEventListener('keydown', (e) => {
@@ -416,7 +410,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch('/projets/notes/assets/php/createUser.php', {
+    const response = await fetch('/notes/assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -479,7 +473,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('/projets/notes/assets/php/connectUser.php', {
+    const response = await fetch('/notes/assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -710,20 +704,19 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/projets/notes/';
+    window.location.href = '/notes/';
     return;
   }
   if (e === 'en') {
-    window.location.href = '/projets/notes/en/';
+    window.location.href = '/notes/en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = '/projets/notes/de/';
+    window.location.href = '/notes/de/';
   }
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/projets/notes/sw.js');
-  if (localStorage.getItem('cookie') !== 'hide') cookie.style.display = 'block';
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/notes/sw.js');
   await showNotes();
 });
