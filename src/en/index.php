@@ -1,7 +1,7 @@
 <?php
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => '/notes',
+    'path'     => './',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
