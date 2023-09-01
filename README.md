@@ -55,9 +55,9 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 🇫🇷French, 🇬🇧English, 🇩🇪German
 
 ## Todo
-- []  Share notes with a random link
+- [ ]  Share notes with a random link
 - [x] Export notes in text file
-- []  Spanish translation
+- [ ]  Spanish translation
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
@@ -77,7 +77,7 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass and [Showdownjs](https://github.com/
 
 ``npm run sass`` to compile Saas files
 
-``docker-compose up --build`` to start the Docker container
+``docker-compose up --build`` to build the Docker container
 
 [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 
