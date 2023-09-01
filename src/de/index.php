@@ -41,31 +41,31 @@ if (isset($_SESSION["nom"]) === false) {
     <meta name="twitter:description" content="Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.">
     <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
     -->
-    <link rel="alternate" hreflang="en" href="/notes/en/">
-    <link rel="alternate" hreflang="fr" href="/notes/">
-    <link rel="alternate" hreflang="de" href="/notes/de/">
-    <link rel="alternate" hreflang="x-default" href="/notes/en/">
+    <link rel="alternate" hreflang="en" href="en/">
+    <link rel="alternate" hreflang="fr" href="">
+    <link rel="alternate" hreflang="de" href="de/">
+    <link rel="alternate" hreflang="x-default" href="en/">
     <!-- Open Graph
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
     <meta property="og:description" content="Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.">
     <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta property="og:url" content="https://leoseguin.fr/projets/notes/">
+    <meta property="og:url" content="https://leoseguin.fr/projets">
     <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:locale" content="de">
     -->
-    <link rel="apple-touch-icon" href="/notes/assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="/notes/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/notes/assets/css/style.css">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="manifest" href="/notes/de/app.webmanifest">
+    <link rel="manifest" href="de/app.webmanifest">
 </head>
 
 <body>
     <nav>
         <?php if (isset($nom) === true) { ?>
-            <div>
-                <h1 class="welcome">
+            <div class="welcome">
+                <h1>
                     <span class="gestionCompte linkp" tabindex="0" role="button">
                         <i class="fa-solid fa-circle-user"></i>
                         <?= $nom ?>
@@ -73,10 +73,10 @@ if (isset($_SESSION["nom"]) === false) {
                 </h1>
             </div>
         <?php } else { ?>
-            <div>
+            <div class="welcome">
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.8.2</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub (v23.9.1)" target="_blank" rel="noreferrer">v23.9.1</a>
                 </span>
             </div>
             <div>
@@ -109,15 +109,6 @@ if (isset($_SESSION["nom"]) === false) {
                 <i id="iconeTheme" class="fa-solid fa-moon"></i>
             </button>
         </div>
-        <?php if (isset($nom) === false) { ?>
-            <div class="divLanguage">
-                <select class="language" name="language" aria-label="Sprache">
-                    <option value="fr">🇫🇷</option>
-                    <option value="en">🇬🇧</option>
-                    <option value="de" selected>🇩🇪</option>
-                </select>
-            </div>
-        <?php } ?>
     </nav>
     <main>
         <?php if (isset($nom) === true) { ?>
@@ -148,6 +139,13 @@ if (isset($_SESSION["nom"]) === false) {
             <div class="listNotes"></div>
             <div class="copyright">
                 <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Rechtliche Hinweise / Datenschutz">Rechtliche Hinweise / Datenschutz</a>
+                <div class="divLanguage">
+                    <select class="language" name="language" aria-label="Sprache">
+                        <option value="fr">🇫🇷</option>
+                        <option value="en">🇬🇧</option>
+                        <option value="de" selected>🇩🇪</option>
+                    </select>
+                </div>
                 <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
             </div>
         </div>
@@ -206,7 +204,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Markdown-Anleitung">Markdown-Anleitung</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Markdown-Anleitung">Markdown-Anleitung</a>
                             </span>
                         </div>
                         <div class="row">
@@ -224,13 +222,6 @@ if (isset($_SESSION["nom"]) === false) {
                                 <option value="Date de création (Z-A)">Datum der Erstellung (Z-A)</option>
                                 <option value="Date de modification">Datum der Änderung</option>
                                 <option value="Date de modification (Z-A)">Datum der Änderung (Z-A)</option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <select class="language" name="language" aria-label="Sprache">
-                                <option value="fr">🇫🇷 Français</option>
-                                <option value="en">🇬🇧 English</option>
-                                <option value="de" selected>🇩🇪 Deutsch</option>
                             </select>
                         </div>
                         <details>
@@ -251,7 +242,7 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/PouletEnSlip/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.8.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.9.1</a>
                             </p>
                         </div>
                     </div>
@@ -347,11 +338,11 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         <?php } ?>
     </main>
-    <script src="/notes/assets/js/showdown.min.js" defer></script>
+    <script src="assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>
-        <script src="/notes/assets/js/scriptConnect.js" defer></script>
+        <script src="assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
-        <script src="/notes/assets/js/script.js" defer></script>
+        <script src="assets/js/script.js" defer></script>
     <?php } ?>
 </body>
 

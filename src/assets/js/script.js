@@ -156,6 +156,15 @@ const showNotes = async () => {
         clipboardIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(clipboardIconElement);
 
+        const downloadIconElement = document.createElement('i');
+        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
+        downloadIconElement.tabIndex = 0;
+        downloadIconElement.setAttribute('data-note-id', id);
+        downloadIconElement.setAttribute('data-note-title', title);
+        downloadIconElement.setAttribute('data-note-desc', descEnd);
+        downloadIconElement.setAttribute('role', 'button');
+        bottomContentElement.appendChild(downloadIconElement);
+
         const expandIconElement = document.createElement('i');
         expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
         expandIconElement.tabIndex = 0;
@@ -220,6 +229,20 @@ const updateNote = (id, title, desc, couleur, hidden) => {
   descTag.focus();
 };
 
+const downloadNote = (e, t) => {
+  const a = document.createElement('a');
+  const noteTitle = e;
+  const noteDesc = t;
+  const noteDescEnd = replaceAllEnd(noteDesc);
+  const noteDescTxt = replaceAllStart(noteDescEnd);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(noteDescTxt)}`);
+  a.setAttribute('download', `${noteTitle}.txt`);
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
+
 const copy = (e) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
@@ -265,6 +288,8 @@ notesContainer.addEventListener('click', (event) => {
       deleteNote(noteId);
     } else if (target.classList.contains('fa-expand')) {
       toggleFullscreen(noteId);
+    } else if (target.classList.contains('fa-download')) {
+      downloadNote(noteTitle, noteDesc);
     }
   }
 });
@@ -410,7 +435,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch('/notes/assets/php/createUser.php', {
+    const response = await fetch('assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -473,7 +498,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('/notes/assets/php/connectUser.php', {
+    const response = await fetch('assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -704,19 +729,19 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/notes/';
+    window.location.href = '';
     return;
   }
   if (e === 'en') {
-    window.location.href = '/notes/en/';
+    window.location.href = 'en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = '/notes/de/';
+    window.location.href = 'de/';
   }
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/notes/sw.js');
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   await showNotes();
 });

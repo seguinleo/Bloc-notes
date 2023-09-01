@@ -83,7 +83,7 @@ const showNotesConnect = async () => {
     note.remove();
   });
 
-  const response = await fetch('/notes/assets/php/getNotes.php', {
+  const response = await fetch('assets/php/getNotes.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -165,6 +165,15 @@ const showNotesConnect = async () => {
       clipboardIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(clipboardIconElement);
 
+      const downloadIconElement = document.createElement('i');
+      downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
+      downloadIconElement.tabIndex = 0;
+      downloadIconElement.setAttribute('data-note-id', id);
+      downloadIconElement.setAttribute('data-note-title', title);
+      downloadIconElement.setAttribute('data-note-desc', descEnd);
+      downloadIconElement.setAttribute('role', 'button');
+      bottomContentElement.appendChild(downloadIconElement);
+
       const expandIconElement = document.createElement('i');
       expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
       expandIconElement.tabIndex = 0;
@@ -203,7 +212,7 @@ const fetchDelete = async (e) => {
   darken.classList.remove('show');
   document.body.classList.remove('noscroll');
   try {
-    await fetch('/notes/assets/php/deleteNote.php', {
+    await fetch('assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -231,7 +240,7 @@ const fetchDelete = async (e) => {
 
 const deleteAccount = async () => {
   try {
-    const response = await fetch('/notes/assets/php/deleteAccount.php', {
+    const response = await fetch('assets/php/deleteAccount.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -275,7 +284,7 @@ const deleteAccount = async () => {
 
 const fetchLogout = async () => {
   try {
-    await fetch('/notes/assets/php/logout.php', {
+    await fetch('assets/php/logout.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -329,6 +338,20 @@ const updateNoteConnect = (id, title, desc, couleur, hidden) => {
   descTagConnect.focus();
 };
 
+const downloadNote = (e, t) => {
+  const a = document.createElement('a');
+  const noteTitle = e;
+  const noteDesc = t;
+  const noteDescEnd = replaceAllEnd(noteDesc);
+  const noteDescTxt = replaceAllStart(noteDescEnd);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(noteDescTxt)}`);
+  a.setAttribute('download', `${noteTitle}.txt`);
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
+
 const copy = (e) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
   const copyText = replaceAllStart(e);
@@ -376,6 +399,8 @@ notesContainer.addEventListener('click', (event) => {
       deleteNoteConnect(noteId);
     } else if (target.classList.contains('fa-expand')) {
       toggleFullscreen(noteId);
+    } else if (target.classList.contains('fa-download')) {
+      downloadNote(noteTitle, noteDesc);
     }
   }
 });
@@ -558,21 +583,21 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/notes/';
+    window.location.href = '';
     return;
   }
   if (e === 'en') {
-    window.location.href = '/notes/en/';
+    window.location.href = 'en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = '/notes/de/';
+    window.location.href = 'de/';
   }
 });
 
 document.querySelector('#tri').addEventListener('change', async () => {
   try {
-    await fetch('/notes/assets/php/updateSort.php', {
+    await fetch('assets/php/updateSort.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -631,7 +656,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const checkBox = document.querySelector('#checkHidden');
     const hidden = checkBox.checked ? 1 : 0;
-    const url = isUpdate ? '/notes/assets/php/updateNote.php' : '/notes/assets/php/addNote.php';
+    const url = isUpdate ? 'assets/php/updateNote.php' : 'assets/php/addNote.php';
     const data = isUpdate ? `noteId=${document.querySelector('#idNoteInputConnect').value}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const response = await fetch(url, {
       method: 'POST',
@@ -737,7 +762,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   }
   const mdpNew = encodeURIComponent(e);
   try {
-    await fetch('/notes/assets/php/updatePassword.php', {
+    await fetch('assets/php/updatePassword.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -766,7 +791,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('/notes/sw.js');
+  if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   await showNotesConnect();
   document.querySelectorAll('.resync').forEach((resync) => {
     resync.addEventListener('click', () => {

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: notes
+      MYSQL_USER: root

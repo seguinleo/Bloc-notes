@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/PouletEnSlip/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
+<img src="https://raw.githubusercontent.com/seguinleo/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
 </p>
 <h1 align="center">Bloc-notes</h1>
 
@@ -9,8 +9,8 @@
 
 <p align="center">
 <img alt="" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr/projets/notes/?color=8ab4f8&style=for-the-badge">
-<img alt="" src="https://img.shields.io/github/license/PouletEnSlip/Bloc-notes?color=8ab4f8&style=for-the-badge">
-<img alt="" src="https://img.shields.io/github/issues/PouletEnSlip/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
 <img alt="" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
 </p>
 
@@ -28,7 +28,7 @@
 When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote don't respect privacy, Standard Notes and Obsidian can be light without having to pay (no Markdown or no Sync). So I decided to create my own notebook that respects users' privacy and GDPR.
 
 ## Features
-The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/PouletEnSlip/Bloc-notes/wiki/Markdown) to create titles, lists, links, todos or import images from another website.
+The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/seguinleo/Bloc-notes/wiki/Markdown) to create titles, lists, links, todos or import images from another website.
 
 The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
 
@@ -55,19 +55,19 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 🇫🇷French, 🇬🇧English, 🇩🇪German
 
 ## Todo
-*   Share notes with a random link
-*   Export notes in text file
-*   Spanish translation
+- []  Share notes with a random link
+- [x] Export notes in text file
+- []  Spanish translation
 
 ## Community
-If you find [issues](https://github.com/PouletEnSlip/Bloc-notes/issues), [vulnerabilities](https://github.com/PouletEnSlip/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/PouletEnSlip/Bloc-notes/discussions)!
+If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
 
 ## For developers
 Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
-Technologies: JavaScript, PHP PDO, MySQL and Saas
+Technologies: JavaScript, PHP PDO and MySQL
 
-Dependencies: ESLint, PHP_CodeSniffer and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
+Dependencies: ESLint, PHP_CodeSniffer, Sass and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
 
 ``npm i`` and ``composer i`` to install all dependencies
 
@@ -75,13 +75,10 @@ Dependencies: ESLint, PHP_CodeSniffer and [Showdownjs](https://github.com/showdo
 
 ``vendor/bin/phpcs --standard=PSR2 file.php`` to verify PHP files
 
-``sass sass/style.scss css/style.css --style compressed`` to compile Saas files
+``npm run sass`` to compile Saas files
 
-You can host the website locally by simply configuring ``config.php`` and importing ``database.sql`` onto your server. Drag and drop the ``src`` folder into your ``www`` and rename it "notes".
+``docker-compose up --build`` to start the Docker container
 
-> [!NOTE]
-> The test database file is not the real database, it is not the real table/column names.
+[GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 
-[GPL-3.0](https://github.com/PouletEnSlip/Bloc-notes/blob/main/LICENSE)
-
-![Preview](https://github.com/PouletEnSlip/Bloc-notes/blob/main/image.png)
+![Preview](https://github.com/seguinleo/Bloc-notes/blob/main/image.png)

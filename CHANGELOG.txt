@@ -1,3 +1,7 @@
+#----v23.9.1----#
+-Add note export in .txt
+-Improve UI/UX
+
 #----v23.8.2----#
 -Better self-hosting
 -Change license (CC-BY-4.0 to GPL-3.0)

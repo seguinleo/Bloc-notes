@@ -184,7 +184,7 @@ nav {
 
 main {
   max-width: 100vw;
-  margin: 8rem auto 2rem;
+  margin: 6rem auto 2rem;
   padding: 0 2rem 0 414px;
   display: flex;
   justify-content: center;
@@ -366,7 +366,6 @@ p.welcome {
     -webkit-user-select: none;
     user-select: none;
     margin-top: 5px;
-    padding: 5px 0;
     text-align: center;
     opacity: 0;
     visibility: hidden;
@@ -390,7 +389,7 @@ p.welcome {
     }
 
     span {
-      font-size: .8rem;
+      font-size: .7rem;
       transition: .1s;
     }
   }
@@ -572,15 +571,17 @@ select {
   margin: 0 5px;
 }
 
+.divLanguage {
+  .language {
+    width: 50px;
+    padding: 0;
+  }
+}
+
 .copyright {
   position: absolute;
   bottom: 1rem;
   font-size: .8rem;
-
-  .license {
-    margin-top: 1rem;
-    display: block;
-  }
 }
 
 .gestion-popup-box.show .version {
@@ -696,10 +697,10 @@ select {
     }
 
     .search-input {
-      width: 60%;
+      width: 75%;
 
       input {
-        width: 45%;
+        width: 60%;
         vertical-align: middle;
         padding: 5px;
         margin: 0 10px;
@@ -833,17 +834,7 @@ select {
     display: inline-flex;
   }
 
-  .divLanguage {
-    display: inline;
-
-    .language {
-      width: 50px;
-      padding: 0;
-    }
-  }
-
-  .divTheme,
-  .divLanguage {
+  .divTheme {
     display: inline;
     vertical-align: middle;
     margin-left: 10px;
@@ -1002,7 +993,7 @@ html.dark {
 
   .divLanguage .language {
     border: none;
-    background: none;
+    background: $color2;
   }
 
   #copyNotification {

@@ -1,13 +1,13 @@
 {
-    "name": "poulet/src",
+    "name": "seguinleo/src",
     "autoload": {
         "psr-4": {
-            "Poulet\\Src\\": "src/"
+            "Seguinleo\\Src\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "PouletEnSlip"
+            "name": "seguinleo"
         }
     ],
     "require-dev": {
