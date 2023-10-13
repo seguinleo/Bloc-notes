@@ -10,7 +10,7 @@ $cookieParams = [
 session_set_cookie_params($cookieParams);
 session_start();
 
-if (isset($_SESSION["nom"]) === false) {
+if (isset($_SESSION['nom']) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
     $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
     $csrf_token_connect = $_SESSION['csrf_token_connect'];
@@ -21,7 +21,7 @@ if (isset($_SESSION["nom"]) === false) {
     $_SESSION['csrf_token_mdp'] = bin2hex(random_bytes(32));
     $csrf_token_note = $_SESSION['csrf_token_note'];
     $csrf_token_mdp = $_SESSION['csrf_token_mdp'];
-    $nom = $_SESSION["nom"];
+    $nom = $_SESSION['nom'];
 }
 ?>
 <!DOCTYPE html>
@@ -41,10 +41,10 @@ if (isset($_SESSION["nom"]) === false) {
     <meta name="twitter:description" content="Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.">
     <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
     -->
-    <link rel="alternate" hreflang="en" href="en/">
-    <link rel="alternate" hreflang="fr" href="">
-    <link rel="alternate" hreflang="de" href="de/">
-    <link rel="alternate" hreflang="x-default" href="en/">
+    <link rel="alternate" hreflang="en" href="../en/">
+    <link rel="alternate" hreflang="fr" href="../">
+    <link rel="alternate" hreflang="de" href="./">
+    <link rel="alternate" hreflang="x-default" href="../en/">
     <!-- Open Graph
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
@@ -54,11 +54,11 @@ if (isset($_SESSION["nom"]) === false) {
     <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
     <meta property="og:locale" content="de">
     -->
-    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="manifest" href="de/app.webmanifest">
+    <link rel="manifest" href="app.webmanifest">
 </head>
 
 <body>
@@ -76,7 +76,7 @@ if (isset($_SESSION["nom"]) === false) {
             <div class="welcome">
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub (v23.9.1)" target="_blank" rel="noreferrer">v23.9.1</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub (v23.10.1)" target="_blank" rel="noreferrer">v23.10.1</a>
                 </span>
             </div>
             <div>
@@ -149,7 +149,7 @@ if (isset($_SESSION["nom"]) === false) {
                 <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
             </div>
         </div>
-        <div id="copyNotification">Notiz kopiert!</div>
+        <div id="copyNotification">Kopiert!</div>
         <?php if (isset($nom) === true) { ?>
             <div class="connect-popup-box">
                 <div class="popup">
@@ -158,7 +158,8 @@ if (isset($_SESSION["nom"]) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInputConnect" name="idNoteInputConnect" type="hidden">
+                            <input id="idNoteInputConnect" type="hidden">
+                            <input id="checkLink" type="hidden">
                             <input type="hidden" id="csrf_token_note" name="csrf_token_note" value="<?= $csrf_token_note ?>">
                             <div class="row">
                                 <input id="titleConnect" name="titleConnect" placeholder="Titel" type="text" maxlength="30" aria-label="Titel" required>
@@ -208,14 +209,6 @@ if (isset($_SESSION["nom"]) === false) {
                             </span>
                         </div>
                         <div class="row">
-                            <span class="linkp">
-                                <a href="#" aria-label="Hilfe" target="_blank" rel="noreferrer">
-                                    <i class="fa-solid fa-circle-question"></i>
-                                    Hilfe
-                                </a>
-                            </span>
-                        </div>
-                        <div class="row">
                             <select id="tri" name="tri" aria-label="sortieren">
                                 <option disabled selected value>Notizen sortieren</option>
                                 <option value="Date de création">Datum der Erstellung</option>
@@ -242,9 +235,49 @@ if (isset($_SESSION["nom"]) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.9.1</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.10.1</a>
                             </p>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="private-note-popup-box">
+                <div class="popup">
+                    <div class="content">
+                        <header>
+                            <i class="fa-solid fa-xmark" tabindex="0"></i>
+                        </header>
+                        <form id="rendrePublique" method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                Möchten Sie Ihre Notiz veröffentlichen? Dadurch wird ein eindeutiger Link zum Teilen Ihrer Notiz generiert.
+                            </div>
+                            <input id="idNoteInputPublic" name="idNoteInputPublic" type="hidden">
+                            <input id="titleNoteInputPublic" name="titleNoteInputPublic" type="hidden">
+                            <input id="descNoteInputPublic" name="descNoteInputPublic" type="hidden">
+                            <div class="row">
+                                <button id="submitRendrePublique" type="submit" aria-label="Machen Sie die Notiz öffentlich">Machen Sie die Notiz öffentlich</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="public-note-popup-box">
+                <div class="popup">
+                    <div class="content">
+                        <header>
+                            <i class="fa-solid fa-xmark" tabindex="0"></i>
+                        </header>
+                        <p id="copyNoteLink" tabindex="0"></p>
+                        <form id="rendrePrivee" method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                Möchten Sie Ihre Notiz wieder privat machen? Der eindeutige Link ist nicht mehr verfügbar.
+                            </div>
+                            <input id="idNoteInputPrivate" name="idNoteInputPrivate" type="hidden">
+                            <input id="linkNoteInputPrivate" name="linkNoteInputPrivate" type="hidden">
+                            <div class="row">
+                                <button id="submitRendrePrivee" type="submit" aria-label="Machen Sie die Notiz privat">Machen Sie die Notiz privat</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -338,11 +371,11 @@ if (isset($_SESSION["nom"]) === false) {
             </div>
         <?php } ?>
     </main>
-    <script src="assets/js/showdown.min.js" defer></script>
+    <script src="../assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>
-        <script src="assets/js/scriptConnect.js" defer></script>
+        <script src="scriptConnect.js" defer></script>
     <?php } else { ?>
-        <script src="assets/js/script.js" defer></script>
+        <script src="script.js" defer></script>
     <?php } ?>
 </body>
 

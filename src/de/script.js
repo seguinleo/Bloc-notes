@@ -74,7 +74,8 @@ const showNotes = async () => {
   document.querySelectorAll('.note').forEach((note) => note.remove());
 
   if (notesJSON.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBar h2').textContent = 'Notizen (0)';
+    return;
   }
 
   notesJSON
@@ -173,7 +174,7 @@ const showNotes = async () => {
 
       document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
-  document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
+  document.querySelector('.sideBar h2').textContent = `Notizen (${notesJSON.length})`;
   searchSideBar();
 };
 
@@ -233,7 +234,7 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
+  if (window.confirm('Möchten Sie diese Notiz wirklich löschen?')) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     darken.classList.remove('show');
@@ -320,29 +321,29 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const o = document.querySelector('#mdpCreerValid').value;
   if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    showError('Le nom ne peut contenir que des lettres...');
+    showError('Der Name darf nur Buchstaben enthalten...');
     return;
   }
   if (/^[0-9]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des chiffres)...');
+    showError('Passwort zu schwach (nur Zahlen)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des lettres)...');
+    showError('Passwort zu schwach (nur Buchstaben)...');
     return;
   }
   if (t !== o) {
-    showError('Les mots de passe ne correspondent pas...');
+    showError('Die Passwörter stimmen nicht überein...');
     return;
   }
   if (e === t) {
-    showError('Le mot de passe doit être différent du nom...');
+    showError('Das Passwort muss sich vom Namen unterscheiden...');
     return;
   }
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/createUser.php', {
+    const response = await fetch('../assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -353,12 +354,12 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
       document.body.classList.remove('noscroll');
       forms.forEach((form) => form.reset());
-      alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+      alert('Konto erfolgreich erstellt! Sie können sich jetzt anmelden.');
       return;
     }
-    showError('Utilisateur déjà existant...');
+    showError('Benutzer bereits vorhanden...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la création du compte...');
+    showError('Beim Erstellen des Kontos ist ein Fehler aufgetreten...');
   }
 });
 
@@ -369,7 +370,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/connectUser.php', {
+    const response = await fetch('../assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -383,19 +384,19 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       let time = 10;
       const btn = document.querySelector('#submitSeConnecter');
       btn.disabled = true;
-      showError('Mauvais identifiants...');
+      showError('Falsche Anmeldeinformationen...');
       const interval = setInterval(() => {
         time -= 1;
-        btn.textContent = `Se connecter (${time})`;
+        btn.textContent = `Anmelden (${time})`;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
         btn.disabled = false;
-        btn.textContent = 'Se connecter';
+        btn.textContent = 'Anmelden';
       }, 11000);
     }
   } catch (error) {
-    showError('Une erreur est survenue lors de la connexion...');
+    showError('Beim Anmelden ist ein Fehler aufgetreten...');
   }
 });
 
@@ -556,15 +557,15 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/';
+    window.location.href = '../';
     return;
   }
   if (e === 'en') {
-    window.location.href = 'en/';
+    window.location.href = '../en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = 'de/';
+    window.location.href = '../de/';
   }
 });
 

@@ -10,7 +10,7 @@ if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION["nom"], $_SESSION['key'], $_SESSION['userId'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+if (isset($_SESSION['nom'], $_SESSION['key'], $_SESSION['userId'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden'], $_POST['link']) === false) {
     http_response_code(403);
     return;
 }
@@ -22,14 +22,15 @@ $encryption = new Encryption\Encryption();
 
 $key = $_SESSION['key'];
 $desc = $_POST['desc'];
-$desc = $encryption->encryptData($desc, $key);
+$descEncrypted = $encryption->encryptData($desc, $key);
 $title = $_POST['title'];
-$title = $encryption->encryptData($title, $key);
+$titleEncrypted = $encryption->encryptData($title, $key);
 $couleur = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
-$nom = $_SESSION["nom"];
+$nom = $_SESSION['nom'];
 $noteId = $_POST['noteId'];
+$link = $_POST['link'];
 $couleursAutorisees = [
     "Noir",
     "Blanc",
@@ -45,22 +46,39 @@ $couleursAutorisees = [
 ];
 
 if (in_array($couleur, $couleursAutorisees) === false) {
-    $couleur = "Noir";
+    $couleur = 'Noir';
 }
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
-    $query->execute(
-        [
-            ':Title'      => $title,
-            ':Descr'      => $desc,
-            ':Couleur'    => $couleur,
-            ':NoteId'     => $noteId,
-            ':DateNote'   => $dateNote,
-            ':User'       => $nom,
-            ':HiddenNote' => $hidden
-        ]
-    );
+    if ($link === '') {
+        $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
+        $query->execute(
+            [
+                ':Title'      => $titleEncrypted,
+                ':Descr'      => $descEncrypted,
+                ':Couleur'    => $couleur,
+                ':NoteId'     => $noteId,
+                ':DateNote'   => $dateNote,
+                ':User'       => $nom,
+                ':HiddenNote' => $hidden
+            ]
+        );
+    } else {
+        $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote,clearTitle=:ClearTitle,clearContent=:ClearContent WHERE id=:NoteId AND user=:User");
+        $query->execute(
+            [
+                ':Title'        => $titleEncrypted,
+                ':Descr'        => $descEncrypted,
+                ':Couleur'      => $couleur,
+                ':NoteId'       => $noteId,
+                ':DateNote'     => $dateNote,
+                ':User'         => $nom,
+                ':HiddenNote'   => $hidden,
+                ':ClearTitle'   => $title,
+                ':ClearContent' => $desc
+            ]
+        );
+    }
     $query->closeCursor();
     $PDO = null;
 } catch (Exception $e) {

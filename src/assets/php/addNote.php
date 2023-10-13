@@ -10,7 +10,7 @@ if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION["nom"], $_SESSION['key'], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+if (isset($_SESSION['nom'], $_SESSION['key'], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;
 }
@@ -28,7 +28,7 @@ $title = $encryption->encryptData($title, $key);
 $couleur = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
-$nom = $_SESSION["nom"];
+$nom = $_SESSION['nom'];
 $couleursAutorisees = [
     "Noir",
     "Blanc",
@@ -44,7 +44,7 @@ $couleursAutorisees = [
 ];
 
 if (in_array($couleur, $couleursAutorisees) === false) {
-    $couleur = "Noir";
+    $couleur = 'Noir';
 }
 
 try {

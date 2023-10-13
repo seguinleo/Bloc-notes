@@ -31,15 +31,11 @@ CREATE TABLE `notes` (
   `dateNote` datetime NOT NULL,
   `user` varchar(255) NOT NULL,
   `couleur` varchar(255) NOT NULL,
-  `hiddenNote` tinyint NOT NULL
+  `hiddenNote` tinyint NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `clearTitle` text,
+  `clearContent` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `notes`
---
-
-INSERT INTO `notes` (`id`, `titre`, `content`, `dateNote`, `user`, `couleur`, `hiddenNote`) VALUES
-(1, 'mGmp8g5K8tJSxwW7QtuQGw==YdWzlOALpAqnImciWtxbsa9nh8Nhxu2I8aELCNEeivc=', 'ZAyvWdBD6ie2v23QpEqTFw==5hHKJ+mx0wQhWBJl+FylpHNh4/NgqB4irMYuMXgpO4gaf8vI3AgzYCZGOg==', '2023-08-13 18:21:43', 'test', 'Bleu', 0);
 
 -- --------------------------------------------------------
 
@@ -56,13 +52,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `nom`, `mdp`, `tri`, `one_key`) VALUES
-(1, 'test', '$2y$10$..oMXmjHBTlP8neZJRwPVeM4au.H9xx2fuccrwpX.TOpV6zHCqfFa', 'Date de modification', '��2�dAA�P�^\0d3W�*~[��&gt;b��~T�E');
-
---
 -- Indexes for dumped tables
 --
 
@@ -71,6 +60,7 @@ INSERT INTO `users` (`id`, `nom`, `mdp`, `tri`, `one_key`) VALUES
 --
 ALTER TABLE `notes`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `link` (`link`),
   ADD KEY `user` (`user`);
 
 --
@@ -88,13 +78,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

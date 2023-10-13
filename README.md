@@ -30,7 +30,7 @@ When I was looking for a note-taking application, I faced several difficulties: 
 ## Features
 The user can save and edit notes locally in JSON, change notes color, copy notes and use [Markdown](https://github.com/seguinleo/Bloc-notes/wiki/Markdown) to create titles, lists, links, todos or import images from another website.
 
-The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. The user's connection is maintained by a secure cookie with a shelf life of 1 week.
+The user can also sign in to sync all notes between their devices or browsers and encrypt content with ``AES-256-GCM`` in a database. The user can also hide the content of their notes. A button allows the user to make a note public and share it via a random URL.
 
 This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates. Be sure to change the language before installing the application.
 
@@ -38,6 +38,8 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is fully responsible for mobile devices and UI/UX inspired by [Material Design v3](https://m3.material.io/). The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available with local storage.
 
 ## Security and Privacy
+The user's connection is maintained by a secure cookie with a shelf life of 1 week.
+
 The website is hosted in France by OVHcloud on my personal server. The website is always up to date with the latest security patches.
 
 Passwords are hashed with bcrypt before being sent to the database.
@@ -55,7 +57,7 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 🇫🇷French, 🇬🇧English, 🇩🇪German
 
 ## Todo
-- [ ]  Share notes with a random link
+- [x]  Share notes with a random link
 - [x] Export notes in text file
 - [ ]  Spanish translation
 

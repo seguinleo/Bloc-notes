@@ -75,7 +75,7 @@ const showNotesConnect = async () => {
     note.remove();
   });
 
-  const response = await fetch('assets/php/getNotes.php', {
+  const response = await fetch('../assets/php/getNotes.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ const fetchDelete = async (e) => {
   darken.classList.remove('show');
   document.body.classList.remove('noscroll');
   try {
-    await fetch('assets/php/deleteNote.php', {
+    await fetch('../assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -214,13 +214,13 @@ const fetchDelete = async (e) => {
     });
     await showNotesConnect();
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression de la note...');
+    showError('An error occurred while deleting the note...');
   }
 };
 
 const deleteAccount = async () => {
   try {
-    const response = await fetch('assets/php/deleteAccount.php', {
+    const response = await fetch('../assets/php/deleteAccount.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -230,15 +230,15 @@ const deleteAccount = async () => {
       window.location.reload();
       return;
     }
-    showError('Une erreur est survenue lors de la suppression de votre compte...');
+    showError('An error occurred while deleting your account...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression de votre compte...');
+    showError('An error occurred while deleting your account...');
   }
 };
 
 const fetchLogout = async () => {
   try {
-    await fetch('assets/php/logout.php', {
+    await fetch('../assets/php/logout.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -246,7 +246,7 @@ const fetchLogout = async () => {
     });
     window.location.reload();
   } catch (error) {
-    showError('Une erreur est survenue lors de la déconnexion...');
+    showError('An error occurred while logging out...');
   }
 };
 
@@ -306,7 +306,7 @@ const copy = (e) => {
 };
 
 const deleteNoteConnect = (e) => {
-  if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
+  if (window.confirm('Do you really want to delete this note?')) {
     fetchDelete(e);
   }
 };
@@ -326,7 +326,7 @@ const noteAccess = (id, link, title, desc) => {
     publicNote.classList.add('show');
     document.querySelector('#idNoteInputPrivate').value = id;
     document.querySelector('#linkNoteInputPrivate').value = link;
-    document.querySelector('#copyNoteLink').textContent = `${window.location.href}share/${link}/`;
+    document.querySelector('#copyNoteLink').textContent = `${window.location.href.replace('/en/', '')}/share/${link}/`;
   }
 };
 
@@ -417,7 +417,7 @@ document.querySelectorAll('.gestionCompte').forEach((element) => {
 
 document.querySelectorAll('.supprimerCompte').forEach((element) => {
   element.addEventListener('click', () => {
-    if (window.confirm('Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.')) {
+    if (window.confirm('Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.')) {
       deleteAccount();
     }
   });
@@ -525,21 +525,21 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/';
+    window.location.href = '../';
     return;
   }
   if (e === 'en') {
-    window.location.href = 'en/';
+    window.location.href = '../en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = 'de/';
+    window.location.href = '../de/';
   }
 });
 
 document.querySelector('#tri').addEventListener('change', async () => {
   try {
-    await fetch('assets/php/updateSort.php', {
+    await fetch('../assets/php/updateSort.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -548,7 +548,7 @@ document.querySelector('#tri').addEventListener('change', async () => {
     });
     await showNotesConnect();
   } catch (error) {
-    showError('Une erreur est survenue lors du tri des notes...');
+    showError('An error occurred while sorting notes...');
   }
 });
 
@@ -587,7 +587,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const checkBox = document.querySelector('#checkHidden');
     const link = encodeURIComponent(document.querySelector('#checkLink').value);
     const hidden = checkBox.checked ? 1 : 0;
-    const url = isUpdate ? 'assets/php/updateNote.php' : 'assets/php/addNote.php';
+    const url = isUpdate ? '../assets/php/updateNote.php' : '../assets/php/addNote.php';
     const data = isUpdate ? `noteId=${idNote}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const response = await fetch(url, {
       method: 'POST',
@@ -597,7 +597,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
       body: data,
     });
     if (response.status !== 200) {
-      showError('Une erreur est survenue lors de l\'ajout de la note...');
+      showError('An error occurred while adding the note...');
       return;
     }
     isUpdate = false;
@@ -606,7 +606,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     forms.forEach((form) => form.reset());
     await showNotesConnect();
   } catch (error) {
-    showError('Une erreur est survenue lors de l\'ajout de la note...');
+    showError('An error occurred while adding the note...');
   }
 });
 
@@ -615,20 +615,20 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   const t = document.querySelector('#mdpModifNewValid').value;
   if (!e || !t || e.length < 6 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
-    showError('Mot de passe trop faible (que des chiffres)...');
+    showError('Password too weak (only numbers)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    showError('Mot de passe trop faible (que des lettres)...');
+    showError('Password too weak (only letters)...');
     return;
   }
   if (e !== t) {
-    showError('Les mots de passe ne correspondent pas...');
+    showError('Passwords do not match...');
     return;
   }
   const mdpNew = encodeURIComponent(e);
   try {
-    await fetch('assets/php/updatePassword.php', {
+    await fetch('../assets/php/updatePassword.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -639,7 +639,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     document.body.classList.remove('noscroll');
     forms.forEach((form) => form.reset());
   } catch (error) {
-    showError('Une erreur est survenue lors de la modification du mot de passe...');
+    showError('An error occurred while changing the password...');
   }
 });
 
@@ -647,7 +647,7 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
   const id = document.querySelector('#idNoteInputPrivate').value;
   const link = document.querySelector('#linkNoteInputPrivate').value;
   try {
-    await fetch('assets/php/privateNote.php', {
+    await fetch('../assets/php/privateNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -657,7 +657,7 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
     publicNote.classList.remove('show');
     await showNotesConnect();
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression du lien de la note...');
+    showError('An error occurred while deleting the link of the note...');
   }
 });
 
@@ -667,7 +667,7 @@ document.querySelector('#submitRendrePublique').addEventListener('click', async 
   const title = document.querySelector('#titleNoteInputPublic').value;
   const desc = replaceAllStart(document.querySelector('#descNoteInputPublic').value);
   try {
-    await fetch('assets/php/publicNote.php', {
+    await fetch('../assets/php/publicNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -677,7 +677,7 @@ document.querySelector('#submitRendrePublique').addEventListener('click', async 
     privateNote.classList.remove('show');
     await showNotesConnect();
   } catch (error) {
-    showError('Une erreur est survenue lors de la création du lien de la note...');
+    showError('An error occurred while creating the link of the note...');
   }
 });
 

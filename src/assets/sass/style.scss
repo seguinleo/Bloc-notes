@@ -90,11 +90,6 @@ code {
   border-radius: 5px;
   padding: 2px 5px;
   white-space: pre-wrap;
-
-  &::selection {
-    color: #8be9fd;
-    background: rgba(255, 255, 255, 10%);
-  }
 }
 
 li {
@@ -473,6 +468,8 @@ select {
 .connect-popup-box,
 .creer-box,
 .gestion-popup-box,
+.public-note-popup-box,
+.private-note-popup-box,
 .popup-box {
   display: none;
   pointer-events: none;
@@ -502,7 +499,9 @@ select {
 .connect-popup-box.show,
 .creer-box.show,
 .gestion-popup-box.show,
-.popup-box.show {
+.popup-box.show,
+.public-note-popup-box.show,
+.private-note-popup-box.show {
   display: flex;
   pointer-events: auto;
 }
@@ -511,7 +510,9 @@ select {
 .connect-popup-box.show .popup,
 .creer-box.show .popup,
 .gestion-popup-box.show .popup,
-.popup-box.show .popup {
+.popup-box.show .popup,
+.public-note-popup-box.show .popup,
+.private-note-popup-box.show .popup {
   display: flex;
   pointer-events: auto;
   max-height: 100vh;
@@ -608,9 +609,10 @@ select {
 
 #errorNotification {
   position: fixed;
-  top: .5rem;
+  top: 1rem;
   right: 2rem;
   text-align: center;
+  font-weight: 700;
   max-width: 300px;
   padding: 10px;
   border-radius: 5px;
@@ -622,9 +624,10 @@ select {
 
 #copyNotification {
   position: fixed;
-  top: .5rem;
+  top: 1rem;
   right: 2rem;
   text-align: center;
+  font-weight: 700;
   max-width: 125px;
   padding: 10px;
   border-radius: 5px;
@@ -633,6 +636,20 @@ select {
 
   &.show {
     display: block;
+  }
+}
+
+#copyNoteLink {
+  margin: auto;
+  background-color: #171717;
+  border-radius: 20px;
+  text-align: center;
+  padding: 10px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #424242;
   }
 }
 
@@ -662,7 +679,7 @@ select {
   }
 }
 
-@media (min-width: 1131px) {
+@media (min-width: 901px) {
 
   .iconFloat,
   .iconConnectFloat {
@@ -670,7 +687,7 @@ select {
   }
 }
 
-@media(max-width: 1130px) {
+@media(max-width: 900px) {
   body {
     min-height: 100vh;
   }
@@ -800,7 +817,7 @@ select {
   }
 
   .note {
-    width: 100%;
+    width: 98%;
     max-height: 300px;
 
     .details {
@@ -978,6 +995,8 @@ html.dark {
   .creer-box,
   .gestion-popup-box,
   .popup-box,
+  .private-note-popup-box,
+  .public-note-popup-box,
   .darken {
     background: rgba(0, 0, 0, 50%);
   }
@@ -1001,7 +1020,7 @@ html.dark {
     color: $color4;
   }
 
-  @media(max-width: 1130px) {
+  @media(max-width: 900px) {
 
     #iconButtonFloat,
     #iconButtonConnectFloat {
@@ -1180,7 +1199,7 @@ html.light {
     background: none;
   }
 
-  @media(max-width: 1130px) {
+  @media(max-width: 900px) {
 
     #iconButtonFloat,
     #iconButtonConnectFloat {

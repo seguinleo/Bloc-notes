@@ -75,6 +75,7 @@ const showNotes = async () => {
 
   if (notesJSON.length === 0) {
     document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    return;
   }
 
   notesJSON
@@ -233,7 +234,7 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
+  if (window.confirm('Do you really want to delete this note?')) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     darken.classList.remove('show');
@@ -320,29 +321,29 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const o = document.querySelector('#mdpCreerValid').value;
   if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    showError('Le nom ne peut contenir que des lettres...');
+    showError('The name can only contain letters...');
     return;
   }
   if (/^[0-9]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des chiffres)...');
+    showError('Password too weak (only numbers)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des lettres)...');
+    showError('Password too weak (only letters)...');
     return;
   }
   if (t !== o) {
-    showError('Les mots de passe ne correspondent pas...');
+    showError('Passwords do not match...');
     return;
   }
   if (e === t) {
-    showError('Le mot de passe doit être différent du nom...');
+    showError('The password must be different from the name...');
     return;
   }
   const nomCreer = encodeURIComponent(e);
   const mdpCreer = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/createUser.php', {
+    const response = await fetch('../assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -353,12 +354,12 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
       document.body.classList.remove('noscroll');
       forms.forEach((form) => form.reset());
-      alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+      alert('Account created successfully! You can now log in.');
       return;
     }
-    showError('Utilisateur déjà existant...');
+    showError('User already exists...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la création du compte...');
+    showError('An error occurred while creating the account...');
   }
 });
 
@@ -369,7 +370,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   const nomConnect = encodeURIComponent(e);
   const mdpConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/connectUser.php', {
+    const response = await fetch('../assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -383,19 +384,19 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       let time = 10;
       const btn = document.querySelector('#submitSeConnecter');
       btn.disabled = true;
-      showError('Mauvais identifiants...');
+      showError('Wrong credentials...');
       const interval = setInterval(() => {
         time -= 1;
-        btn.textContent = `Se connecter (${time})`;
+        btn.textContent = `Sign in (${time})`;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
         btn.disabled = false;
-        btn.textContent = 'Se connecter';
+        btn.textContent = 'Sign in';
       }, 11000);
     }
   } catch (error) {
-    showError('Une erreur est survenue lors de la connexion...');
+    showError('An error occurred while signing in...');
   }
 });
 
@@ -556,15 +557,15 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
-    window.location.href = '/';
+    window.location.href = '../';
     return;
   }
   if (e === 'en') {
-    window.location.href = 'en/';
+    window.location.href = '../en/';
     return;
   }
   if (e === 'de') {
-    window.location.href = 'de/';
+    window.location.href = '../de/';
   }
 });
 

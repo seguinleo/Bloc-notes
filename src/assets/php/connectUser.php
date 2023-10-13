@@ -14,7 +14,7 @@ if (isset($_POST['nomConnect'], $_POST['mdpConnect']) === false) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION["nom"]) === true) {
+if (isset($_SESSION['nom']) === true) {
     http_response_code(403);
     return;
 }

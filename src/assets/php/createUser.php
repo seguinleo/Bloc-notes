@@ -14,7 +14,7 @@ if (isset($_POST['nomCreer'], $_POST['mdpCreer']) === false) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION["nom"]) === true) {
+if (isset($_SESSION['nom']) === true) {
     http_response_code(403);
     return;
 }
