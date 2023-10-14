@@ -11,10 +11,10 @@ require_once __DIR__ . '/config/config.php';
 
 $nom = $_SESSION['nom'];
 $noteId = $_POST['noteId'];
-$noteLink = $_POST['noteLink'];
+$noteLink = htmlspecialchars($_POST['noteLink'], ENT_QUOTES);
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitle = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
+    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitre = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
     $query->execute(
         [
             ':NoteLink'    => $noteLink,
