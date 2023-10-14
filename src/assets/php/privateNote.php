@@ -29,9 +29,12 @@ try {
     return;
 }
 
-$directoryPath = realpath('../../share/' . $noteLink);
-if (file_exists($directoryPath)) {
-    array_map('unlink', glob("$directoryPath/*"));
+$directoryPath = '../../share/' . $noteLink;
+if (is_dir($directoryPath)) {
+    $files = glob($directoryPath . '/*.*');
+    foreach ($files as $file) {
+        unlink($file);
+    }
     if (rmdir($directoryPath)) {
         http_response_code(200);
         return;
@@ -40,6 +43,6 @@ if (file_exists($directoryPath)) {
         return;
     }
 } else {
-    http_response_code(500);
+    http_response_code(404);
     return;
 }
