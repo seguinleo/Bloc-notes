@@ -14,7 +14,7 @@ $noteId = $_POST['noteId'];
 $noteLink = htmlspecialchars($_POST['noteLink'], ENT_QUOTES);
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitre = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
+    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitle = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
     $query->execute(
         [
             ':NoteLink'    => $noteLink,
@@ -29,7 +29,7 @@ try {
     return;
 }
 
-$directoryPath = '../../share/' . $noteLink;
+$directoryPath = realpath('../../share/' . $noteLink);
 if (file_exists($directoryPath)) {
     array_map('unlink', glob("$directoryPath/*"));
     if (rmdir($directoryPath)) {
