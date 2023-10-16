@@ -641,16 +641,11 @@ select {
 
 #copyNoteLink {
   margin: auto;
-  background-color: #171717;
   border-radius: 20px;
   text-align: center;
   padding: 10px;
   font-weight: 700;
   cursor: pointer;
-
-  &:hover {
-    background-color: #424242;
-  }
 }
 
 #btnTheme {
@@ -1020,6 +1015,14 @@ html.dark {
     color: $color4;
   }
 
+  #copyNoteLink {
+    background-color: $color1;
+  
+    &:hover {
+      background-color: $color3;
+    }
+  }
+
   @media(max-width: 900px) {
 
     #iconButtonFloat,
@@ -1187,6 +1190,14 @@ html.light {
   #copyNotification {
     background: $color4;
     color: $color2;
+  }
+
+  #copyNoteLink {
+    background-color: $color10;
+  
+    &:hover {
+      background-color: $color4;
+    }
   }
 
   #btnTheme {

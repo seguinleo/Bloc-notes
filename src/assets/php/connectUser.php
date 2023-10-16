@@ -18,14 +18,27 @@ if (isset($_SESSION['nom']) === true) {
     http_response_code(403);
     return;
 }
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
 $nomConnect = $_POST['nomConnect'];
 $mdpConnect = $_POST['mdpConnect'];
-$query = $PDO->prepare("SELECT id,nom,mdp,tri,one_key FROM users WHERE nom=:NomConnect LIMIT 1");
-$query->execute([':NomConnect' => $nomConnect]);
-$row = $query->fetch(PDO::FETCH_ASSOC);
+
+try {
+    $query = $PDO->prepare("SELECT id,nom,mdp,tri,one_key FROM users WHERE nom=:NomConnect LIMIT 1");
+    $query->execute([':NomConnect' => $nomConnect]);
+    $row = $query->fetch(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
+}
+
+$query->closeCursor();
+$PDO = null;
 
 if (!$row || !password_verify($mdpConnect, $row['mdp'])) {
     http_response_code(403);
@@ -49,6 +62,3 @@ $_SESSION['nom'] = $row['nom'];
 $_SESSION['userId'] = $row['id'];
 $_SESSION['tri'] = $row['tri'];
 $_SESSION['key'] = $row['one_key'];
-
-$query->closeCursor();
-$PDO = null;

@@ -2,7 +2,11 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_SESSION['nom'], $_SESSION['userId'], $_SESSION['tri'], $_SESSION['key']) === false) {
+if (isset($_SESSION['nom'], $_SESSION['tri'], $_SESSION['key']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
     http_response_code(403);
     return;
 }
@@ -26,20 +30,25 @@ if ($tri === 'Date de création') {
     $orderBy = 'ORDER BY dateNote, id DESC';
 }
 
-$query = $PDO->prepare("SELECT id, titre, couleur, content, dateNote, hiddenNote, link FROM notes WHERE user=:CurrentUser $orderBy");
-$query->execute([':CurrentUser' => $nom]);
-$items = [];
+try {
+    $query = $PDO->prepare("SELECT id,titre,couleur,content,dateNote,hiddenNote,link FROM notes WHERE user=:CurrentUser $orderBy");
+    $query->execute([':CurrentUser' => $nom]);
+    $items = [];
 
-while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-    $items[] = [
-        'id'      => $row['id'],
-        'title'   => $encryption->decryptData($row['titre'], $key),
-        'couleur' => $row['couleur'],
-        'desc'    => $encryption->decryptData($row['content'], $key),
-        'date'    => $row['dateNote'],
-        'hidden'  => $row['hiddenNote'],
-        'link'    => $row['link'] === null ? '' : $row['link']
-    ];
+    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+        $items[] = [
+            'id'      => $row['id'],
+            'title'   => $encryption->decryptData($row['titre'], $key),
+            'couleur' => $row['couleur'],
+            'desc'    => $encryption->decryptData($row['content'], $key),
+            'date'    => $row['dateNote'],
+            'hidden'  => $row['hiddenNote'],
+            'link'    => $row['link'] === null ? '' : $row['link']
+        ];
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
 }
 
 echo json_encode($items);

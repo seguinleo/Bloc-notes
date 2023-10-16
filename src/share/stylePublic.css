@@ -1,10 +1,9 @@
 html {
-  scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
-  scrollbar-width: thin;
   scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
   background-color: #171717;
   color: #c6c6c6;
+  font-family: Arial, sans-serif
 }
 
 ::-webkit-scrollbar-thumb {
@@ -12,7 +11,6 @@ html {
 }
 
 * {
-  font-family: Arial, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }

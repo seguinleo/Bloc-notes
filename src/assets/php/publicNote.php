@@ -6,6 +6,10 @@ if (isset($_SESSION['nom'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteL
     http_response_code(403);
     return;
 }
+if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
@@ -13,10 +17,10 @@ $nom = $_SESSION['nom'];
 $noteId = $_POST['noteId'];
 $title = $_POST['title'];
 $desc = $_POST['desc'];
-$noteLink = htmlspecialchars($_POST['noteLink'], ENT_QUOTES);
+$noteLink = $_POST['noteLink'];
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink, clearTitle=:ClearTitle, clearContent=:ClearContent WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
+    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink, clearTitre=:ClearTitle, clearContent=:ClearContent WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
     $query->execute(
         [
             ':NoteLink'     => $noteLink,
@@ -47,11 +51,11 @@ if (is_dir($directoryPath) === false) {
             <title>Bloc-notes &#8211; Léo SEGUIN</title>
             <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <meta name="theme-color" content="#272727">
+            <meta name="theme-color" content="#171717">
             <meta name="apple-mobile-web-app-capable" content="yes">
-            <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
+            <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
             <link rel="stylesheet" href="../stylePublic.css">
-            <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         </head>
         <body>
             <main data-link="%s"></main>

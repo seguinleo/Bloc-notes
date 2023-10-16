@@ -10,7 +10,19 @@ if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION['nom'], $_SESSION['key'], $_SESSION['userId'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden'], $_POST['link']) === false) {
+if (isset($_SESSION['nom'], $_SESSION['key'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden'], $_POST['link']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[0-9]+$/', $_SESSION['noteId']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
     http_response_code(403);
     return;
 }
@@ -64,7 +76,7 @@ try {
             ]
         );
     } else {
-        $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote,clearTitle=:ClearTitle,clearContent=:ClearContent WHERE id=:NoteId AND user=:User");
+        $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote,clearTitre=:ClearTitle,clearContent=:ClearContent WHERE id=:NoteId AND user=:User");
         $query->execute(
             [
                 ':Title'        => $titleEncrypted,
@@ -79,9 +91,10 @@ try {
             ]
         );
     }
-    $query->closeCursor();
-    $PDO = null;
 } catch (Exception $e) {
     http_response_code(500);
     return;
 }
+
+$query->closeCursor();
+$PDO = null;

@@ -6,6 +6,14 @@ if (isset($_SESSION['nom'], $_SESSION['userId']) === false) {
     http_response_code(403);
     return;
 }
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[0-9]+$/', $_SESSION['userId']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
@@ -23,14 +31,20 @@ if (in_array($tri, $trisAutorises) === false) {
     $tri = 'Date de modification';
 }
 
-$query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
-$query->execute(
-    [
-        ':Tri'         => $tri,
-        ':CurrentUser' => $nom,
-        ':UserId'      => $userID
-    ]
-);
-$query->closeCursor();
+try {
+    $query = $PDO->prepare("UPDATE users SET tri=:Tri WHERE nom=:CurrentUser AND id=:UserId");
+    $query->execute(
+        [
+            ':Tri'         => $tri,
+            ':CurrentUser' => $nom,
+            ':UserId'      => $userID
+        ]
+    );
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
+}
+
 $_SESSION['tri'] = $tri;
+$query->closeCursor();
 $PDO = null;

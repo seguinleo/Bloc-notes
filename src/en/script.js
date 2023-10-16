@@ -72,6 +72,7 @@ const converter = new showdown.Converter({
 const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
   document.querySelectorAll('.note').forEach((note) => note.remove());
+  forms.forEach((form) => form.reset());
 
   if (notesJSON.length === 0) {
     document.querySelector('.sideBar h2').textContent = 'Notes (0)';
@@ -85,7 +86,7 @@ const showNotes = async () => {
         title, desc, couleur, date, hidden,
       } = row;
 
-      if (!title || !date || !couleur) return;
+      if (!title) return;
 
       const descEnd = replaceAllEnd(desc);
       const descHtml = converter.makeHtml(desc);
@@ -105,14 +106,13 @@ const showNotes = async () => {
       } else {
         descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
       }
+
       detailsElement.appendChild(titleElement);
       detailsElement.appendChild(descElement);
-
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
       const dateElement = document.createElement('span');
       dateElement.textContent = date;
-
       const editIconElement = document.createElement('i');
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
@@ -122,7 +122,6 @@ const showNotes = async () => {
       editIconElement.setAttribute('data-note-color', couleur);
       editIconElement.setAttribute('data-note-hidden', hidden);
       editIconElement.setAttribute('role', 'button');
-
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
@@ -156,10 +155,10 @@ const showNotes = async () => {
         expandIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(expandIconElement);
       }
+
       noteElement.appendChild(detailsElement);
       noteElement.appendChild(bottomContentElement);
       notesContainer.appendChild(noteElement);
-
       const paragraph = document.createElement('p');
       paragraph.setAttribute('tabindex', '0');
       paragraph.setAttribute('role', 'button');
@@ -171,7 +170,6 @@ const showNotes = async () => {
       dateSpan.textContent = date;
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
-
       document.querySelector('.sideBar .listNotes').appendChild(paragraph);
     });
   document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
@@ -427,16 +425,8 @@ couleurs.forEach((span, index) => {
 document.querySelector('#submitNote').addEventListener('click', () => {
   const couleurSpan = document.querySelector('.couleurs span.selectionne');
   const v = couleurSpan.classList[0];
-  const e = titleTag.value.trim()
-    .replaceAll(/'/g, '‘')
-    .replaceAll(/"/g, '‘‘')
-    .replaceAll(/</g, '←')
-    .replaceAll(/>/g, '→');
-  const t = descTag.value.trim()
-    .replaceAll(/'/g, '‘')
-    .replaceAll(/"/g, '‘‘')
-    .replaceAll(/</g, '←')
-    .replaceAll(/>/g, '→');
+  const e = titleTag.value.trim();
+  const t = descTag.value.trim().replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;');
   const g = document.querySelector('#checkHidden').checked;
   if (!e || e.length > 30 || t.length > 5000) return;
   const c = {
@@ -453,7 +443,6 @@ document.querySelector('#submitNote').addEventListener('click', () => {
     notesJSON.push(c);
   }
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-  forms.forEach((form) => form.reset());
   popupBox.classList.remove('show');
   document.body.classList.remove('noscroll');
   showNotes();
@@ -558,13 +547,11 @@ document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
     window.location.href = '../';
-    return;
   }
-  if (e === 'en') {
+  else if (e === 'en') {
     window.location.href = '../en/';
-    return;
   }
-  if (e === 'de') {
+  else if (e === 'de') {
     window.location.href = '../de/';
   }
 });

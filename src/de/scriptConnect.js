@@ -71,9 +71,8 @@ const converter = new showdown.Converter({
 
 const showNotesConnect = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
-  document.querySelectorAll('.note').forEach((note) => {
-    note.remove();
-  });
+  document.querySelectorAll('.note').forEach((note) => note.remove());
+  forms.forEach((form) => form.reset());
 
   const response = await fetch('../assets/php/getNotes.php', {
     method: 'POST',
@@ -96,6 +95,8 @@ const showNotesConnect = async () => {
       id, title, desc, couleur, date, hidden, link,
     } = row;
 
+    if (!id || !title) return;
+
     const descEnd = replaceAllEnd(desc);
     const descHtml = converter.makeHtml(desc);
     const noteElement = document.createElement('div');
@@ -114,14 +115,13 @@ const showNotesConnect = async () => {
     } else {
       descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
     }
+
     detailsElement.appendChild(titleElement);
     detailsElement.appendChild(descElement);
-
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
     const dateElement = document.createElement('span');
     dateElement.textContent = date;
-
     const editIconElement = document.createElement('i');
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
@@ -132,7 +132,6 @@ const showNotesConnect = async () => {
     editIconElement.setAttribute('data-note-hidden', hidden);
     editIconElement.setAttribute('data-note-link', link);
     editIconElement.setAttribute('role', 'button');
-
     bottomContentElement.appendChild(dateElement);
     bottomContentElement.appendChild(editIconElement);
 
@@ -179,10 +178,10 @@ const showNotesConnect = async () => {
       linkIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(linkIconElement);
     }
+
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
     notesContainer.appendChild(noteElement);
-
     const paragraph = document.createElement('p');
     paragraph.setAttribute('tabindex', '0');
     paragraph.setAttribute('role', 'button');
@@ -194,7 +193,6 @@ const showNotesConnect = async () => {
     dateSpan.textContent = date;
     paragraph.appendChild(titleSpan);
     paragraph.appendChild(dateSpan);
-
     document.querySelector('.sideBar .listNotes').appendChild(paragraph);
   });
   document.querySelector('.sideBar h2').textContent = `Notizen (${data.length})`;
@@ -276,7 +274,12 @@ const updateNoteConnect = (id, title, desc, couleur, hidden, link) => {
       couleurSpan.classList.remove('selectionne');
     }
   });
-  if (hidden === '1') { document.querySelector('#checkHidden').checked = true; }
+  if (link === '') {
+    document.querySelector('#checkHidden').disabled = false;
+    if (hidden === '1') document.querySelector('#checkHidden').checked = true;
+  } else {
+    document.querySelector('#checkHidden').disabled = true;
+  }
   descTagConnect.focus();
 };
 
@@ -526,13 +529,11 @@ document.querySelector('.language').addEventListener('change', () => {
   const e = document.querySelector('.language').value;
   if (e === 'fr') {
     window.location.href = '../';
-    return;
   }
-  if (e === 'en') {
+  else if (e === 'en') {
     window.location.href = '../en/';
-    return;
   }
-  if (e === 'de') {
+  else if (e === 'de') {
     window.location.href = '../de/';
   }
 });
@@ -571,16 +572,8 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const titreBrut = document.querySelector('#titleConnect').value.trim();
     const contentBrut = document.querySelector('#descConnect').value.trim();
     if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
-    const titre = encodeURIComponent(titreBrut
-      .replaceAll(/'/g, '‘')
-      .replaceAll(/"/g, '‘‘')
-      .replaceAll(/</g, '←')
-      .replaceAll(/>/g, '→'));
-    const content = encodeURIComponent(contentBrut
-      .replaceAll(/'/g, '‘')
-      .replaceAll(/"/g, '‘‘')
-      .replaceAll(/</g, '←')
-      .replaceAll(/>/g, '→'));
+    const titre = encodeURIComponent(titreBrut);
+    const content = encodeURIComponent(contentBrut.replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;'));
     const couleurSpan = document.querySelector('.couleurs span.selectionne');
     const couleur = encodeURIComponent(couleurSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -603,7 +596,6 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     isUpdate = false;
     popupBoxConnect.classList.remove('show');
     document.body.classList.remove('noscroll');
-    forms.forEach((form) => form.reset());
     await showNotesConnect();
   } catch (error) {
     showError('Beim Hinzufügen der Notiz ist ein Fehler aufgetreten...');
@@ -637,7 +629,6 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     });
     popupBoxGestion.classList.remove('show');
     document.body.classList.remove('noscroll');
-    forms.forEach((form) => form.reset());
   } catch (error) {
     showError('Beim Ändern des Passworts ist ein Fehler aufgetreten...');
   }
@@ -655,6 +646,7 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
       body: `noteId=${encodeURIComponent(id)}&noteLink=${encodeURIComponent(link)}`,
     });
     publicNote.classList.remove('show');
+    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     showError('Beim Löschen des Links der Notiz ist ein Fehler aufgetreten...');
@@ -675,6 +667,7 @@ document.querySelector('#submitRendrePublique').addEventListener('click', async 
       body: `noteId=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&noteLink=${link}`,
     });
     privateNote.classList.remove('show');
+    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     showError('Beim Erstellen des Links der Notiz ist ein Fehler aufgetreten...');

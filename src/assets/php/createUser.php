@@ -18,6 +18,10 @@ if (isset($_SESSION['nom']) === true) {
     http_response_code(403);
     return;
 }
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
@@ -25,13 +29,20 @@ $nomCreer = $_POST['nomCreer'];
 $mdpCreer = $_POST['mdpCreer'];
 $mdpCreerSecure = password_hash($mdpCreer, PASSWORD_DEFAULT);
 $key = openssl_random_pseudo_bytes(32);
-$query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:MdpHash,:OneKey)");
-$query->execute(
-    [
-        ':NomCreer' => $nomCreer,
-        ':MdpHash'  => $mdpCreerSecure,
-        ':OneKey'   => htmlspecialchars($key)
-    ]
-);
+
+try {
+    $query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:MdpHash,:OneKey)");
+    $query->execute(
+        [
+            ':NomCreer' => $nomCreer,
+            ':MdpHash'  => $mdpCreerSecure,
+            ':OneKey'   => htmlspecialchars($key)
+        ]
+    );
+} catch (Exception $e) {
+    http_response_code(500);
+    return;
+}
+
 $query->closeCursor();
 $PDO = null;

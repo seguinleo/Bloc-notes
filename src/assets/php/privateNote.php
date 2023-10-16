@@ -6,6 +6,10 @@ if (isset($_SESSION['nom'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteL
     http_response_code(403);
     return;
 }
+if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
@@ -14,7 +18,7 @@ $noteId = $_POST['noteId'];
 $noteLink = htmlspecialchars($_POST['noteLink'], ENT_QUOTES);
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitle = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
+    $query = $PDO->prepare("UPDATE notes SET link = NULL, clearTitre = NULL, clearContent = NULL WHERE id=:NoteId AND user=:CurrentUser AND link=:NoteLink");
     $query->execute(
         [
             ':NoteLink'    => $noteLink,

@@ -26,7 +26,7 @@ const showSharedNote = async () => {
   const data = await response.json();
   data.forEach((row) => {
     const {
-      title, desc, couleur, date, user,
+      title, desc, couleur, date,
     } = row;
     const descEnd = replaceAllEnd(desc);
     const descHtml = converter.makeHtml(desc);
@@ -45,7 +45,7 @@ const showSharedNote = async () => {
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
     const dateElement = document.createElement('span');
-    dateElement.textContent = `${date} by ${user}`;
+    dateElement.textContent = date;
     bottomContentElement.appendChild(dateElement);
     const clipboardIconElement = document.createElement('i');
     clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
@@ -105,9 +105,6 @@ document.addEventListener('keydown', (e) => {
     } else if (document.activeElement.classList.contains('fa-download')) {
       document.activeElement.click();
     }
-  } else if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.querySelector('#search-input').focus();
   }
 });
 
