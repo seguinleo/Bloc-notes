@@ -26,7 +26,6 @@ if (isset($_SESSION['nom']) === false) {
 ?>
 <!DOCTYPE html>
 <html class="dark" lang="de">
-
 <head>
     <meta charset="utf-8">
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
@@ -35,40 +34,19 @@ if (isset($_SESSION['nom']) === false) {
     <meta name="theme-color" content="#272727" id="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
-    <!-- TWITTER ("""X""")
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta name="twitter:description" content="Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.">
-    <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
-    -->
-    <link rel="alternate" hreflang="en" href="../en/">
-    <link rel="alternate" hreflang="fr" href="../">
-    <link rel="alternate" hreflang="de" href="./">
-    <link rel="alternate" hreflang="x-default" href="../en/">
-    <!-- Open Graph
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta property="og:description" content="Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.">
-    <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta property="og:url" content="https://leoseguin.fr/projets">
-    <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
-    <meta property="og:locale" content="de">
-    -->
     <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="manifest" href="app.webmanifest">
 </head>
-
 <body>
     <nav>
         <?php if (isset($nom) === true) { ?>
             <div class="welcome">
                 <h1>
-                    <span class="gestionCompte linkp" tabindex="0" role="button">
+                    <span class="gestionCompte linkp" tabindex="0" role="button" aria-label="Konto">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?= $nom ?>
                     </span>
                 </h1>
             </div>
@@ -76,17 +54,17 @@ if (isset($_SESSION['nom']) === false) {
             <div class="welcome">
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub (v23.10.1)" target="_blank" rel="noreferrer">v23.10.1</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
                 </span>
             </div>
             <div>
-                <button type="button" class="seconnecter" aria-label="Anmelden">Anmelden</button>
+                <button type="button" class="seconnecter">Anmelden</button>
             </div>
         <?php } ?>
         <div class="search-input">
             <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
-            <input type="text" id="search-input" name="search-input" maxlength="30" aria-label="Suche" placeholder="Suche">
+            <input type="text" id="search-input" maxlength="30" aria-label="Suche" placeholder="Suche">
             <kbd>CTRL</kbd><kbd>K</kbd>
             <?php if (isset($nom) === true) { ?>
                 <span class="gestionCompte linkp" aria-label="Konto" tabindex="0" role="button">
@@ -120,7 +98,6 @@ if (isset($_SESSION['nom']) === false) {
                 <button id="iconButtonFloat" type="button" aria-label="Eine lokale Notiz hinzufügen"><i class="fa-solid fa-plus"></i></button>
             </div>
         <?php } ?>
-        <div class="darken"></div>
         <div id="errorNotification"></div>
         <div class="sideBar">
             <header>
@@ -129,18 +106,18 @@ if (isset($_SESSION['nom']) === false) {
             <h2>Notizen</h2>
             <?php if (isset($nom) === true) { ?>
                 <div class="iconConnect">
-                    <button id="iconButtonConnect" type="button" aria-label="Eine Wolkennotiz hinzufügen">Eine Wolkennotiz hinzufügen</button>
+                    <button id="iconButtonConnect" type="button">Eine Wolkennotiz hinzufügen</button>
                 </div>
             <?php } else { ?>
                 <div class="icon">
-                    <button id="iconButton" type="button" aria-label="Eine lokale Notiz hinzufügen">Eine lokale Notiz hinzufügen</button>
+                    <button id="iconButton" type="button">Eine lokale Notiz hinzufügen</button>
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
             <div class="copyright">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Rechtliche Hinweise / Datenschutz">Rechtliche Hinweise / Datenschutz</a>
+                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer">Rechtliche Hinweise / Datenschutz</a>
                 <div class="divLanguage">
-                    <select class="language" name="language" aria-label="Sprache">
+                    <select id="language" aria-label="Sprache">
                         <option value="fr">🇫🇷</option>
                         <option value="en">🇬🇧</option>
                         <option value="de" selected>🇩🇪</option>
@@ -150,50 +127,52 @@ if (isset($_SESSION['nom']) === false) {
             </div>
         </div>
         <div id="copyNotification">Kopiert!</div>
-        <?php if (isset($nom) === true) { ?>
-            <div class="connect-popup-box">
-                <div class="popup">
-                    <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
-                        <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInputConnect" type="hidden">
+        <div class="note-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <header>
+                        <i class="fa-solid fa-xmark" tabindex="0"></i>
+                    </header>
+                    <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
+                        <input id="idNoteInput" type="hidden">
+                        <?php if (isset($nom) === true) { ?>
                             <input id="checkLink" type="hidden">
-                            <input type="hidden" id="csrf_token_note" name="csrf_token_note" value="<?= $csrf_token_note ?>">
-                            <div class="row">
-                                <input id="titleConnect" name="titleConnect" placeholder="Titel" type="text" maxlength="30" aria-label="Titel" required>
+                            <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
+                        <?php } ?>
+                        <div class="row">
+                            <input id="title" placeholder="Titel" type="text" maxlength="30" aria-label="Titel" required>
+                        </div>
+                        <div class="row">
+                            <textarea id="content" placeholder="Inhalt (Markdown)" aria-label="Inhalt" maxlength="5000"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="couleurs">
+                                <span class="Noir" role="button" tabindex="0" aria-label="Schwarz"></span>
+                                <span class="Blanc" role="button" tabindex="0" aria-label="Weiß"></span>
+                                <span class="Rouge" role="button" tabindex="0" aria-label="Rot"></span>
+                                <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
+                                <span class="Jaune" role="button" tabindex="0" aria-label="Gelb"></span>
+                                <span class="Vert" role="button" tabindex="0" aria-label="Grün"></span>
+                                <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
+                                <span class="BleuCiel" role="button" tabindex="0" aria-label="Himmelblau"></span>
+                                <span class="Bleu" role="button" tabindex="0" aria-label="Blau"></span>
+                                <span class="Violet" role="button" tabindex="0" aria-label="Lila"></span>
+                                <span class="Rose" role="button" tabindex="0" aria-label="Rosa"></span>
                             </div>
-                            <div class="row">
-                                <textarea id="descConnect" name="descConnect" placeholder="Inhalt (Markdown)" aria-label="Inhalt" maxlength="5000"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="couleurs">
-                                    <span class="Noir" role="button" tabindex="0" aria-label="Schwarz"></span>
-                                    <span class="Blanc" role="button" tabindex="0" aria-label="Weiß"></span>
-                                    <span class="Rouge" role="button" tabindex="0" aria-label="Rot"></span>
-                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
-                                    <span class="Jaune" role="button" tabindex="0" aria-label="Gelb"></span>
-                                    <span class="Vert" role="button" tabindex="0" aria-label="Grün"></span>
-                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
-                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Himmelblau"></span>
-                                    <span class="Bleu" role="button" tabindex="0" aria-label="Blau"></span>
-                                    <span class="Violet" role="button" tabindex="0" aria-label="Lila"></span>
-                                    <span class="Rose" role="button" tabindex="0" aria-label="Rosa"></span>
-                                </div>
-                            </div>
-                            Versteckte Notiz
-                            <div class="row">
-                                <label for="checkHidden" class="switch" aria-label="Versteckte Notiz">
-                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                    <span class="slider" tabindex="0"></span>
-                                </label>
-                            </div>
-                            <button id="submitNoteConnect" type="submit" aria-label="Notiz speichern">Notiz speichern <i class="fa-solid fa-cloud"></i></button>
-                        </form>
-                    </div>
+                        </div>
+                        Versteckte Notiz
+                        <div class="row">
+                            <label for="checkHidden" class="switch" aria-label="Versteckte Notiz">
+                                <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
+                                <span class="slider" tabindex="0"></span>
+                            </label>
+                        </div>
+                        <button id="submitNote" type="submit">Notiz speichern</button>
+                    </form>
                 </div>
             </div>
+        </div>
+        <?php if (isset($nom) === true) { ?>
             <div class="gestion-popup-box">
                 <div class="popup">
                     <div class="content">
@@ -205,11 +184,11 @@ if (isset($_SESSION['nom']) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Markdown-Anleitung">Markdown-Anleitung</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer">Markdown-Anleitung</a>
                             </span>
                         </div>
                         <div class="row">
-                            <select id="tri" name="tri" aria-label="sortieren">
+                            <select id="tri" aria-label="sortieren">
                                 <option disabled selected value>Notizen sortieren</option>
                                 <option value="Date de création">Datum der Erstellung</option>
                                 <option value="Date de création (Z-A)">Datum der Erstellung (Z-A)</option>
@@ -222,12 +201,12 @@ if (isset($_SESSION['nom']) === false) {
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
                                 <input type="hidden" id="csrf_token_mdp" name="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" name="mdpModifNew" placeholder="Neues Passwort" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                    <input id="mdpModifNew" placeholder="Neues Passwort" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" name="mdpModifNewValid" placeholder="Geben Sie Ihr neues Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                    <input id="mdpModifNewValid" placeholder="Geben Sie Ihr neues Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
                                 </div>
-                                <button id="submitChangeMDP" type="submit" aria-label="Passwort ändern">Passwort ändern</button>
+                                <button id="submitChangeMDP" type="submit">Passwort ändern</button>
                             </form>
                             <div class="row">
                                 <span class="supprimerCompte" tabindex="0">Mein Konto löschen</span>
@@ -235,7 +214,7 @@ if (isset($_SESSION['nom']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Siehe auf GitHub" target="_blank" rel="noreferrer">v23.10.1</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
                             </p>
                         </div>
                     </div>
@@ -251,11 +230,9 @@ if (isset($_SESSION['nom']) === false) {
                             <div class="row">
                                 Möchten Sie Ihre Notiz veröffentlichen? Dadurch wird ein eindeutiger Link zum Teilen Ihrer Notiz generiert.
                             </div>
-                            <input id="idNoteInputPublic" name="idNoteInputPublic" type="hidden">
-                            <input id="titleNoteInputPublic" name="titleNoteInputPublic" type="hidden">
-                            <input id="descNoteInputPublic" name="descNoteInputPublic" type="hidden">
+                            <input id="idNoteInputPublic" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePublique" type="submit" aria-label="Machen Sie die Notiz öffentlich">Machen Sie die Notiz öffentlich</button>
+                                <button id="submitRendrePublique" type="submit">Machen Sie die Notiz öffentlich</button>
                             </div>
                         </form>
                     </div>
@@ -272,57 +249,16 @@ if (isset($_SESSION['nom']) === false) {
                             <div class="row">
                                 Möchten Sie Ihre Notiz wieder privat machen? Der eindeutige Link ist nicht mehr verfügbar.
                             </div>
-                            <input id="idNoteInputPrivate" name="idNoteInputPrivate" type="hidden">
-                            <input id="linkNoteInputPrivate" name="linkNoteInputPrivate" type="hidden">
+                            <input id="idNoteInputPrivate" type="hidden">
+                            <input id="linkNoteInputPrivate" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePrivee" type="submit" aria-label="Machen Sie die Notiz privat">Machen Sie die Notiz privat</button>
+                                <button id="submitRendrePrivee" type="submit">Machen Sie die Notiz privat</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         <?php } else { ?>
-            <div class="popup-box">
-                <div class="popup">
-                    <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
-                        <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInput" name="idNoteInput" type="hidden">
-                            <div class="row">
-                                <input id="title" name="title" placeholder="Titel" type="text" maxlength="30" aria-label="Titel" required>
-                            </div>
-                            <div class="row">
-                                <textarea id="content" name="content" placeholder="Inhalt (Markdown)" aria-label="Inhalt" maxlength="5000"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="couleurs">
-                                    <span class="Noir" role="button" tabindex="0" aria-label="Schwarz"></span>
-                                    <span class="Blanc" role="button" tabindex="0" aria-label="Weiß"></span>
-                                    <span class="Rouge" role="button" tabindex="0" aria-label="Rot"></span>
-                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
-                                    <span class="Jaune" role="button" tabindex="0" aria-label="Gelb"></span>
-                                    <span class="Vert" role="button" tabindex="0" aria-label="Grün"></span>
-                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
-                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Himmelblau"></span>
-                                    <span class="Bleu" role="button" tabindex="0" aria-label="Blau"></span>
-                                    <span class="Violet" role="button" tabindex="0" aria-label="Lila"></span>
-                                    <span class="Rose" role="button" tabindex="0" aria-label="Rosa"></span>
-                                </div>
-                            </div>
-                            Versteckte Notiz
-                            <div class="row">
-                                <label for="checkHidden" class="switch" aria-label="Versteckte Notiz">
-                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                    <span class="slider" tabindex="0"></span>
-                                </label>
-                            </div>
-                            <button id="submitNote" type="submit" aria-label="Notiz speichern">Notiz speichern</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <div class="connect-box">
                 <div class="popup">
                     <div class="content">
@@ -331,14 +267,14 @@ if (isset($_SESSION['nom']) === false) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">Noch kein Konto?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" name="csrf_token_connect" value="<?= $csrf_token_connect ?>">
+                            <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
-                                <input id="nomConnect" name="nomConnect" placeholder="Nutzername" type="text" maxlength="25" aria-label="Nutzername" required>
+                                <input id="nomConnect" placeholder="Nutzername" type="text" maxlength="25" aria-label="Nutzername" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" name="mdpConnect" placeholder="Passwort" type="password" maxlength="50" aria-label="Passwort" required>
+                                <input id="mdpConnect" placeholder="Passwort" type="password" maxlength="50" aria-label="Passwort" required>
                             </div>
-                            <button id="submitSeConnecter" type="submit" aria-label="Anmelden">Anmelden</button>
+                            <button id="submitSeConnecter" type="submit">Anmelden</button>
                         </form>
                     </div>
                 </div>
@@ -352,19 +288,19 @@ if (isset($_SESSION['nom']) === false) {
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_creer" name="csrf_token_creer" value="<?= $csrf_token_creer ?>">
                             <div class="row">
-                                <input id="nomCreer" name="nomCreer" placeholder="Nutzername" type="text" minlength="4" maxlength="25" aria-label="Nutzername" required>
+                                <input id="nomCreer" placeholder="Nutzername" type="text" minlength="4" maxlength="25" aria-label="Nutzername" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" name="mdpCreer" placeholder="Passwort" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                <input id="mdpCreer" placeholder="Passwort" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" name="mdpCreerValid" placeholder="Geben Sie Ihr Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                <input id="mdpCreerValid" placeholder="Geben Sie Ihr Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
                                 Ihr Passwort wird sicher gespeichert und Ihre Notizen werden verschlüsselt.
                             </div>
-                            <button id="submitCreer" type="submit" aria-label="Registrieren Sie sich">Registrieren Sie sich</button>
+                            <button id="submitCreer" type="submit">Registrieren Sie sich</button>
                         </form>
                     </div>
                 </div>
@@ -378,5 +314,4 @@ if (isset($_SESSION['nom']) === false) {
         <script src="script.js" defer></script>
     <?php } ?>
 </body>
-
 </html>

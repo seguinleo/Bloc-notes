@@ -32,9 +32,7 @@ CREATE TABLE `notes` (
   `user` varchar(255) NOT NULL,
   `couleur` varchar(255) NOT NULL,
   `hiddenNote` tinyint NOT NULL,
-  `link` varchar(255) DEFAULT NULL,
-  `clearTitre` text,
-  `clearContent` longtext
+  `link` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

@@ -1,3 +1,10 @@
+#----v23.10.2----#
+-Local notes are now also encrypted
+-Better key management
+-Improve shared notes
+-Improve UI/UX
+-Bug fixes
+
 #----v23.10.1----#
 -Add public notes
 -Bug fixes for self-hosting

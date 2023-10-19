@@ -5,13 +5,12 @@ let touchEnd = 0;
 let timeoutCopy = null;
 let timeoutError = null;
 const notesContainer = document.querySelector('main');
-const popupBox = document.querySelector('.popup-box');
+const noteBox = document.querySelector('.note-popup-box');
 const connectBox = document.querySelector('.connect-box');
 const creerBox = document.querySelector('.creer-box');
-const titleTag = popupBox.querySelector('#title');
-const descTag = popupBox.querySelector('#content');
+const titleNote = noteBox.querySelector('#title');
+const contentNote = noteBox.querySelector('#content');
 const couleurs = document.querySelectorAll('.couleurs span');
-const darken = document.querySelector('.darken');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('.sideBar');
@@ -69,6 +68,77 @@ const converter = new showdown.Converter({
   extensions: [taskListEnablerExtension],
 });
 
+function arrayBufferToBase64(buffer) {
+  const binary = [];
+  const bytes = new Uint8Array(buffer);
+  for (let i = 0; i < bytes.byteLength; i += 1) {
+    binary.push(String.fromCharCode(bytes[i]));
+  }
+  return btoa(binary.join(''));
+}
+
+function base64ToArrayBuffer(base64) {
+  const binaryString = atob(base64);
+  const byteArray = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i += 1) {
+    byteArray[i] = binaryString.charCodeAt(i);
+  }
+  return byteArray.buffer;
+}
+
+async function openIndexedDB(dbName, objectStoreName) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName, 1);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(objectStoreName)) {
+        db.createObjectStore(objectStoreName);
+      }
+    };
+
+    request.onsuccess = (event) => {
+      resolve(event.target.result);
+    };
+
+    request.onerror = (event) => {
+      reject(event.target.error);
+    };
+  });
+}
+
+async function getKeyFromDB(db, objectStoreName) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(objectStoreName, 'readonly');
+    const objectStore = transaction.objectStore(objectStoreName);
+    const request = objectStore.get('encryptionKey');
+
+    request.onsuccess = (event) => {
+      resolve(event.target.result);
+    };
+
+    request.onerror = (event) => {
+      reject(event.target.error);
+    };
+  });
+}
+
+async function storeKeyInDB(db, objectStoreName, key) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(objectStoreName, 'readwrite');
+    const objectStore = transaction.objectStore(objectStoreName);
+    objectStore.put(key, 'encryptionKey');
+
+    transaction.oncomplete = () => {
+      resolve();
+    };
+
+    transaction.onerror = (event) => {
+      reject(event.target.error);
+    };
+  });
+}
+
 const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
   document.querySelectorAll('.note').forEach((note) => note.remove());
@@ -79,17 +149,38 @@ const showNotes = async () => {
     return;
   }
 
+  const dbName = 'notes_db';
+  const objectStoreName = 'key';
+  const db = await openIndexedDB(dbName, objectStoreName);
+  const key = await getKeyFromDB(db, objectStoreName);
+  db.close();
+
   notesJSON
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .forEach((row, id) => {
+    .forEach(async (row, id) => {
       const {
-        title, desc, couleur, date, hidden,
+        title, content, couleur, date, hidden,
       } = row;
 
       if (!title) return;
 
-      const descEnd = replaceAllEnd(desc);
-      const descHtml = converter.makeHtml(desc);
+      const deTitle = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(12) },
+        key,
+        base64ToArrayBuffer(title),
+      );
+
+      const deContent = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(12) },
+        key,
+        base64ToArrayBuffer(content),
+      );
+
+      const deTitleString = JSON.parse(new TextDecoder().decode(new Uint8Array(deTitle)));
+      const deContentString = JSON.parse(new TextDecoder().decode(new Uint8Array(deContent)));
+
+      const descEnd = replaceAllEnd(deContentString);
+      const descHtml = converter.makeHtml(deContentString);
       const noteElement = document.createElement('div');
       noteElement.id = `note${id}`;
       noteElement.classList.add('note', couleur);
@@ -98,7 +189,7 @@ const showNotes = async () => {
       detailsElement.classList.add('details');
       const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
-      titleElement.textContent = title;
+      titleElement.textContent = deTitleString;
       const descElement = document.createElement('span');
 
       if (hidden === false) {
@@ -111,13 +202,11 @@ const showNotes = async () => {
       detailsElement.appendChild(descElement);
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
-      const dateElement = document.createElement('span');
-      dateElement.textContent = date;
       const editIconElement = document.createElement('i');
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
       editIconElement.setAttribute('data-note-id', id);
-      editIconElement.setAttribute('data-note-title', title);
+      editIconElement.setAttribute('data-note-title', deTitleString);
       editIconElement.setAttribute('data-note-desc', descEnd);
       editIconElement.setAttribute('data-note-color', couleur);
       editIconElement.setAttribute('data-note-hidden', hidden);
@@ -127,7 +216,6 @@ const showNotes = async () => {
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
-      bottomContentElement.appendChild(dateElement);
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
 
@@ -143,7 +231,7 @@ const showNotes = async () => {
         downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
         downloadIconElement.tabIndex = 0;
         downloadIconElement.setAttribute('data-note-id', id);
-        downloadIconElement.setAttribute('data-note-title', title);
+        downloadIconElement.setAttribute('data-note-title', deTitleString);
         downloadIconElement.setAttribute('data-note-desc', descEnd);
         downloadIconElement.setAttribute('role', 'button');
         bottomContentElement.appendChild(downloadIconElement);
@@ -164,7 +252,7 @@ const showNotes = async () => {
       paragraph.setAttribute('role', 'button');
       const titleSpan = document.createElement('span');
       titleSpan.classList.add('titleList');
-      titleSpan.textContent = title;
+      titleSpan.textContent = deTitleString;
       const dateSpan = document.createElement('span');
       dateSpan.classList.add('dateList');
       dateSpan.textContent = date;
@@ -179,7 +267,6 @@ const showNotes = async () => {
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
-  darken.classList.toggle('show');
   document.body.classList.toggle('noscroll');
 };
 
@@ -188,13 +275,12 @@ const updateNote = (id, title, desc, couleur, hidden) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  darken.classList.remove('show');
   document.body.classList.add('noscroll');
   document.querySelector('#idNoteInput').value = id;
   isUpdate = true;
   document.querySelector('.icon').click();
-  titleTag.value = title;
-  descTag.value = s;
+  titleNote.value = title;
+  contentNote.value = s;
   couleurs.forEach((couleurSpan) => {
     if (couleurSpan.classList.contains(couleur)) {
       couleurSpan.classList.add('selectionne');
@@ -203,7 +289,7 @@ const updateNote = (id, title, desc, couleur, hidden) => {
     }
   });
   if (hidden === 'true') { document.querySelector('#checkHidden').checked = true; }
-  descTag.focus();
+  contentNote.focus();
 };
 
 const downloadNote = (e, t) => {
@@ -235,7 +321,6 @@ const deleteNote = (e) => {
   if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-    darken.classList.remove('show');
     showNotes();
   }
 };
@@ -305,7 +390,6 @@ document.querySelectorAll('.creercompte').forEach((element) => {
   element.addEventListener('click', () => {
     connectBox.classList.remove('show');
     creerBox.classList.add('show');
-    document.body.classList.add('noscroll');
     document.querySelector('#nomCreer').focus();
   });
   element.addEventListener('keydown', (event) => {
@@ -400,7 +484,7 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
 
 document.querySelectorAll('.icon, .iconFloat').forEach((element) => {
   element.addEventListener('click', () => {
-    popupBox.classList.add('show');
+    noteBox.classList.add('show');
     document.body.classList.add('noscroll');
     document.querySelector('#title').focus();
   });
@@ -422,28 +506,58 @@ couleurs.forEach((span, index) => {
   if (index === 0) span.classList.add('selectionne');
 });
 
-document.querySelector('#submitNote').addEventListener('click', () => {
+document.querySelector('#submitNote').addEventListener('click', async () => {
   const couleurSpan = document.querySelector('.couleurs span.selectionne');
-  const v = couleurSpan.classList[0];
-  const e = titleTag.value.trim();
-  const t = descTag.value.trim().replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;');
-  const g = document.querySelector('#checkHidden').checked;
-  if (!e || e.length > 30 || t.length > 5000) return;
-  const c = {
-    title: e,
-    desc: t,
-    couleur: v,
+  const couleur = couleurSpan.classList[0];
+  const title = titleNote.value.trim();
+  const content = contentNote.value.trim().replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;');
+  const hidden = document.querySelector('#checkHidden').checked;
+
+  if (!title || title.length > 30 || content.length > 5000) return;
+
+  const dbName = 'notes_db';
+  const objectStoreName = 'key';
+  const db = await openIndexedDB(dbName, objectStoreName);
+  let key = await getKeyFromDB(db, objectStoreName);
+
+  if (!key) {
+    key = await window.crypto.subtle.generateKey(
+      { name: 'AES-GCM', length: 256 },
+      true,
+      ['encrypt', 'decrypt'],
+    );
+    await storeKeyInDB(db, objectStoreName, key);
+  }
+
+  const enTitle = await window.crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: new Uint8Array(12) },
+    key,
+    new TextEncoder().encode(JSON.stringify(title)),
+  );
+
+  const enContent = await window.crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: new Uint8Array(12) },
+    key,
+    new TextEncoder().encode(JSON.stringify(content)),
+  );
+
+  const note = {
+    title: arrayBufferToBase64(enTitle),
+    content: arrayBufferToBase64(enContent),
+    couleur,
     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-    hidden: g,
+    hidden,
   };
+
   if (isUpdate) {
     isUpdate = false;
-    notesJSON[document.querySelector('#idNoteInput').value] = c;
+    notesJSON[document.querySelector('#idNoteInput').value] = note;
   } else {
-    notesJSON.push(c);
+    notesJSON.push(note);
   }
+
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-  popupBox.classList.remove('show');
+  noteBox.classList.remove('show');
   document.body.classList.remove('noscroll');
   showNotes();
 });
@@ -451,7 +565,6 @@ document.querySelector('#submitNote').addEventListener('click', () => {
 document.querySelectorAll('#menuIcon').forEach((element) => {
   element.addEventListener('click', () => {
     document.querySelector('.sideBar').classList.add('show');
-    darken.classList.toggle('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -471,16 +584,14 @@ document.body.addEventListener('touchmove', (e) => {
 
 document.body.addEventListener('touchend', () => {
   const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 50 && !sideBar.classList.contains('show')) {
+  if (swipeDistance > 100 && !sideBar.classList.contains('show')) {
     sideBar.classList.add('show');
-    darken.classList.add('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
     document.body.classList.add('noscroll');
-  } else if (swipeDistance < -50 && sideBar.classList.contains('show')) {
+  } else if (swipeDistance < -100 && sideBar.classList.contains('show')) {
     sideBar.classList.remove('show');
-    darken.classList.remove('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
@@ -504,10 +615,9 @@ document.querySelectorAll('header i').forEach((element) => {
   element.addEventListener('click', () => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
-    popupBox.classList.remove('show');
+    noteBox.classList.remove('show');
     connectBox.classList.remove('show');
     creerBox.classList.remove('show');
-    darken.classList.remove('show');
     document.body.classList.remove('noscroll');
     document.querySelector('.sideBar').classList.remove('show');
   });
@@ -543,15 +653,13 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
   }
 });
 
-document.querySelector('.language').addEventListener('change', () => {
-  const e = document.querySelector('.language').value;
+document.querySelector('#language').addEventListener('change', () => {
+  const e = document.querySelector('#language').value;
   if (e === 'fr') {
     window.location.href = './';
-  }
-  else if (e === 'en') {
+  } else if (e === 'en') {
     window.location.href = 'en/';
-  }
-  else if (e === 'de') {
+  } else if (e === 'de') {
     window.location.href = 'de/';
   }
 });

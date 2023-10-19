@@ -5,13 +5,12 @@ let touchEnd = 0;
 let timeoutCopy = null;
 let timeoutError = null;
 const notesContainer = document.querySelector('main');
-const popupBoxConnect = document.querySelector('.connect-popup-box');
+const noteBox = document.querySelector('.note-popup-box');
 const popupBoxGestion = document.querySelector('.gestion-popup-box');
 const privateNote = document.querySelector('.private-note-popup-box');
 const publicNote = document.querySelector('.public-note-popup-box');
-const titleTagConnect = popupBoxConnect.querySelector('#titleConnect');
-const descTagConnect = popupBoxConnect.querySelector('textarea');
-const darken = document.querySelector('.darken');
+const titleNote = noteBox.querySelector('#title');
+const contentNote = noteBox.querySelector('#content');
 const switchElement = document.querySelector('.switch');
 const couleurs = document.querySelectorAll('.couleurs span');
 const forms = document.querySelectorAll('form');
@@ -120,8 +119,6 @@ const showNotesConnect = async () => {
     detailsElement.appendChild(descElement);
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
-    const dateElement = document.createElement('span');
-    dateElement.textContent = date;
     const editIconElement = document.createElement('i');
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
@@ -132,7 +129,6 @@ const showNotesConnect = async () => {
     editIconElement.setAttribute('data-note-hidden', hidden);
     editIconElement.setAttribute('data-note-link', link);
     editIconElement.setAttribute('role', 'button');
-    bottomContentElement.appendChild(dateElement);
     bottomContentElement.appendChild(editIconElement);
 
     if (link === '') {
@@ -172,8 +168,6 @@ const showNotesConnect = async () => {
       linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
       linkIconElement.tabIndex = 0;
       linkIconElement.setAttribute('data-note-id', id);
-      linkIconElement.setAttribute('data-note-title', title);
-      linkIconElement.setAttribute('data-note-desc', descEnd);
       linkIconElement.setAttribute('data-note-link', link);
       linkIconElement.setAttribute('role', 'button');
       bottomContentElement.appendChild(linkIconElement);
@@ -192,6 +186,11 @@ const showNotesConnect = async () => {
     dateSpan.classList.add('dateList');
     dateSpan.textContent = date;
     paragraph.appendChild(titleSpan);
+    if (link !== '') {
+      const iconLink = document.createElement('i');
+      iconLink.classList.add('fa-solid', 'fa-link');
+      paragraph.appendChild(iconLink);
+    }
     paragraph.appendChild(dateSpan);
     document.querySelector('.sideBar .listNotes').appendChild(paragraph);
   });
@@ -200,7 +199,6 @@ const showNotesConnect = async () => {
 };
 
 const fetchDelete = async (e) => {
-  darken.classList.remove('show');
   document.body.classList.remove('noscroll');
   try {
     await fetch('../assets/php/deleteNote.php', {
@@ -251,7 +249,6 @@ const fetchLogout = async () => {
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
-  darken.classList.toggle('show');
   document.body.classList.toggle('noscroll');
 };
 
@@ -259,14 +256,13 @@ const updateNoteConnect = (id, title, desc, couleur, hidden, link) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  darken.classList.remove('show');
   document.body.classList.add('noscroll');
   isUpdate = true;
   document.querySelector('.iconConnect').click();
-  document.querySelector('#idNoteInputConnect').value = id;
+  document.querySelector('#idNoteInput').value = id;
   document.querySelector('#checkLink').value = link;
-  titleTagConnect.value = title;
-  descTagConnect.value = replaceAllStart(desc);
+  titleNote.value = title;
+  contentNote.value = replaceAllStart(desc);
   couleurs.forEach((couleurSpan) => {
     if (couleurSpan.classList.contains(couleur)) {
       couleurSpan.classList.add('selectionne');
@@ -280,7 +276,7 @@ const updateNoteConnect = (id, title, desc, couleur, hidden, link) => {
   } else {
     document.querySelector('#checkHidden').disabled = true;
   }
-  descTagConnect.focus();
+  contentNote.focus();
 };
 
 const downloadNote = (e, t) => {
@@ -314,17 +310,14 @@ const deleteNoteConnect = (e) => {
   }
 };
 
-const noteAccess = (id, link, title, desc) => {
+const noteAccess = (id, link) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  darken.classList.remove('show');
   document.body.classList.add('noscroll');
   if (link === '') {
     privateNote.classList.add('show');
     document.querySelector('#idNoteInputPublic').value = id;
-    document.querySelector('#titleNoteInputPublic').value = title;
-    document.querySelector('#descNoteInputPublic').value = desc;
   } else {
     publicNote.classList.add('show');
     document.querySelector('#idNoteInputPrivate').value = id;
@@ -389,9 +382,9 @@ switchElement.addEventListener('keydown', (event) => {
 
 document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) => {
   element.addEventListener('click', () => {
-    popupBoxConnect.classList.add('show');
+    noteBox.classList.add('show');
     document.body.classList.add('noscroll');
-    titleTagConnect.focus();
+    titleNote.focus();
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -432,7 +425,6 @@ document.querySelectorAll('.supprimerCompte').forEach((element) => {
 document.querySelectorAll('#menuIcon').forEach((element) => {
   element.addEventListener('click', () => {
     sideBar.classList.add('show');
-    darken.classList.toggle('show');
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -452,16 +444,14 @@ document.body.addEventListener('touchmove', (e) => {
 
 document.body.addEventListener('touchend', () => {
   const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 50 && !sideBar.classList.contains('show')) {
+  if (swipeDistance > 100 && !sideBar.classList.contains('show')) {
     sideBar.classList.add('show');
-    darken.classList.add('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
     document.body.classList.remove('noscroll');
-  } else if (swipeDistance < -50 && sideBar.classList.contains('show')) {
+  } else if (swipeDistance < -100 && sideBar.classList.contains('show')) {
     sideBar.classList.remove('show');
-    darken.classList.remove('show');
     document.querySelectorAll('.note').forEach((note) => {
       note.classList.remove('fullscreen');
     });
@@ -485,11 +475,10 @@ document.querySelectorAll('header i').forEach((element) => {
   element.addEventListener('click', () => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
-    popupBoxConnect.classList.remove('show');
+    noteBox.classList.remove('show');
     popupBoxGestion.classList.remove('show');
     publicNote.classList.remove('show');
     privateNote.classList.remove('show');
-    darken.classList.remove('show');
     document.body.classList.remove('noscroll');
     sideBar.classList.remove('show');
   });
@@ -525,15 +514,13 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
   }
 });
 
-document.querySelector('.language').addEventListener('change', () => {
-  const e = document.querySelector('.language').value;
+document.querySelector('#language').addEventListener('change', () => {
+  const e = document.querySelector('#language').value;
   if (e === 'fr') {
     window.location.href = '../';
-  }
-  else if (e === 'en') {
+  } else if (e === 'en') {
     window.location.href = '../en/';
-  }
-  else if (e === 'de') {
+  } else if (e === 'de') {
     window.location.href = '../de/';
   }
 });
@@ -566,11 +553,11 @@ couleurs.forEach((span, index) => {
   if (index === 0) span.classList.add('selectionne');
 });
 
-document.querySelector('#submitNoteConnect').addEventListener('click', async () => {
+document.querySelector('#submitNote').addEventListener('click', async () => {
   try {
-    const idNote = document.querySelector('#idNoteInputConnect').value;
-    const titreBrut = document.querySelector('#titleConnect').value.trim();
-    const contentBrut = document.querySelector('#descConnect').value.trim();
+    const idNote = document.querySelector('#idNoteInput').value;
+    const titreBrut = titleNote.value.trim();
+    const contentBrut = contentNote.value.trim();
     if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
     const titre = encodeURIComponent(titreBrut);
     const content = encodeURIComponent(contentBrut.replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;'));
@@ -579,7 +566,7 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const checkBox = document.querySelector('#checkHidden');
     const link = encodeURIComponent(document.querySelector('#checkLink').value);
-    const hidden = checkBox.checked ? 1 : 0;
+    const hidden = checkBox.checked ? '1' : '0';
     const url = isUpdate ? '../assets/php/updateNote.php' : '../assets/php/addNote.php';
     const data = isUpdate ? `noteId=${idNote}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const response = await fetch(url, {
@@ -590,11 +577,11 @@ document.querySelector('#submitNoteConnect').addEventListener('click', async () 
       body: data,
     });
     if (response.status !== 200) {
-      showError('Beim Hinzufügen der Notiz ist ein Fehler aufgetreten...');
+      showError('Zeitüberschreitung bei der Verbindung, bitte laden Sie die Seite neu...');
       return;
     }
     isUpdate = false;
-    popupBoxConnect.classList.remove('show');
+    noteBox.classList.remove('show');
     document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
@@ -656,15 +643,13 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
 document.querySelector('#submitRendrePublique').addEventListener('click', async () => {
   const id = document.querySelector('#idNoteInputPublic').value;
   const link = Math.random().toString(36).substring(2, 15);
-  const title = document.querySelector('#titleNoteInputPublic').value;
-  const desc = replaceAllStart(document.querySelector('#descNoteInputPublic').value);
   try {
     await fetch('../assets/php/publicNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `noteId=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&noteLink=${link}`,
+      body: `noteId=${encodeURIComponent(id)}&noteLink=${link}`,
     });
     privateNote.classList.remove('show');
     document.body.classList.remove('noscroll');

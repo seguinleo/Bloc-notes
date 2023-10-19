@@ -24,6 +24,7 @@ html {
   -webkit-tap-highlight-color: transparent;
   scrollbar-width: thin;
   scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
+  font-family: Arial, sans-serif;
 
   ::-webkit-scrollbar-thumb {
     background: rgba(100, 100, 100, 50%);
@@ -31,7 +32,6 @@ html {
 }
 
 * {
-  font-family: Arial, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -94,6 +94,7 @@ code {
 
 li {
   margin-left: -1rem;
+  word-break: break-word;
 }
 
 img {
@@ -113,6 +114,10 @@ nav {
 
   h1 {
     display: inline-block;
+
+    i {
+      font-size: 2rem;
+    }
   }
 
   div {
@@ -145,8 +150,6 @@ nav {
     }
 
     input {
-      font-size: 1rem;
-      height: 50px;
       width: 180px;
       border: none;
       border-radius: 24px;
@@ -225,6 +228,8 @@ main {
       display: inline-block;
       white-space: nowrap;
       font-weight: 700;
+      vertical-align: bottom;
+      margin-right: 5px;
     }
 
     .dateList {
@@ -234,12 +239,17 @@ main {
   }
 }
 
-label {
-  vertical-align: middle;
+input {
+  font-family: OpenSans, sans-serif;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
 }
 
 input,
-textarea,
 select {
   height: 50px;
   width: 100%;
@@ -253,7 +263,10 @@ option {
 }
 
 textarea {
+  font-family: OpenSans, sans-serif;
+  font-size: 1rem;
   height: 250px;
+  width: 100%;
   min-height: 200px;
   max-height: 450px;
   resize: vertical;
@@ -261,12 +274,13 @@ textarea {
 }
 
 button {
+  font-family: OpenSans, sans-serif;
+  font-size: 1rem;
   cursor: pointer;
   width: 100%;
   height: 50px;
   border: none;
   padding: 0 1rem;
-  font-size: 1rem;
   border-radius: 5px;
   transition: .1s;
 
@@ -276,7 +290,7 @@ button {
 }
 
 form {
-  margin: 1rem 0;
+  margin: 10px 0;
 }
 
 p.welcome {
@@ -293,13 +307,13 @@ p.welcome {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 1rem;
+  border-radius: 10px;
   clip-path: polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px);
   transition: clip-path .4s;
   width: 400px;
   max-height: 460px;
   line-height: 2;
-  padding: 30px 20px 10px;
+  padding: 15px 15px 10px;
 
   &:hover,
   &:focus {
@@ -376,15 +390,10 @@ p.welcome {
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      margin: 0 4px;
+      margin: 0 5px;
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      transition: .1s;
-    }
-
-    span {
-      font-size: .7rem;
       transition: .1s;
     }
   }
@@ -400,34 +409,16 @@ p.welcome {
   z-index: 3;
   width: 80vw;
   min-height: 80vh;
-  top: 10%;
-  left: 0;
-  right: 0;
   margin: auto;
+  inset: 0;
 
   .details {
-    min-height: 70vh;
+    max-height: 100%;
   }
 }
 
 .noscroll {
   overflow: hidden;
-}
-
-.darken {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  height: 100%;
-  width: 100%;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-
-  &.show {
-    display: block;
-  }
 }
 
 .popup,
@@ -465,12 +456,11 @@ select {
 }
 
 .connect-box,
-.connect-popup-box,
 .creer-box,
 .gestion-popup-box,
 .public-note-popup-box,
 .private-note-popup-box,
-.popup-box {
+.note-popup-box {
   display: none;
   pointer-events: none;
   position: fixed;
@@ -496,10 +486,9 @@ select {
 }
 
 .connect-box.show,
-.connect-popup-box.show,
 .creer-box.show,
 .gestion-popup-box.show,
-.popup-box.show,
+.note-popup-box.show,
 .public-note-popup-box.show,
 .private-note-popup-box.show {
   display: flex;
@@ -507,10 +496,9 @@ select {
 }
 
 .connect-box.show .popup,
-.connect-popup-box.show .popup,
 .creer-box.show .popup,
 .gestion-popup-box.show .popup,
-.popup-box.show .popup,
+.note-popup-box.show .popup,
 .public-note-popup-box.show .popup,
 .private-note-popup-box.show .popup {
   display: flex;
@@ -572,11 +560,9 @@ select {
   margin: 0 5px;
 }
 
-.divLanguage {
-  .language {
-    width: 50px;
-    padding: 0;
-  }
+#language {
+  width: 50px;
+  padding: 0;
 }
 
 .copyright {
@@ -587,24 +573,6 @@ select {
 
 .gestion-popup-box.show .version {
   text-align: right;
-}
-
-.check {
-  position: relative;
-  margin-left: -40px;
-  width: 32px;
-  height: 25px;
-  vertical-align: middle;
-  opacity: 0;
-
-  &:checked+label svg g path {
-    stroke-dashoffset: 0;
-  }
-}
-
-.path1 {
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
 }
 
 #errorNotification {
@@ -668,10 +636,6 @@ select {
 .task-list-item {
   list-style-type: none;
   margin-left: -2rem;
-
-  * {
-    vertical-align: middle;
-  }
 }
 
 @media (min-width: 901px) {
@@ -713,9 +677,7 @@ select {
 
       input {
         width: 60%;
-        vertical-align: middle;
         padding: 5px;
-        margin: 0 10px;
       }
 
       .linkp {
@@ -724,21 +686,18 @@ select {
 
       .gestionCompte,
       .seconnecter,
-      .fa-bars,
-      .resync {
+      .fa-bars {
         display: inline;
-        vertical-align: middle;
         cursor: pointer;
       }
 
       i {
-        font-size: 1.1rem;
+        vertical-align: middle;
+        font-size: 1.8rem;
       }
 
-      .gestionCompte i,
-      .seconnecter i {
-        font-size: 1.8rem;
-        vertical-align: middle;
+      .fa-bars {
+        font-size: 1.2rem;
       }
 
       .fa-magnifying-glass {
@@ -752,7 +711,7 @@ select {
   }
 
   main {
-    padding: 0 5px 5rem;
+    padding: 0 0 5rem;
     gap: 10px;
   }
 
@@ -812,21 +771,32 @@ select {
   }
 
   .note {
-    width: 98%;
+    width: 100%;
     max-height: 300px;
+    margin: 0 10px;
+
+    .bottom-content {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .title {
+      font-size: 1.1rem;
+    }
 
     .details {
-      overflow-y: hidden;
-      max-height: 75vh;
+      overflow: hidden;
+      font-size: .9rem;
     }
   }
 
   .fullscreen {
-    min-height: calc(100vh - 5rem);
-    top: 1rem;
+    min-height: 100dvh;
+    inset: auto;
+    top: 0;
 
     .details {
-      overflow-y: auto;
+      overflow: auto;
     }
   }
 
@@ -882,14 +852,15 @@ html.dark {
     background: $color2;
 
     .search-input {
-      background: $color3;
+      background: $color1;
 
       ::placeholder {
         color: $color4;
       }
 
       input {
-        background: $color3;
+        background: $color1;
+        border: none;
 
         &:focus {
           outline: none;
@@ -985,14 +956,12 @@ html.dark {
     }
   }
 
-  .connect-box,
-  .connect-popup-box,
+  .note-popup-box,
   .creer-box,
   .gestion-popup-box,
   .popup-box,
   .private-note-popup-box,
-  .public-note-popup-box,
-  .darken {
+  .public-note-popup-box {
     background: rgba(0, 0, 0, 50%);
   }
 
@@ -1001,11 +970,11 @@ html.dark {
   }
 
   #btnTheme {
-    background: $color3;
+    background: $color1;
     color: $color4;
   }
 
-  .divLanguage .language {
+  #language {
     border: none;
     background: $color2;
   }
@@ -1174,12 +1143,12 @@ html.light {
     }
   }
 
-  .connect-box,
-  .connect-popup-box,
+  .note-popup-box,
   .creer-box,
   .gestion-popup-box,
   .popup-box,
-  .darken {
+  .private-note-popup-box,
+  .public-note-popup-box {
     background: rgba(200, 200, 200, 40%);
   }
 
@@ -1205,7 +1174,7 @@ html.light {
     color: $color2;
   }
 
-  .divLanguage .language {
+  #language {
     border: none;
     background: none;
   }

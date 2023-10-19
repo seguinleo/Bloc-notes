@@ -26,7 +26,6 @@ if (isset($_SESSION['nom']) === false) {
 ?>
 <!DOCTYPE html>
 <html class="dark" lang="fr-FR">
-
 <head>
     <meta charset="utf-8">
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
@@ -35,40 +34,19 @@ if (isset($_SESSION['nom']) === false) {
     <meta name="theme-color" content="#272727" id="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
-    <!-- TWITTER ("""X""")
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta name="twitter:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
-    <meta name="twitter:image" content="https://leoseguin.fr/assets/img/notes.png">
-    -->
-    <link rel="alternate" hreflang="en" href="en/">
-    <link rel="alternate" hreflang="fr" href="./">
-    <link rel="alternate" hreflang="de" href="de/">
-    <link rel="alternate" hreflang="x-default" href="en/">
-    <!-- Open Graph
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta property="og:description" content="Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.">
-    <meta property="og:site_name" content="Bloc-notes &#8211; Léo SEGUIN">
-    <meta property="og:url" content="https://leoseguin.fr/projets">
-    <meta property="og:image" content="https://leoseguin.fr/assets/img/notes.png">
-    <meta property="og:locale" content="fr-FR">
-    -->
     <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="manifest" href="app.webmanifest">
 </head>
-
 <body>
     <nav>
         <?php if (isset($nom) === true) { ?>
             <div class="welcome">
                 <h1>
-                    <span class="gestionCompte linkp" tabindex="0" role="button">
+                    <span class="gestionCompte linkp" tabindex="0" role="button" aria-label="Gestion du compte">
                         <i class="fa-solid fa-circle-user"></i>
-                        <?= $nom ?>
                     </span>
                 </h1>
             </div>
@@ -76,17 +54,17 @@ if (isset($_SESSION['nom']) === false) {
             <div class="welcome">
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Voir sur GitHub (v23.10.1)" target="_blank" rel="noreferrer">v23.10.1</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
                 </span>
             </div>
             <div>
-                <button type="button" class="seconnecter" aria-label="Se connecter">Se connecter</button>
+                <button type="button" class="seconnecter">Se connecter</button>
             </div>
         <?php } ?>
         <div class="search-input">
             <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
-            <input type="text" id="search-input" name="search-input" maxlength="30" aria-label="Recherche" placeholder="Recherche">
+            <input type="text" id="search-input" maxlength="30" aria-label="Recherche" placeholder="Recherche">
             <kbd>CTRL</kbd><kbd>K</kbd>
             <?php if (isset($nom) === true) { ?>
                 <span class="gestionCompte linkp" aria-label="Compte" tabindex="0" role="button">
@@ -120,7 +98,6 @@ if (isset($_SESSION['nom']) === false) {
                 <button id="iconButtonFloat" type="button" aria-label="Ajouter une note sur l'appareil"><i class="fa-solid fa-plus"></i></button>
             </div>
         <?php } ?>
-        <div class="darken"></div>
         <div id="errorNotification"></div>
         <div class="sideBar">
             <header>
@@ -129,18 +106,18 @@ if (isset($_SESSION['nom']) === false) {
             <h2>Notes</h2>
             <?php if (isset($nom) === true) { ?>
                 <div class="iconConnect">
-                    <button id="iconButtonConnect" type="button" aria-label="Ajouter une note dans le cloud">Ajouter une note dans le cloud</button>
+                    <button id="iconButtonConnect" type="button">Ajouter une note dans le cloud</button>
                 </div>
             <?php } else { ?>
                 <div class="icon">
-                    <button id="iconButton" type="button" aria-label="Ajouter une note sur l'appareil">Ajouter une note sur l'appareil</button>
+                    <button id="iconButton" type="button">Ajouter une note sur l'appareil</button>
                 </div>
             <?php } ?>
             <div class="listNotes"></div>
             <div class="copyright">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer" aria-label="Mentions légales / Privacy policy">Mentions légales / confidentialité</a>
+                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer">Mentions légales / confidentialité</a>
                 <div class="divLanguage">
-                    <select class="language" name="language" aria-label="Langue">
+                    <select id="language" aria-label="Langue">
                         <option value="fr" selected>🇫🇷</option>
                         <option value="en">🇬🇧</option>
                         <option value="de">🇩🇪</option>
@@ -150,50 +127,52 @@ if (isset($_SESSION['nom']) === false) {
             </div>
         </div>
         <div id="copyNotification">Copié !</div>
-        <?php if (isset($nom) === true) { ?>
-            <div class="connect-popup-box">
-                <div class="popup">
-                    <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
-                        <form id="addFormConnect" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInputConnect" type="hidden">
+        <div class="note-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <header>
+                        <i class="fa-solid fa-xmark" tabindex="0"></i>
+                    </header>
+                    <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
+                        <input id="idNoteInput" type="hidden">
+                        <?php if (isset($nom) === true) { ?>
                             <input id="checkLink" type="hidden">
-                            <input type="hidden" id="csrf_token_note" name="csrf_token_note" value="<?= $csrf_token_note ?>">
-                            <div class="row">
-                                <input id="titleConnect" name="titleConnect" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
+                            <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
+                        <?php } ?>
+                        <div class="row">
+                            <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
+                        </div>
+                        <div class="row">
+                            <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="couleurs">
+                                <span class="Noir" role="button" tabindex="0" aria-label="Noir"></span>
+                                <span class="Blanc" role="button" tabindex="0" aria-label="Blanc"></span>
+                                <span class="Rouge" role="button" tabindex="0" aria-label="Rouge"></span>
+                                <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
+                                <span class="Jaune" role="button" tabindex="0" aria-label="Jaune"></span>
+                                <span class="Vert" role="button" tabindex="0" aria-label="Vert"></span>
+                                <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
+                                <span class="BleuCiel" role="button" tabindex="0" aria-label="Bleu ciel"></span>
+                                <span class="Bleu" role="button" tabindex="0" aria-label="Bleu"></span>
+                                <span class="Violet" role="button" tabindex="0" aria-label="Violet"></span>
+                                <span class="Rose" role="button" tabindex="0" aria-label="Rose"></span>
                             </div>
-                            <div class="row">
-                                <textarea id="descConnect" name="descConnect" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="couleurs">
-                                    <span class="Noir" role="button" tabindex="0" aria-label="Noir"></span>
-                                    <span class="Blanc" role="button" tabindex="0" aria-label="Blanc"></span>
-                                    <span class="Rouge" role="button" tabindex="0" aria-label="Rouge"></span>
-                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
-                                    <span class="Jaune" role="button" tabindex="0" aria-label="Jaune"></span>
-                                    <span class="Vert" role="button" tabindex="0" aria-label="Vert"></span>
-                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
-                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Bleu ciel"></span>
-                                    <span class="Bleu" role="button" tabindex="0" aria-label="Bleu"></span>
-                                    <span class="Violet" role="button" tabindex="0" aria-label="Violet"></span>
-                                    <span class="Rose" role="button" tabindex="0" aria-label="Rose"></span>
-                                </div>
-                            </div>
-                            Note masquée
-                            <div class="row">
-                                <label for="checkHidden" class="switch" aria-label="Note masquée">
-                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                    <span class="slider" tabindex="0"></span>
-                                </label>
-                            </div>
-                            <button id="submitNoteConnect" type="submit" aria-label="Enregistrer la note">Enregistrer la note <i class="fa-solid fa-cloud"></i></button>
-                        </form>
-                    </div>
+                        </div>
+                        Note masquée
+                        <div class="row">
+                            <label for="checkHidden" class="switch" aria-label="Note masquée">
+                                <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
+                                <span class="slider" tabindex="0"></span>
+                            </label>
+                        </div>
+                        <button id="submitNote" type="submit">Enregistrer la note</button>
+                    </form>
                 </div>
             </div>
+        </div>
+        <?php if (isset($nom) === true) { ?>
             <div class="gestion-popup-box">
                 <div class="popup">
                     <div class="content">
@@ -205,11 +184,11 @@ if (isset($_SESSION['nom']) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer" aria-label="Guide Markdown">Guide Markdown</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer">Guide Markdown</a>
                             </span>
                         </div>
                         <div class="row">
-                            <select id="tri" name="tri" aria-label="tri">
+                            <select id="tri" aria-label="tri">
                                 <option disabled selected value>Trier les notes</option>
                                 <option value="Date de création">Date de création</option>
                                 <option value="Date de création (Z-A)">Date de création (Z-A)</option>
@@ -220,14 +199,14 @@ if (isset($_SESSION['nom']) === false) {
                         <details>
                             <summary>Gestion du compte <?= $nom ?></summary>
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-                                <input type="hidden" id="csrf_token_mdp" name="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
+                                <input type="hidden" id="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" name="mdpModifNew" placeholder="Nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
+                                    <input id="mdpModifNew" placeholder="Nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="Nouveau mot de passe" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" name="mdpModifNewValid" placeholder="Retaper le nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
+                                    <input id="mdpModifNewValid" placeholder="Retaper le nouveau mot de passe" type="password" minlength="6" maxlength="50" aria-label="Retaper le nouveau mot de passe" required>
                                 </div>
-                                <button id="submitChangeMDP" type="submit" aria-label="Modifier le mot de passe">Modifier le mot de passe</button>
+                                <button id="submitChangeMDP" type="submit">Modifier le mot de passe</button>
                             </form>
                             <div class="row">
                                 <span class="supprimerCompte" tabindex="0">Supprimer mon compte</span>
@@ -235,7 +214,7 @@ if (isset($_SESSION['nom']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" aria-label="Voir sur GitHub" target="_blank" rel="noreferrer">v23.10.1</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
                             </p>
                         </div>
                     </div>
@@ -251,11 +230,9 @@ if (isset($_SESSION['nom']) === false) {
                             <div class="row">
                                 Voulez-vous rendre votre note publique ? Cela générera un lien unique pour partager votre note.
                             </div>
-                            <input id="idNoteInputPublic" name="idNoteInputPublic" type="hidden">
-                            <input id="titleNoteInputPublic" name="titleNoteInputPublic" type="hidden">
-                            <input id="descNoteInputPublic" name="descNoteInputPublic" type="hidden">
+                            <input id="idNoteInputPublic" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePublique" type="submit" aria-label="Rendre la note publique">Rendre la note publique</button>
+                                <button id="submitRendrePublique" type="submit">Rendre la note publique</button>
                             </div>
                         </form>
                     </div>
@@ -272,57 +249,16 @@ if (isset($_SESSION['nom']) === false) {
                             <div class="row">
                                 Voulez-vous de nouveau rendre votre note privée ? Le lien unique ne sera plus disponible.
                             </div>
-                            <input id="idNoteInputPrivate" name="idNoteInputPrivate" type="hidden">
-                            <input id="linkNoteInputPrivate" name="linkNoteInputPrivate" type="hidden">
+                            <input id="idNoteInputPrivate" type="hidden">
+                            <input id="linkNoteInputPrivate" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePrivee" type="submit" aria-label="Rendre la note privée">Rendre la note privée</button>
+                                <button id="submitRendrePrivee" type="submit">Rendre la note privée</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         <?php } else { ?>
-            <div class="popup-box">
-                <div class="popup">
-                    <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
-                        <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input id="idNoteInput" name="idNoteInput" type="hidden">
-                            <div class="row">
-                                <input id="title" name="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
-                            </div>
-                            <div class="row">
-                                <textarea id="content" name="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="couleurs">
-                                    <span class="Noir" role="button" tabindex="0" aria-label="Noir"></span>
-                                    <span class="Blanc" role="button" tabindex="0" aria-label="Blanc"></span>
-                                    <span class="Rouge" role="button" tabindex="0" aria-label="Rouge"></span>
-                                    <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
-                                    <span class="Jaune" role="button" tabindex="0" aria-label="Jaune"></span>
-                                    <span class="Vert" role="button" tabindex="0" aria-label="Vert"></span>
-                                    <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
-                                    <span class="BleuCiel" role="button" tabindex="0" aria-label="Bleu ciel"></span>
-                                    <span class="Bleu" role="button" tabindex="0" aria-label="Bleu"></span>
-                                    <span class="Violet" role="button" tabindex="0" aria-label="Violet"></span>
-                                    <span class="Rose" role="button" tabindex="0" aria-label="Rose"></span>
-                                </div>
-                            </div>
-                            Note masquée
-                            <div class="row">
-                                <label for="checkHidden" class="switch" aria-label="Note masquée">
-                                    <input type="checkbox" name="checkHidden" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                    <span class="slider" tabindex="0"></span>
-                                </label>
-                            </div>
-                            <button id="submitNote" type="submit" aria-label="Enregistrer la note">Enregistrer la note</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <div class="connect-box">
                 <div class="popup">
                     <div class="content">
@@ -331,14 +267,14 @@ if (isset($_SESSION['nom']) === false) {
                         </header>
                         <span class="creercompte linkp" tabindex="0" role="button">Pas encore de compte ?</span>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" name="csrf_token_connect" value="<?= $csrf_token_connect ?>">
+                            <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
-                                <input id="nomConnect" name="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="nom" required>
+                                <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="Nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" name="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="mdp" required>
+                                <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="Mot de passe" required>
                             </div>
-                            <button id="submitSeConnecter" type="submit" aria-label="Se connecter">Se connecter</button>
+                            <button id="submitSeConnecter" type="submit">Se connecter</button>
                         </form>
                     </div>
                 </div>
@@ -350,21 +286,21 @@ if (isset($_SESSION['nom']) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" name="csrf_token_creer" value="<?= $csrf_token_creer ?>">
+                            <input type="hidden" id="csrf_token_creer" value="<?= $csrf_token_creer ?>">
                             <div class="row">
-                                <input id="nomCreer" name="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="nom" required>
+                                <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="Entrer votre nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" name="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
+                                <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Entrer votre mot de passe" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" name="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="mdp" required>
+                                <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Retaper votre mot de passe" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
                                 Votre mot de passe est stocké en toute sécurité et vos notes chiffrées.
                             </div>
-                            <button id="submitCreer" type="submit" aria-label="Créer mon compte">Créer mon compte</button>
+                            <button id="submitCreer" type="submit">Créer mon compte</button>
                         </form>
                     </div>
                 </div>
@@ -378,5 +314,4 @@ if (isset($_SESSION['nom']) === false) {
         <script src="assets/js/script.js" defer></script>
     <?php } ?>
 </body>
-
 </html>

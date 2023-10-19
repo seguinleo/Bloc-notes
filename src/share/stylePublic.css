@@ -3,7 +3,7 @@ html {
   scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
   background-color: #171717;
   color: #c6c6c6;
-  font-family: Arial, sans-serif
+  font-family: Arial, sans-serif;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -51,10 +51,9 @@ li {
   flex-direction: column;
   justify-content: space-between;
   border-radius: 1rem;
-  width: 98%;
   min-height: 600px;
-  height: 85vh;
-  margin: 1rem auto;
+  height: 90dvh;
+  margin: 1rem;
   line-height: 2;
   padding: 30px 20px 10px;
 }
@@ -227,7 +226,6 @@ li {
 }
 
 footer {
-  padding: 1rem;
   font-size: .8rem;
   text-align: center;
   width: 100%;
@@ -237,4 +235,14 @@ footer {
 
 footer a {
   color: #8ab4f8;
+}
+
+@media(max-width: 900px) {
+  .note {
+    margin: 10px;
+  }
+
+  .details {
+    font-size: .9rem;
+  }
 }

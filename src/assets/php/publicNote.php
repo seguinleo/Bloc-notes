@@ -2,7 +2,15 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_SESSION['nom'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteLink']) === false) {
+if (isset($_SESSION['nom'], $_POST['noteId'], $_POST['noteLink']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+    http_response_code(403);
+    return;
+}
+if (preg_match('/^[0-9]+$/', $_SESSION['noteId']) === false) {
     http_response_code(403);
     return;
 }
@@ -15,19 +23,15 @@ require_once __DIR__ . '/config/config.php';
 
 $nom = $_SESSION['nom'];
 $noteId = $_POST['noteId'];
-$title = $_POST['title'];
-$desc = $_POST['desc'];
 $noteLink = $_POST['noteLink'];
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink, clearTitre=:ClearTitle, clearContent=:ClearContent WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
+    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
     $query->execute(
         [
             ':NoteLink'     => $noteLink,
             ':NoteId'       => $noteId,
             ':CurrentUser'  => $nom,
-            ':ClearTitle'   => $title,
-            ':ClearContent' => $desc
         ]
     );
     $query->closeCursor();
@@ -37,12 +41,12 @@ try {
     return;
 }
 
-$directoryPath = '../../share/' . $noteLink;
+$directoryPath = '../../share/' . htmlspecialchars($noteLink);
 if (is_dir($directoryPath) === false) {
-    if (mkdir($directoryPath)) {
+    if (mkdir($directoryPath, 0755, true)) {
         $index = fopen($directoryPath . '/index.php', 'w');
         $indexContent =
-        <<<EOT
+            <<<EOT
         <!DOCTYPE html>
         <html>
         <head>

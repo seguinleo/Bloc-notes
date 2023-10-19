@@ -10,7 +10,7 @@ if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION['nom'], $_SESSION['key'], $_SESSION['userId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
+if (isset($_SESSION['nom'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;
 }
@@ -19,20 +19,16 @@ if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
     return;
 }
 
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 
-$key = $_SESSION['key'];
-$desc = $_POST['desc'];
-$desc = $encryption->encryptData($desc, $key);
 $title = $_POST['title'];
-$title = $encryption->encryptData($title, $key);
+$desc = $_POST['desc'];
 $couleur = $_POST['couleur'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
-$nom = $_SESSION['nom'];
 $couleursAutorisees = [
     "Noir",
     "Blanc",
@@ -52,15 +48,15 @@ if (in_array($couleur, $couleursAutorisees) === false) {
 }
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Title,:Descr,:DateNote,:Couleur,:User,:HiddenNote)");
+    $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Titre,:Content,:DateNote,:Couleur,:User,:HiddenNote)");
     $query->execute(
         [
-            ':Title'      => $title,
-            ':Descr'      => $desc,
-            ':DateNote'   => $dateNote,
-            ':Couleur'    => $couleur,
-            ':User'       => $nom,
-            ':HiddenNote' => $hidden
+            ':Titre'        => $encryption->encryptData($title, $key),
+            ':Content'      => $encryption->encryptData($desc, $key),
+            ':DateNote'     => $dateNote,
+            ':Couleur'      => $couleur,
+            ':User'         => $nom,
+            ':HiddenNote'   => $hidden
         ]
     );
 } catch (Exception $e) {
