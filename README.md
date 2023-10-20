@@ -83,4 +83,5 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass and [Showdownjs](https://github.com/
 
 [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 
-![Preview](https://github.com/seguinleo/Bloc-notes/blob/main/image.png)
+![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/img/desktop.png)
+![Mobile preview](https://github.com/seguinleo/Bloc-notes/blob/main/img/mobile.png)
