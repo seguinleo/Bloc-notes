@@ -2,18 +2,13 @@ const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
 const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
-const taskListEnablerExtension = () => [{
-  type: 'output',
-  regex: /<input type="checkbox"?/g,
-  replace: '<input type="checkbox"',
-}];
-
 // eslint-disable-next-line no-undef
-const converter = new showdown.Converter({
-  tasklists: true,
-  smoothLivePreview: true,
-  extensions: [taskListEnablerExtension],
-});
+const converter = new showdown.Converter();
+converter.setOption('tables', true);
+converter.setOption('tasklists', true);
+converter.setOption('strikethrough', true);
+converter.setOption('parseImgDimensions', true);
+converter.setOption('simpleLineBreaks', true);
 
 const showSharedNote = async () => {
   const response = await fetch('../../assets/php/getSharedNote.php', {
@@ -28,6 +23,7 @@ const showSharedNote = async () => {
     const {
       title, desc, couleur, date,
     } = row;
+    if (!title || !desc) return;
     const descEnd = replaceAllEnd(desc);
     const descHtml = converter.makeHtml(desc);
     const noteElement = document.createElement('div');

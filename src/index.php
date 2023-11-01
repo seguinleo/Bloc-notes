@@ -54,7 +54,7 @@ if (isset($_SESSION['nom']) === false) {
             <div class="welcome">
                 <h1>Bloc-notes</h1>
                 <span class="version">
-                    <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.1</a>
                 </span>
             </div>
             <div>
@@ -64,7 +64,7 @@ if (isset($_SESSION['nom']) === false) {
         <div class="search-input">
             <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
-            <input type="text" id="search-input" maxlength="30" aria-label="Recherche" placeholder="Recherche">
+            <input type="search" id="search-input" maxlength="30" aria-label="Recherche" placeholder="Recherche">
             <kbd>CTRL</kbd><kbd>K</kbd>
             <?php if (isset($nom) === true) { ?>
                 <span class="gestionCompte linkp" aria-label="Compte" tabindex="0" role="button">
@@ -90,13 +90,9 @@ if (isset($_SESSION['nom']) === false) {
     </nav>
     <main>
         <?php if (isset($nom) === true) { ?>
-            <div class="iconConnectFloat">
-                <button id="iconButtonConnectFloat" type="button" aria-label="Ajouter une note sur le cloud"><i class="fa-solid fa-plus"></i></button>
-            </div>
+            <button id="iconButtonConnectFloat" class="iconConnectFloat" type="button" aria-label="Ajouter une note sur le cloud"><i class="fa-solid fa-plus"></i></button>
         <?php } else { ?>
-            <div class="iconFloat">
-                <button id="iconButtonFloat" type="button" aria-label="Ajouter une note sur l'appareil"><i class="fa-solid fa-plus"></i></button>
-            </div>
+            <button id="iconButtonFloat" class="iconFloat" type="button" aria-label="Ajouter une note sur l'appareil"><i class="fa-solid fa-plus"></i></button>
         <?php } ?>
         <div id="errorNotification"></div>
         <div class="sideBar">
@@ -105,17 +101,13 @@ if (isset($_SESSION['nom']) === false) {
             </header>
             <h2>Notes</h2>
             <?php if (isset($nom) === true) { ?>
-                <div class="iconConnect">
-                    <button id="iconButtonConnect" type="button">Ajouter une note dans le cloud</button>
-                </div>
+                <button id="iconButtonConnect" class="iconConnect" type="button">Ajouter une note dans le cloud</button>
             <?php } else { ?>
-                <div class="icon">
-                    <button id="iconButton" type="button">Ajouter une note sur l'appareil</button>
-                </div>
+                <button id="iconButton" class="icon" type="button">Ajouter une note sur l'appareil</button>
             <?php } ?>
             <div class="listNotes"></div>
             <div class="copyright">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer">Mentions légales / confidentialité</a>
+                <a href="/mentionslegales/" target="_blank" rel="noreferrer">Mentions légales / confidentialité</a>
                 <div class="divLanguage">
                     <select id="language" aria-label="Langue">
                         <option value="fr" selected>🇫🇷</option>
@@ -144,6 +136,7 @@ if (isset($_SESSION['nom']) === false) {
                         </div>
                         <div class="row">
                             <textarea id="content" placeholder="Contenu (Markdown)" aria-label="contenu" maxlength="5000"></textarea>
+                            <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
                             <div class="couleurs">
@@ -214,7 +207,7 @@ if (isset($_SESSION['nom']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.10.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.1</a>
                             </p>
                         </div>
                     </div>
@@ -265,14 +258,16 @@ if (isset($_SESSION['nom']) === false) {
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <span class="creercompte linkp" tabindex="0" role="button">Pas encore de compte ?</span>
+                        <div class="row">
+                            <span class="creercompte linkp" tabindex="0" role="button">Pas encore de compte ?</span>
+                        </div>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
                                 <input id="nomConnect" placeholder="Nom" type="text" maxlength="25" aria-label="Nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="Mot de passe" required>
+                                <input id="mdpConnect" placeholder="Mot de passe" type="password" maxlength="50" aria-label="Mot de passe" disabled required>
                             </div>
                             <button id="submitSeConnecter" type="submit">Se connecter</button>
                         </form>
@@ -291,10 +286,10 @@ if (isset($_SESSION['nom']) === false) {
                                 <input id="nomCreer" placeholder="Entrer votre nom" type="text" minlength="4" maxlength="25" aria-label="Entrer votre nom" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Entrer votre mot de passe" required>
+                                <input id="mdpCreer" placeholder="Entrer votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Entrer votre mot de passe" disabled required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Retaper votre mot de passe" required>
+                                <input id="mdpCreerValid" placeholder="Retaper votre mot de passe" type="password" minlength="6" maxlength="50" aria-label="Retaper votre mot de passe" disabled required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>

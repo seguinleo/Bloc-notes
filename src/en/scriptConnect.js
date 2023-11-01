@@ -37,18 +37,12 @@ const showError = (message) => {
   }, 5000);
 };
 
-const taskListEnablerExtension = () => [{
-  type: 'output',
-  regex: /<input type="checkbox"?/g,
-  replace: '<input type="checkbox"',
-}];
-
 const searchSideBar = () => {
-  document.querySelectorAll('.listNotes p').forEach((element) => {
+  sideBar.querySelectorAll('p').forEach((element) => {
     element.addEventListener('click', () => {
       const e = element.querySelector('.titleList').textContent;
       document.querySelectorAll('.note').forEach((note) => {
-        const t = note.querySelector('.note h2').textContent;
+        const t = note.querySelector('.title').textContent;
         if (t === e) {
           note.scrollIntoView();
           note.focus();
@@ -62,11 +56,12 @@ const searchSideBar = () => {
 };
 
 // eslint-disable-next-line no-undef
-const converter = new showdown.Converter({
-  tasklists: true,
-  smoothLivePreview: true,
-  extensions: [taskListEnablerExtension],
-});
+const converter = new showdown.Converter();
+converter.setOption('tables', true);
+converter.setOption('tasklists', true);
+converter.setOption('strikethrough', true);
+converter.setOption('parseImgDimensions', true);
+converter.setOption('simpleLineBreaks', true);
 
 const showNotesConnect = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
@@ -129,6 +124,7 @@ const showNotesConnect = async () => {
     editIconElement.setAttribute('data-note-hidden', hidden);
     editIconElement.setAttribute('data-note-link', link);
     editIconElement.setAttribute('role', 'button');
+    editIconElement.setAttribute('aria-label', 'Edit note');
     bottomContentElement.appendChild(editIconElement);
 
     if (link === '') {
@@ -137,6 +133,7 @@ const showNotesConnect = async () => {
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
+      trashIconElement.setAttribute('aria-label', 'Delete note');
       bottomContentElement.appendChild(trashIconElement);
     }
 
@@ -146,6 +143,7 @@ const showNotesConnect = async () => {
       clipboardIconElement.tabIndex = 0;
       clipboardIconElement.setAttribute('data-note-desc', descEnd);
       clipboardIconElement.setAttribute('role', 'button');
+      clipboardIconElement.setAttribute('aria-label', 'Copy note');
       bottomContentElement.appendChild(clipboardIconElement);
 
       const downloadIconElement = document.createElement('i');
@@ -155,6 +153,7 @@ const showNotesConnect = async () => {
       downloadIconElement.setAttribute('data-note-title', title);
       downloadIconElement.setAttribute('data-note-desc', descEnd);
       downloadIconElement.setAttribute('role', 'button');
+      downloadIconElement.setAttribute('aria-label', 'Download note');
       bottomContentElement.appendChild(downloadIconElement);
 
       const expandIconElement = document.createElement('i');
@@ -162,6 +161,7 @@ const showNotesConnect = async () => {
       expandIconElement.tabIndex = 0;
       expandIconElement.setAttribute('data-note-id', id);
       expandIconElement.setAttribute('role', 'button');
+      expandIconElement.setAttribute('aria-label', 'Expand note');
       bottomContentElement.appendChild(expandIconElement);
 
       const linkIconElement = document.createElement('i');
@@ -170,6 +170,7 @@ const showNotesConnect = async () => {
       linkIconElement.setAttribute('data-note-id', id);
       linkIconElement.setAttribute('data-note-link', link);
       linkIconElement.setAttribute('role', 'button');
+      linkIconElement.setAttribute('aria-label', 'Share note');
       bottomContentElement.appendChild(linkIconElement);
     }
 
@@ -192,9 +193,9 @@ const showNotesConnect = async () => {
       paragraph.appendChild(iconLink);
     }
     paragraph.appendChild(dateSpan);
-    document.querySelector('.sideBar .listNotes').appendChild(paragraph);
+    sideBar.querySelector('.listNotes').appendChild(paragraph);
   });
-  document.querySelector('.sideBar h2').textContent = `Notes (${data.length})`;
+  sideBar.querySelector('h2').textContent = `Notes (${data.length})`;
   searchSideBar();
 };
 
@@ -276,6 +277,7 @@ const updateNoteConnect = (id, title, desc, couleur, hidden, link) => {
   } else {
     document.querySelector('#checkHidden').disabled = true;
   }
+  document.querySelector('#textareaLength').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
 
@@ -318,11 +320,13 @@ const noteAccess = (id, link) => {
   if (link === '') {
     privateNote.classList.add('show');
     document.querySelector('#idNoteInputPublic').value = id;
+    privateNote.querySelector('i').focus();
   } else {
     publicNote.classList.add('show');
     document.querySelector('#idNoteInputPrivate').value = id;
     document.querySelector('#linkNoteInputPrivate').value = link;
     document.querySelector('#copyNoteLink').textContent = `${window.location.href.replace('/en/', '')}/share/${link}/`;
+    publicNote.querySelector('i').focus();
   }
 };
 
@@ -385,6 +389,7 @@ document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) =
     noteBox.classList.add('show');
     document.body.classList.add('noscroll');
     titleNote.focus();
+    document.querySelector('#textareaLength').textContent = '0/5000';
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -487,7 +492,7 @@ document.querySelectorAll('header i').forEach((element) => {
   });
 });
 
-document.querySelector('#search-input').addEventListener('keyup', () => {
+document.querySelector('#search-input').addEventListener('input', () => {
   const e = document.querySelector('#search-input').value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((element) => {
     const note = element;
@@ -540,6 +545,11 @@ document.querySelector('#tri').addEventListener('change', async () => {
   }
 });
 
+contentNote.addEventListener('input', () => {
+  const e = contentNote.value.length;
+  document.querySelector('#textareaLength').textContent = `${e}/5000`;
+});
+
 couleurs.forEach((span, index) => {
   span.addEventListener('click', (event) => {
     couleurs.forEach((s) => {
@@ -560,7 +570,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
     const contentBrut = contentNote.value.trim();
     if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
     const titre = encodeURIComponent(titreBrut);
-    const content = encodeURIComponent(contentBrut.replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;'));
+    const content = encodeURIComponent(contentBrut);
     const couleurSpan = document.querySelector('.couleurs span.selectionne');
     const couleur = encodeURIComponent(couleurSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');

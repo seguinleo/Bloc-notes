@@ -37,18 +37,12 @@ const showError = (message) => {
   }, 5000);
 };
 
-const taskListEnablerExtension = () => [{
-  type: 'output',
-  regex: /<input type="checkbox"?/g,
-  replace: '<input type="checkbox"',
-}];
-
 const searchSideBar = () => {
-  document.querySelectorAll('.listNotes p').forEach((element) => {
+  sideBar.querySelectorAll('p').forEach((element) => {
     element.addEventListener('click', () => {
       const e = element.querySelector('.titleList').textContent;
       document.querySelectorAll('.note').forEach((note) => {
-        const t = note.querySelector('.note h2').textContent;
+        const t = note.querySelector('.title').textContent;
         if (t === e) {
           note.scrollIntoView();
           note.focus();
@@ -62,11 +56,12 @@ const searchSideBar = () => {
 };
 
 // eslint-disable-next-line no-undef
-const converter = new showdown.Converter({
-  tasklists: true,
-  smoothLivePreview: true,
-  extensions: [taskListEnablerExtension],
-});
+const converter = new showdown.Converter();
+converter.setOption('tables', true);
+converter.setOption('tasklists', true);
+converter.setOption('strikethrough', true);
+converter.setOption('parseImgDimensions', true);
+converter.setOption('simpleLineBreaks', true);
 
 function arrayBufferToBase64(buffer) {
   const binary = [];
@@ -153,7 +148,6 @@ const showNotes = async () => {
   const objectStoreName = 'key';
   const db = await openIndexedDB(dbName, objectStoreName);
   const key = await getKeyFromDB(db, objectStoreName);
-  db.close();
 
   notesJSON
     .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -211,11 +205,13 @@ const showNotes = async () => {
       editIconElement.setAttribute('data-note-color', couleur);
       editIconElement.setAttribute('data-note-hidden', hidden);
       editIconElement.setAttribute('role', 'button');
+      editIconElement.setAttribute('aria-label', 'Modifier la note');
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
+      trashIconElement.setAttribute('aria-label', 'Supprimer la note');
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
 
@@ -225,6 +221,7 @@ const showNotes = async () => {
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('data-note-desc', descEnd);
         clipboardIconElement.setAttribute('role', 'button');
+        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
@@ -234,6 +231,7 @@ const showNotes = async () => {
         downloadIconElement.setAttribute('data-note-title', deTitleString);
         downloadIconElement.setAttribute('data-note-desc', descEnd);
         downloadIconElement.setAttribute('role', 'button');
+        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
         bottomContentElement.appendChild(downloadIconElement);
 
         const expandIconElement = document.createElement('i');
@@ -241,6 +239,7 @@ const showNotes = async () => {
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('data-note-id', id);
         expandIconElement.setAttribute('role', 'button');
+        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
         bottomContentElement.appendChild(expandIconElement);
       }
 
@@ -258,10 +257,10 @@ const showNotes = async () => {
       dateSpan.textContent = date;
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
-      document.querySelector('.sideBar .listNotes').appendChild(paragraph);
+      sideBar.querySelector('.listNotes').appendChild(paragraph);
+      searchSideBar();
     });
-  document.querySelector('.sideBar h2').textContent = `Notes (${notesJSON.length})`;
-  searchSideBar();
+  sideBar.querySelector('h2').textContent = `Notes (${notesJSON.length})`;
 };
 
 const toggleFullscreen = (id) => {
@@ -289,6 +288,7 @@ const updateNote = (id, title, desc, couleur, hidden) => {
     }
   });
   if (hidden === 'true') { document.querySelector('#checkHidden').checked = true; }
+  document.querySelector('#textareaLength').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
 
@@ -372,6 +372,7 @@ document.querySelectorAll('.seconnecter').forEach((element) => {
     connectBox.classList.add('show');
     document.body.classList.add('noscroll');
     document.querySelector('#nomConnect').focus();
+    document.querySelector('#mdpConnect').disabled = true;
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -391,6 +392,8 @@ document.querySelectorAll('.creercompte').forEach((element) => {
     connectBox.classList.remove('show');
     creerBox.classList.add('show');
     document.querySelector('#nomCreer').focus();
+    document.querySelector('#mdpCreer').disabled = true;
+    document.querySelector('#mdpCreerValid').disabled = true;
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -482,15 +485,41 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   }
 });
 
+document.querySelector('#nomConnect').addEventListener('input', () => {
+  const e = document.querySelector('#nomConnect').value.trim();
+  if (e.length >= 4 && e.length <= 25 && /^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
+    document.querySelector('#mdpConnect').disabled = false;
+  } else {
+    document.querySelector('#mdpConnect').disabled = true;
+  }
+});
+
+document.querySelector('#nomCreer').addEventListener('input', () => {
+  const e = document.querySelector('#nomCreer').value.trim();
+  if (e.length >= 4 && e.length <= 25 && /^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
+    document.querySelector('#mdpCreer').disabled = false;
+    document.querySelector('#mdpCreerValid').disabled = false;
+  } else {
+    document.querySelector('#mdpCreer').disabled = true;
+    document.querySelector('#mdpCreerValid').disabled = true;
+  }
+});
+
 document.querySelectorAll('.icon, .iconFloat').forEach((element) => {
   element.addEventListener('click', () => {
     noteBox.classList.add('show');
     document.body.classList.add('noscroll');
     document.querySelector('#title').focus();
+    document.querySelector('#textareaLength').textContent = '0/5000';
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
   });
+});
+
+contentNote.addEventListener('input', () => {
+  const e = contentNote.value.length;
+  document.querySelector('#textareaLength').textContent = `${e}/5000`;
 });
 
 couleurs.forEach((span, index) => {
@@ -510,7 +539,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
   const couleurSpan = document.querySelector('.couleurs span.selectionne');
   const couleur = couleurSpan.classList[0];
   const title = titleNote.value.trim();
-  const content = contentNote.value.trim().replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;');
+  const content = contentNote.value.trim();
   const hidden = document.querySelector('#checkHidden').checked;
 
   if (!title || title.length > 30 || content.length > 5000) return;
@@ -626,7 +655,7 @@ document.querySelectorAll('header i').forEach((element) => {
   });
 });
 
-document.querySelector('#search-input').addEventListener('keyup', () => {
+document.querySelector('#search-input').addEventListener('input', () => {
   const e = document.querySelector('#search-input').value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((element) => {
     const note = element;

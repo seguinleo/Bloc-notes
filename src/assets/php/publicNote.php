@@ -46,7 +46,7 @@ if (is_dir($directoryPath) === false) {
     if (mkdir($directoryPath, 0755, true)) {
         $index = fopen($directoryPath . '/index.php', 'w');
         $indexContent =
-            <<<EOT
+        <<<EOT
         <!DOCTYPE html>
         <html>
         <head>

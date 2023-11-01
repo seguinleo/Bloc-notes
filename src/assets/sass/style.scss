@@ -19,15 +19,30 @@ $color10: #eee;
   }
 }
 
+@font-face {
+  font-family: OpenSans;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/OpenSans.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: OpenSans;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/OpenSans-700.woff2') format('woff2');
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
-  font-family: Arial, sans-serif;
+  scrollbar-color: rgba(75, 75, 75, 20%) rgba(0, 0, 0, 0);
+  font-family: OpenSans, sans-serif;
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(100, 100, 100, 50%);
+    background: rgba(75, 75, 75, 20%);
   }
 }
 
@@ -51,6 +66,19 @@ h2 {
 
 h3 {
   font-size: 1.1rem;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+  border: 1px solid $color1;
+  margin: 10px 0;
+
+  th,
+  td {
+    padding: 4px 8px;
+    border: 1px solid $color1;
+  }
 }
 
 a {
@@ -99,7 +127,7 @@ li {
 
 img {
   max-width: 100%;
-  border-radius: 1rem;
+  height: auto;
 }
 
 nav {
@@ -217,8 +245,9 @@ main {
 
   p {
     border-radius: 5px;
-    margin: 10px 0;
-    padding: 4px;
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 0 15px 15px 0;
     font-size: .8rem;
     cursor: pointer;
 
@@ -257,6 +286,12 @@ select {
   padding: 0 1rem;
 }
 
+input[type="text"]:disabled,
+input[type="password"]:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
 select,
 option {
   font-family: Arial, sans-serif;
@@ -265,10 +300,10 @@ option {
 textarea {
   font-family: OpenSans, sans-serif;
   font-size: 1rem;
-  height: 250px;
+  height: 400px;
   width: 100%;
   min-height: 200px;
-  max-height: 450px;
+  max-height: 750px;
   resize: vertical;
   padding: 10px;
 }
@@ -407,10 +442,15 @@ p.welcome {
 .fullscreen {
   position: fixed;
   z-index: 3;
-  width: 80vw;
-  min-height: 80vh;
+  width: 100vw;
+  min-height: 100vh;
   margin: auto;
   inset: 0;
+  border-radius: 5px;
+
+  .title {
+    text-align: center;
+  }
 
   .details {
     max-height: 100%;
@@ -508,8 +548,12 @@ select {
 }
 
 .content {
-  width: 600px;
+  width: 500px;
   padding: 5px 1rem;
+}
+
+.note-popup-box .content {
+  width: 900px;
 }
 
 .row {
@@ -876,7 +920,7 @@ html.dark {
 
       &:hover,
       &:focus {
-        background: $color3;
+        background: rgba($color5, .2);
       }
     }
   }
@@ -895,7 +939,8 @@ html.dark {
     color: $color1;
     background: $color5;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: $color6;
     }
 
@@ -959,7 +1004,7 @@ html.dark {
   .note-popup-box,
   .creer-box,
   .gestion-popup-box,
-  .popup-box,
+  .connect-box,
   .private-note-popup-box,
   .public-note-popup-box {
     background: rgba(0, 0, 0, 50%);
@@ -986,29 +1031,9 @@ html.dark {
 
   #copyNoteLink {
     background-color: $color1;
-  
+
     &:hover {
       background-color: $color3;
-    }
-  }
-
-  @media(max-width: 900px) {
-
-    #iconButtonFloat,
-    #iconButtonConnectFloat {
-      box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
-    }
-
-    .sideBar {
-      background: $color2;
-
-      p {
-
-        &:hover,
-        &:focus {
-          background: $color3;
-        }
-      }
     }
   }
 }
@@ -1068,7 +1093,7 @@ html.light {
 
       &:hover,
       &:focus {
-        background: $color4;
+        background: rgba($color7, .2);
       }
     }
   }
@@ -1077,7 +1102,8 @@ html.light {
     color: $color9;
     background: $color7;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: $color8;
     }
 
@@ -1146,7 +1172,7 @@ html.light {
   .note-popup-box,
   .creer-box,
   .gestion-popup-box,
-  .popup-box,
+  .connect-box,
   .private-note-popup-box,
   .public-note-popup-box {
     background: rgba(200, 200, 200, 40%);
@@ -1163,7 +1189,7 @@ html.light {
 
   #copyNoteLink {
     background-color: $color10;
-  
+
     &:hover {
       background-color: $color4;
     }
@@ -1178,26 +1204,6 @@ html.light {
     border: none;
     background: none;
   }
-
-  @media(max-width: 900px) {
-
-    #iconButtonFloat,
-    #iconButtonConnectFloat {
-      box-shadow: 1px 1px 6px rgba(0, 0, 0, 20%);
-    }
-
-    .sideBar {
-      background: $color10;
-
-      p {
-
-        &:hover,
-        &:focus {
-          background: $color4;
-        }
-      }
-    }
-  }
 }
 
 .note {
@@ -1210,6 +1216,15 @@ html.light {
 
 .Noir {
   background: $color2;
+
+  table {
+    border: 1px solid $color4;
+
+    th,
+    td {
+      border: 1px solid $color4;
+    }
+  }
 }
 
 .Blanc {

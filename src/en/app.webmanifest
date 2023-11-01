@@ -1,12 +1,26 @@
 {
 	"name": "Bloc-notes \u2013 Léo SEGUIN",
 	"short_name": "Bloc-notes",
-	"start_url": "./",
+	"start_url": "./en/",
+	"id": "./en/",
 	"display": "standalone",
 	"background_color": "#171717",
 	"theme_color": "#171717",
 	"orientation": "portrait-primary",
 	"lang": "en",
+	"scope": "./en/",
+	"screenshots": [
+		{
+			"src": "../assets/img/desktop.png",
+			"type": "image/png",
+			"sizes": "1728x1103"
+		},
+		{
+			"src": "../assets/img/mobile.png",
+			"type": "image/png",
+			"sizes": "531x1026"
+		}
+	],
 	"description": "Save notes to your device or sign in to sync and encrypt your notes.",
 	"icons": [
 		{

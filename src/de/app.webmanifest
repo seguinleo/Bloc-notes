@@ -1,12 +1,26 @@
 {
 	"name": "Bloc-notes \u2013 Léo SEGUIN",
 	"short_name": "Bloc-notes",
-	"start_url": "./",
+	"start_url": "./de/",
+	"id": "./de/",
 	"display": "standalone",
 	"background_color": "#171717",
 	"theme_color": "#171717",
 	"orientation": "portrait-primary",
 	"lang": "de",
+	"scope": "./de/",
+	"screenshots": [
+		{
+			"src": "../assets/img/desktop.png",
+			"type": "image/png",
+			"sizes": "1728x1103"
+		},
+		{
+			"src": "../assets/img/mobile.png",
+			"type": "image/png",
+			"sizes": "531x1026"
+		}
+	],
 	"description": "Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.",
 	"icons": [
 		{

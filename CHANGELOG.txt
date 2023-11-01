@@ -1,3 +1,9 @@
+#----v23.11.1----#
+-Better Markdown (add table and strikethrough)
+-Better PWA
+-Improve UI/UX
+-Bug fixes
+
 #----v23.10.2----#
 -Local notes are now also encrypted
 -Better key management
