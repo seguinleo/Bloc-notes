@@ -13,12 +13,12 @@
 		{
 			"src": "../assets/img/desktop.png",
 			"type": "image/png",
-			"sizes": "1728x1103"
+			"sizes": "1199x691"
 		},
 		{
 			"src": "../assets/img/mobile.png",
 			"type": "image/png",
-			"sizes": "531x1026"
+			"sizes": "317x599"
 		}
 	],
 	"description": "Speichern Sie Notizen auf Ihrem Gerät oder melden Sie sich an, um Ihre Notizen zu synchronisieren und zu verschlüsseln.",

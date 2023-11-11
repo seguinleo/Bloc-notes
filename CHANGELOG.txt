@@ -1,3 +1,7 @@
+#----v23.11.2----#
+-New UI
+-Export all your notes at once
+
 #----v23.11.1----#
 -Better Markdown (add table and strikethrough)
 -Better PWA

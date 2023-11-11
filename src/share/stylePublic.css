@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../assets/fonts/OpenSans.woff2') format('woff2');
+  src: url('/assets/fonts/OpenSans.woff2') format('woff2');
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../assets/fonts/OpenSans-700.woff2') format('woff2');
+  src: url('/assets/fonts/OpenSans-700.woff2') format('woff2');
 }
 
 html {
@@ -21,6 +21,7 @@ html {
   color: #c6c6c6;
   font-family: OpenSans, sans-serif;
   min-height: 100dvh;
+  accent-color: #8ab4f8;
 }
 
 body {
@@ -37,15 +38,15 @@ body {
 }
 
 h1 {
-  font-size: 1.4rem;
-}
-
-h2 {
   font-size: 1.2rem;
 }
 
-h3 {
+h2 {
   font-size: 1.1rem;
+}
+
+h3 {
+  font-size: 1rem;
 }
 
 table {
@@ -53,12 +54,12 @@ table {
   text-align: center;
   border: 1px solid #000;
   margin: 10px 0;
+}
 
-  th,
-  td {
-    padding: 4px 8px;
-    border: 1px solid #000;
-  }
+th,
+td {
+  padding: 4px 8px;
+  border: 1px solid #000;
 }
 
 a {
@@ -82,7 +83,7 @@ img {
 }
 
 li {
-  margin-left: -1rem;
+  margin-left: -1.4rem;
 }
 
 .note {
@@ -90,15 +91,15 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 10px;
-  clip-path: polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px);
+  border-radius: 1rem;
+  clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
   transition: clip-path .4s;
   width: fit-content;
   height: fit-content;
-  max-height: calc(100dvh - 5rem);
-  margin: 1rem auto;
+  max-height: calc(100dvh - 4rem);
+  margin: auto;
   line-height: 2;
-  padding: 15px 15px 10px;
+  padding: 10px 1rem;
 }
 
 .note:hover,
@@ -111,8 +112,8 @@ li {
   content: "";
   top: 0;
   left: 0;
-  width: 25px;
-  height: 25px;
+  width: 1rem;
+  height: 1rem;
   border-radius: 0 0 1rem;
   transition: transform .4s
 }
@@ -123,10 +124,9 @@ li {
 }
 
 .note .title {
-  font-size: 1.4rem;
   text-align: right;
   font-weight: 700;
-  margin: 4px 10px 1rem
+  margin: 0 10px;
 }
 
 .note:after {
@@ -156,13 +156,6 @@ li {
   margin: 0 10px;
 }
 
-.note .title {
-  font-size: 1.4rem;
-  text-align: center;
-  font-weight: 700;
-  margin: 4px 10px 1rem;
-}
-
 .note a {
   text-decoration: underline;
 }
@@ -176,6 +169,8 @@ li {
   overflow-wrap: break-word;
   overflow-x: hidden;
   padding-right: 5px;
+  font-size: .9rem;
+  font-weight: 700;
 }
 
 .Noir {
@@ -183,43 +178,43 @@ li {
 }
 
 .Blanc {
-  background: #fff;
+  background: #ffffff;
 }
 
 .Rouge {
-  background: #ff7b7b;
+  background: #fd948a;
 }
 
 .Orange {
-  background: #ff9b4f;
+  background: #ffc65c;
 }
 
 .Jaune {
-  background: #ffea64;
+  background: #fdf488;
 }
 
 .Vert {
-  background: #89f17e;
+  background: #d6fe9d;
 }
 
 .Cyan {
-  background: #7cffe7;
+  background: #bbfdec;
 }
 
 .BleuCiel {
-  background: #a0deff;
+  background: #d2eff7;
 }
 
 .Bleu {
-  background: #72a5e9;
+  background: #b4caf6;
 }
 
 .Violet {
-  background: #a99aff;
+  background: #d1acff;
 }
 
 .Rose {
-  background: #ffa2ff;
+  background: #fdd0e7;
 }
 
 .Blanc,
@@ -296,7 +291,7 @@ li {
 
 .task-list-item {
   list-style-type: none;
-  margin-left: -2rem;
+  margin-left: -2.4rem;
 }
 
 .task-list-item * {

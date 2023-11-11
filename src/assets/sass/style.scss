@@ -1,13 +1,15 @@
-$color1: #171717;
-$color2: #272727;
-$color3: #424242;
-$color4: #c6c6c6;
-$color5: #8ab4f8;
-$color6: #9ec3ff;
-$color7: #2b5790;
-$color8: #34629f;
-$color9: #fff;
-$color10: #eee;
+$color01: #171717;
+$color02: #272727;
+$color03: #c6c6c6;
+$color04: #8ab4f8;
+$color05: #9ec3ff;
+$color06: #2b5790;
+$color07: #34629f;
+$color08: #ffffff;
+$color09: #eeeeee;
+$color10: #1c1936;
+$color11: #272342;
+$color12: #cecbe3;
 
 @keyframes slide-left {
   0% {
@@ -56,28 +58,36 @@ html {
   height: 5px;
 }
 
-h1 {
-  font-size: 1.4rem;
+::placeholder {
+  opacity: 1;
 }
 
-h2 {
+h1 {
   font-size: 1.2rem;
 }
 
-h3 {
+h2 {
   font-size: 1.1rem;
+}
+
+h3 {
+  font-size: 1rem;
 }
 
 table {
   border-collapse: collapse;
   text-align: center;
-  border: 1px solid $color1;
+  border: 1px solid $color01;
   margin: 10px 0;
+
+  thead {
+    background-color: rgba(0, 0, 0, 20%);
+  }
 
   th,
   td {
     padding: 4px 8px;
-    border: 1px solid $color1;
+    border: 1px solid $color01;
   }
 }
 
@@ -94,6 +104,10 @@ kbd {
   font-size: .8rem;
   font-weight: 700;
   padding: 2px 4px;
+}
+
+progress {
+  width: 100%;
 }
 
 header {
@@ -116,18 +130,19 @@ code {
   background: #383a59;
   color: #8be9fd;
   border-radius: 5px;
-  padding: 2px 5px;
+  padding: 0 4px;
   white-space: pre-wrap;
 }
 
 li {
-  margin-left: -1rem;
+  margin-left: -1.4rem;
   word-break: break-word;
 }
 
 img {
   max-width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 
 nav {
@@ -161,15 +176,11 @@ nav {
   .search-input {
     width: 300px;
     height: 50px;
-    border-radius: 24px;
+    border-radius: 10px;
     display: inline-block;
 
     &:focus-within {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
-    }
-
-    ::placeholder {
-      opacity: 1;
     }
 
     i {
@@ -201,7 +212,6 @@ nav {
     font-size: .8rem;
 
     i {
-      font-size: 1rem;
       margin: 0 5px;
       cursor: pointer;
     }
@@ -210,7 +220,7 @@ nav {
 
 main {
   max-width: 100vw;
-  margin: 6rem auto 2rem;
+  margin: 86px auto 2rem;
   padding: 0 2rem 0 414px;
   display: flex;
   justify-content: center;
@@ -223,15 +233,17 @@ main {
   position: fixed;
   -webkit-user-select: none;
   user-select: none;
-  background: $color2;
+  background: $color02;
   left: 0;
-  top: 0;
+  top: 70px;
   bottom: 0;
   width: 382px;
-  padding: 100px 1rem 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin: 1rem;
 
   .listNotes {
-    max-height: 65vh;
+    max-height: calc(100dvh - 250px);
     overflow-y: scroll;
   }
 
@@ -246,10 +258,16 @@ main {
   p {
     border-radius: 5px;
     margin: 5px 0;
-    padding: 5px 10px;
-    border-radius: 0 15px 15px 0;
+    padding: 5px;
+    border-radius: 0 1rem 1rem 0;
     font-size: .8rem;
     cursor: pointer;
+
+    &:hover {
+      .dateList {
+        display: inline-block;
+      }
+    }
 
     .titleList {
       max-width: 200px;
@@ -262,7 +280,7 @@ main {
     }
 
     .dateList {
-      display: inline;
+      display: none;
       float: right;
     }
   }
@@ -272,13 +290,11 @@ input {
   font-family: OpenSans, sans-serif;
 }
 
-input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin: 0 5px;
-}
-
-input,
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
 select {
   height: 50px;
   width: 100%;
@@ -316,7 +332,6 @@ button {
   height: 50px;
   border: none;
   padding: 0 1rem;
-  border-radius: 5px;
   transition: .1s;
 
   &:disabled {
@@ -342,13 +357,12 @@ p.welcome {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 10px;
-  clip-path: polygon(25px 0, 100% 0, 100% 100%, 0 100%, 0 25px);
+  border-radius: 1rem;
+  clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
   transition: clip-path .4s;
-  width: 400px;
-  max-height: 460px;
+  width: 350px;
   line-height: 2;
-  padding: 15px 15px 10px;
+  padding: 10px 1rem;
 
   &:hover,
   &:focus {
@@ -365,8 +379,8 @@ p.welcome {
     content: '';
     top: 0;
     left: 0;
-    width: 25px;
-    height: 25px;
+    width: 1rem;
+    height: 1rem;
     border-radius: 0 0 1rem;
     transition: transform .4s;
   }
@@ -384,10 +398,9 @@ p.welcome {
   }
 
   .title {
-    font-size: 1.4rem;
     text-align: right;
     font-weight: 700;
-    margin: 4px 10px 1rem;
+    margin: 0 10px;
   }
 
   a {
@@ -399,11 +412,13 @@ p.welcome {
   }
 
   .details {
-    max-height: 400px;
+    max-height: 420px;
     overflow-y: auto;
     overflow-wrap: break-word;
     overflow-x: hidden;
-    padding-right: 5px;
+    padding: 0 4px;
+    font-size: .9rem;
+    font-weight: 700;
   }
 
   .bottom-content {
@@ -443,7 +458,7 @@ p.welcome {
   position: fixed;
   z-index: 3;
   width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh;
   margin: auto;
   inset: 0;
   border-radius: 5px;
@@ -457,10 +472,6 @@ p.welcome {
   }
 }
 
-.noscroll {
-  overflow: hidden;
-}
-
 .popup,
 header {
   display: flex;
@@ -471,8 +482,9 @@ header {
 .popup .content,
 input,
 textarea,
-select {
-  border-radius: 5px;
+select,
+button {
+  border-radius: 10px;
 }
 
 .couleurs {
@@ -507,7 +519,7 @@ select {
   top: 0;
   left: 0;
   z-index: 2;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -543,7 +555,7 @@ select {
 .private-note-popup-box.show .popup {
   display: flex;
   pointer-events: auto;
-  max-height: 100vh;
+  max-height: 100dvh;
   transform: translate(-50%, -50%);
 }
 
@@ -557,13 +569,13 @@ select {
 }
 
 .row {
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
 .switch {
   position: relative;
-  margin-top: 8px;
   display: inline-block;
+  vertical-align: middle;
   width: 60px;
   height: 2rem;
 
@@ -604,9 +616,39 @@ select {
   margin: 0 5px;
 }
 
+#newVersion {
+  -webkit-user-select: none;
+  user-select: none;
+  width: 350px;
+  height: 350px;
+  border: 2px dashed rgba(100, 100, 100, 10%);
+  text-align: center;
+  border-radius: 1rem;
+
+  h2 {
+    font-size: 1.6rem;
+    margin: 2rem auto;
+  }
+
+  p {
+    margin: 1rem;
+  }
+}
+
 #language {
   width: 50px;
+  height: 40px;
   padding: 0;
+}
+
+#textareaLength {
+  margin: 5px 0;
+  font-size: .8rem;
+}
+
+.supprimerCompte {
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .copyright {
@@ -629,7 +671,7 @@ select {
   padding: 10px;
   border-radius: 5px;
   background: #a93b3b;
-  color: $color9;
+  color: $color08;
   display: none;
   z-index: 999;
 }
@@ -679,7 +721,7 @@ select {
 
 .task-list-item {
   list-style-type: none;
-  margin-left: -2rem;
+  margin-left: -2.4rem;
 }
 
 @media (min-width: 901px) {
@@ -691,9 +733,6 @@ select {
 }
 
 @media(max-width: 900px) {
-  body {
-    min-height: 100vh;
-  }
 
   nav {
     position: fixed;
@@ -741,7 +780,7 @@ select {
       }
 
       .fa-bars {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
 
       .fa-magnifying-glass {
@@ -784,9 +823,11 @@ select {
 
   .sideBar {
     display: none;
-    width: 90vw;
+    width: 94vw;
     padding: 1rem;
-    z-index: 3;
+    margin: 0;
+    top: 0;
+    border-radius: 0 1rem 1rem 0;
 
     .listNotes {
       margin-top: 1rem;
@@ -807,6 +848,7 @@ select {
 
   .sideBar.show {
     display: block;
+    z-index: 3;
     animation: slide-left .3s ease-in-out;
   }
 
@@ -830,7 +872,17 @@ select {
 
     .details {
       overflow: hidden;
-      font-size: .9rem;
+    }
+  }
+
+  #newVersion {
+    width: 100%;
+    max-height: 300px;
+    margin: 0 10px;
+
+    h2 {
+      font-size: 1.4rem;
+      margin: 1.5rem auto;
     }
   }
 
@@ -876,16 +928,20 @@ select {
 }
 
 html.dark {
-  background: $color1;
-  color: $color4;
-  accent-color: $color5;
+  background: $color01;
+  color: $color03;
+  accent-color: $color04;
+
+  ::placeholder {
+    color: $color03;
+  }
 
   a {
-    color: $color5;
+    color: $color04;
   }
 
   kbd {
-    background: $color2;
+    background: $color02;
   }
 
   header .fa-xmark:hover {
@@ -893,17 +949,13 @@ html.dark {
   }
 
   nav {
-    background: $color2;
+    background: $color02;
 
     .search-input {
-      background: $color1;
-
-      ::placeholder {
-        color: $color4;
-      }
+      background: $color01;
 
       input {
-        background: $color1;
+        background: $color01;
         border: none;
 
         &:focus {
@@ -914,13 +966,13 @@ html.dark {
   }
 
   .sideBar {
-    background: $color2;
+    background: $color02;
 
     p {
 
       &:hover,
       &:focus {
-        background: rgba($color5, .2);
+        background: rgba($color04, .2);
       }
     }
   }
@@ -928,41 +980,41 @@ html.dark {
   input,
   textarea,
   select {
-    border: 2px solid $color3;
+    border: 2px solid $color01;
 
     &:focus {
-      outline: $color5 solid 2px;
+      outline: $color04 solid 2px;
     }
   }
 
   button {
-    color: $color1;
-    background: $color5;
+    color: $color01;
+    background: $color04;
 
     &:hover,
     &:focus {
-      background: $color6;
+      background: $color05;
     }
 
     &:disabled {
-      background: $color4;
+      background: $color03;
     }
   }
 
   .linkp {
-    color: $color5;
+    color: $color04;
   }
 
   .popup .content,
   input,
   textarea,
   select {
-    background: $color2;
-    color: $color4;
+    background: $color02;
+    color: $color03;
   }
 
   .couleurs span {
-    border: 1px solid $color3;
+    border: 1px solid $color01;
   }
 
   .Blanc,
@@ -976,27 +1028,31 @@ html.dark {
   .Violet,
   .Rose {
     a {
-      color: $color1;
+      color: $color01;
     }
   }
 
   .Noir a {
-    color: $color5;
+    color: $color04;
+  }
+
+  #newVersion {
+    border: 2px dashed rgba(255, 255, 255, 10%);
   }
 
   .switch {
     input {
 
       &:checked+.slider {
-        background: $color5;
+        background: $color04;
       }
     }
 
     .slider {
-      background: $color3;
+      background: $color01;
 
       &:before {
-        background: $color9;
+        background: $color08;
       }
     }
   }
@@ -1015,36 +1071,40 @@ html.dark {
   }
 
   #btnTheme {
-    background: $color1;
-    color: $color4;
+    background: $color01;
+    color: $color03;
   }
 
   #language {
     border: none;
-    background: $color2;
+    background: $color02;
   }
 
   #copyNotification {
-    background: $color3;
-    color: $color4;
+    background: $color01;
+    color: $color03;
   }
 
   #copyNoteLink {
-    background-color: $color1;
+    background-color: $color01;
 
     &:hover {
-      background-color: $color3;
+      opacity: .8;
     }
   }
 }
 
-html.light {
-  background: $color9;
-  color: $color2;
-  accent-color: $color7;
+html.dusk {
+  background: $color11;
+  color: $color12;
+  accent-color: $color04;
+
+  ::placeholder {
+    color: $color12;
+  }
 
   a {
-    color: $color7;
+    color: $color04;
   }
 
   kbd {
@@ -1052,31 +1112,17 @@ html.light {
   }
 
   header .fa-xmark:hover {
-    background: rgba(0, 0, 0, 20%);
-  }
-
-  input,
-  textarea,
-  select {
-    border: 2px solid $color4;
-
-    &:focus {
-      outline: $color7 solid 2px;
-    }
+    background: rgba(255, 255, 255, 10%);
   }
 
   nav {
     background: $color10;
 
     .search-input {
-      background: $color9;
-
-      ::placeholder {
-        color: $color2;
-      }
+      background: $color11;
 
       input {
-        background: $color9;
+        background: $color11;
         border: none;
 
         &:focus {
@@ -1093,40 +1139,49 @@ html.light {
 
       &:hover,
       &:focus {
-        background: rgba($color7, .2);
+        background: rgba($color04, .2);
       }
     }
   }
 
+  input,
+  textarea,
+  select {
+    border: 2px solid $color10;
+
+    &:focus {
+      outline: $color04 solid 2px;
+    }
+  }
+
   button {
-    color: $color9;
-    background: $color7;
+    color: $color11;
+    background: $color04;
 
     &:hover,
     &:focus {
-      background: $color8;
+      background: $color05;
     }
 
     &:disabled {
-      background: $color4;
-      color: $color1;
+      background: $color12;
     }
   }
 
   .linkp {
-    color: $color7;
+    color: $color04;
   }
 
   .popup .content,
   input,
   textarea,
   select {
-    background: $color9;
-    color: $color2;
+    background: $color11;
+    color: $color12;
   }
 
   .couleurs span {
-    border: 1px solid $color4;
+    border: 1px solid $color10;
   }
 
   .Blanc,
@@ -1140,31 +1195,203 @@ html.light {
   .Violet,
   .Rose {
     a {
-      color: $color1;
+      color: $color11;
     }
   }
 
-  .Noir {
-    color: $color4;
+  .Noir a {
+    color: $color04;
+  }
 
-    a {
-      color: $color5;
-    }
+  #newVersion {
+    border: 2px dashed rgba(255, 255, 255, 10%);
   }
 
   .switch {
     input {
 
       &:checked+.slider {
-        background: $color7;
+        background: $color04;
       }
     }
 
     .slider {
-      background: $color4;
+      background: $color10;
 
       &:before {
-        background: $color9;
+        background: $color08;
+      }
+    }
+  }
+
+  .note-popup-box,
+  .creer-box,
+  .gestion-popup-box,
+  .connect-box,
+  .private-note-popup-box,
+  .public-note-popup-box {
+    background: rgba(0, 0, 0, 50%);
+  }
+
+  .supprimerCompte {
+    color: #fe7575;
+  }
+
+  #btnTheme {
+    background: $color11;
+    color: $color12;
+  }
+
+  #language {
+    border: none;
+    background: $color10;
+  }
+
+  #copyNotification {
+    background: $color11;
+    color: $color12;
+  }
+
+  #copyNoteLink {
+    background-color: $color10;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+}
+
+html.light {
+  background: $color08;
+  color: $color02;
+  accent-color: $color06;
+
+  ::placeholder {
+    color: $color02;
+  }
+
+  a {
+    color: $color06;
+  }
+
+  kbd {
+    background: $color09;
+  }
+
+  header .fa-xmark:hover {
+    background: rgba(0, 0, 0, 20%);
+  }
+
+  input,
+  textarea,
+  select {
+    border: 2px solid $color03;
+
+    &:focus {
+      outline: $color06 solid 2px;
+    }
+  }
+
+  nav {
+    background: $color09;
+
+    .search-input {
+      background: $color08;
+
+      input {
+        background: $color08;
+        border: none;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .sideBar {
+    background: $color09;
+
+    p {
+
+      &:hover,
+      &:focus {
+        background: rgba($color06, .2);
+      }
+    }
+  }
+
+  button {
+    color: $color08;
+    background: $color06;
+
+    &:hover,
+    &:focus {
+      background: $color07;
+    }
+
+    &:disabled {
+      background: $color03;
+      color: $color01;
+    }
+  }
+
+  .linkp {
+    color: $color06;
+  }
+
+  .popup .content,
+  input,
+  textarea,
+  select {
+    background: $color08;
+    color: $color02;
+  }
+
+  .couleurs span {
+    border: 1px solid $color03;
+  }
+
+  .Blanc,
+  .Rouge,
+  .Orange,
+  .Jaune,
+  .Vert,
+  .Cyan,
+  .BleuCiel,
+  .Bleu,
+  .Violet,
+  .Rose {
+    a {
+      color: $color01;
+    }
+  }
+
+  .Noir {
+    color: $color03;
+
+    a {
+      color: $color04;
+    }
+  }
+
+  #newVersion {
+    border: 2px dashed rgba(0, 0, 0, 10%);
+  }
+
+  .switch {
+    input {
+
+      &:checked+.slider {
+        background: $color06;
+      }
+    }
+
+    .slider {
+      background: $color03;
+
+      &:before {
+        background: $color08;
       }
     }
   }
@@ -1183,21 +1410,21 @@ html.light {
   }
 
   #copyNotification {
-    background: $color4;
-    color: $color2;
+    background: $color08;
+    color: $color02;
   }
 
   #copyNoteLink {
-    background-color: $color10;
+    background-color: $color09;
 
     &:hover {
-      background-color: $color4;
+      opacity: .8;
     }
   }
 
   #btnTheme {
-    background: $color9;
-    color: $color2;
+    background: $color08;
+    color: $color02;
   }
 
   #language {
@@ -1207,7 +1434,7 @@ html.light {
 }
 
 .note {
-  background: $color2;
+  background: $color02;
 
   &:after {
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 20%);
@@ -1215,56 +1442,56 @@ html.light {
 }
 
 .Noir {
-  background: $color2;
+  background: $color02;
 
   table {
-    border: 1px solid $color4;
+    border: 1px solid $color03;
 
     th,
     td {
-      border: 1px solid $color4;
+      border: 1px solid $color03;
     }
   }
 }
 
 .Blanc {
-  background: $color10;
+  background: $color09;
 }
 
 .Rouge {
-  background: #ff7b7b;
+  background: #fd948a;
 }
 
 .Orange {
-  background: #ff9b4f;
+  background: #ffc65c;
 }
 
 .Jaune {
-  background: #ffea64;
+  background: #fdf488;
 }
 
 .Vert {
-  background: #89f17e;
+  background: #d6fe9d;
 }
 
 .Cyan {
-  background: #7cffe7;
+  background: #bbfdec;
 }
 
 .BleuCiel {
-  background: #a0deff;
+  background: #d2eff7;
 }
 
 .Bleu {
-  background: #72a5e9;
+  background: #b4caf6;
 }
 
 .Violet {
-  background: #a99aff;
+  background: #d1acff;
 }
 
 .Rose {
-  background: #ffa2ff;
+  background: #fdd0e7;
 }
 
 .Blanc,
@@ -1277,7 +1504,7 @@ html.light {
 .Bleu,
 .Violet,
 .Rose {
-  color: $color1;
+  color: $color01;
 
   ::selection {
     background: rgba(0, 0, 0, 20%);
@@ -1302,11 +1529,11 @@ html.light {
 
   .bottom-content {
     span {
-      color: $color4;
+      color: $color03;
     }
 
     i {
-      color: $color4;
+      color: $color03;
 
       &:hover {
         background: rgba(255, 255, 255, 10%);

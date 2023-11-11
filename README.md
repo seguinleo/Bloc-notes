@@ -30,7 +30,7 @@ When I was looking for a note-taking application, I faced several difficulties: 
 ## Features
 All notes are encrypted with ``AES-256-GCM``.
 
-The user can save and edit notes, change color, copy, export and use Markdown. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
+The user can save and edit notes, change color, copy, export and use Markdown or HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
 
 The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
@@ -58,6 +58,7 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 - [x] Share notes with a random link
 - [x] Export notes in text file
 - [ ] Pin notes
+- [ ] Categories
 - [ ] Spanish translation
 - [ ] ...
 

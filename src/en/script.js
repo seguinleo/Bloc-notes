@@ -1,7 +1,5 @@
 /* eslint-disable no-alert */
 let isUpdate = false;
-let touchStart = 0;
-let touchEnd = 0;
 let timeoutCopy = null;
 let timeoutError = null;
 const notesContainer = document.querySelector('main');
@@ -22,6 +20,14 @@ if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.content = '#eeeeee';
   button.className = 'fa-solid fa-lightbulb';
+} else if (localStorage.getItem('theme') === 'dusk') {
+  document.querySelector('html').className = 'dusk';
+  metaTheme.content = '#1c1936';
+  button.className = 'fa-solid fa-star';
+}
+
+if (localStorage.getItem('newVersion') === 'hide') {
+  document.querySelector('#newVersion').style.display = 'none';
 }
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -215,7 +221,7 @@ const showNotes = async () => {
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
 
-      if (hidden === false) {
+      if (hidden === false && descEnd !== '') {
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
@@ -266,7 +272,6 @@ const showNotes = async () => {
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
-  document.body.classList.toggle('noscroll');
 };
 
 const updateNote = (id, title, desc, couleur, hidden) => {
@@ -274,7 +279,6 @@ const updateNote = (id, title, desc, couleur, hidden) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  document.body.classList.add('noscroll');
   document.querySelector('#idNoteInput').value = id;
   isUpdate = true;
   document.querySelector('.icon').click();
@@ -370,9 +374,7 @@ document.addEventListener('keydown', (e) => {
 document.querySelectorAll('.seconnecter').forEach((element) => {
   element.addEventListener('click', () => {
     connectBox.classList.add('show');
-    document.body.classList.add('noscroll');
     document.querySelector('#nomConnect').focus();
-    document.querySelector('#mdpConnect').disabled = true;
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -392,8 +394,6 @@ document.querySelectorAll('.creercompte').forEach((element) => {
     connectBox.classList.remove('show');
     creerBox.classList.add('show');
     document.querySelector('#nomCreer').focus();
-    document.querySelector('#mdpCreer').disabled = true;
-    document.querySelector('#mdpCreerValid').disabled = true;
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -437,7 +437,7 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
     });
     if (response.ok) {
       creerBox.classList.remove('show');
-      document.body.classList.remove('noscroll');
+
       forms.forEach((form) => form.reset());
       alert('Account created successfully! You can now log in.');
       return;
@@ -485,30 +485,9 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
   }
 });
 
-document.querySelector('#nomConnect').addEventListener('input', () => {
-  const e = document.querySelector('#nomConnect').value.trim();
-  if (e.length >= 4 && e.length <= 25 && /^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    document.querySelector('#mdpConnect').disabled = false;
-  } else {
-    document.querySelector('#mdpConnect').disabled = true;
-  }
-});
-
-document.querySelector('#nomCreer').addEventListener('input', () => {
-  const e = document.querySelector('#nomCreer').value.trim();
-  if (e.length >= 4 && e.length <= 25 && /^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    document.querySelector('#mdpCreer').disabled = false;
-    document.querySelector('#mdpCreerValid').disabled = false;
-  } else {
-    document.querySelector('#mdpCreer').disabled = true;
-    document.querySelector('#mdpCreerValid').disabled = true;
-  }
-});
-
 document.querySelectorAll('.icon, .iconFloat').forEach((element) => {
   element.addEventListener('click', () => {
     noteBox.classList.add('show');
-    document.body.classList.add('noscroll');
     document.querySelector('#title').focus();
     document.querySelector('#textareaLength').textContent = '0/5000';
   });
@@ -587,7 +566,6 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
 
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
   noteBox.classList.remove('show');
-  document.body.classList.remove('noscroll');
   showNotes();
 });
 
@@ -603,37 +581,6 @@ document.querySelectorAll('#menuIcon').forEach((element) => {
   });
 });
 
-document.body.addEventListener('touchstart', (e) => {
-  touchStart = e.targetTouches[0].clientX;
-});
-
-document.body.addEventListener('touchmove', (e) => {
-  touchEnd = e.targetTouches[0].clientX;
-});
-
-document.body.addEventListener('touchend', () => {
-  const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 100 && !sideBar.classList.contains('show')) {
-    sideBar.classList.add('show');
-    document.querySelectorAll('.note').forEach((note) => {
-      note.classList.remove('fullscreen');
-    });
-    document.body.classList.add('noscroll');
-  } else if (swipeDistance < -100 && sideBar.classList.contains('show')) {
-    sideBar.classList.remove('show');
-    document.querySelectorAll('.note').forEach((note) => {
-      note.classList.remove('fullscreen');
-    });
-    document.body.classList.add('noscroll');
-  }
-  touchStart = 0;
-  touchEnd = 0;
-});
-
-sideBar.addEventListener('touchstart', (e) => {
-  e.stopPropagation();
-});
-
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -647,7 +594,6 @@ document.querySelectorAll('header i').forEach((element) => {
     noteBox.classList.remove('show');
     connectBox.classList.remove('show');
     creerBox.classList.remove('show');
-    document.body.classList.remove('noscroll');
     document.querySelector('.sideBar').classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
@@ -669,17 +615,34 @@ document.querySelector('#search-input').addEventListener('input', () => {
 });
 
 document.querySelector('#btnTheme').addEventListener('click', () => {
-  if (localStorage.getItem('theme') === 'light') {
+  if (localStorage.getItem('theme') === null) {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+    return;
+  }
+  if (localStorage.getItem('theme') === 'dark') {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+  } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'dark';
     metaTheme.content = '#272727';
     button.className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'dark');
   } else {
-    document.querySelector('html').className = 'light';
-    metaTheme.content = '#eeeeee';
-    button.className = 'fa-solid fa-lightbulb';
-    localStorage.setItem('theme', 'light');
+    document.querySelector('html').className = 'dusk';
+    metaTheme.content = '#1c1936';
+    button.className = 'fa-solid fa-star';
+    localStorage.setItem('theme', 'dusk');
   }
+});
+
+document.querySelector('#newVersion header i').addEventListener('click', () => {
+  document.querySelector('#newVersion').style.display = 'none';
+  localStorage.setItem('newVersion', 'hide');
 });
 
 document.querySelector('#language').addEventListener('change', () => {

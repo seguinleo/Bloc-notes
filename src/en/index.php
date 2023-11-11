@@ -53,9 +53,6 @@ if (isset($_SESSION['nom']) === false) {
         <?php } else { ?>
             <div>
                 <h1>Bloc-notes</h1>
-                <span class="version">
-                    <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.1</a>
-                </span>
             </div>
             <div>
                 <button type="button" class="seconnecter">Sign in</button>
@@ -151,8 +148,8 @@ if (isset($_SESSION['nom']) === false) {
                                 <span class="Rose" role="button" tabindex="0" aria-label="Pink"></span>
                             </div>
                         </div>
-                        Hidden note
                         <div class="row">
+                            Hidden note
                             <label for="checkHidden" class="switch" aria-label="Hidden note">
                                 <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
                                 <span class="slider" tabindex="0"></span>
@@ -180,7 +177,7 @@ if (isset($_SESSION['nom']) === false) {
                         </div>
                         <div class="row">
                             <select id="tri" aria-label="sort">
-                                <option disabled selected value>Sort notes</option>
+                                <option disabled selected value>Sort my notes</option>
                                 <option value="Date de création">Creation date</option>
                                 <option value="Date de création (Z-A)">Creation date (Z-A)</option>
                                 <option value="Date de modification">Modification date</option>
@@ -200,12 +197,15 @@ if (isset($_SESSION['nom']) === false) {
                                 <button id="submitChangeMDP" type="submit">Change password</button>
                             </form>
                             <div class="row">
+                                <span class="exportAll linkp" tabindex="0">Export all my notes</span>
+                            </div>
+                            <div class="row">
                                 <span class="supprimerCompte" tabindex="0">Delete my account</span>
                             </div>
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.1</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.2</a>
                             </p>
                         </div>
                     </div>
@@ -257,7 +257,7 @@ if (isset($_SESSION['nom']) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <div class="row">
-                            <span class="creercompte linkp" tabindex="0" role="button">No account yet?</span>
+                            <span class="creercompte linkp" tabindex="0" role="button">Sign up</span>
                         </div>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
@@ -265,7 +265,7 @@ if (isset($_SESSION['nom']) === false) {
                                 <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="Username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="Password" disabled required>
+                                <input id="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="Password" required>
                             </div>
                             <button id="submitSeConnecter" type="submit">Sign in</button>
                         </form>
@@ -284,10 +284,10 @@ if (isset($_SESSION['nom']) === false) {
                                 <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="Username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="Password" disabled required>
+                                <input id="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="Password" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="Retype your password" disabled required>
+                                <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="Retype your password" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
@@ -299,6 +299,18 @@ if (isset($_SESSION['nom']) === false) {
                 </div>
             </div>
         <?php } ?>
+        <div id="newVersion">
+            <header>
+                <i class="fa-solid fa-xmark" tabindex="0"></i>
+            </header>
+            <h2>v23.11.2</h2>
+            <p>
+                A new version of Bloc-notes is available! 🎉
+            </p>
+            <p>
+                <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Changelog</a>
+            </p>
+        </div>
     </main>
     <script src="../assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>

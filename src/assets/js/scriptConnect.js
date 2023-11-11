@@ -1,7 +1,5 @@
 /* eslint-disable no-alert */
 let isUpdate = false;
-let touchStart = 0;
-let touchEnd = 0;
 let timeoutCopy = null;
 let timeoutError = null;
 const notesContainer = document.querySelector('main');
@@ -22,6 +20,14 @@ if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.content = '#eeeeee';
   button.className = 'fa-solid fa-lightbulb';
+} else if (localStorage.getItem('theme') === 'dusk') {
+  document.querySelector('html').className = 'dusk';
+  metaTheme.content = '#1c1936';
+  button.className = 'fa-solid fa-star';
+}
+
+if (localStorage.getItem('newVersion') === 'hide') {
+  document.querySelector('#newVersion').style.display = 'none';
 }
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -82,7 +88,7 @@ const showNotesConnect = async () => {
     return;
   }
 
-  document.querySelector('.lastSync span').textContent = `${new Date().toLocaleString()}`;
+  document.querySelector('.lastSync span').textContent = new Date().toLocaleTimeString();
 
   data.forEach((row) => {
     const {
@@ -137,7 +143,7 @@ const showNotesConnect = async () => {
       bottomContentElement.appendChild(trashIconElement);
     }
 
-    if (hidden === 0) {
+    if (hidden === 0 && desc !== '') {
       const clipboardIconElement = document.createElement('i');
       clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
       clipboardIconElement.tabIndex = 0;
@@ -200,7 +206,6 @@ const showNotesConnect = async () => {
 };
 
 const fetchDelete = async (e) => {
-  document.body.classList.remove('noscroll');
   try {
     await fetch('assets/php/deleteNote.php', {
       method: 'POST',
@@ -250,14 +255,12 @@ const fetchLogout = async () => {
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
-  document.body.classList.toggle('noscroll');
 };
 
 const updateNoteConnect = (id, title, desc, couleur, hidden, link) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  document.body.classList.add('noscroll');
   isUpdate = true;
   document.querySelector('.iconConnect').click();
   document.querySelector('#idNoteInput').value = id;
@@ -316,7 +319,6 @@ const noteAccess = (id, link) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  document.body.classList.add('noscroll');
   if (link === '') {
     privateNote.classList.add('show');
     document.querySelector('#idNoteInputPublic').value = id;
@@ -387,7 +389,7 @@ switchElement.addEventListener('keydown', (event) => {
 document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) => {
   element.addEventListener('click', () => {
     noteBox.classList.add('show');
-    document.body.classList.add('noscroll');
+
     titleNote.focus();
     document.querySelector('#textareaLength').textContent = '0/5000';
   });
@@ -408,7 +410,7 @@ document.querySelectorAll('.sedeconnecter').forEach((element) => {
 document.querySelectorAll('.gestionCompte').forEach((element) => {
   element.addEventListener('click', () => {
     popupBoxGestion.classList.add('show');
-    document.body.classList.add('noscroll');
+
     popupBoxGestion.querySelector('i').focus();
   });
   element.addEventListener('keydown', (event) => {
@@ -439,37 +441,6 @@ document.querySelectorAll('#menuIcon').forEach((element) => {
   });
 });
 
-document.body.addEventListener('touchstart', (e) => {
-  touchStart = e.targetTouches[0].clientX;
-});
-
-document.body.addEventListener('touchmove', (e) => {
-  touchEnd = e.targetTouches[0].clientX;
-});
-
-document.body.addEventListener('touchend', () => {
-  const swipeDistance = touchEnd - touchStart;
-  if (swipeDistance > 100 && !sideBar.classList.contains('show')) {
-    sideBar.classList.add('show');
-    document.querySelectorAll('.note').forEach((note) => {
-      note.classList.remove('fullscreen');
-    });
-    document.body.classList.remove('noscroll');
-  } else if (swipeDistance < -100 && sideBar.classList.contains('show')) {
-    sideBar.classList.remove('show');
-    document.querySelectorAll('.note').forEach((note) => {
-      note.classList.remove('fullscreen');
-    });
-    document.body.classList.remove('noscroll');
-  }
-  touchStart = 0;
-  touchEnd = 0;
-});
-
-sideBar.addEventListener('touchstart', (e) => {
-  e.stopPropagation();
-});
-
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -484,7 +455,6 @@ document.querySelectorAll('header i').forEach((element) => {
     popupBoxGestion.classList.remove('show');
     publicNote.classList.remove('show');
     privateNote.classList.remove('show');
-    document.body.classList.remove('noscroll');
     sideBar.classList.remove('show');
   });
   element.addEventListener('keydown', (event) => {
@@ -506,17 +476,57 @@ document.querySelector('#search-input').addEventListener('input', () => {
 });
 
 document.querySelector('#btnTheme').addEventListener('click', () => {
-  if (localStorage.getItem('theme') === 'light') {
+  if (localStorage.getItem('theme') === null) {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+    return;
+  }
+  if (localStorage.getItem('theme') === 'dark') {
+    document.querySelector('html').className = 'light';
+    metaTheme.content = '#eeeeee';
+    button.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
+  } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'dark';
     metaTheme.content = '#272727';
     button.className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'dark');
   } else {
-    document.querySelector('html').className = 'light';
-    metaTheme.content = '#eeeeee';
-    button.className = 'fa-solid fa-lightbulb';
-    localStorage.setItem('theme', 'light');
+    document.querySelector('html').className = 'dusk';
+    metaTheme.content = '#1c1936';
+    button.className = 'fa-solid fa-star';
+    localStorage.setItem('theme', 'dusk');
   }
+});
+
+document.querySelector('#newVersion header i').addEventListener('click', () => {
+  document.querySelector('#newVersion').style.display = 'none';
+  localStorage.setItem('newVersion', 'hide');
+});
+
+document.querySelector('.exportAll').addEventListener('click', () => {
+  if (document.querySelector('.note') === null) {
+    return;
+  }
+  const notes = [];
+  document.querySelectorAll('.note').forEach((note) => {
+    const title = note.querySelector('.title').textContent;
+    const content = note.querySelector('.details span').textContent;
+    const noteObject = {
+      title,
+      content,
+    };
+    notes.push(noteObject);
+  });
+  const a = document.createElement('a');
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(JSON.stringify(notes))}`);
+  a.setAttribute('download', 'notes.json');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 });
 
 document.querySelector('#language').addEventListener('change', () => {
@@ -592,7 +602,6 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
     }
     isUpdate = false;
     noteBox.classList.remove('show');
-    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     showError('Une erreur est survenue lors de l\'ajout de la note...');
@@ -625,7 +634,6 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
       body: `mdpNew=${mdpNew}&csrf_token_mdp=${document.querySelector('#csrf_token_mdp').value}`,
     });
     popupBoxGestion.classList.remove('show');
-    document.body.classList.remove('noscroll');
   } catch (error) {
     showError('Une erreur est survenue lors de la modification du mot de passe...');
   }
@@ -643,7 +651,6 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
       body: `noteId=${encodeURIComponent(id)}&noteLink=${encodeURIComponent(link)}`,
     });
     publicNote.classList.remove('show');
-    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     showError('Une erreur est survenue lors de la suppression du lien de la note...');
@@ -662,7 +669,6 @@ document.querySelector('#submitRendrePublique').addEventListener('click', async 
       body: `noteId=${encodeURIComponent(id)}&noteLink=${link}`,
     });
     privateNote.classList.remove('show');
-    document.body.classList.remove('noscroll');
     await showNotesConnect();
   } catch (error) {
     showError('Une erreur est survenue lors de la création du lien de la note...');
