@@ -3,15 +3,16 @@ require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
+$sort = $_POST['sort'];
 
-if ($tri === 'Date de création') {
+if ($sort === "1") {
     $orderBy = 'ORDER BY id DESC';
-} else if ($tri === 'Date de création (Z-A)') {
+} else if ($sort === "2") {
     $orderBy = 'ORDER BY id';
-} else if ($tri === 'Date de modification') {
-    $orderBy = 'ORDER BY dateNote DESC, id DESC';
-} else {
+} else if ($sort === "4") {
     $orderBy = 'ORDER BY dateNote, id DESC';
+} else {
+    $orderBy = 'ORDER BY dateNote DESC, id DESC';
 }
 
 try {

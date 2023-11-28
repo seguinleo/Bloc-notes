@@ -1,3 +1,12 @@
+#----v23.11.3----#
+-Add password generator
+-Better Markdown
+-Better mobile gesture
+-Better sorting
+-Improve code structure
+-Improve UI/UX
+-Bug fixes
+
 #----v23.11.2----#
 -New UI
 -Export all your notes at once

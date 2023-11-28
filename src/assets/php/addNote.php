@@ -31,7 +31,6 @@ $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $couleursAutorisees = [
     "Noir",
-    "Blanc",
     "Rouge",
     "Orange",
     "Jaune",

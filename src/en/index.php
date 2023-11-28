@@ -31,9 +31,9 @@ if (isset($_SESSION['nom']) === false) {
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
     <meta name="description" content="Save notes to your device or sign in to sync and encrypt your notes.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#272727" id="themecolor">
+    <meta name="theme-color" content="#171717" class="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#272727">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
     <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -42,6 +42,9 @@ if (isset($_SESSION['nom']) === false) {
 </head>
 <body>
     <nav>
+        <noscript>
+            <p class="noscript">You need to enable JavaScript to run Bloc-notes.</p>
+        </noscript>
         <?php if (isset($nom) === true) { ?>
             <div>
                 <h1 class="welcome">
@@ -116,6 +119,45 @@ if (isset($_SESSION['nom']) === false) {
             </div>
         </div>
         <div id="copyNotification">Copied!</div>
+        <button type="button" id="btnSort" aria-label="Sort my notes">
+            <i class="fa-solid fa-arrow-up-wide-short"></i>
+        </button>
+        <div class="sort-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <header>
+                        <i class="fa-solid fa-xmark" tabindex="0"></i>
+                    </header>
+                    <div class="row">
+                        <h2>Sort my notes :</h2>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="sortNotes" value="1">
+                            Creation date
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="sortNotes" value="2">
+                            Creation date (Z-A)
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="sortNotes" value="3" checked>
+                            Modification date
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="sortNotes" value="4">
+                            Modification date (Z-A)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="note-popup-box">
             <div class="popup">
                 <div class="content">
@@ -130,13 +172,12 @@ if (isset($_SESSION['nom']) === false) {
                             <input id="title" placeholder="Title" type="text" maxlength="30" aria-label="Title" required>
                         </div>
                         <div class="row">
-                            <textarea id="content" placeholder="Content (Markdown)" aria-label="Content" maxlength="5000"></textarea>
+                            <textarea id="content" placeholder="Content (Plain text, Markdown or HTML)" aria-label="Content" maxlength="5000"></textarea>
                             <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
                             <div class="couleurs">
-                                <span class="Noir" role="button" tabindex="0" aria-label="Black"></span>
-                                <span class="Blanc" role="button" tabindex="0" aria-label="White"></span>
+                                <span class="Noir" role="button" tabindex="0" aria-label="Default"></span>
                                 <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
                                 <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
                                 <span class="Jaune" role="button" tabindex="0" aria-label="Yellow"></span>
@@ -172,17 +213,11 @@ if (isset($_SESSION['nom']) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer">Markdown guide</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer">
+                                    Markdown guide
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </span>
-                        </div>
-                        <div class="row">
-                            <select id="tri" aria-label="sort">
-                                <option disabled selected value>Sort my notes</option>
-                                <option value="Date de création">Creation date</option>
-                                <option value="Date de création (Z-A)">Creation date (Z-A)</option>
-                                <option value="Date de modification">Modification date</option>
-                                <option value="Date de modification (Z-A)">Modification date (Z-A)</option>
-                            </select>
                         </div>
                         <details>
                             <summary>Manage <?= $nom ?> account</summary>
@@ -200,12 +235,12 @@ if (isset($_SESSION['nom']) === false) {
                                 <span class="exportAll linkp" tabindex="0">Export all my notes</span>
                             </div>
                             <div class="row">
-                                <span class="supprimerCompte" tabindex="0">Delete my account</span>
+                                <span class="supprimerCompte attention" tabindex="0">Delete my account</span>
                             </div>
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.3</a>
                             </p>
                         </div>
                     </div>
@@ -292,7 +327,17 @@ if (isset($_SESSION['nom']) === false) {
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
                                 Your password is securely stored and your notes are encrypted.
+                                <span class="attention">It will be impossible to recover your password if you forget it.</span>
                             </div>
+                            <details id="genMdp">
+                                <summary>Generate a strong password</summary>
+                                <div class="row">
+                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Generated password" disabled required>
+                                    <button id="submitGenMdp" type="button" aria-label="Generate a strong password">
+                                        <i class="fa-solid fa-arrow-rotate-right"></i>
+                                    </button>
+                                </div>
+                            </details>
                             <button id="submitCreer" type="submit">Sign up</button>
                         </form>
                     </div>
@@ -303,9 +348,9 @@ if (isset($_SESSION['nom']) === false) {
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>v23.11.2</h2>
+            <h2>v23.11.3🎉</h2>
             <p>
-                A new version of Bloc-notes is available! 🎉
+                What's new? A more refined interface, a password generator and numerous bug fixes.
             </p>
             <p>
                 <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Changelog</a>

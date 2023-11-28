@@ -2,7 +2,7 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_SESSION['nom'], $_SESSION['userId'], $_SESSION['tri']) === false) {
+if (isset($_SESSION['nom'], $_SESSION['userId']) === false) {
     http_response_code(403);
     return;
 }
@@ -24,7 +24,6 @@ if ($PDO === null) {
 
 $nom = $_SESSION['nom'];
 $userId = $_SESSION['userId'];
-$tri = $_SESSION['tri'];
 
 try {
     $query = $PDO->prepare("SELECT one_key FROM users WHERE nom=:CurrentUser AND id=:UserId LIMIT 1");

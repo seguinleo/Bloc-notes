@@ -48,7 +48,6 @@ $noteId = $_POST['noteId'];
 $link = $_POST['link'];
 $couleursAutorisees = [
     "Noir",
-    "Blanc",
     "Rouge",
     "Orange",
     "Jaune",

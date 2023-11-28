@@ -29,7 +29,7 @@ $nomConnect = $_POST['nomConnect'];
 $mdpConnect = $_POST['mdpConnect'];
 
 try {
-    $query = $PDO->prepare("SELECT id,nom,mdp,tri FROM users WHERE nom=:NomConnect LIMIT 1");
+    $query = $PDO->prepare("SELECT id,nom,mdp FROM users WHERE nom=:NomConnect LIMIT 1");
     $query->execute([':NomConnect' => $nomConnect]);
     $row = $query->fetch(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
@@ -60,4 +60,3 @@ session_start();
 
 $_SESSION['nom'] = $row['nom'];
 $_SESSION['userId'] = $row['id'];
-$_SESSION['tri'] = $row['tri'];

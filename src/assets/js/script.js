@@ -2,9 +2,12 @@
 let isUpdate = false;
 let timeoutCopy = null;
 let timeoutError = null;
+let touchstartX = 0;
+let touchendX = 0;
 const notesContainer = document.querySelector('main');
 const noteBox = document.querySelector('.note-popup-box');
 const connectBox = document.querySelector('.connect-box');
+const sortBox = document.querySelector('.sort-popup-box');
 const creerBox = document.querySelector('.creer-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
@@ -13,21 +16,29 @@ const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('.sideBar');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
-const metaTheme = document.querySelector('#themecolor');
+const metaTheme = document.querySelectorAll('.themecolor');
 const button = document.querySelector('#iconeTheme');
 
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
-  metaTheme.content = '#eeeeee';
+  metaTheme.forEach((e) => {
+    e.content = '#eeeeee';
+  });
   button.className = 'fa-solid fa-lightbulb';
 } else if (localStorage.getItem('theme') === 'dusk') {
   document.querySelector('html').className = 'dusk';
-  metaTheme.content = '#1c1936';
+  metaTheme.forEach((e) => {
+    e.content = '#1c1936';
+  });
   button.className = 'fa-solid fa-star';
 }
 
-if (localStorage.getItem('newVersion') === 'hide') {
+if (localStorage.getItem('version') === 'hide') {
   document.querySelector('#newVersion').style.display = 'none';
+}
+
+if (localStorage.getItem('sort_notes') === null) {
+  localStorage.setItem('sort_notes', '3');
 }
 
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
@@ -61,6 +72,23 @@ const searchSideBar = () => {
   });
 };
 
+const openSidebar = () => {
+  sideBar.classList.add('show');
+};
+
+const closeSidebar = () => {
+  sideBar.classList.remove('show');
+};
+
+const handleGesture = () => {
+  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) {
+    openSidebar();
+  }
+  if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) {
+    closeSidebar();
+  }
+};
+
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
@@ -68,6 +96,7 @@ converter.setOption('tasklists', true);
 converter.setOption('strikethrough', true);
 converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
+converter.setOption('simplifiedAutoLink', true);
 
 function arrayBufferToBase64(buffer) {
   const binary = [];
@@ -86,6 +115,23 @@ function base64ToArrayBuffer(base64) {
   }
   return byteArray.buffer;
 }
+
+function getPassword(length) {
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?!@#$%^&(){}[]<>+-*/|=.,;_'~";
+  let password = '';
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
+  for (let i = 0; i < length; i += 1) {
+    password += chars[array[i] % chars.length];
+  }
+  document.querySelector('#mdpCreerGen').value = password;
+  document.querySelector('#mdpCreer').value = password;
+  document.querySelector('#mdpCreerValid').value = password;
+}
+
+document.querySelector('#submitGenMdp').addEventListener('click', () => {
+  getPassword(16);
+});
 
 async function openIndexedDB(dbName, objectStoreName) {
   return new Promise((resolve, reject) => {
@@ -155,8 +201,21 @@ const showNotes = async () => {
   const db = await openIndexedDB(dbName, objectStoreName);
   const key = await getKeyFromDB(db, objectStoreName);
 
+  if (localStorage.getItem('sort_notes') === '1') {
+    notesJSON.sort((a, b) => b.id - a.id);
+    document.querySelector('input[name="sortNotes"][value="1"]').checked = true;
+  } else if (localStorage.getItem('sort_notes') === '2') {
+    notesJSON.sort((a, b) => a.id - b.id);
+    document.querySelector('input[name="sortNotes"][value="2"]').checked = true;
+  } else if (localStorage.getItem('sort_notes') === '4') {
+    notesJSON.sort((a, b) => new Date(a.date) - new Date(b.date));
+    document.querySelector('input[name="sortNotes"][value="4"]').checked = true;
+  } else {
+    notesJSON.sort((a, b) => new Date(b.date) - new Date(a.date));
+    document.querySelector('input[name="sortNotes"][value="3"]').checked = true;
+  }
+
   notesJSON
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
     .forEach(async (row, id) => {
       const {
         title, content, couleur, date, hidden,
@@ -550,6 +609,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
   );
 
   const note = {
+    id: notesJSON.length,
     title: arrayBufferToBase64(enTitle),
     content: arrayBufferToBase64(enContent),
     couleur,
@@ -571,7 +631,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
 
 document.querySelectorAll('#menuIcon').forEach((element) => {
   element.addEventListener('click', () => {
-    document.querySelector('.sideBar').classList.add('show');
+    openSidebar();
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -594,7 +654,8 @@ document.querySelectorAll('header i').forEach((element) => {
     noteBox.classList.remove('show');
     connectBox.classList.remove('show');
     creerBox.classList.remove('show');
-    document.querySelector('.sideBar').classList.remove('show');
+    sortBox.classList.remove('show');
+    closeSidebar();
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -617,24 +678,32 @@ document.querySelector('#search-input').addEventListener('input', () => {
 document.querySelector('#btnTheme').addEventListener('click', () => {
   if (localStorage.getItem('theme') === null) {
     document.querySelector('html').className = 'light';
-    metaTheme.content = '#eeeeee';
+    metaTheme.forEach((e) => {
+      e.content = '#eeeeee';
+    });
     button.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
     return;
   }
   if (localStorage.getItem('theme') === 'dark') {
     document.querySelector('html').className = 'light';
-    metaTheme.content = '#eeeeee';
+    metaTheme.forEach((e) => {
+      e.content = '#eeeeee';
+    });
     button.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
   } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'dark';
-    metaTheme.content = '#272727';
+    metaTheme.forEach((e) => {
+      e.content = '#171717';
+    });
     button.className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'dark');
   } else {
     document.querySelector('html').className = 'dusk';
-    metaTheme.content = '#1c1936';
+    metaTheme.forEach((e) => {
+      e.content = '#1c1936';
+    });
     button.className = 'fa-solid fa-star';
     localStorage.setItem('theme', 'dusk');
   }
@@ -642,7 +711,7 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
 
 document.querySelector('#newVersion header i').addEventListener('click', () => {
   document.querySelector('#newVersion').style.display = 'none';
-  localStorage.setItem('newVersion', 'hide');
+  localStorage.setItem('version', 'hide');
 });
 
 document.querySelector('#language').addEventListener('change', () => {
@@ -654,6 +723,28 @@ document.querySelector('#language').addEventListener('change', () => {
   } else if (e === 'de') {
     window.location.href = 'de/';
   }
+});
+
+document.addEventListener('touchstart', (event) => {
+  touchstartX = event.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener('touchend', (event) => {
+  touchendX = event.changedTouches[0].screenX;
+  handleGesture();
+}, false);
+
+document.querySelector('#btnSort').addEventListener('click', () => {
+  sortBox.classList.add('show');
+});
+
+document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
+  element.addEventListener('change', () => {
+    if (element.value === '1' || element.value === '2' || element.value === '3' || element.value === '4') {
+      localStorage.setItem('sort_notes', element.value);
+      showNotes();
+    }
+  });
 });
 
 document.addEventListener('DOMContentLoaded', async () => {

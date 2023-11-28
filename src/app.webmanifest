@@ -2,10 +2,9 @@
 	"name": "Bloc-notes \u2013 Léo SEGUIN",
 	"short_name": "Bloc-notes",
 	"start_url": "./",
-	"id": "./",
 	"display": "standalone",
-	"background_color": "#171717",
-	"theme_color": "#171717",
+	"background_color": "#000000",
+	"theme_color": "#000000",
 	"orientation": "portrait-primary",
 	"lang": "fr",
 	"scope": "./",
@@ -13,12 +12,13 @@
 		{
 			"src": "./assets/img/desktop.png",
 			"type": "image/png",
-			"sizes": "1199x691"
+			"sizes": "1199x691",
+			"form_factor": "wide"
 		},
 		{
 			"src": "./assets/img/mobile.png",
 			"type": "image/png",
-			"sizes": "317x599"
+			"sizes": "320x605"
 		}
 	],
 	"description": "Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.",

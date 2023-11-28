@@ -45,7 +45,6 @@ CREATE TABLE `users` (
   `id` int NOT NULL,
   `nom` varchar(255) NOT NULL,
   `mdp` varchar(255) NOT NULL,
-  `tri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Date de modification',
   `one_key` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
