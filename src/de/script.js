@@ -577,7 +577,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
   const couleurSpan = document.querySelector('.couleurs span.selectionne');
   const couleur = couleurSpan.classList[0];
   const title = titleNote.value.trim();
-  const content = contentNote.value.trim();
+  const content = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const hidden = document.querySelector('#checkHidden').checked;
 
   if (!title || title.length > 30 || content.length > 5000) return;

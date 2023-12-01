@@ -604,7 +604,7 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
   try {
     const idNote = document.querySelector('#idNoteInput').value;
     const titreBrut = titleNote.value.trim();
-    const contentBrut = contentNote.value.trim();
+    const contentBrut = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
     if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
     const titre = encodeURIComponent(titreBrut);
     const content = encodeURIComponent(contentBrut);
