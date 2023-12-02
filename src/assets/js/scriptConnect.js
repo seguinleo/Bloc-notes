@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-alert */
 let isUpdate = false;
 let timeoutCopy = null;
@@ -94,7 +95,6 @@ const handleGesture = () => {
   }
 };
 
-// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -146,7 +146,7 @@ const showNotes = async () => {
     const descElement = document.createElement('span');
 
     if (hidden === 0) {
-      descElement.innerHTML = descHtml;
+      descElement.innerHTML = DOMPurify.sanitize(descHtml);
     } else {
       descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
     }
@@ -579,6 +579,8 @@ document.querySelector('#language').addEventListener('change', () => {
     window.location.href = 'en/';
   } else if (e === 'de') {
     window.location.href = 'de/';
+  } else if (e === 'es') {
+    window.location.href = 'es/';
   }
 });
 

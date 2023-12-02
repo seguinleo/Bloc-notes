@@ -18,6 +18,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
       '../assets/js/showdown.min.js',
+      '../assets/js/purify.min.js',
     ]),
   );
 });

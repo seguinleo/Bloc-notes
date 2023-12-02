@@ -20,7 +20,7 @@ try {
     $query->execute([':CurrentUser' => $nom]);
     $items = [];
 
-    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+    while ($row = $query->fetch()) {
         $items[] = [
             'id'      => $row['id'],
             'title'   => $encryption->decryptData($row['titre'], $key),

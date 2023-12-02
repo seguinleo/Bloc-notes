@@ -116,10 +116,6 @@ kbd {
   padding: 2px 4px;
 }
 
-progress {
-  width: 100%;
-}
-
 header {
   padding: 1rem;
 
@@ -664,7 +660,7 @@ button {
   }
 
   p {
-    margin: 1.6rem 1rem;
+    margin: 3rem 1rem;
   }
 }
 
@@ -1510,36 +1506,4 @@ html.light {
 .Violet,
 .Rose {
   color: $color01;
-}
-
-.bold {
-  font-weight: 700;
-}
-
-.italic {
-  font-style: italic;
-}
-
-.underline {
-  text-decoration: underline;
-}
-
-.strikethrough {
-  text-decoration: line-through;
-}
-
-.align-left {
-  text-align: left;
-}
-
-.align-center {
-  text-align: center;
-}
-
-.align-right {
-  text-align: right;
-}
-
-.align-justify {
-  text-align: justify;
 }

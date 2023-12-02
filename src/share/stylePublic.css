@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/fonts/OpenSans.woff2') format('woff2');
+  src: url('../assets/fonts/OpenSans.woff2') format('woff2');
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/assets/fonts/OpenSans-700.woff2') format('woff2');
+  src: url('../assets/fonts/OpenSans-700.woff2') format('woff2');
 }
 
 html {
@@ -186,43 +186,43 @@ img {
 }
 
 .Noir {
-  background: #171717;
+  background-color: #171717;
 }
 
 .Rouge {
-  background: #fd948a;
+  background-color: #fd948a;
 }
 
 .Orange {
-  background: #ffc65c;
+  background-color: #ffc65c;
 }
 
 .Jaune {
-  background: #fdf488;
+  background-color: #fdf488;
 }
 
 .Vert {
-  background: #d6fe9d;
+  background-color: #d6fe9d;
 }
 
 .Cyan {
-  background: #bbfdec;
+  background-color: #bbfdec;
 }
 
 .BleuCiel {
-  background: #d2eff7;
+  background-color: #d2eff7;
 }
 
 .Bleu {
-  background: #b4caf6;
+  background-color: #b4caf6;
 }
 
 .Violet {
-  background: #d1acff;
+  background-color: #d1acff;
 }
 
 .Rose {
-  background: #fdd0e7;
+  background-color: #fdd0e7;
 }
 
 .Rouge,
@@ -250,10 +250,6 @@ img {
   background: rgba(100, 100, 125, 20%);
 }
 
-.bottom-content i:focus {
-  background: rgba(100, 100, 125, 50%);
-}
-
 .task-list-item {
   list-style-type: none;
   margin-left: -2.4rem;
@@ -272,9 +268,5 @@ footer {
 @media(max-width: 900px) {
   body {
     padding: 10px;
-  }
-
-  .details {
-    font-size: .9rem;
   }
 }

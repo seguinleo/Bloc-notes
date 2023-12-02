@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-alert */
 let isUpdate = false;
 let timeoutCopy = null;
@@ -95,6 +94,7 @@ const handleGesture = () => {
   }
 };
 
+// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -119,7 +119,7 @@ const showNotes = async () => {
   const data = await response.json();
 
   if (data.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBar h2').textContent = 'Notizen (0)';
     return;
   }
 
@@ -165,7 +165,7 @@ const showNotes = async () => {
     editIconElement.setAttribute('data-note-hidden', hidden);
     editIconElement.setAttribute('data-note-link', link);
     editIconElement.setAttribute('role', 'button');
-    editIconElement.setAttribute('aria-label', 'Edit note');
+    editIconElement.setAttribute('aria-label', 'Bearbeiten');
     bottomContentElement.appendChild(editIconElement);
 
     if (link === '') {
@@ -174,7 +174,7 @@ const showNotes = async () => {
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
-      trashIconElement.setAttribute('aria-label', 'Delete note');
+      trashIconElement.setAttribute('aria-label', 'Löschen');
       bottomContentElement.appendChild(trashIconElement);
     }
 
@@ -184,7 +184,7 @@ const showNotes = async () => {
       clipboardIconElement.tabIndex = 0;
       clipboardIconElement.setAttribute('data-note-desc', descEnd);
       clipboardIconElement.setAttribute('role', 'button');
-      clipboardIconElement.setAttribute('aria-label', 'Copy note');
+      clipboardIconElement.setAttribute('aria-label', 'Kopieren');
       bottomContentElement.appendChild(clipboardIconElement);
 
       const downloadIconElement = document.createElement('i');
@@ -194,7 +194,7 @@ const showNotes = async () => {
       downloadIconElement.setAttribute('data-note-title', title);
       downloadIconElement.setAttribute('data-note-desc', descEnd);
       downloadIconElement.setAttribute('role', 'button');
-      downloadIconElement.setAttribute('aria-label', 'Download note');
+      downloadIconElement.setAttribute('aria-label', 'Herunterladen');
       bottomContentElement.appendChild(downloadIconElement);
 
       const expandIconElement = document.createElement('i');
@@ -202,7 +202,7 @@ const showNotes = async () => {
       expandIconElement.tabIndex = 0;
       expandIconElement.setAttribute('data-note-id', id);
       expandIconElement.setAttribute('role', 'button');
-      expandIconElement.setAttribute('aria-label', 'Expand note');
+      expandIconElement.setAttribute('aria-label', 'Vollbild');
       bottomContentElement.appendChild(expandIconElement);
 
       const linkIconElement = document.createElement('i');
@@ -211,7 +211,7 @@ const showNotes = async () => {
       linkIconElement.setAttribute('data-note-id', id);
       linkIconElement.setAttribute('data-note-link', link);
       linkIconElement.setAttribute('role', 'button');
-      linkIconElement.setAttribute('aria-label', 'Share note');
+      linkIconElement.setAttribute('aria-label', 'Link');
       bottomContentElement.appendChild(linkIconElement);
     }
 
@@ -236,7 +236,7 @@ const showNotes = async () => {
     paragraph.appendChild(dateSpan);
     sideBar.querySelector('.listNotes').appendChild(paragraph);
   });
-  sideBar.querySelector('h2').textContent = `Notes (${data.length})`;
+  sideBar.querySelector('h2').textContent = `Notas (${data.length})`;
   searchSideBar();
 };
 
@@ -251,7 +251,7 @@ const fetchDelete = async (e) => {
     });
     await showNotes();
   } catch (error) {
-    showError('An error occurred while deleting the note...');
+    showError('Se produjo un error al eliminar la nota...');
   }
 };
 
@@ -267,9 +267,9 @@ const deleteAccount = async () => {
       window.location.reload();
       return;
     }
-    showError('An error occurred while deleting your account...');
+    showError('Se produjo un error al eliminar tu cuenta...');
   } catch (error) {
-    showError('An error occurred while deleting your account...');
+    showError('Se produjo un error al eliminar tu cuenta...');
   }
 };
 
@@ -283,7 +283,7 @@ const fetchLogout = async () => {
     });
     window.location.reload();
   } catch (error) {
-    showError('An error occurred while logging out...');
+    showError('Se produjo un error al cerrar la sesión...');
   }
 };
 
@@ -345,7 +345,7 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Do you really want to delete this note?')) {
+  if (window.confirm('¿Estás seguro que quieres eliminar esta nota?')) {
     fetchDelete(e);
   }
 };
@@ -362,7 +362,7 @@ const noteAccess = (id, link) => {
     publicNote.classList.add('show');
     document.querySelector('#idNoteInputPrivate').value = id;
     document.querySelector('#linkNoteInputPrivate').value = link;
-    document.querySelector('#copyNoteLink').textContent = `${window.location.href.replace('/en/', '')}/share/${link}/`;
+    document.querySelector('#copyNoteLink').textContent = `${window.location.href.replace('/es/', '')}/share/${link}/`;
     publicNote.querySelector('i').focus();
   }
 };
@@ -453,7 +453,7 @@ document.querySelectorAll('.gestionCompte').forEach((element) => {
 
 document.querySelectorAll('.supprimerCompte').forEach((element) => {
   element.addEventListener('click', () => {
-    if (window.confirm('Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.')) {
+    if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.')) {
       deleteAccount();
     }
   });
@@ -626,14 +626,14 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
       body: data,
     });
     if (response.status !== 200) {
-      showError('Connection timed out, please reload the page...');
+      showError('Se agotó el tiempo de conexión, por favor recarga la página...');
       return;
     }
     isUpdate = false;
     noteBox.classList.remove('show');
     await showNotes();
   } catch (error) {
-    showError('An error occurred while adding the note...');
+    showError('Se produjo un error al agregar la nota...');
   }
 });
 
@@ -642,15 +642,15 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
   const t = document.querySelector('#mdpModifNewValid').value;
   if (!e || !t || e.length < 6 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
-    showError('Password too weak (only numbers)...');
+    showError('Contraseña demasiado débil (solo números)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    showError('Password too weak (only letters)...');
+    showError('Contraseña demasiado débil (solo letras)...');
     return;
   }
   if (e !== t) {
-    showError('Passwords do not match...');
+    showError('Las contraseñas no coinciden...');
     return;
   }
   const mdpNew = encodeURIComponent(e);
@@ -664,7 +664,7 @@ document.querySelector('#submitChangeMDP').addEventListener('click', async () =>
     });
     popupBoxGestion.classList.remove('show');
   } catch (error) {
-    showError('An error occurred while changing the password...');
+    showError('Se produjo un error al cambiar la contraseña...');
   }
 });
 
@@ -682,7 +682,7 @@ document.querySelector('#submitRendrePrivee').addEventListener('click', async ()
     publicNote.classList.remove('show');
     await showNotes();
   } catch (error) {
-    showError('An error occurred while deleting the link of the note...');
+    showError('Se produjo un error al eliminar el enlace de la nota...');
   }
 });
 
@@ -700,7 +700,7 @@ document.querySelector('#submitRendrePublique').addEventListener('click', async 
     privateNote.classList.remove('show');
     await showNotes();
   } catch (error) {
-    showError('An error occurred while creating the link of the note...');
+    showError('Se produjo un error al crear el enlace de la nota...');
   }
 });
 

@@ -58,8 +58,9 @@ if (is_dir($directoryPath) === false) {
             <meta name="theme-color" content="#171717">
             <meta name="apple-mobile-web-app-capable" content="yes">
             <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
             <link rel="stylesheet" href="../stylePublic.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         </head>
         <body>
             <main data-link="%s"></main>
@@ -69,6 +70,7 @@ if (is_dir($directoryPath) === false) {
                 </a>
                 GPL-3.0 &copy;<?= date('Y') ?>
             </footer>
+            <script src="../../assets/js/purify.min.js" defer></script>
             <script src="../../assets/js/showdown.min.js" defer></script>
             <script src="../scriptPublic.js" defer></script>
         </body>

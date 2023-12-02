@@ -1,8 +1,8 @@
+/* eslint-disable no-undef */
 const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
 const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
 const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
-// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -35,7 +35,7 @@ const showSharedNote = async () => {
     titleElement.classList.add('title');
     titleElement.textContent = title;
     const descElement = document.createElement('span');
-    descElement.innerHTML = descHtml;
+    descElement.innerHTML = DOMPurify.sanitize(descHtml);
     detailsElement.appendChild(titleElement);
     detailsElement.appendChild(descElement);
     const bottomContentElement = document.createElement('div');

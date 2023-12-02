@@ -38,5 +38,5 @@ try {
     return;
 }
 
-$key = $query->fetch(PDO::FETCH_ASSOC)['one_key'];
+$key = $query->fetch()['one_key'];
 $query->closeCursor();

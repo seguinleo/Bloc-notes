@@ -34,11 +34,11 @@ if (isset($_SESSION['nom']) === false) {
     <meta name="theme-color" content="#171717" class="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; child-src 'none'; connect-src 'self'; frame-ancestors 'none'; frame-src 'none'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; media-src 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
     <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="manifest" href="app.webmanifest">
 </head>
 <body>
@@ -79,12 +79,12 @@ if (isset($_SESSION['nom']) === false) {
         </div>
         <?php if (isset($nom) === true) { ?>
             <div class="lastSync">
-                <i class="resync fa-solid fa-sync" aria-label="Sync" tabindex="0" role="button"></i>
+                <i class="resync fa-solid fa-sync" aria-label="Synchronisieren" tabindex="0" role="button"></i>
                 <span></span>
             </div>
         <?php } ?>
         <div class="divTheme">
-            <button type="button" id="btnTheme" aria-label="Dunkel-/Hellmodus">
+            <button type="button" id="btnTheme" aria-label="Thema">
                 <i id="iconeTheme" class="fa-solid fa-moon"></i>
             </button>
         </div>
@@ -114,6 +114,7 @@ if (isset($_SESSION['nom']) === false) {
                         <option value="fr">🇫🇷</option>
                         <option value="en">🇬🇧</option>
                         <option value="de" selected>🇩🇪</option>
+                        <option value="es">🇪🇸</option>
                     </select>
                 </div>
                 <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
@@ -175,7 +176,12 @@ if (isset($_SESSION['nom']) === false) {
                             <input id="title" placeholder="Titel" type="text" maxlength="30" aria-label="Titel" required>
                         </div>
                         <div class="row">
-                            <textarea id="content" placeholder="Inhalt (einfacher Text, Markdown oder HTML)" aria-label="Inhalt" maxlength="5000"></textarea>
+                            <textarea
+                                id="content"
+                                placeholder="Inhalt (einfacher Text oder Markdown)"
+                                aria-label="Inhalt"
+                                maxlength="5000"
+                            ></textarea>
                             <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
@@ -227,10 +233,10 @@ if (isset($_SESSION['nom']) === false) {
                             <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
                                 <input type="hidden" id="csrf_token_mdp" name="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" placeholder="Neues Passwort" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                    <input id="mdpModifNew" placeholder="Neues Passwort" type="password" minlength="6" maxlength="50" aria-label="Neues Passwort" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" placeholder="Geben Sie Ihr neues Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Passwort" required>
+                                    <input id="mdpModifNewValid" placeholder="Geben Sie Ihr neues Passwort erneut ein" type="password" minlength="6" maxlength="50" aria-label="Geben Sie Ihr neues Passwort erneut ein" required>
                                 </div>
                                 <button id="submitChangeMDP" type="submit">Passwort ändern</button>
                             </form>
@@ -243,7 +249,7 @@ if (isset($_SESSION['nom']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.3</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.1</a>
                             </p>
                         </div>
                     </div>
@@ -335,7 +341,7 @@ if (isset($_SESSION['nom']) === false) {
                             <details id="genMdp">
                                 <summary>Generieren Sie ein sicheres Passwort</summary>
                                 <div class="row">
-                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Passwort generiert" disabled required>
+                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Passwort generiert" disabled>
                                     <button id="submitGenMdp" type="button" aria-label="Generieren Sie ein sicheres Passwort">
                                         <i class="fa-solid fa-arrow-rotate-right"></i>
                                     </button>
@@ -351,15 +357,16 @@ if (isset($_SESSION['nom']) === false) {
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>v23.11.3🎉</h2>
+            <h2>v23.12.1🎉</h2>
             <p>
-                Was ist neu? Eine verfeinerte Benutzeroberfläche, ein Passwortgenerator und zahlreiche Fehlerbehebungen.
+            Bloc-notes wurde aktualisiert!
             </p>
             <p>
-                <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Changelog</a>
+                <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Liste der Änderungen</a>
             </p>
         </div>
     </main>
+    <script src="../assets/js/purify.min.js" defer></script>
     <script src="../assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>
         <script src="scriptConnect.js" defer></script>

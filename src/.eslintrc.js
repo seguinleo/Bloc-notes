@@ -9,6 +9,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
+  ignorePatterns: ['*.min.js'],
   rules: {
   },
 };

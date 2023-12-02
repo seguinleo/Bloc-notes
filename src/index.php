@@ -34,11 +34,11 @@ if (isset($_SESSION['nom']) === false) {
     <meta name="theme-color" content="#171717" class="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; child-src 'none'; connect-src 'self'; frame-ancestors 'none'; frame-src 'none'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; media-src 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
     <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="manifest" href="app.webmanifest">
 </head>
 <body>
@@ -72,7 +72,7 @@ if (isset($_SESSION['nom']) === false) {
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } else { ?>
-                <span class="seconnecter linkp" aria-label="Se connecter" tabindex="0" role="button">
+                <span class="seconnecter linkp" aria-label="Me connecter" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } ?>
@@ -114,6 +114,7 @@ if (isset($_SESSION['nom']) === false) {
                         <option value="fr" selected>🇫🇷</option>
                         <option value="en">🇬🇧</option>
                         <option value="de">🇩🇪</option>
+                        <option value="es">🇪🇸</option>
                     </select>
                 </div>
                 <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
@@ -175,7 +176,12 @@ if (isset($_SESSION['nom']) === false) {
                             <input id="title" placeholder="Titre" type="text" maxlength="30" aria-label="titre" required>
                         </div>
                         <div class="row">
-                            <textarea id="content" placeholder="Contenu (Texte brut, Markdown ou HTML)" aria-label="contenu" maxlength="5000"></textarea>
+                            <textarea
+                                id="content"
+                                placeholder="Contenu (Texte brut ou Markdown)"
+                                aria-label="Contenu (Texte brut ou Markdown)"
+                                maxlength="5000"
+                            ></textarea>
                             <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
@@ -243,7 +249,7 @@ if (isset($_SESSION['nom']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.11.3</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.1</a>
                             </p>
                         </div>
                     </div>
@@ -335,7 +341,7 @@ if (isset($_SESSION['nom']) === false) {
                             <details id="genMdp">
                                 <summary>Générer un mot de passe fort</summary>
                                 <div class="row">
-                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Mot de passe généré" disabled required>
+                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Mot de passe généré" disabled>
                                     <button id="submitGenMdp" type="button" aria-label="Générer un mot de passe fort">
                                         <i class="fa-solid fa-arrow-rotate-right"></i>
                                     </button>
@@ -351,15 +357,16 @@ if (isset($_SESSION['nom']) === false) {
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>v23.11.3🎉</h2>
+            <h2>v23.12.1🎉</h2>
             <p>
-                Au menu ? Une interface plus travaillée, un générateur de mot de passe et de nombreuses corrections de bugs.
+                Bloc-notes à été mis à jour !
             </p>
             <p>
                 <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Liste des changements</a>
             </p>
         </div>
     </main>
+    <script src="assets/js/purify.min.js" defer></script>
     <script src="assets/js/showdown.min.js" defer></script>
     <?php if (isset($nom) === true) { ?>
         <script src="assets/js/scriptConnect.js" defer></script>

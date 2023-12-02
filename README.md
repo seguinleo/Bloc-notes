@@ -25,7 +25,7 @@
 *   [For developers](#for-developers)
 
 ## Why?
-When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote don't respect privacy, Standard Notes and Obsidian can be light without having to pay (no Markdown or no Sync). So I decided to create my own notebook that respects users' privacy and easy to use.
+When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote do not respect users' privacy, Standard Notes and Obsidian can be lightweight without having to pay (no Markdown or Sync). So I decided to create my own notebook, respectful of users' privacy and easy to use.
 
 ## Features
 All notes are encrypted with ``AES-256-GCM``.
@@ -52,14 +52,14 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 > Never store passwords or too personal data in your notes regardless of the service.
 
 ## Languages
-🇫🇷French, 🇬🇧English, 🇩🇪German
+🇫🇷French, 🇬🇧English, 🇩🇪German, 🇪🇸Spanish
 
 ## Todo
 - [x] Share notes with a random link
 - [x] Export notes in text file
 - [ ] Pin notes
 - [ ] Categories
-- [ ] Spanish translation
+- [x] Spanish translation
 - [ ] ...
 
 ## Community
@@ -70,7 +70,7 @@ Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozi
 
 Technologies: JavaScript, PHP and MySQL
 
-Dependencies: ESLint, PHP_CodeSniffer, Sass and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
+Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure53/DOMPurify) and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
 
 ``npm i`` and ``composer i`` to install all dependencies
 

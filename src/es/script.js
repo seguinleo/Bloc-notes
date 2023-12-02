@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-alert */
 let isUpdate = false;
 let timeoutCopy = null;
@@ -90,6 +89,7 @@ const handleGesture = () => {
   }
 };
 
+// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -192,7 +192,7 @@ const showNotes = async () => {
   forms.forEach((form) => form.reset());
 
   if (notesJSON.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
+    document.querySelector('.sideBar h2').textContent = 'Notizen (0)';
     return;
   }
 
@@ -270,13 +270,13 @@ const showNotes = async () => {
       editIconElement.setAttribute('data-note-color', couleur);
       editIconElement.setAttribute('data-note-hidden', hidden);
       editIconElement.setAttribute('role', 'button');
-      editIconElement.setAttribute('aria-label', 'Edit note');
+      editIconElement.setAttribute('aria-label', 'Bearbeiten');
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
-      trashIconElement.setAttribute('aria-label', 'Delete note');
+      trashIconElement.setAttribute('aria-label', 'Löschen');
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
 
@@ -286,7 +286,7 @@ const showNotes = async () => {
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('data-note-desc', descEnd);
         clipboardIconElement.setAttribute('role', 'button');
-        clipboardIconElement.setAttribute('aria-label', 'Copy note');
+        clipboardIconElement.setAttribute('aria-label', 'Kopieren');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
@@ -296,7 +296,7 @@ const showNotes = async () => {
         downloadIconElement.setAttribute('data-note-title', deTitleString);
         downloadIconElement.setAttribute('data-note-desc', descEnd);
         downloadIconElement.setAttribute('role', 'button');
-        downloadIconElement.setAttribute('aria-label', 'Download note');
+        downloadIconElement.setAttribute('aria-label', 'Herunterladen');
         bottomContentElement.appendChild(downloadIconElement);
 
         const expandIconElement = document.createElement('i');
@@ -304,7 +304,7 @@ const showNotes = async () => {
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('data-note-id', id);
         expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Expand note');
+        expandIconElement.setAttribute('aria-label', 'Vollbild');
         bottomContentElement.appendChild(expandIconElement);
       }
 
@@ -325,7 +325,7 @@ const showNotes = async () => {
       sideBar.querySelector('.listNotes').appendChild(paragraph);
       searchSideBar();
     });
-  document.querySelector('h2').textContent = `Notes (${notesJSON.length})`;
+  document.querySelector('h2').textContent = `Notas (${notesJSON.length})`;
 };
 
 const toggleFullscreen = (id) => {
@@ -381,11 +381,19 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Do you really want to delete this note?')) {
+  if (window.confirm('¿Estás seguro que quieres eliminar esta nota?')) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     showNotes();
   }
+};
+
+window.onTurnstileSuccessConnect = () => {
+  document.querySelector('#submitSeConnecter').disabled = false;
+};
+
+window.onTurnstileSuccessCreate = () => {
+  document.querySelector('#submitCreer').disabled = false;
 };
 
 notesContainer.addEventListener('click', (event) => {
@@ -465,23 +473,23 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
   const o = document.querySelector('#mdpCreerValid').value;
   if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    showError('The name can only contain letters...');
+    showError('El nombre sólo puede contener letras...');
     return;
   }
   if (/^[0-9]+$/.test(t)) {
-    showError('Password too weak (only numbers)...');
+    showError('Contraseña demasiado débil (solo números)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    showError('Password too weak (only letters)...');
+    showError('Contraseña demasiado débil (solo letras)...');
     return;
   }
   if (t !== o) {
-    showError('Passwords do not match...');
+    showError('Las contraseñas no coinciden...');
     return;
   }
   if (e === t) {
-    showError('The password must be different from the name...');
+    showError('La contraseña debe ser diferente al nombre...');
     return;
   }
   const nomCreer = encodeURIComponent(e);
@@ -498,12 +506,12 @@ document.querySelector('#submitCreer').addEventListener('click', async () => {
       creerBox.classList.remove('show');
 
       forms.forEach((form) => form.reset());
-      alert('Account created successfully! You can now log in.');
+      alert('¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.');
       return;
     }
-    showError('User already exists...');
+    showError('El usuario ya existe...');
   } catch (error) {
-    showError('An error occurred while creating the account...');
+    showError('Ocurrió un error al crear la cuenta...');
   }
 });
 
@@ -528,19 +536,19 @@ document.querySelector('#submitSeConnecter').addEventListener('click', async () 
       let time = 10;
       const btn = document.querySelector('#submitSeConnecter');
       btn.disabled = true;
-      showError('Wrong credentials...');
+      showError('Credenciales incorrectas...');
       const interval = setInterval(() => {
         time -= 1;
-        btn.textContent = `Sign in (${time})`;
+        btn.textContent = `Conectarse (${time})`;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
         btn.disabled = false;
-        btn.textContent = 'Sign in';
+        btn.textContent = 'Conectarse';
       }, 11000);
     }
   } catch (error) {
-    showError('An error occurred while signing in...');
+    showError('Ocurrió un error al iniciar sesión...');
   }
 });
 
