@@ -3,7 +3,7 @@
 // THIS IS NOT THE REAL CONFIG FILE, THIS IS JUST AN EXAMPLE FOR SELF-HOSTING
 
 $host = 'localhost';
-$db = 'notes';
+$db = 'seguinleo-notes';
 $user = 'root';
 $pass = '';
 $port = "3306";

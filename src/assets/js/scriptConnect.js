@@ -1,61 +1,166 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-alert */
+/* eslint-disable no-undef */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
 let isUpdate = false;
 let timeoutCopy = null;
-let timeoutError = null;
+let timeoutNotification = null;
 let touchstartX = 0;
 let touchendX = 0;
-const notesContainer = document.querySelector('main');
 const noteBox = document.querySelector('.note-popup-box');
 const sortBox = document.querySelector('.sort-popup-box');
-const popupBoxGestion = document.querySelector('.gestion-popup-box');
+const popupBoxManage = document.querySelector('.manage-popup-box');
 const privateNote = document.querySelector('.private-note-popup-box');
 const publicNote = document.querySelector('.public-note-popup-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
 const switchElement = document.querySelector('.switch');
-const couleurs = document.querySelectorAll('.couleurs span');
+const colors = document.querySelectorAll('.colors span');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('.sideBar');
 const metaTheme = document.querySelectorAll('.themecolor');
-const button = document.querySelector('#iconeTheme');
+const buttonTheme = document.querySelector('#iconTheme');
+
+function generateRandomBytes(length) {
+  const array = new Uint8Array(length);
+  window.crypto.getRandomValues(array);
+  return array;
+}
+
+const submitFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    const credentialObject = {
+      id: credential.id,
+      rawId: credential.rawId,
+      response: {
+        attestationObject: credential.response.attestationObject,
+        clientDataJSON: credential.response.clientDataJSON,
+      },
+      type: credential.type,
+    };
+    localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    document.querySelector('#checkFingerprint').checked = false;
+  }
+};
+
+const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    const credentialObject = {
+      id: credential.id,
+      rawId: credential.rawId,
+      response: {
+        attestationObject: credential.response.attestationObject,
+        clientDataJSON: credential.response.clientDataJSON,
+      },
+      type: credential.type,
+    };
+    await showNotes();
+  } catch (error) {
+    window.location.href = '/error/403/';
+  }
+};
+
+document.querySelector('#checkFingerprint').addEventListener('change', () => {
+  if (document.querySelector('#checkFingerprint').checked) submitFingerprint();
+  else localStorage.removeItem('fingerprint');
+});
+
+if (localStorage.getItem('fingerprint') === 'true') {
+  verifyFingerprint();
+  document.querySelector('#checkFingerprint').checked = true;
+}
 
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.forEach((e) => {
     e.content = '#eeeeee';
   });
-  button.className = 'fa-solid fa-lightbulb';
+  buttonTheme.className = 'fa-solid fa-lightbulb';
 } else if (localStorage.getItem('theme') === 'dusk') {
   document.querySelector('html').className = 'dusk';
   metaTheme.forEach((e) => {
     e.content = '#1c1936';
   });
-  button.className = 'fa-solid fa-star';
+  buttonTheme.className = 'fa-solid fa-star';
 }
 
-if (localStorage.getItem('version') === 'hide') {
-  document.querySelector('#newVersion').style.display = 'none';
-}
-
-if (localStorage.getItem('sort_notes') === null) {
-  localStorage.setItem('sort_notes', '3');
-}
+if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
+if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 
 document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
   const e = element;
   if (e.value === localStorage.getItem('sort_notes')) e.checked = true;
 });
 
-const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
+const showSuccess = (message) => {
+  if (timeoutNotification) clearTimeout(timeoutNotification);
+  const notification = document.querySelector('#successNotification');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  timeoutNotification = setTimeout(() => {
+    notification.style.display = 'none';
+  }, 5000);
+};
 
 const showError = (message) => {
-  if (timeoutError) clearTimeout(timeoutError);
+  if (timeoutNotification) clearTimeout(timeoutNotification);
   const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
   notification.style.display = 'block';
-  timeoutError = setTimeout(() => {
+  timeoutNotification = setTimeout(() => {
     notification.style.display = 'none';
   }, 5000);
 };
@@ -78,21 +183,11 @@ const searchSideBar = () => {
   });
 };
 
-const openSidebar = () => {
-  sideBar.classList.add('show');
-};
-
-const closeSidebar = () => {
-  sideBar.classList.remove('show');
-};
-
+const openSidebar = () => sideBar.classList.add('show');
+const closeSidebar = () => sideBar.classList.remove('show');
 const handleGesture = () => {
-  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) {
-    openSidebar();
-  }
-  if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) {
-    closeSidebar();
-  }
+  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) openSidebar();
+  else if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) closeSidebar();
 };
 
 const converter = new showdown.Converter();
@@ -101,14 +196,13 @@ converter.setOption('tasklists', true);
 converter.setOption('strikethrough', true);
 converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
-converter.setOption('simplifiedAutoLink', true);
 
 const showNotes = async () => {
   document.querySelector('.sideBar .listNotes').textContent = '';
   document.querySelectorAll('.note').forEach((note) => note.remove());
   forms.forEach((form) => form.reset());
 
-  const response = await fetch('assets/php/getNotes.php', {
+  const response = await fetch('/seguinleo-notes/assets/php/getNotes.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -118,52 +212,51 @@ const showNotes = async () => {
 
   const data = await response.json();
 
-  if (data.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
-    return;
-  }
+  if (data.length === 0) return;
 
   document.querySelector('.lastSync span').textContent = new Date().toLocaleTimeString();
 
   data.forEach((row) => {
     const {
-      id, title, desc, couleur, date, hidden, link,
+      id, title, content, color, date, hidden, link,
     } = row;
 
     if (!id || !title) return;
 
-    const descEnd = replaceAllEnd(desc);
-    const descHtml = converter.makeHtml(desc);
+    const contentHtml = converter.makeHtml(content);
+    const contentHtmlPurify = DOMPurify.sanitize(contentHtml);
     const noteElement = document.createElement('div');
     noteElement.id = `note${id}`;
-    noteElement.classList.add('note', couleur);
+    noteElement.classList.add('note', color);
     noteElement.tabIndex = 0;
+    noteElement.setAttribute('data-note-id', id);
+    noteElement.setAttribute('data-note-title', title);
+    noteElement.setAttribute('data-note-content', content);
+    noteElement.setAttribute('data-note-color', color);
+    noteElement.setAttribute('data-note-hidden', hidden);
+    noteElement.setAttribute('data-note-link', link);
+
     const detailsElement = document.createElement('div');
     detailsElement.classList.add('details');
+
     const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
     titleElement.textContent = title;
-    const descElement = document.createElement('span');
 
-    if (hidden === 0) {
-      descElement.innerHTML = DOMPurify.sanitize(descHtml);
-    } else {
-      descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-    }
+    const contentElement = document.createElement('span');
+
+    if (hidden === 0) contentElement.innerHTML = contentHtmlPurify;
+    else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
     detailsElement.appendChild(titleElement);
-    detailsElement.appendChild(descElement);
+    detailsElement.appendChild(contentElement);
+
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
+
     const editIconElement = document.createElement('i');
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
-    editIconElement.setAttribute('data-note-id', id);
-    editIconElement.setAttribute('data-note-title', title);
-    editIconElement.setAttribute('data-note-desc', descEnd);
-    editIconElement.setAttribute('data-note-color', couleur);
-    editIconElement.setAttribute('data-note-hidden', hidden);
-    editIconElement.setAttribute('data-note-link', link);
     editIconElement.setAttribute('role', 'button');
     editIconElement.setAttribute('aria-label', 'Modifier la note');
     bottomContentElement.appendChild(editIconElement);
@@ -172,17 +265,15 @@ const showNotes = async () => {
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
-      trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
       trashIconElement.setAttribute('aria-label', 'Supprimer la note');
       bottomContentElement.appendChild(trashIconElement);
     }
 
-    if (hidden === 0 && desc !== '') {
+    if (hidden === 0 && content !== '') {
       const clipboardIconElement = document.createElement('i');
       clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
       clipboardIconElement.tabIndex = 0;
-      clipboardIconElement.setAttribute('data-note-desc', descEnd);
       clipboardIconElement.setAttribute('role', 'button');
       clipboardIconElement.setAttribute('aria-label', 'Copier la note');
       bottomContentElement.appendChild(clipboardIconElement);
@@ -190,9 +281,6 @@ const showNotes = async () => {
       const downloadIconElement = document.createElement('i');
       downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
       downloadIconElement.tabIndex = 0;
-      downloadIconElement.setAttribute('data-note-id', id);
-      downloadIconElement.setAttribute('data-note-title', title);
-      downloadIconElement.setAttribute('data-note-desc', descEnd);
       downloadIconElement.setAttribute('role', 'button');
       downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
       bottomContentElement.appendChild(downloadIconElement);
@@ -200,7 +288,6 @@ const showNotes = async () => {
       const expandIconElement = document.createElement('i');
       expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
       expandIconElement.tabIndex = 0;
-      expandIconElement.setAttribute('data-note-id', id);
       expandIconElement.setAttribute('role', 'button');
       expandIconElement.setAttribute('aria-label', 'Agrandir la note');
       bottomContentElement.appendChild(expandIconElement);
@@ -208,8 +295,6 @@ const showNotes = async () => {
       const linkIconElement = document.createElement('i');
       linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
       linkIconElement.tabIndex = 0;
-      linkIconElement.setAttribute('data-note-id', id);
-      linkIconElement.setAttribute('data-note-link', link);
       linkIconElement.setAttribute('role', 'button');
       linkIconElement.setAttribute('aria-label', 'Statut de la note');
       bottomContentElement.appendChild(linkIconElement);
@@ -217,73 +302,76 @@ const showNotes = async () => {
 
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
-    notesContainer.appendChild(noteElement);
+    document.querySelector('main').appendChild(noteElement);
+
     const paragraph = document.createElement('p');
     paragraph.setAttribute('tabindex', '0');
     paragraph.setAttribute('role', 'button');
+
     const titleSpan = document.createElement('span');
     titleSpan.classList.add('titleList');
     titleSpan.textContent = title;
+
     const dateSpan = document.createElement('span');
     dateSpan.classList.add('dateList');
     dateSpan.textContent = date;
     paragraph.appendChild(titleSpan);
+
     if (link !== '') {
       const iconLink = document.createElement('i');
       iconLink.classList.add('fa-solid', 'fa-link');
       paragraph.appendChild(iconLink);
     }
+
     paragraph.appendChild(dateSpan);
     sideBar.querySelector('.listNotes').appendChild(paragraph);
   });
-  sideBar.querySelector('h2').textContent = `Notes (${data.length})`;
   searchSideBar();
 };
 
 const fetchDelete = async (e) => {
   try {
-    await fetch('assets/php/deleteNote.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `noteId=${encodeURIComponent(e)}`,
     });
-    await showNotes();
+    if (response.ok) await showNotes();
+    else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression de la note...');
+    showError('An error occurred...');
   }
 };
 
 const deleteAccount = async () => {
   try {
-    const response = await fetch('assets/php/deleteAccount.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/deleteAccount.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    if (response.ok) {
-      window.location.reload();
-      return;
-    }
-    showError('Une erreur est survenue lors de la suppression de votre compte...');
+    if (response.ok) window.location.reload();
+    else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression de votre compte...');
+    showError('An error occurred...');
   }
 };
 
 const fetchLogout = async () => {
   try {
-    await fetch('assets/php/logout.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/logout.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    window.location.reload();
+    if (response.ok) window.location.reload();
+    else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la déconnexion...');
+    showError('An error occurred...');
   }
 };
 
@@ -292,52 +380,42 @@ const toggleFullscreen = (id) => {
   note.classList.toggle('fullscreen');
 };
 
-const updateNote = (id, title, desc, couleur, hidden, link) => {
+const updateNote = (id, title, content, color, hidden, link) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
   isUpdate = true;
   document.querySelector('.iconConnect').click();
-  document.querySelector('#idNoteInput').value = id;
+  document.querySelector('#idNote').value = id;
   document.querySelector('#checkLink').value = link;
   titleNote.value = title;
-  contentNote.value = replaceAllStart(desc);
-  couleurs.forEach((couleurSpan) => {
-    if (couleurSpan.classList.contains(couleur)) {
-      couleurSpan.classList.add('selectionne');
-    } else {
-      couleurSpan.classList.remove('selectionne');
-    }
+  contentNote.value = content;
+  colors.forEach((colorSpan) => {
+    if (colorSpan.classList.contains(color)) colorSpan.classList.add('selectionne');
+    else colorSpan.classList.remove('selectionne');
   });
   if (link === '') {
     document.querySelector('#checkHidden').disabled = false;
     if (hidden === '1') document.querySelector('#checkHidden').checked = true;
-  } else {
-    document.querySelector('#checkHidden').disabled = true;
-  }
+  } else document.querySelector('#checkHidden').disabled = true;
   document.querySelector('#textareaLength').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
 
-const downloadNote = (e, t) => {
+const downloadNote = (title, content) => {
   const a = document.createElement('a');
-  const noteTitle = e;
-  const noteDesc = t;
-  const noteDescEnd = replaceAllEnd(noteDesc);
-  const noteDescTxt = replaceAllStart(noteDescEnd);
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(noteDescTxt)}`);
-  a.setAttribute('download', `${noteTitle}.txt`);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+  a.setAttribute('download', `${title}.txt`);
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 };
 
-const copy = (e) => {
+const copy = (content) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
-  const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
-  navigator.clipboard.writeText(copyText);
+  navigator.clipboard.writeText(content);
   notification.classList.add('show');
   timeoutCopy = setTimeout(() => {
     notification.classList.remove('show');
@@ -345,9 +423,12 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
-    fetchDelete(e);
-  }
+  let message = '';
+  if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete this note?';
+  else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
+  else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
+  else message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  if (window.confirm(message)) fetchDelete(e);
 };
 
 const noteAccess = (id, link) => {
@@ -356,57 +437,45 @@ const noteAccess = (id, link) => {
   });
   if (link === '') {
     privateNote.classList.add('show');
-    document.querySelector('#idNoteInputPublic').value = id;
+    document.querySelector('#idNotePublic').value = id;
     privateNote.querySelector('i').focus();
   } else {
     publicNote.classList.add('show');
-    document.querySelector('#idNoteInputPrivate').value = id;
-    document.querySelector('#linkNoteInputPrivate').value = link;
-    document.querySelector('#copyNoteLink').textContent = `${window.location.href}share/${link}/`;
+    document.querySelector('#idNotePrivate').value = id;
+    document.querySelector('#linkNotePrivate').value = link;
+    const baseURL = window.location.href.replace('/en', '').replace('/de', '').replace('/es', '');
+    document.querySelector('#copyNoteLink').textContent = `${baseURL}share/${link}/`;
     publicNote.querySelector('i').focus();
   }
 };
 
-notesContainer.addEventListener('click', (event) => {
+document.querySelector('main').addEventListener('click', (event) => {
   const { target } = event;
   if (target.classList.contains('note-action')) {
-    const noteId = target.getAttribute('data-note-id');
-    const noteTitle = target.getAttribute('data-note-title');
-    const noteDesc = target.getAttribute('data-note-desc');
-    const noteColor = target.getAttribute('data-note-color');
-    const noteHidden = target.getAttribute('data-note-hidden');
-    const noteLink = target.getAttribute('data-note-link');
-    if (target.classList.contains('fa-pen')) {
-      updateNote(noteId, noteTitle, noteDesc, noteColor, noteHidden, noteLink);
-    } else if (target.classList.contains('fa-clipboard')) {
-      copy(noteDesc);
-    } else if (target.classList.contains('fa-trash-can')) {
-      deleteNote(noteId);
-    } else if (target.classList.contains('fa-expand')) {
-      toggleFullscreen(noteId);
-    } else if (target.classList.contains('fa-download')) {
-      downloadNote(noteTitle, noteDesc);
-    } else if (target.classList.contains('fa-link')) {
-      noteAccess(noteId, noteLink, noteTitle, noteDesc);
-    }
+    const noteId = target.closest('.note').getAttribute('data-note-id');
+    const noteTitle = target.closest('.note').getAttribute('data-note-title');
+    const noteContent = target.closest('.note').getAttribute('data-note-content');
+    const noteColor = target.closest('.note').getAttribute('data-note-color');
+    const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
+    const noteLink = target.closest('.note').getAttribute('data-note-link');
+
+    if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteLink);
+    else if (target.classList.contains('fa-clipboard')) copy(noteContent);
+    else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
+    else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
+    else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
+    else if (target.classList.contains('fa-link')) noteAccess(noteId, noteLink, noteTitle, noteContent);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-trash-can')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-pen')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-expand')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-download')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-link')) {
-      document.activeElement.click();
-    }
+    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-trash-can')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-pen')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-expand')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-download')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-link')) document.activeElement.click();
   } else if (e.ctrlKey && e.key === 'k') {
     e.preventDefault();
     document.querySelector('#search-input').focus();
@@ -432,47 +501,28 @@ document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) =
   });
 });
 
-document.querySelectorAll('.sedeconnecter').forEach((element) => {
-  element.addEventListener('click', () => {
-    fetchLogout();
-  });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') fetchLogout();
-  });
-});
+document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
 
-document.querySelectorAll('.gestionCompte').forEach((element) => {
+document.querySelectorAll('.manage-account').forEach((element) => {
   element.addEventListener('click', () => {
-    popupBoxGestion.classList.add('show');
-    popupBoxGestion.querySelector('i').focus();
+    popupBoxManage.classList.add('show');
+    popupBoxManage.querySelector('i').focus();
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
   });
 });
 
-document.querySelectorAll('.supprimerCompte').forEach((element) => {
-  element.addEventListener('click', () => {
-    if (window.confirm('Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.')) {
-      deleteAccount();
-    }
-  });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') element.click();
-  });
+document.querySelector('#delete-account').addEventListener('click', () => {
+  let message = '';
+  if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.';
+  else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
+  else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
+  else message = 'Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.';
+  if (window.confirm(message)) deleteAccount();
 });
 
-document.querySelectorAll('#menuIcon').forEach((element) => {
-  element.addEventListener('click', () => {
-    openSidebar();
-  });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-      document.querySelector('.sideBar header i').focus();
-    }
-  });
-});
+document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
 
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
@@ -485,7 +535,7 @@ document.querySelectorAll('header i').forEach((element) => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
     noteBox.classList.remove('show');
-    popupBoxGestion.classList.remove('show');
+    popupBoxManage.classList.remove('show');
     publicNote.classList.remove('show');
     privateNote.classList.remove('show');
     sortBox.classList.remove('show');
@@ -501,11 +551,8 @@ document.querySelector('#search-input').addEventListener('input', () => {
   document.querySelectorAll('.note').forEach((element) => {
     const note = element;
     const t = note.querySelector('.note h2').textContent.toLowerCase();
-    if (t.includes(e)) {
-      note.style.display = 'flex';
-    } else {
-      note.style.display = 'none';
-    }
+    if (t.includes(e)) note.style.display = 'flex';
+    else note.style.display = 'none';
   });
 });
 
@@ -515,7 +562,7 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.forEach((e) => {
       e.content = '#eeeeee';
     });
-    button.className = 'fa-solid fa-lightbulb';
+    buttonTheme.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
     return;
   }
@@ -524,21 +571,21 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.forEach((e) => {
       e.content = '#eeeeee';
     });
-    button.className = 'fa-solid fa-lightbulb';
+    buttonTheme.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
   } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'dark';
     metaTheme.forEach((e) => {
       e.content = '#171717';
     });
-    button.className = 'fa-solid fa-moon';
+    buttonTheme.className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'dark');
   } else {
     document.querySelector('html').className = 'dusk';
     metaTheme.forEach((e) => {
       e.content = '#1c1936';
     });
-    button.className = 'fa-solid fa-star';
+    buttonTheme.className = 'fa-solid fa-star';
     localStorage.setItem('theme', 'dusk');
   }
 });
@@ -548,10 +595,8 @@ document.querySelector('#newVersion header i').addEventListener('click', () => {
   localStorage.setItem('version', 'hide');
 });
 
-document.querySelector('.exportAll').addEventListener('click', () => {
-  if (document.querySelector('.note') === null) {
-    return;
-  }
+document.querySelector('#export-all-notes').addEventListener('click', () => {
+  if (document.querySelector('.note') === null) return;
   const notes = [];
   document.querySelectorAll('.note').forEach((note) => {
     const title = note.querySelector('.title').textContent;
@@ -573,15 +618,21 @@ document.querySelector('.exportAll').addEventListener('click', () => {
 
 document.querySelector('#language').addEventListener('change', () => {
   const e = document.querySelector('#language').value;
-  if (e === 'fr') {
-    window.location.href = './';
-  } else if (e === 'en') {
-    window.location.href = 'en/';
-  } else if (e === 'de') {
-    window.location.href = 'de/';
-  } else if (e === 'es') {
-    window.location.href = 'es/';
-  }
+  if (window.location.href.endsWith('/en/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'de') window.location.href = '../de/';
+    else if (e === 'es') window.location.href = '../es/';
+  } else if (window.location.href.endsWith('/de/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'en') window.location.href = '../en/';
+    else if (e === 'es') window.location.href = '../es/';
+  } else if (window.location.href.endsWith('/es/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'en') window.location.href = '../en/';
+    else if (e === 'de') window.location.href = '../de/';
+  } else if (e === 'en') window.location.href += 'en/';
+  else if (e === 'de') window.location.href += 'de/';
+  else if (e === 'es') window.location.href += 'es/';
 });
 
 contentNote.addEventListener('input', () => {
@@ -589,9 +640,9 @@ contentNote.addEventListener('input', () => {
   document.querySelector('#textareaLength').textContent = `${e}/5000`;
 });
 
-couleurs.forEach((span, index) => {
+colors.forEach((span, index) => {
   span.addEventListener('click', (event) => {
-    couleurs.forEach((s) => {
+    colors.forEach((s) => {
       s.classList.remove('selectionne');
     });
     event.target.classList.add('selectionne');
@@ -604,20 +655,19 @@ couleurs.forEach((span, index) => {
 
 document.querySelector('#submitNote').addEventListener('click', async () => {
   try {
-    const idNote = document.querySelector('#idNoteInput').value;
-    const titreBrut = titleNote.value.trim();
+    const idNote = document.querySelector('#idNote').value;
+    const titleBrut = titleNote.value.trim();
     const contentBrut = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    if (!titreBrut || titreBrut.length > 30 || contentBrut.length > 5000) return;
-    const titre = encodeURIComponent(titreBrut);
+    if (!titleBrut || titleBrut.length > 30 || contentBrut.length > 5000) return;
+    const title = encodeURIComponent(titleBrut);
     const content = encodeURIComponent(contentBrut);
-    const couleurSpan = document.querySelector('.couleurs span.selectionne');
-    const couleur = encodeURIComponent(couleurSpan.classList[0]);
+    const colorSpan = document.querySelector('.colors span.selectionne');
+    const color = encodeURIComponent(colorSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const checkBox = document.querySelector('#checkHidden');
+    const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
     const link = encodeURIComponent(document.querySelector('#checkLink').value);
-    const hidden = checkBox.checked ? '1' : '0';
-    const url = isUpdate ? 'assets/php/updateNote.php' : 'assets/php/addNote.php';
-    const data = isUpdate ? `noteId=${idNote}&title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${titre}&desc=${content}&couleur=${couleur}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
+    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
+    const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -625,82 +675,87 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
       },
       body: data,
     });
-    if (response.status !== 200) {
-      showError('La connexion a expiré, veuillez recharger la page...');
-      return;
-    }
-    isUpdate = false;
-    noteBox.classList.remove('show');
-    await showNotes();
+    if (response.ok) {
+      isUpdate = false;
+      noteBox.classList.remove('show');
+      await showNotes();
+    } else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de l\'ajout de la note...');
+    showError('An error occurred...');
   }
 });
 
-document.querySelector('#submitChangeMDP').addEventListener('click', async () => {
-  const e = document.querySelector('#mdpModifNew').value;
-  const t = document.querySelector('#mdpModifNewValid').value;
+document.querySelector('#submitChangePsswd').addEventListener('click', async () => {
+  const e = document.querySelector('#newPsswd').value;
+  const t = document.querySelector('#newPsswdValid').value;
   if (!e || !t || e.length < 6 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
-    showError('Mot de passe trop faible (que des chiffres)...');
+    showError('Password too weak (only numbers)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(e)) {
-    showError('Mot de passe trop faible (que des lettres)...');
+    showError('Password too weak (only letters)...');
     return;
   }
   if (e !== t) {
-    showError('Les mots de passe ne correspondent pas...');
+    showError('Passwords do not match...');
     return;
   }
-  const mdpNew = encodeURIComponent(e);
+  const psswdNew = encodeURIComponent(e);
   try {
-    await fetch('assets/php/updatePassword.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/updatePsswd.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `mdpNew=${mdpNew}&csrf_token_mdp=${document.querySelector('#csrf_token_mdp').value}`,
+      body: `psswdNew=${psswdNew}&csrf_token_psswd=${document.querySelector('#csrf_token_psswd').value}`,
     });
-    popupBoxGestion.classList.remove('show');
+    if (response.ok) {
+      popupBoxManage.classList.remove('show');
+      showSuccess('Successfully changed password!');
+    } else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la modification du mot de passe...');
+    showError('An error occurred...');
   }
 });
 
-document.querySelector('#submitRendrePrivee').addEventListener('click', async () => {
-  const id = document.querySelector('#idNoteInputPrivate').value;
-  const link = document.querySelector('#linkNoteInputPrivate').value;
+document.querySelector('#submitPrivateNote').addEventListener('click', async () => {
+  const id = document.querySelector('#idNotePrivate').value;
+  const link = document.querySelector('#linkNotePrivate').value;
   try {
-    await fetch('assets/php/privateNote.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/privateNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `noteId=${encodeURIComponent(id)}&noteLink=${encodeURIComponent(link)}`,
     });
-    publicNote.classList.remove('show');
-    await showNotes();
+    if (response.ok) {
+      publicNote.classList.remove('show');
+      await showNotes();
+    } else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la suppression du lien de la note...');
+    showError('An error occurred...');
   }
 });
 
-document.querySelector('#submitRendrePublique').addEventListener('click', async () => {
-  const id = document.querySelector('#idNoteInputPublic').value;
+document.querySelector('#submitPublicNote').addEventListener('click', async () => {
+  const id = document.querySelector('#idNotePublic').value;
   const link = Math.random().toString(36).substring(2, 15);
   try {
-    await fetch('assets/php/publicNote.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/publicNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `noteId=${encodeURIComponent(id)}&noteLink=${link}`,
     });
-    privateNote.classList.remove('show');
-    await showNotes();
+    if (response.ok) {
+      privateNote.classList.remove('show');
+      await showNotes();
+    } else showError('An error occurred...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la création du lien de la note...');
+    showError('An error occurred...');
   }
 });
 
@@ -727,9 +782,7 @@ document.addEventListener('touchend', (event) => {
   handleGesture();
 }, false);
 
-document.querySelector('#btnSort').addEventListener('click', () => {
-  sortBox.classList.add('show');
-});
+document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
 
 document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
   element.addEventListener('change', () => {
@@ -742,7 +795,7 @@ document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  await showNotes();
+  if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
   document.querySelectorAll('.resync').forEach((resync) => {
     resync.addEventListener('click', () => {
       window.location.reload();

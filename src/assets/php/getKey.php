@@ -2,15 +2,7 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_SESSION['nom'], $_SESSION['userId']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[0-9]+$/', $_SESSION['userId']) === false) {
+if (isset($_SESSION['name'], $_SESSION['userId']) === false) {
     http_response_code(403);
     return;
 }
@@ -22,14 +14,14 @@ if ($PDO === null) {
     return;
 }
 
-$nom = $_SESSION['nom'];
+$name = $_SESSION['name'];
 $userId = $_SESSION['userId'];
 
 try {
-    $query = $PDO->prepare("SELECT one_key FROM users WHERE nom=:CurrentUser AND id=:UserId LIMIT 1");
+    $query = $PDO->prepare("SELECT oneKey FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");
     $query->execute(
         [
-            ':CurrentUser' => $nom,
+            ':CurrentUser' => $name,
             ':UserId'      => $userId
         ]
     );
@@ -38,5 +30,5 @@ try {
     return;
 }
 
-$key = $query->fetch()['one_key'];
+$key = $query->fetch()['oneKey'];
 $query->closeCursor();

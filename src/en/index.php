@@ -1,7 +1,7 @@
 <?php
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => './',
+    'path'     => '/seguinleo-notes/',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
@@ -10,18 +10,18 @@ $cookieParams = [
 session_set_cookie_params($cookieParams);
 session_start();
 
-if (isset($_SESSION['nom']) === false) {
+if (isset($_SESSION['name']) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));
-    $_SESSION['csrf_token_creer'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token_create'] = bin2hex(random_bytes(32));
     $csrf_token_connect = $_SESSION['csrf_token_connect'];
-    $csrf_token_creer = $_SESSION['csrf_token_creer'];
-    $nom = null;
+    $csrf_token_create = $_SESSION['csrf_token_create'];
+    $name = null;
 } else {
     $_SESSION['csrf_token_note'] = bin2hex(random_bytes(32));
-    $_SESSION['csrf_token_mdp'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token_psswd'] = bin2hex(random_bytes(32));
     $csrf_token_note = $_SESSION['csrf_token_note'];
-    $csrf_token_mdp = $_SESSION['csrf_token_mdp'];
-    $nom = $_SESSION['nom'];
+    $csrf_token_psswd = $_SESSION['csrf_token_psswd'];
+    $name = $_SESSION['name'];
 }
 ?>
 <!DOCTYPE html>
@@ -35,21 +35,21 @@ if (isset($_SESSION['nom']) === false) {
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
-    <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="apple-touch-icon" href="/seguinleo-notes/assets/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/seguinleo-notes/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/seguinleo-notes/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="manifest" href="app.webmanifest">
+    <link rel="manifest" href="/seguinleo-notes/en/app.webmanifest">
 </head>
 <body>
     <nav>
         <noscript>
             <p class="noscript">You need to enable JavaScript to run Bloc-notes.</p>
         </noscript>
-        <?php if (isset($nom) === true) { ?>
+        <?php if (isset($name) === true) { ?>
             <div>
                 <h1 class="welcome">
-                    <span class="gestionCompte linkp" tabindex="0" role="button" aria-label="Manage account">
+                    <span class="manage-account linkp" tabindex="0" role="button" aria-label="Manage account">
                         <i class="fa-solid fa-circle-user"></i>
                     </span>
                 </h1>
@@ -59,7 +59,7 @@ if (isset($_SESSION['nom']) === false) {
                 <h1>Bloc-notes</h1>
             </div>
             <div>
-                <button type="button" class="seconnecter">Sign in</button>
+                <button type="button" class="log-in">Sign in</button>
             </div>
         <?php } ?>
         <div class="search-input">
@@ -67,17 +67,17 @@ if (isset($_SESSION['nom']) === false) {
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="search" id="search-input" maxlength="30" aria-label="Search" placeholder="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
-            <?php if (isset($nom) === true) { ?>
-                <span class="gestionCompte linkp" aria-label="Account" tabindex="0" role="button">
+            <?php if (isset($name) === true) { ?>
+                <span class="manage-account linkp" aria-label="Account" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } else { ?>
-                <span class="seconnecter linkp" aria-label="Sign in" tabindex="0" role="button">
+                <span class="log-in linkp" aria-label="Sign in" tabindex="0" role="button">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } ?>
         </div>
-        <?php if (isset($nom) === true) { ?>
+        <?php if (isset($name) === true) { ?>
             <div class="lastSync">
                 <i class="resync fa-solid fa-sync" aria-label="Synchronize" tabindex="0" role="button"></i>
                 <span></span>
@@ -85,30 +85,31 @@ if (isset($_SESSION['nom']) === false) {
         <?php } ?>
         <div class="divTheme">
             <button type="button" id="btnTheme" aria-label="Theme">
-                <i id="iconeTheme" class="fa-solid fa-moon"></i>
+                <i id="iconTheme" class="fa-solid fa-moon"></i>
             </button>
         </div>
     </nav>
     <main>
-        <?php if (isset($nom) === true) { ?>
+        <?php if (isset($name) === true) { ?>
             <button id="iconButtonConnectFloat" class="iconConnectFloat" type="button" aria-label="Add a cloud note"><i class="fa-solid fa-plus"></i></button>
         <?php } else { ?>
             <button id="iconButtonFloat" class="iconFloat" type="button" aria-label="Add a local note"><i class="fa-solid fa-plus"></i></button>
         <?php } ?>
+        <div id="successNotification"></div>
         <div id="errorNotification"></div>
+        <div id="copyNotification">Copied!</div>
         <div class="sideBar">
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>Notes</h2>
-            <?php if (isset($nom) === true) { ?>
+            <?php if (isset($name) === true) { ?>
                 <button id="iconButtonConnect" class="iconConnect" type="button">Add a cloud note</button>
             <?php } else { ?>
                 <button id="iconButton" class="icon" type="button">Add a local note</button>
             <?php } ?>
             <div class="listNotes"></div>
             <div class="copyright">
-                <a href="/mentionslegales/" target="_blank" rel="noreferrer">Legal notice / Privacy policy</a>
+                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer">Legal notice / Privacy policy</a>
                 <div class="divLanguage">
                     <select id="language" aria-label="Langue">
                         <option value="fr">🇫🇷</option>
@@ -120,7 +121,6 @@ if (isset($_SESSION['nom']) === false) {
                 <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
             </div>
         </div>
-        <div id="copyNotification">Copied!</div>
         <button type="button" id="btnSort" aria-label="Sort my notes">
             <i class="fa-solid fa-arrow-up-wide-short"></i>
         </button>
@@ -167,7 +167,7 @@ if (isset($_SESSION['nom']) === false) {
                         <i class="fa-solid fa-xmark" tabindex="0"></i>
                     </header>
                     <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
-                        <input id="idNoteInput" type="hidden">
+                        <input id="idNote" type="hidden">
                         <input id="checkLink" type="hidden">
                         <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
                         <div class="row">
@@ -183,7 +183,7 @@ if (isset($_SESSION['nom']) === false) {
                             <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
-                            <div class="couleurs">
+                            <div class="colors">
                                 <span class="Noir" role="button" tabindex="0" aria-label="Default"></span>
                                 <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
                                 <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
@@ -208,15 +208,18 @@ if (isset($_SESSION['nom']) === false) {
                 </div>
             </div>
         </div>
-        <?php if (isset($nom) === true) { ?>
-            <div class="gestion-popup-box">
+        <?php if (isset($name) === true) { ?>
+            <div class="manage-popup-box">
                 <div class="popup">
                     <div class="content">
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <div class="row">
-                            <span class="sedeconnecter linkp" tabindex="0" role="button">Sign out</span>
+                            <span id="log-out" class="linkp" tabindex="0" role="button">Sign out</span>
+                        </div>
+                        <div class="row">
+                            <span id="export-all-notes" class="linkp" tabindex="0">Export all my notes</span>
                         </div>
                         <div class="row">
                             <span class="linkp">
@@ -226,28 +229,32 @@ if (isset($_SESSION['nom']) === false) {
                                 </a>
                             </span>
                         </div>
+                        <div class="row">
+                            <i class="fa-solid fa-fingerprint"></i>
+                            <label for="checkFingerprint" class="switch" aria-label="Fingerprint lock">
+                                <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
+                                <span class="slider" tabindex="0"></span>
+                            </label>
+                        </div>
                         <details>
-                            <summary>Manage <?= $nom ?> account</summary>
-                            <form id="changeMDP" method="post" enctype="application/x-www-form-urlencoded">
-                                <input type="hidden" id="csrf_token_mdp" value="<?= $csrf_token_mdp ?>">
+                            <summary>Manage <?= $name ?> account</summary>
+                            <form id="changePsswd" method="post" enctype="application/x-www-form-urlencoded">
+                                <input type="hidden" id="csrf_token_psswd" value="<?= $csrf_token_psswd ?>">
                                 <div class="row">
-                                    <input id="mdpModifNew" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="New password" required>
+                                    <input id="newPsswd" placeholder="New password" type="password" minlength="6" maxlength="50" aria-label="New password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="mdpModifNewValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="Retype your new password" required>
+                                    <input id="newPsswdValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="Retype your new password" required>
                                 </div>
-                                <button id="submitChangeMDP" type="submit">Change password</button>
+                                <button id="submitChangePsswd" type="submit">Change password</button>
                             </form>
                             <div class="row">
-                                <span class="exportAll linkp" tabindex="0">Export all my notes</span>
-                            </div>
-                            <div class="row">
-                                <span class="supprimerCompte attention" tabindex="0">Delete my account</span>
+                                <span id="delete-account" class="warning" tabindex="0">Delete my account</span>
                             </div>
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.1</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
                             </p>
                         </div>
                     </div>
@@ -259,13 +266,13 @@ if (isset($_SESSION['nom']) === false) {
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <form id="rendrePublique" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="publicNote" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 Do you want to make your note public? This will generate a unique link to share your note.
                             </div>
-                            <input id="idNoteInputPublic" type="hidden">
+                            <input id="idNotePublic" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePublique" type="submit">Make the note public</button>
+                                <button id="submitPublicNote" type="submit">Make the note public</button>
                             </div>
                         </form>
                     </div>
@@ -278,14 +285,14 @@ if (isset($_SESSION['nom']) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <p id="copyNoteLink" tabindex="0"></p>
-                        <form id="rendrePrivee" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="privateNote" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 Do you want to make your note private again? The unique link will no longer be available.
                             </div>
-                            <input id="idNoteInputPrivate" type="hidden">
-                            <input id="linkNoteInputPrivate" type="hidden">
+                            <input id="idNotePrivate" type="hidden">
+                            <input id="linkNotePrivate" type="hidden">
                             <div class="row">
-                                <button id="submitRendrePrivee" type="submit">Make the note private</button>
+                                <button id="submitPrivateNote" type="submit">Make the note private</button>
                             </div>
                         </form>
                     </div>
@@ -299,54 +306,64 @@ if (isset($_SESSION['nom']) === false) {
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
                         <div class="row">
-                            <span class="creercompte linkp" tabindex="0" role="button">Sign up</span>
+                            <span id="create-account" class="linkp" tabindex="0" role="button">Sign up</span>
                         </div>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
-                                <input id="nomConnect" placeholder="Username" type="text" maxlength="25" aria-label="Username" required>
+                                <input id="nameConnect" placeholder="Username" type="text" maxlength="25" aria-label="Username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpConnect" placeholder="Password" type="password" maxlength="50" aria-label="Password" required>
+                                <input id="psswdConnect" placeholder="Password" type="password" maxlength="50" aria-label="Password" required>
                             </div>
-                            <button id="submitSeConnecter" type="submit">Sign in</button>
+                            <button id="submitLogIn" type="submit">Sign in</button>
                         </form>
+                        <div class="row">
+                            <p class="version">
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="creer-box">
+            <div class="create-box">
                 <div class="popup">
                     <div class="content">
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
-                        <form id="creerForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_creer" value="<?= $csrf_token_creer ?>">
+                        <form id="createForm" method="post" enctype="application/x-www-form-urlencoded">
+                            <input type="hidden" id="csrf_token_create" value="<?= $csrf_token_create ?>">
                             <div class="row">
-                                <input id="nomCreer" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="Username" required>
+                                <input id="nameCreate" placeholder="Username" type="text" minlength="4" maxlength="25" aria-label="Username" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreer" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="Password" required>
+                                <input id="psswdCreate" placeholder="Password" type="password" minlength="6" maxlength="50" aria-label="Password" required>
                             </div>
                             <div class="row">
-                                <input id="mdpCreerValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="Retype your password" required>
+                                <input id="psswdCreateValid" placeholder="Retype your password" type="password" minlength="6" maxlength="50" aria-label="Retype your password" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
                                 Your password is securely stored and your notes are encrypted.
-                                <span class="attention">It will be impossible to recover your password if you forget it.</span>
+                                <span class="warning">It will be impossible to recover your password if you forget it.</span>
                             </div>
-                            <details id="genMdp">
+                            <details id="genPsswd">
                                 <summary>Generate a strong password</summary>
                                 <div class="row">
-                                    <input id="mdpCreerGen" type="text" minlength="6" maxlength="50" aria-label="Generated password" disabled>
-                                    <button id="submitGenMdp" type="button" aria-label="Generate a strong password">
+                                    <input id="psswdGen" type="text" minlength="6" maxlength="50" aria-label="Generated password" disabled>
+                                    <button id="submitGenPsswd" type="button" aria-label="Generate a strong password">
                                         <i class="fa-solid fa-arrow-rotate-right"></i>
                                     </button>
                                 </div>
                             </details>
-                            <button id="submitCreer" type="submit">Sign up</button>
+                            <button id="submitCreate" type="submit">Sign up</button>
                         </form>
+                        <div class="row">
+                            <p class="version">
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -355,7 +372,7 @@ if (isset($_SESSION['nom']) === false) {
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>v23.12.1🎉</h2>
+            <h2>v23.12.2🎉</h2>
             <p>
                 Bloc-notes has been updated!
             </p>
@@ -364,12 +381,12 @@ if (isset($_SESSION['nom']) === false) {
             </p>
         </div>
     </main>
-    <script src="../assets/js/purify.min.js" defer></script>
-    <script src="../assets/js/showdown.min.js" defer></script>
-    <?php if (isset($nom) === true) { ?>
-        <script src="scriptConnect.js" defer></script>
+    <script src="/seguinleo-notes/assets/js/purify.min.js" defer></script>
+    <script src="/seguinleo-notes/assets/js/showdown.min.js" defer></script>
+    <?php if (isset($name) === true) { ?>
+        <script src="/seguinleo-notes/assets/js/scriptConnect.js" defer></script>
     <?php } else { ?>
-        <script src="script.js" defer></script>
+        <script src="/seguinleo-notes/assets/js/script.js" defer></script>
     <?php } ?>
 </body>
 </html>

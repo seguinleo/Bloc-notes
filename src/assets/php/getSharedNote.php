@@ -13,9 +13,9 @@ require_once __DIR__ . '/config/config.php';
 $noteLink = $_POST['noteLink'];
 
 try {
-    $query = $PDO->prepare("SELECT users.one_key FROM users,notes WHERE notes.link=:NoteLink AND notes.user=users.nom LIMIT 1");
+    $query = $PDO->prepare("SELECT users.oneKey FROM users,notes WHERE notes.link=:NoteLink AND notes.user=users.name LIMIT 1");
     $query->execute([':NoteLink' => $noteLink]);
-    $key = $query->fetch()['one_key'];
+    $key = $query->fetch()['oneKey'];
 } catch (Exception $e) {
     http_response_code(404);
     return;
@@ -28,14 +28,14 @@ require_once __DIR__ . '/class/Encryption.php';
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT titre,content,dateNote,couleur FROM notes WHERE link=:NoteLink LIMIT 1");
+    $query = $PDO->prepare("SELECT title,content,dateNote,color FROM notes WHERE link=:NoteLink LIMIT 1");
     $query->execute([':NoteLink' => $noteLink]);
     $row = $query->fetch();
     $items[] = [
-        'title'   => $encryption->decryptData($row['titre'], $key),
-        'desc'    => $encryption->decryptData($row['content'], $key),
+        'title'   => $encryption->decryptData($row['title'], $key),
+        'content'    => $encryption->decryptData($row['content'], $key),
         'date'    => $row['dateNote'],
-        'couleur' => $row['couleur']
+        'color' => $row['color']
     ];
 } catch (Exception $e) {
     http_response_code(404);

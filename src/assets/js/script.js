@@ -1,56 +1,56 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-alert */
 let isUpdate = false;
 let timeoutCopy = null;
-let timeoutError = null;
+let timeoutNotification = null;
 let touchstartX = 0;
 let touchendX = 0;
-const notesContainer = document.querySelector('main');
 const noteBox = document.querySelector('.note-popup-box');
 const connectBox = document.querySelector('.connect-box');
 const sortBox = document.querySelector('.sort-popup-box');
-const creerBox = document.querySelector('.creer-box');
+const createBox = document.querySelector('.create-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
-const couleurs = document.querySelectorAll('.couleurs span');
+const colors = document.querySelectorAll('.colors span');
 const switchElement = document.querySelector('.switch');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('.sideBar');
-const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 const metaTheme = document.querySelectorAll('.themecolor');
-const button = document.querySelector('#iconeTheme');
+const buttonTheme = document.querySelector('#iconTheme');
+const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.forEach((e) => {
     e.content = '#eeeeee';
   });
-  button.className = 'fa-solid fa-lightbulb';
+  buttonTheme.className = 'fa-solid fa-lightbulb';
 } else if (localStorage.getItem('theme') === 'dusk') {
   document.querySelector('html').className = 'dusk';
   metaTheme.forEach((e) => {
     e.content = '#1c1936';
   });
-  button.className = 'fa-solid fa-star';
+  buttonTheme.className = 'fa-solid fa-star';
 }
 
-if (localStorage.getItem('version') === 'hide') {
-  document.querySelector('#newVersion').style.display = 'none';
-}
+if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
+if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 
-if (localStorage.getItem('sort_notes') === null) {
-  localStorage.setItem('sort_notes', '3');
-}
-
-const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
+const showSuccess = (message) => {
+  if (timeoutNotification) clearTimeout(timeoutNotification);
+  const notification = document.querySelector('#successNotification');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  timeoutNotification = setTimeout(() => {
+    notification.style.display = 'none';
+  }, 5000);
+};
 
 const showError = (message) => {
-  if (timeoutError) clearTimeout(timeoutError);
+  if (timeoutNotification) clearTimeout(timeoutNotification);
   const notification = document.querySelector('#errorNotification');
   notification.textContent = message;
   notification.style.display = 'block';
-  timeoutError = setTimeout(() => {
+  timeoutNotification = setTimeout(() => {
     notification.style.display = 'none';
   }, 5000);
 };
@@ -73,30 +73,20 @@ const searchSideBar = () => {
   });
 };
 
-const openSidebar = () => {
-  sideBar.classList.add('show');
-};
-
-const closeSidebar = () => {
-  sideBar.classList.remove('show');
-};
-
+const openSidebar = () => sideBar.classList.add('show');
+const closeSidebar = () => sideBar.classList.remove('show');
 const handleGesture = () => {
-  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) {
-    openSidebar();
-  }
-  if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) {
-    closeSidebar();
-  }
+  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) openSidebar();
+  else if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) closeSidebar();
 };
 
+// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
 converter.setOption('strikethrough', true);
 converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
-converter.setOption('simplifiedAutoLink', true);
 
 function arrayBufferToBase64(buffer) {
   const binary = [];
@@ -124,30 +114,23 @@ function getPassword(length) {
   for (let i = 0; i < length; i += 1) {
     password += chars[array[i] % chars.length];
   }
-  document.querySelector('#mdpCreerGen').value = password;
-  document.querySelector('#mdpCreer').value = password;
-  document.querySelector('#mdpCreerValid').value = password;
+  document.querySelector('#psswdGen').value = password;
+  document.querySelector('#psswdCreate').value = password;
+  document.querySelector('#psswdCreateValid').value = password;
 }
-
-document.querySelector('#submitGenMdp').addEventListener('click', () => {
-  getPassword(16);
-});
 
 async function openIndexedDB(dbName, objectStoreName) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName, 1);
-
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains(objectStoreName)) {
         db.createObjectStore(objectStoreName);
       }
     };
-
     request.onsuccess = (event) => {
       resolve(event.target.result);
     };
-
     request.onerror = (event) => {
       reject(event.target.error);
     };
@@ -159,11 +142,9 @@ async function getKeyFromDB(db, objectStoreName) {
     const transaction = db.transaction(objectStoreName, 'readonly');
     const objectStore = transaction.objectStore(objectStoreName);
     const request = objectStore.get('encryptionKey');
-
     request.onsuccess = (event) => {
       resolve(event.target.result);
     };
-
     request.onerror = (event) => {
       reject(event.target.error);
     };
@@ -175,11 +156,9 @@ async function storeKeyInDB(db, objectStoreName, key) {
     const transaction = db.transaction(objectStoreName, 'readwrite');
     const objectStore = transaction.objectStore(objectStoreName);
     objectStore.put(key, 'encryptionKey');
-
     transaction.oncomplete = () => {
       resolve();
     };
-
     transaction.onerror = (event) => {
       reject(event.target.error);
     };
@@ -191,10 +170,7 @@ const showNotes = async () => {
   document.querySelectorAll('.note').forEach((note) => note.remove());
   forms.forEach((form) => form.reset());
 
-  if (notesJSON.length === 0) {
-    document.querySelector('.sideBar h2').textContent = 'Notes (0)';
-    return;
-  }
+  if (notesJSON.length === 0) return;
 
   const dbName = 'notes_db';
   const objectStoreName = 'key';
@@ -218,7 +194,7 @@ const showNotes = async () => {
   notesJSON
     .forEach(async (row, id) => {
       const {
-        title, content, couleur, date, hidden,
+        title, content, color, date, hidden,
       } = row;
 
       if (!title) return;
@@ -237,86 +213,86 @@ const showNotes = async () => {
 
       const deTitleString = JSON.parse(new TextDecoder().decode(new Uint8Array(deTitle)));
       const deContentString = JSON.parse(new TextDecoder().decode(new Uint8Array(deContent)));
-
-      const descEnd = replaceAllEnd(deContentString);
-      const descHtml = converter.makeHtml(deContentString);
+      const contentHtml = converter.makeHtml(deContentString);
+      // eslint-disable-next-line no-undef
+      const contentHtmlPurify = DOMPurify.sanitize(contentHtml);
       const noteElement = document.createElement('div');
       noteElement.id = `note${id}`;
-      noteElement.classList.add('note', couleur);
+      noteElement.classList.add('note', color);
       noteElement.tabIndex = 0;
+      noteElement.setAttribute('data-note-id', id);
+      noteElement.setAttribute('data-note-title', deTitleString);
+      noteElement.setAttribute('data-note-content', deContentString);
+      noteElement.setAttribute('data-note-color', color);
+      noteElement.setAttribute('data-note-hidden', hidden);
+
       const detailsElement = document.createElement('div');
       detailsElement.classList.add('details');
+
       const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
       titleElement.textContent = deTitleString;
-      const descElement = document.createElement('span');
 
-      if (hidden === false) {
-        descElement.innerHTML = DOMPurify.sanitize(descHtml);
-      } else {
-        descElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-      }
+      const contentElement = document.createElement('span');
+
+      if (hidden === false) contentElement.innerHTML = contentHtmlPurify;
+      else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
       detailsElement.appendChild(titleElement);
-      detailsElement.appendChild(descElement);
+      detailsElement.appendChild(contentElement);
+
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
+
       const editIconElement = document.createElement('i');
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
-      editIconElement.setAttribute('data-note-id', id);
-      editIconElement.setAttribute('data-note-title', deTitleString);
-      editIconElement.setAttribute('data-note-desc', descEnd);
-      editIconElement.setAttribute('data-note-color', couleur);
-      editIconElement.setAttribute('data-note-hidden', hidden);
       editIconElement.setAttribute('role', 'button');
-      editIconElement.setAttribute('aria-label', 'Modifier la note');
+      editIconElement.setAttribute('aria-label', 'Edit');
+
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
-      trashIconElement.setAttribute('data-note-id', id);
       trashIconElement.setAttribute('role', 'button');
-      trashIconElement.setAttribute('aria-label', 'Supprimer la note');
+      trashIconElement.setAttribute('aria-label', 'Delete');
       bottomContentElement.appendChild(editIconElement);
       bottomContentElement.appendChild(trashIconElement);
 
-      if (hidden === false && descEnd !== '') {
+      if (hidden === false && deContentString !== '') {
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
-        clipboardIconElement.setAttribute('data-note-desc', descEnd);
         clipboardIconElement.setAttribute('role', 'button');
-        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
+        clipboardIconElement.setAttribute('aria-label', 'Copy');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
         downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
         downloadIconElement.tabIndex = 0;
-        downloadIconElement.setAttribute('data-note-id', id);
-        downloadIconElement.setAttribute('data-note-title', deTitleString);
-        downloadIconElement.setAttribute('data-note-desc', descEnd);
         downloadIconElement.setAttribute('role', 'button');
-        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
+        downloadIconElement.setAttribute('aria-label', 'Download');
         bottomContentElement.appendChild(downloadIconElement);
 
         const expandIconElement = document.createElement('i');
         expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
         expandIconElement.tabIndex = 0;
-        expandIconElement.setAttribute('data-note-id', id);
         expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
+        expandIconElement.setAttribute('aria-label', 'Expand');
         bottomContentElement.appendChild(expandIconElement);
       }
 
       noteElement.appendChild(detailsElement);
       noteElement.appendChild(bottomContentElement);
-      notesContainer.appendChild(noteElement);
+      document.querySelector('main').appendChild(noteElement);
+
       const paragraph = document.createElement('p');
       paragraph.setAttribute('tabindex', '0');
       paragraph.setAttribute('role', 'button');
+
       const titleSpan = document.createElement('span');
       titleSpan.classList.add('titleList');
       titleSpan.textContent = deTitleString;
+
       const dateSpan = document.createElement('span');
       dateSpan.classList.add('dateList');
       dateSpan.textContent = date;
@@ -325,7 +301,6 @@ const showNotes = async () => {
       sideBar.querySelector('.listNotes').appendChild(paragraph);
       searchSideBar();
     });
-  sideBar.querySelector('h2').textContent = `Notes (${notesJSON.length})`;
 };
 
 const toggleFullscreen = (id) => {
@@ -333,47 +308,38 @@ const toggleFullscreen = (id) => {
   note.classList.toggle('fullscreen');
 };
 
-const updateNote = (id, title, desc, couleur, hidden) => {
-  const s = replaceAllStart(desc);
+const updateNote = (id, title, content, color, hidden) => {
   document.querySelectorAll('.note').forEach((note) => {
     note.classList.remove('fullscreen');
   });
-  document.querySelector('#idNoteInput').value = id;
+  document.querySelector('#idNote').value = id;
   isUpdate = true;
   document.querySelector('.icon').click();
   titleNote.value = title;
-  contentNote.value = s;
-  couleurs.forEach((couleurSpan) => {
-    if (couleurSpan.classList.contains(couleur)) {
-      couleurSpan.classList.add('selectionne');
-    } else {
-      couleurSpan.classList.remove('selectionne');
-    }
+  contentNote.value = content;
+  colors.forEach((colorSpan) => {
+    if (colorSpan.classList.contains(color)) colorSpan.classList.add('selectionne');
+    else colorSpan.classList.remove('selectionne');
   });
   if (hidden === 'true') { document.querySelector('#checkHidden').checked = true; }
   document.querySelector('#textareaLength').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
 
-const downloadNote = (e, t) => {
+const downloadNote = (title, content) => {
   const a = document.createElement('a');
-  const noteTitle = e;
-  const noteDesc = t;
-  const noteDescEnd = replaceAllEnd(noteDesc);
-  const noteDescTxt = replaceAllStart(noteDescEnd);
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(noteDescTxt)}`);
-  a.setAttribute('download', `${noteTitle}.txt`);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+  a.setAttribute('download', `${title}.txt`);
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 };
 
-const copy = (e) => {
+const copy = (content) => {
   if (timeoutCopy) clearTimeout(timeoutCopy);
-  const copyText = replaceAllStart(e);
   const notification = document.querySelector('#copyNotification');
-  navigator.clipboard.writeText(copyText);
+  navigator.clipboard.writeText(content);
   notification.classList.add('show');
   timeoutCopy = setTimeout(() => {
     notification.classList.remove('show');
@@ -381,59 +347,52 @@ const copy = (e) => {
 };
 
 const deleteNote = (e) => {
-  if (window.confirm('Voulez-vous vraiment supprimer cette note ?')) {
+  let message = '';
+  if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete this note?';
+  else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
+  else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
+  else message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  if (window.confirm(message)) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     showNotes();
   }
 };
 
-notesContainer.addEventListener('click', (event) => {
+document.querySelector('main').addEventListener('click', (event) => {
   const { target } = event;
   if (target.classList.contains('note-action')) {
-    const noteId = target.getAttribute('data-note-id');
-    const noteTitle = target.getAttribute('data-note-title');
-    const noteDesc = target.getAttribute('data-note-desc');
-    const noteColor = target.getAttribute('data-note-color');
-    const noteHidden = target.getAttribute('data-note-hidden');
+    const noteId = target.closest('.note').getAttribute('data-note-id');
+    const noteTitle = target.closest('.note').getAttribute('data-note-title');
+    const noteContent = target.closest('.note').getAttribute('data-note-content');
+    const noteColor = target.closest('.note').getAttribute('data-note-color');
+    const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
 
-    if (target.classList.contains('fa-pen')) {
-      updateNote(noteId, noteTitle, noteDesc, noteColor, noteHidden);
-    } else if (target.classList.contains('fa-clipboard')) {
-      copy(noteDesc);
-    } else if (target.classList.contains('fa-trash-can')) {
-      deleteNote(noteId);
-    } else if (target.classList.contains('fa-expand')) {
-      toggleFullscreen(noteId);
-    } else if (target.classList.contains('fa-download')) {
-      downloadNote(noteTitle, noteDesc);
-    }
+    if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden);
+    else if (target.classList.contains('fa-clipboard')) copy(noteContent);
+    else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
+    else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
+    else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-trash-can')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-pen')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-expand')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-download')) {
-      document.activeElement.click();
-    }
+    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-trash-can')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-pen')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-expand')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-download')) document.activeElement.click();
   } else if (e.ctrlKey && e.key === 'k') {
     e.preventDefault();
     document.querySelector('#search-input').focus();
   }
 });
 
-document.querySelectorAll('.seconnecter').forEach((element) => {
+document.querySelectorAll('.log-in').forEach((element) => {
   element.addEventListener('click', () => {
     connectBox.classList.add('show');
-    document.querySelector('#nomConnect').focus();
+    document.querySelector('#nameConnect').focus();
   });
   element.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') element.click();
@@ -448,99 +407,96 @@ switchElement.addEventListener('keydown', (event) => {
   }
 });
 
-document.querySelectorAll('.creercompte').forEach((element) => {
-  element.addEventListener('click', () => {
-    connectBox.classList.remove('show');
-    creerBox.classList.add('show');
-    document.querySelector('#nomCreer').focus();
-  });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') element.click();
-  });
+document.querySelector('#create-account').addEventListener('click', () => {
+  connectBox.classList.remove('show');
+  createBox.classList.add('show');
+  document.querySelector('#nameCreate').focus();
 });
 
-document.querySelector('#submitCreer').addEventListener('click', async () => {
-  const e = document.querySelector('#nomCreer').value.trim();
-  const t = document.querySelector('#mdpCreer').value;
-  const o = document.querySelector('#mdpCreerValid').value;
+document.querySelector('#submitCreate').addEventListener('click', async () => {
+  const e = document.querySelector('#nameCreate').value.trim();
+  const t = document.querySelector('#psswdCreate').value;
+  const o = document.querySelector('#psswdCreateValid').value;
   if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    showError('Le nom ne peut contenir que des lettres...');
+    showError('Name can only contain letters...');
     return;
   }
   if (/^[0-9]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des chiffres)...');
+    showError('Password too weak (only numbers)...');
     return;
   }
   if (/^[a-zA-Z]+$/.test(t)) {
-    showError('Mot de passe trop faible (que des lettres)...');
+    showError('Password too weak (only letters)...');
     return;
   }
   if (t !== o) {
-    showError('Les mots de passe ne correspondent pas...');
+    showError('Passwords do not match...');
     return;
   }
   if (e === t) {
-    showError('Le mot de passe doit être différent du nom...');
+    showError('Username and password cannot be the same...');
     return;
   }
-  const nomCreer = encodeURIComponent(e);
-  const mdpCreer = encodeURIComponent(t);
+  const nameCreate = encodeURIComponent(e);
+  const psswdCreate = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/createUser.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nomCreer=${nomCreer}&mdpCreer=${mdpCreer}&csrf_token_creer=${document.querySelector('#csrf_token_creer').value}`,
+      body: `nameCreate=${nameCreate}&psswdCreate=${psswdCreate}&csrf_token_create=${document.querySelector('#csrf_token_create').value}`,
     });
     if (response.ok) {
-      creerBox.classList.remove('show');
-
+      createBox.classList.remove('show');
       forms.forEach((form) => form.reset());
-      alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
-      return;
-    }
-    showError('Utilisateur déjà existant...');
+      let message = '';
+      if (window.location.href.endsWith('/en/')) message = 'Account created successfully! You can now log in.';
+      else if (window.location.href.endsWith('/de/')) message = 'Konto erfolgreich erstellt! Sie können sich jetzt anmelden.';
+      else if (window.location.href.endsWith('/es/')) message = '¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.';
+      else message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
+      showSuccess(message);
+    } else showError('Username already taken...');
   } catch (error) {
-    showError('Une erreur est survenue lors de la création du compte...');
+    showError('An error occurred...');
   }
 });
 
-document.querySelector('#submitSeConnecter').addEventListener('click', async () => {
-  const e = document.querySelector('#nomConnect').value.trim();
-  const t = document.querySelector('#mdpConnect').value;
+document.querySelector('#submitLogIn').addEventListener('click', async () => {
+  const e = document.querySelector('#nameConnect').value.trim();
+  const t = document.querySelector('#psswdConnect').value;
   if (!e || !t || e.length > 25 || t.length > 50 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
-  const nomConnect = encodeURIComponent(e);
-  const mdpConnect = encodeURIComponent(t);
+  const nameConnect = encodeURIComponent(e);
+  const psswdConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('assets/php/connectUser.php', {
+    const response = await fetch('/seguinleo-notes/assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nomConnect=${nomConnect}&mdpConnect=${mdpConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
+      body: `nameConnect=${nameConnect}&psswdConnect=${psswdConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
     });
-    if (response.ok) {
-      window.location.reload();
-    } else {
-      document.querySelector('#mdpConnect').value = '';
+    if (response.ok) window.location.reload();
+    else {
+      document.querySelector('#psswdConnect').value = '';
       let time = 10;
-      const btn = document.querySelector('#submitSeConnecter');
+      const btn = document.querySelector('#submitLogIn');
+      const btnText = btn.textContent;
       btn.disabled = true;
-      showError('Mauvais identifiants...');
+      showError('Wrong username or password...');
       const interval = setInterval(() => {
         time -= 1;
-        btn.textContent = `Se connecter (${time})`;
+        btn.textContent = time;
       }, 1000);
       setTimeout(() => {
         clearInterval(interval);
         btn.disabled = false;
-        btn.textContent = 'Se connecter';
-      }, 11000);
+        btn.textContent = btnText;
+      }, 10000);
     }
   } catch (error) {
-    showError('Une erreur est survenue lors de la connexion...');
+    showError('An error occurred...');
   }
 });
 
@@ -560,9 +516,9 @@ contentNote.addEventListener('input', () => {
   document.querySelector('#textareaLength').textContent = `${e}/5000`;
 });
 
-couleurs.forEach((span, index) => {
+colors.forEach((span, index) => {
   span.addEventListener('click', (event) => {
-    couleurs.forEach((s) => {
+    colors.forEach((s) => {
       s.classList.remove('selectionne');
     });
     event.target.classList.add('selectionne');
@@ -574,14 +530,12 @@ couleurs.forEach((span, index) => {
 });
 
 document.querySelector('#submitNote').addEventListener('click', async () => {
-  const couleurSpan = document.querySelector('.couleurs span.selectionne');
-  const couleur = couleurSpan.classList[0];
+  const colorSpan = document.querySelector('.colors span.selectionne');
+  const color = colorSpan.classList[0];
   const title = titleNote.value.trim();
   const content = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const hidden = document.querySelector('#checkHidden').checked;
-
   if (!title || title.length > 30 || content.length > 5000) return;
-
   const dbName = 'notes_db';
   const objectStoreName = 'key';
   const db = await openIndexedDB(dbName, objectStoreName);
@@ -612,34 +566,22 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
     id: notesJSON.length,
     title: arrayBufferToBase64(enTitle),
     content: arrayBufferToBase64(enContent),
-    couleur,
+    color,
     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
     hidden,
   };
 
   if (isUpdate) {
     isUpdate = false;
-    notesJSON[document.querySelector('#idNoteInput').value] = note;
-  } else {
-    notesJSON.push(note);
-  }
+    notesJSON[document.querySelector('#idNote').value] = note;
+  } else notesJSON.push(note);
 
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
   noteBox.classList.remove('show');
   showNotes();
 });
 
-document.querySelectorAll('#menuIcon').forEach((element) => {
-  element.addEventListener('click', () => {
-    openSidebar();
-  });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      element.click();
-      document.querySelector('.sideBar header i').focus();
-    }
-  });
-});
+document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
 
 forms.forEach((element) => {
   element.addEventListener('submit', (event) => {
@@ -653,7 +595,7 @@ document.querySelectorAll('header i').forEach((element) => {
     forms.forEach((form) => form.reset());
     noteBox.classList.remove('show');
     connectBox.classList.remove('show');
-    creerBox.classList.remove('show');
+    createBox.classList.remove('show');
     sortBox.classList.remove('show');
     closeSidebar();
   });
@@ -667,11 +609,8 @@ document.querySelector('#search-input').addEventListener('input', () => {
   document.querySelectorAll('.note').forEach((element) => {
     const note = element;
     const t = note.querySelector('.note h2').textContent.toLowerCase();
-    if (t.includes(e)) {
-      note.style.display = 'flex';
-    } else {
-      note.style.display = 'none';
-    }
+    if (t.includes(e)) note.style.display = 'flex';
+    else note.style.display = 'none';
   });
 });
 
@@ -681,7 +620,7 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.forEach((e) => {
       e.content = '#eeeeee';
     });
-    button.className = 'fa-solid fa-lightbulb';
+    buttonTheme.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
     return;
   }
@@ -690,21 +629,21 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
     metaTheme.forEach((e) => {
       e.content = '#eeeeee';
     });
-    button.className = 'fa-solid fa-lightbulb';
+    buttonTheme.className = 'fa-solid fa-lightbulb';
     localStorage.setItem('theme', 'light');
   } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'dark';
     metaTheme.forEach((e) => {
       e.content = '#171717';
     });
-    button.className = 'fa-solid fa-moon';
+    buttonTheme.className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'dark');
   } else {
     document.querySelector('html').className = 'dusk';
     metaTheme.forEach((e) => {
       e.content = '#1c1936';
     });
-    button.className = 'fa-solid fa-star';
+    buttonTheme.className = 'fa-solid fa-star';
     localStorage.setItem('theme', 'dusk');
   }
 });
@@ -716,15 +655,21 @@ document.querySelector('#newVersion header i').addEventListener('click', () => {
 
 document.querySelector('#language').addEventListener('change', () => {
   const e = document.querySelector('#language').value;
-  if (e === 'fr') {
-    window.location.href = './';
-  } else if (e === 'en') {
-    window.location.href = 'en/';
-  } else if (e === 'de') {
-    window.location.href = 'de/';
-  } else if (e === 'es') {
-    window.location.href = 'es/';
-  }
+  if (window.location.href.endsWith('/en/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'de') window.location.href = '../de/';
+    else if (e === 'es') window.location.href = '../es/';
+  } else if (window.location.href.endsWith('/de/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'en') window.location.href = '../en/';
+    else if (e === 'es') window.location.href = '../es/';
+  } else if (window.location.href.endsWith('/es/')) {
+    if (e === 'fr') window.location.href = '../';
+    else if (e === 'en') window.location.href = '../en/';
+    else if (e === 'de') window.location.href = '../de/';
+  } else if (e === 'en') window.location.href += 'en/';
+  else if (e === 'de') window.location.href += 'de/';
+  else if (e === 'es') window.location.href += 'es/';
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -736,9 +681,9 @@ document.addEventListener('touchend', (event) => {
   handleGesture();
 }, false);
 
-document.querySelector('#btnSort').addEventListener('click', () => {
-  sortBox.classList.add('show');
-});
+document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
+
+document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
 
 document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
   element.addEventListener('change', () => {

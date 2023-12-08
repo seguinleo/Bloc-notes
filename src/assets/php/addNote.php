@@ -1,35 +1,25 @@
 <?php
-session_name('__Secure-notes');
-session_start();
+require_once __DIR__ . '/getKey.php';
 
-if (isset($_POST['csrf_token_note']) === false) {
-    http_response_code(403);
-    return;
-}
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION['nom'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+if (isset($_SESSION['name'], $_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;
 }
 
-require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 
 $title = $_POST['title'];
-$desc = $_POST['desc'];
-$couleur = $_POST['couleur'];
+$content = $_POST['content'];
+$color = $_POST['color'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
-$couleursAutorisees = [
+$allColors = [
     "Noir",
     "Rouge",
     "Orange",
@@ -42,20 +32,18 @@ $couleursAutorisees = [
     "Rose"
 ];
 
-if (in_array($couleur, $couleursAutorisees) === false) {
-    $couleur = 'Noir';
-}
+if (in_array($color, $allColors) === false) $color = 'Noir';
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (titre,content,dateNote,couleur,user,hiddenNote) VALUES (:Titre,:Content,:DateNote,:Couleur,:User,:HiddenNote)");
+    $query = $PDO->prepare("INSERT INTO notes (title,content,dateNote,color,hiddenNote,user) VALUES (:Title,:Content,:DateNote,:Color,:HiddenNote,:User)");
     $query->execute(
         [
-            ':Titre'        => $encryption->encryptData($title, $key),
-            ':Content'      => $encryption->encryptData($desc, $key),
-            ':DateNote'     => $dateNote,
-            ':Couleur'      => $couleur,
-            ':User'         => $nom,
-            ':HiddenNote'   => $hidden
+            ':Title'      => $encryption->encryptData($title, $key),
+            ':Content'    => $encryption->encryptData($content, $key),
+            ':Color'      => $color,
+            ':DateNote'   => $dateNote,
+            ':HiddenNote' => $hidden,
+            ':User'       => $name
         ]
     );
 } catch (Exception $e) {

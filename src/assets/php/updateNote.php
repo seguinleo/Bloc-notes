@@ -1,52 +1,28 @@
 <?php
-session_name('__Secure-notes');
-session_start();
+require_once __DIR__ . '/getKey.php';
 
-if (isset($_POST['csrf_token_note']) === false) {
-    http_response_code(403);
-    return;
-}
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION['nom'], $_POST['noteId'], $_POST['title'], $_POST['desc'], $_POST['date'], $_POST['couleur'], $_POST['hidden'], $_POST['link']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[0-9]+$/', $_SESSION['noteId']) === false) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
-    http_response_code(403);
-    return;
-}
-if ($_POST['link'] !== '' && $_POST['hidden'] === '1') {
+if (isset($_SESSION['name'], $_POST['noteId'], $_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;
 }
 
-require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 
-$desc = $_POST['desc'];
-$descEncrypted = $encryption->encryptData($desc, $key);
+$noteId = $_POST['noteId'];
 $title = $_POST['title'];
 $titleEncrypted = $encryption->encryptData($title, $key);
-$couleur = $_POST['couleur'];
+$content = $_POST['content'];
+$contentEncrypted = $encryption->encryptData($content, $key);
+$color = $_POST['color'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
-$nom = $_SESSION['nom'];
-$noteId = $_POST['noteId'];
-$link = $_POST['link'];
-$couleursAutorisees = [
+$allColors = [
     "Noir",
     "Rouge",
     "Orange",
@@ -59,21 +35,19 @@ $couleursAutorisees = [
     "Rose"
 ];
 
-if (in_array($couleur, $couleursAutorisees) === false) {
-    $couleur = 'Noir';
-}
+if (in_array($color, $allColors) === false) $color = 'Noir';
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET titre=:Title,content=:Descr,dateNote=:DateNote,couleur=:Couleur,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
+    $query = $PDO->prepare("UPDATE notes SET title=:Title,content=:Content,dateNote=:DateNote,color=:Color,hiddenNote=:HiddenNote WHERE id=:NoteId AND user=:User");
     $query->execute(
         [
-            ':Title'      => $titleEncrypted,
-            ':Descr'      => $descEncrypted,
-            ':Couleur'    => $couleur,
             ':NoteId'     => $noteId,
+            ':Title'      => $titleEncrypted,
+            ':Content'    => $contentEncrypted,
+            ':Color'      => $color,
             ':DateNote'   => $dateNote,
-            ':User'       => $nom,
-            ':HiddenNote' => $hidden
+            ':HiddenNote' => $hidden,
+            ':User'       => $name
         ]
     );
 } catch (Exception $e) {

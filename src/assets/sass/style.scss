@@ -52,15 +52,15 @@ html {
   -webkit-tap-highlight-color: transparent;
   scrollbar-color: rgba(100, 100, 125, 50%) rgba(0, 0, 0, 0);
   font-family: OpenSans, sans-serif;
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(100, 100, 125, 50%);
-  }
 }
 
 * {
   margin: 0;
   box-sizing: border-box;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 125, 50%);
 }
 
 ::-webkit-scrollbar {
@@ -214,8 +214,8 @@ nav {
       }
     }
 
-    .gestionCompte,
-    .seconnecter,
+    .manage-account,
+    .log-in,
     .fa-bars {
       display: none;
       cursor: pointer;
@@ -257,7 +257,7 @@ main {
   margin: 1rem;
 
   .listNotes {
-    max-height: calc(100dvh - 250px);
+    max-height: calc(100vh - 250px);
     overflow-y: scroll;
   }
 
@@ -343,7 +343,7 @@ textarea {
   height: 400px;
   width: 100%;
   min-height: 200px;
-  max-height: 750px;
+  max-height: 600px;
   resize: vertical;
   padding: 10px;
 }
@@ -369,11 +369,6 @@ form {
 
 p.welcome {
   font-size: 1.2rem;
-
-  .nomUser {
-    font-weight: 700;
-    font-style: italic;
-  }
 }
 
 .note {
@@ -487,7 +482,7 @@ p.welcome {
   position: fixed;
   z-index: 3;
   width: 100vw;
-  min-height: 100dvh;
+  min-height: 100vh;
   margin: auto;
   inset: 0;
   border-radius: 5px;
@@ -516,7 +511,7 @@ button {
   border-radius: 10px;
 }
 
-.couleurs {
+.colors {
   display: flex;
   justify-content: center;
   min-height: 30px;
@@ -537,8 +532,8 @@ button {
 }
 
 .connect-box,
-.creer-box,
-.gestion-popup-box,
+.create-box,
+.manage-popup-box,
 .public-note-popup-box,
 .private-note-popup-box,
 .note-popup-box,
@@ -548,7 +543,7 @@ button {
   top: 0;
   left: 0;
   z-index: 2;
-  height: 100dvh;
+  height: 100vh;
   width: 100vw;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -567,8 +562,8 @@ button {
 }
 
 .connect-box.show,
-.creer-box.show,
-.gestion-popup-box.show,
+.create-box.show,
+.manage-popup-box.show,
 .note-popup-box.show,
 .public-note-popup-box.show,
 .private-note-popup-box.show,
@@ -577,14 +572,14 @@ button {
 }
 
 .connect-box.show .popup,
-.creer-box.show .popup,
-.gestion-popup-box.show .popup,
+.create-box.show .popup,
+.manage-popup-box.show .popup,
 .note-popup-box.show .popup,
 .public-note-popup-box.show .popup,
 .private-note-popup-box.show .popup,
 .sort-popup-box.show .popup {
   display: flex;
-  max-height: 100dvh;
+  max-height: 100vh;
   transform: translate(-50%, -50%);
 }
 
@@ -641,6 +636,7 @@ button {
 }
 
 .version {
+  text-align: right;
   font-size: .8rem;
   margin: 0 5px;
 }
@@ -675,7 +671,7 @@ button {
   font-size: .8rem;
 }
 
-#genMdp {
+#genPsswd {
   margin: 10px auto;
 
   input {
@@ -689,7 +685,7 @@ button {
   }
 }
 
-.supprimerCompte {
+.delete-account {
   font-weight: 700;
   cursor: pointer;
 }
@@ -700,10 +696,7 @@ button {
   font-size: .8rem;
 }
 
-.gestion-popup-box.show .version {
-  text-align: right;
-}
-
+#successNotification,
 #errorNotification {
   position: fixed;
   top: 1rem;
@@ -713,10 +706,16 @@ button {
   max-width: 300px;
   padding: 10px;
   border-radius: 5px;
-  background: #a93b3b;
   color: $color08;
   display: none;
   z-index: 999;
+}
+
+#successNotification {
+  background-color: #1c7f1d;
+}
+#errorNotification {
+  background-color: #a93b3b;
 }
 
 #copyNotification {
@@ -810,7 +809,7 @@ button {
       display: block;
     }
 
-    button.seconnecter,
+    button.log-in,
     .welcome {
       display: none;
     }
@@ -832,8 +831,8 @@ button {
         margin: 0;
       }
 
-      .gestionCompte,
-      .seconnecter,
+      .manage-account,
+      .log-in,
       .fa-bars {
         display: inline;
         cursor: pointer;
@@ -919,7 +918,7 @@ button {
   }
 
   textarea {
-    height: 30vh;
+    height: 45vh;
   }
 
   .note {
@@ -947,7 +946,7 @@ button {
   }
 
   .fullscreen {
-    min-height: 100dvh;
+    min-height: 100vh;
     inset: auto;
     top: 0;
 
@@ -956,7 +955,7 @@ button {
     }
   }
 
-  .couleurs span {
+  .colors span {
     margin: 0 4px;
   }
 
@@ -1061,7 +1060,7 @@ html.dark {
     color: $color03;
   }
 
-  .couleurs span {
+  .colors span {
     border: 1px solid $color01;
   }
 
@@ -1101,8 +1100,8 @@ html.dark {
   }
 
   .note-popup-box,
-  .creer-box,
-  .gestion-popup-box,
+  .create-box,
+  .manage-popup-box,
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
@@ -1115,7 +1114,7 @@ html.dark {
     color: $color01;
   }
 
-  .attention {
+  .warning {
     color: #fe7575;
   }
 
@@ -1217,7 +1216,7 @@ html.dusk {
     color: $color12;
   }
 
-  .couleurs span {
+  .colors span {
     border: 1px solid $color10;
   }
 
@@ -1257,8 +1256,8 @@ html.dusk {
   }
 
   .note-popup-box,
-  .creer-box,
-  .gestion-popup-box,
+  .create-box,
+  .manage-popup-box,
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
@@ -1271,7 +1270,7 @@ html.dusk {
     color: $color01;
   }
 
-  .attention {
+  .warning {
     color: #fe7575;
   }
 
@@ -1374,7 +1373,7 @@ html.light {
     color: $color02;
   }
 
-  .couleurs span {
+  .colors span {
     border: 1px solid $color03;
   }
 
@@ -1414,8 +1413,8 @@ html.light {
   }
 
   .note-popup-box,
-  .creer-box,
-  .gestion-popup-box,
+  .create-box,
+  .manage-popup-box,
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
@@ -1428,7 +1427,7 @@ html.light {
     color: $color08;
   }
 
-  .attention {
+  .warning {
     color: #a93b3b;
   }
 

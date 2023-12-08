@@ -2,41 +2,33 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_POST['csrf_token_creer']) === false) {
+if (isset($_SESSION['name']) === true) {
     http_response_code(403);
     return;
 }
-if ($_POST['csrf_token_creer'] !== $_SESSION['csrf_token_creer']) {
+if ($_POST['csrf_token_create'] !== $_SESSION['csrf_token_create']) {
     http_response_code(403);
     return;
 }
-if (isset($_POST['nomCreer'], $_POST['mdpCreer']) === false) {
-    http_response_code(403);
-    return;
-}
-if (isset($_SESSION['nom']) === true) {
-    http_response_code(403);
-    return;
-}
-if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $_SESSION['nom']) === false) {
+if (isset($_POST['nameCreate'], $_POST['psswdCreate']) === false) {
     http_response_code(403);
     return;
 }
 
 require_once __DIR__ . '/config/config.php';
 
-$nomCreer = $_POST['nomCreer'];
-$mdpCreer = $_POST['mdpCreer'];
-$mdpCreerSecure = password_hash($mdpCreer, PASSWORD_DEFAULT);
+$nameCreate = $_POST['nameCreate'];
+$psswdCreate = $_POST['psswdCreate'];
+$psswdCreateHash = password_hash($psswdCreate, PASSWORD_DEFAULT);
 $key = openssl_random_pseudo_bytes(32);
 
 try {
-    $query = $PDO->prepare("INSERT INTO users (nom,mdp,one_key) VALUES (:NomCreer,:MdpHash,:OneKey)");
+    $query = $PDO->prepare("INSERT INTO users (name,psswd,oneKey) VALUES (:nameCreate,:psswdHash,:OneKey)");
     $query->execute(
         [
-            ':NomCreer' => $nomCreer,
-            ':MdpHash'  => $mdpCreerSecure,
-            ':OneKey'   => htmlspecialchars($key)
+            ':nameCreate' => $nameCreate,
+            ':psswdHash'  => $psswdCreateHash,
+            ':OneKey'     => htmlspecialchars($key)
         ]
     );
 } catch (Exception $e) {

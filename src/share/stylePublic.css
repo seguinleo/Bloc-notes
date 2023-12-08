@@ -32,6 +32,11 @@ body {
   background: rgba(100, 100, 125, 50%);
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
 * {
   margin: 0;
   box-sizing: border-box;

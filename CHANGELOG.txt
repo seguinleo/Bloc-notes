@@ -1,3 +1,7 @@
+#----v23.12.2----#
+-Add fingerprint auth for cloud notes
+-Refractor database and code structure
+
 #----v23.12.1----#
 -Add Spanish support
 -Improve security (add DOMPurify)

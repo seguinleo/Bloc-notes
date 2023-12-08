@@ -40,13 +40,15 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available.
 
 ## Security and Privacy
-The user's connection for online sync is maintained by a secure cookie with a shelf life of 1 week. The website is hosted in France by OVHcloud on my personal server. The website is always up to date with the latest security patches.
+The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches.
 
 Passwords are hashed with the latest algorithms before being sent to the database.
 
 Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF and SQL injections.
 
 Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes. The website editor disclaims any responsibility for the content of user notes.
+
+The user can use its fingerprint to unlock the notes. The fingerprint is stored in the browser's local storage and is not sent to the server.
 
 > [!WARNING]
 > Never store passwords or too personal data in your notes regardless of the service.
@@ -55,12 +57,8 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 🇫🇷French, 🇬🇧English, 🇩🇪German, 🇪🇸Spanish
 
 ## Todo
-- [x] Share notes with a random link
-- [x] Export notes in text file
-- [ ] Pin notes
-- [ ] Categories
-- [x] Spanish translation
-- [ ] ...
+*   Pin notes
+*   Categories
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
@@ -81,6 +79,9 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure
 ``npm run sass`` to compile Saas files
 
 ``docker-compose up --build`` to build the Docker container
+
+> [!INFO]
+> Base URL is ``localhost/seguinleo-notes/``, just put ``src/`` in your localhost and rename it ``seguinleo-notes/``. Database name is ``seguinleo-notes``.
 
 [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 

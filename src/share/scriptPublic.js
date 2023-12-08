@@ -1,8 +1,7 @@
 /* eslint-disable no-undef */
 const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
-const replaceAllStart = (e) => e.replaceAll('<br /><br />', '\n\n').replaceAll('<br />', '\n');
-const replaceAllEnd = (e) => e.replaceAll('\n\n', '<br /><br />').replaceAll('\n', '<br />');
+
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -11,49 +10,59 @@ converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
 
 const showSharedNote = async () => {
-  const response = await fetch('../../assets/php/getSharedNote.php', {
+  const response = await fetch('/seguinleo-notes/assets/php/getSharedNote.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: `noteLink=${link}`,
   });
+
   const data = await response.json();
+
   data.forEach((row) => {
     const {
-      title, desc, couleur, date,
+      title, content, color, date,
     } = row;
-    if (!title || !desc) return;
-    const descEnd = replaceAllEnd(desc);
-    const descHtml = converter.makeHtml(desc);
+
+    if (!title || !content) return;
+
+    const contentHtml = converter.makeHtml(content);
     const noteElement = document.createElement('div');
-    noteElement.classList.add('note', couleur);
+    noteElement.classList.add('note', color);
     noteElement.tabIndex = 0;
+
     const detailsElement = document.createElement('div');
     detailsElement.classList.add('details');
+
     const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
     titleElement.textContent = title;
-    const descElement = document.createElement('span');
-    descElement.innerHTML = DOMPurify.sanitize(descHtml);
+
+    const contentElement = document.createElement('span');
+    contentElement.innerHTML = DOMPurify.sanitize(contentHtml);
     detailsElement.appendChild(titleElement);
-    detailsElement.appendChild(descElement);
+    detailsElement.appendChild(contentElement);
+
     const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
+
     const dateElement = document.createElement('span');
     dateElement.textContent = date;
     bottomContentElement.appendChild(dateElement);
+
     const clipboardIconElement = document.createElement('i');
     clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
     clipboardIconElement.tabIndex = 0;
-    clipboardIconElement.setAttribute('data-note-desc', descEnd);
+    clipboardIconElement.setAttribute('data-note-content', content);
     clipboardIconElement.setAttribute('role', 'button');
     bottomContentElement.appendChild(clipboardIconElement);
+
     const downloadIconElement = document.createElement('i');
     downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
     downloadIconElement.tabIndex = 0;
     downloadIconElement.setAttribute('data-note-title', title);
-    downloadIconElement.setAttribute('data-note-desc', descEnd);
+    downloadIconElement.setAttribute('data-note-content', content);
     downloadIconElement.setAttribute('role', 'button');
     bottomContentElement.appendChild(downloadIconElement);
     noteElement.appendChild(detailsElement);
@@ -62,45 +71,32 @@ const showSharedNote = async () => {
   });
 };
 
-const downloadNote = (e, t) => {
+const downloadNote = (title, content) => {
   const a = document.createElement('a');
-  const noteTitle = e;
-  const noteDesc = t;
-  const noteDescEnd = replaceAllEnd(noteDesc);
-  const noteDescTxt = replaceAllStart(noteDescEnd);
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(noteDescTxt)}`);
-  a.setAttribute('download', `${noteTitle}.txt`);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+  a.setAttribute('download', `${title}.txt`);
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 };
 
-const copy = (e) => {
-  const copyText = replaceAllStart(e);
-  navigator.clipboard.writeText(copyText);
-};
+const copy = (content) => navigator.clipboard.writeText(content);
 
 notesContainer.addEventListener('click', (event) => {
   const { target } = event;
   if (target.classList.contains('note-action')) {
     const noteTitle = target.getAttribute('data-note-title');
-    const noteDesc = target.getAttribute('data-note-desc');
-    if (target.classList.contains('fa-clipboard')) {
-      copy(noteDesc);
-    } else if (target.classList.contains('fa-download')) {
-      downloadNote(noteTitle, noteDesc);
-    }
+    const noteContent = target.getAttribute('data-note-content');
+    if (target.classList.contains('fa-clipboard')) copy(noteContent);
+    else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) {
-      document.activeElement.click();
-    } else if (document.activeElement.classList.contains('fa-download')) {
-      document.activeElement.click();
-    }
+    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-download')) document.activeElement.click();
   }
 });
 

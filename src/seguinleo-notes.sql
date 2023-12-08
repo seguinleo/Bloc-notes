@@ -15,7 +15,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `notes`
+-- Database: `seguinleo-notes`
 --
 
 -- --------------------------------------------------------
@@ -26,13 +26,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `notes` (
   `id` int NOT NULL,
-  `titre` text NOT NULL,
+  `title` text NOT NULL,
   `content` longtext,
+  `color` varchar(63) NOT NULL,
   `dateNote` datetime NOT NULL,
-  `user` varchar(255) NOT NULL,
-  `couleur` varchar(255) NOT NULL,
-  `hiddenNote` tinyint NOT NULL,
-  `link` varchar(255) DEFAULT NULL
+  `hiddenNote` tinyint NOT NULL DEFAULT '0',
+  `pinnedNote` tinyint NOT NULL DEFAULT '0',
+  `category` varchar(63) DEFAULT NULL,
+  `link` varchar(63) DEFAULT NULL,
+  `user` varchar(63) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -43,9 +45,9 @@ CREATE TABLE `notes` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `nom` varchar(255) NOT NULL,
-  `mdp` varchar(255) NOT NULL,
-  `one_key` varchar(256) NOT NULL
+  `name` varchar(63) NOT NULL,
+  `psswd` varchar(255) NOT NULL,
+  `oneKey` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -65,7 +67,7 @@ ALTER TABLE `notes`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nom` (`nom`);
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -75,13 +77,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Constraints for dumped tables
@@ -91,7 +93,7 @@ ALTER TABLE `users`
 -- Constraints for table `notes`
 --
 ALTER TABLE `notes`
-  ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`nom`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
