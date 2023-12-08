@@ -80,7 +80,7 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure
 
 ``docker-compose up --build`` to build the Docker container
 
-> [!INFO]
+> [!NOTE]
 > Base URL is ``localhost/seguinleo-notes/``, just put ``src/`` in your localhost and rename it ``seguinleo-notes/``. Database name is ``seguinleo-notes``.
 
 [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
