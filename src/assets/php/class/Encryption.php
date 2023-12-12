@@ -17,8 +17,8 @@ class Encryption
     }
 
     /**
-     * @param $password
-     * @param $salt
+     * @param string $password
+     * @param string $salt
      * @return string
      */
     protected function deriveKey($password, $salt)
@@ -35,8 +35,8 @@ class Encryption
     }
 
     /**
-     * @param $plaintext
-     * @param $password
+     * @param string $plaintext
+     * @param string $password
      * @return string
      */
     public function encryptData($plaintext, $password)
@@ -60,8 +60,8 @@ class Encryption
     }
 
     /**
-     * @param $ciphertext
-     * @param $password
+     * @param string $ciphertext
+     * @param string $password
      * @return string
      */
     public function decryptData($ciphertext, $password)

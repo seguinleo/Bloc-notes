@@ -32,7 +32,7 @@ CREATE TABLE `notes` (
   `dateNote` datetime NOT NULL,
   `hiddenNote` tinyint NOT NULL DEFAULT '0',
   `pinnedNote` tinyint NOT NULL DEFAULT '0',
-  `category` varchar(63) DEFAULT NULL,
+  `category` tinyint NOT NULL DEFAULT '0',
   `link` varchar(63) DEFAULT NULL,
   `user` varchar(63) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

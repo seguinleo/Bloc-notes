@@ -21,19 +21,20 @@ require_once __DIR__ . '/class/Encryption.php';
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,link FROM notes WHERE user=:CurrentUser $orderBy");
+    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,link FROM notes WHERE user=:CurrentUser $orderBy");
     $query->execute([':CurrentUser' => $name]);
     $items = [];
 
     while ($row = $query->fetch()) {
         $items[] = [
-            'id'      => $row['id'],
-            'title'   => $encryption->decryptData($row['title'], $key),
-            'content' => $encryption->decryptData($row['content'], $key),
-            'color'   => $row['color'],
-            'date'    => $row['dateNote'],
-            'hidden'  => $row['hiddenNote'],
-            'link'    => $row['link'] === null ? '' : $row['link']
+            'id'        => $row['id'],
+            'title'     => $encryption->decryptData($row['title'], $key),
+            'content'   => $encryption->decryptData($row['content'], $key),
+            'color'     => $row['color'],
+            'date'      => $row['dateNote'],
+            'hidden'    => $row['hiddenNote'],
+            'category'  => $row['category'],
+            'link'      => $row['link'] === null ? '' : $row['link']
         ];
     }
 } catch (Exception $e) {

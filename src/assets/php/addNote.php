@@ -19,6 +19,7 @@ $content = $_POST['content'];
 $color = $_POST['color'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
+$category = $_POST['category'];
 $allColors = [
     "Noir",
     "Rouge",
@@ -31,11 +32,13 @@ $allColors = [
     "Violet",
     "Rose"
 ];
+$allCategories = ["0","1","2","3","4","5","6"];
 
 if (in_array($color, $allColors) === false) $color = 'Noir';
+if (in_array($category, $allCategories) === false) $category = '0';
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (title,content,dateNote,color,hiddenNote,user) VALUES (:Title,:Content,:DateNote,:Color,:HiddenNote,:User)");
+    $query = $PDO->prepare("INSERT INTO notes (title,content,dateNote,color,hiddenNote,category,user) VALUES (:Title,:Content,:DateNote,:Color,:HiddenNote,:Category,:User)");
     $query->execute(
         [
             ':Title'      => $encryption->encryptData($title, $key),
@@ -43,6 +46,7 @@ try {
             ':Color'      => $color,
             ':DateNote'   => $dateNote,
             ':HiddenNote' => $hidden,
+            ':Category'   => $category,
             ':User'       => $name
         ]
     );

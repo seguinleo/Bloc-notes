@@ -91,7 +91,7 @@ table {
   margin: 10px 0;
 
   thead {
-    background-color: rgba(100, 100, 125, 20%);
+    background: rgba(100, 100, 125, 20%);
   }
 
   th,
@@ -117,7 +117,7 @@ kbd {
 }
 
 header {
-  padding: 1rem;
+  padding: 10px;
 
   .fa-xmark {
     cursor: pointer;
@@ -222,7 +222,7 @@ nav {
     }
   }
 
-  .lastSync {
+  #last-sync {
     font-size: .8rem;
 
     i {
@@ -233,7 +233,6 @@ nav {
 }
 
 main {
-  max-width: 100vw;
   margin: 86px auto 2rem;
   padding: 0 2rem 0 414px;
   display: flex;
@@ -247,7 +246,6 @@ main {
   position: fixed;
   -webkit-user-select: none;
   user-select: none;
-  background: $color02;
   left: 0;
   top: 70px;
   bottom: 0;
@@ -257,7 +255,7 @@ main {
   margin: 1rem;
 
   .listNotes {
-    max-height: calc(100vh - 250px);
+    max-height: 70vh;
     overflow-y: scroll;
   }
 
@@ -277,27 +275,44 @@ main {
     font-size: .8rem;
     cursor: pointer;
 
-    &:hover {
-      background-color: rgba(100, 100, 125, 20%);
+    &:hover,
+    &:focus {
+      outline: none;
+      background: rgba(100, 100, 125, 20%);
+
+      .titleList {
+        display: none;
+      }
 
       .dateList {
         display: inline-block;
       }
     }
 
-    .titleList {
+    .titleList,
+    .dateList {
       max-width: 200px;
       overflow: hidden;
-      display: inline-block;
       white-space: nowrap;
       font-weight: 700;
-      vertical-align: bottom;
-      margin-right: 5px;
+      vertical-align: middle;
+      margin: 0 10px;
+    }
+
+    .category {
+      background: rgba(100, 100, 125, 20%);
+      margin: 0;
+      padding: 5px 10px;
+      border-radius: 24px;
+      vertical-align: middle;
+    }
+
+    .titleList {
+      display: inline-block;
     }
 
     .dateList {
       display: none;
-      float: right;
     }
   }
 }
@@ -324,11 +339,8 @@ input[type="password"]:disabled {
   opacity: .6;
 }
 
+input[type="radio"],
 input[type="checkbox"] {
-  pointer-events: none;
-}
-
-input[type="radio"] {
   margin-right: 10px;
 }
 
@@ -340,7 +352,7 @@ option {
 textarea {
   font-family: OpenSans, sans-serif;
   font-size: 1rem;
-  height: 400px;
+  height: 35vh;
   width: 100%;
   min-height: 200px;
   max-height: 600px;
@@ -420,6 +432,13 @@ p.welcome {
     text-align: right;
     font-weight: 700;
     margin: 0 10px;
+  }
+
+  .category {
+    background: rgba(100, 100, 125, 20%);
+    padding: 5px 10px;
+    border-radius: 24px;
+    margin: 5px 0;
   }
 
   a {
@@ -537,7 +556,8 @@ button {
 .public-note-popup-box,
 .private-note-popup-box,
 .note-popup-box,
-.sort-popup-box {
+.sort-popup-box,
+.filter-popup-box {
   display: none;
   position: fixed;
   top: 0;
@@ -567,7 +587,8 @@ button {
 .note-popup-box.show,
 .public-note-popup-box.show,
 .private-note-popup-box.show,
-.sort-popup-box.show {
+.sort-popup-box.show,
+.filter-popup-box.show {
   display: flex;
 }
 
@@ -577,7 +598,8 @@ button {
 .note-popup-box.show .popup,
 .public-note-popup-box.show .popup,
 .private-note-popup-box.show .popup,
-.sort-popup-box.show .popup {
+.sort-popup-box.show .popup,
+.filter-popup-box.show .popup {
   display: flex;
   max-height: 100vh;
   transform: translate(-50%, -50%);
@@ -596,12 +618,28 @@ button {
   margin-bottom: 10px;
 }
 
+.category {
+  margin: 2px;
+  display: inline-flex;
+
+  span {
+    padding: 5px 10px;
+    border-radius: 24px;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+}
+
 .switch {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  width: 60px;
+  width: 4rem;
   height: 2rem;
+  margin: 0 5px;
 
   input {
     opacity: 0;
@@ -610,7 +648,7 @@ button {
 
     &:checked+.slider {
       &:before {
-        transform: translateX(26px);
+        left: 2rem;
       }
     }
   }
@@ -625,12 +663,9 @@ button {
       position: absolute;
       content: "";
       border-radius: 50%;
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      top: 3px;
+      height: 2rem;
+      width: 2rem;
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
-      transition: .3s ease-in-out;
     }
   }
 }
@@ -639,6 +674,10 @@ button {
   text-align: right;
   font-size: .8rem;
   margin: 0 5px;
+}
+
+.fa-eye-slash {
+  margin: 10px;
 }
 
 #newVersion {
@@ -712,10 +751,11 @@ button {
 }
 
 #successNotification {
-  background-color: #1c7f1d;
+  background: #1c7f1d;
 }
+
 #errorNotification {
-  background-color: #a93b3b;
+  background: #a93b3b;
 }
 
 #copyNotification {
@@ -762,9 +802,9 @@ button {
   }
 }
 
-#btnSort {
+#btnSort,
+#btnFilter {
   position: fixed;
-  top: 135px;
   right: 1.5rem;
   font-size: 1.2rem;
   width: 36px;
@@ -781,6 +821,14 @@ button {
   &:focus {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
   }
+}
+
+#btnSort {
+  top: 135px;
+}
+
+#btnFilter {
+  top: 195px;
 }
 
 .task-list-item {
@@ -852,7 +900,7 @@ button {
       }
     }
 
-    .lastSync {
+    #last-sync {
       display: none;
     }
   }
@@ -917,10 +965,6 @@ button {
     animation: slide-left .3s ease-in-out;
   }
 
-  textarea {
-    height: 45vh;
-  }
-
   .note {
     width: 100%;
     max-height: 300px;
@@ -965,10 +1009,6 @@ button {
 
   .bottom-content i {
     margin: 0 2px;
-  }
-
-  .lastSync {
-    display: inline-flex;
   }
 
   .divTheme {
@@ -1079,7 +1119,20 @@ html.dark {
   }
 
   .Noir {
-    background-color: $color02;
+    background: $color02;
+  }
+
+  .category {
+    span {
+      background: $color01;
+    }
+
+    input[type="radio"] {
+      &:checked+span {
+        background: $color04;
+        color: $color01;
+      }
+    }
   }
 
   .switch {
@@ -1105,12 +1158,13 @@ html.dark {
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
-  .sort-popup-box {
+  .sort-popup-box,
+  .filter-popup-box {
     background: rgba(0, 0, 0, 50%);
   }
 
   .noscript {
-    background-color: #fe7575;
+    background: #fe7575;
     color: $color01;
   }
 
@@ -1134,7 +1188,7 @@ html.dark {
   }
 
   #copyNoteLink {
-    background-color: $color01;
+    background: $color01;
 
     &:hover {
       opacity: .8;
@@ -1235,7 +1289,20 @@ html.dusk {
   }
 
   .Noir {
-    background-color: $color10;
+    background: $color10;
+  }
+
+  .category {
+    span {
+      background: $color10;
+    }
+
+    input[type="radio"] {
+      &:checked+span {
+        background: $color04;
+        color: $color01;
+      }
+    }
   }
 
   .switch {
@@ -1261,12 +1328,13 @@ html.dusk {
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
-  .sort-popup-box {
+  .sort-popup-box,
+  .filter-popup-box {
     background: rgba(0, 0, 0, 50%);
   }
 
   .noscript {
-    background-color: #fe7575;
+    background: #fe7575;
     color: $color01;
   }
 
@@ -1290,7 +1358,7 @@ html.dusk {
   }
 
   #copyNoteLink {
-    background-color: $color10;
+    background: $color10;
 
     &:hover {
       opacity: .8;
@@ -1392,7 +1460,19 @@ html.light {
   }
 
   .Noir {
-    background-color: $color09;
+    background: $color09;
+  }
+
+  .category {
+    span {
+      background: $color09;
+    }
+
+    input[type="radio"] {
+      &:checked+span {
+        background: $color05;
+      }
+    }
   }
 
   .switch {
@@ -1404,7 +1484,7 @@ html.light {
     }
 
     .slider {
-      background: $color03;
+      background: $color09;
 
       &:before {
         background: $color08;
@@ -1418,12 +1498,13 @@ html.light {
   .connect-box,
   .private-note-popup-box,
   .public-note-popup-box,
-  .sort-popup-box {
+  .sort-popup-box,
+  .filter-popup-box {
     background: rgba(220, 220, 220, 50%);
   }
 
   .noscript {
-    background-color: #a93b3b;
+    background: #a93b3b;
     color: $color08;
   }
 
@@ -1437,7 +1518,7 @@ html.light {
   }
 
   #copyNoteLink {
-    background-color: $color09;
+    background: $color09;
 
     &:hover {
       opacity: .8;
@@ -1460,39 +1541,39 @@ html.light {
 }
 
 .Rouge {
-  background-color: #fd948a;
+  background: #fd948a;
 }
 
 .Orange {
-  background-color: #ffc65c;
+  background: #ffc65c;
 }
 
 .Jaune {
-  background-color: #fdf488;
+  background: #fdf488;
 }
 
 .Vert {
-  background-color: #d6fe9d;
+  background: #d6fe9d;
 }
 
 .Cyan {
-  background-color: #bbfdec;
+  background: #bbfdec;
 }
 
 .BleuCiel {
-  background-color: #d2eff7;
+  background: #d2eff7;
 }
 
 .Bleu {
-  background-color: #b4caf6;
+  background: #b4caf6;
 }
 
 .Violet {
-  background-color: #d1acff;
+  background: #d1acff;
 }
 
 .Rose {
-  background-color: #fdd0e7;
+  background: #fdd0e7;
 }
 
 .Rouge,

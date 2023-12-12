@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-<img alt="" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr/projets/notes/?color=8ab4f8&style=for-the-badge">
+<img alt="" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr?color=8ab4f8&style=for-the-badge">
 <img alt="" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
 <img alt="" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
 <img alt="" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
@@ -30,7 +30,7 @@ When I was looking for a note-taking application, I faced several difficulties: 
 ## Features
 All notes are encrypted with ``AES-256-GCM``.
 
-The user can save and edit notes, change color, copy, export and use Markdown. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
+The user can save and edit notes, change color, copy, export and use Markdown. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
 
 The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
@@ -58,7 +58,7 @@ The user can use its fingerprint to unlock the notes. The fingerprint is stored 
 
 ## Todo
 *   Pin notes
-*   Categories
+*   2FA
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
@@ -83,7 +83,7 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure
 > [!NOTE]
 > Base URL is ``localhost/seguinleo-notes/``, just put ``src/`` in your localhost and rename it ``seguinleo-notes/``. Database name is ``seguinleo-notes``.
 
-[GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
+LICENSE: [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
 ![Mobile preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/mobile.png)

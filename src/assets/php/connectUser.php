@@ -37,7 +37,7 @@ $PDO = null;
 
 $psswdConnect = $_POST['psswdConnect'];
 
-if (!$row || !password_verify($psswdConnect, $row['psswd'])) {
+if (!password_verify($psswdConnect, $row['psswd'])) {
     http_response_code(403);
     return;
 }

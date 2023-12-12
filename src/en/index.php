@@ -78,8 +78,8 @@ if (isset($_SESSION['name']) === false) {
             <?php } ?>
         </div>
         <?php if (isset($name) === true) { ?>
-            <div class="lastSync">
-                <i class="resync fa-solid fa-sync" aria-label="Synchronize" tabindex="0" role="button"></i>
+            <div id="last-sync">
+                <i class="fa-solid fa-sync" aria-label="Synchronize" tabindex="0" role="button"></i>
                 <span></span>
             </div>
         <?php } ?>
@@ -124,6 +124,63 @@ if (isset($_SESSION['name']) === false) {
         <button type="button" id="btnSort" aria-label="Sort my notes">
             <i class="fa-solid fa-arrow-up-wide-short"></i>
         </button>
+        <button type="button" id="btnFilter" aria-label="Filter my notes">
+            <i class="fa-solid fa-filter"></i>
+        </button>
+        <div class="filter-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <header>
+                        <i class="fa-solid fa-xmark" tabindex="0"></i>
+                    </header>
+                    <div class="row">
+                        <h2>Filter notes by category:</h2>
+                    </div>
+                    <div class="row">
+                        <label for="noCatFilter">
+                            <input type="checkbox" name="filterNotes" value="0" checked id="noCatFilter">
+                            ❌None
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catPersoFilter">
+                            <input type="checkbox" name="filterNotes" value="1" checked id="catPersoFilter">
+                            👤Personal
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catProFilter">
+                            <input type="checkbox" name="filterNotes" value="2" checked id="catProFilter">
+                            💼Work
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catVoyageFilter">
+                            <input type="checkbox" name="filterNotes" value="3" checked id="catVoyageFilter">
+                            🏖️Travel
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catTaskFilter">
+                            <input type="checkbox" name="filterNotes" value="4" checked id="catTaskFilter">
+                            📓Tasks
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catRappelFilter">
+                            <input type="checkbox" name="filterNotes" value="5" checked id="catRappelFilter">
+                            🕰️Reminder
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label for="catIdeesFilter">
+                            <input type="checkbox" name="filterNotes" value="6" checked id="catIdeesFilter">
+                            💡Ideas
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="sort-popup-box">
             <div class="popup">
                 <div class="content">
@@ -131,29 +188,29 @@ if (isset($_SESSION['name']) === false) {
                         <i class="fa-solid fa-xmark" tabindex="0"></i>
                     </header>
                     <div class="row">
-                        <h2>Sort my notes :</h2>
+                        <h2>Sort notes by :</h2>
                     </div>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="sortNotes" value="1">
+                        <label for="sortNotes1">
+                            <input type="radio" name="sortNotes" value="1" id="sortNotes1">
                             Creation date
                         </label>
                     </div>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="sortNotes" value="2">
+                        <label for="sortNotes2">
+                            <input type="radio" name="sortNotes" value="2" id="sortNotes2">
                             Creation date (Z-A)
                         </label>
                     </div>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="sortNotes" value="3" checked>
+                        <label for="sortNotes3">
+                            <input type="radio" name="sortNotes" value="3" checked id="sortNotes3">
                             Modification date
                         </label>
                     </div>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="sortNotes" value="4">
+                        <label for="sortNotes4">
+                            <input type="radio" name="sortNotes" value="4" id="sortNotes4">
                             Modification date (Z-A)
                         </label>
                     </div>
@@ -197,6 +254,36 @@ if (isset($_SESSION['name']) === false) {
                             </div>
                         </div>
                         <div class="row">
+                            <label class="category" for="noCat">
+                                <input type="radio" name="category" id="noCat" value="0" checked>
+                                <span tabindex="0" role="button">❌</span>
+                            </label>
+                            <label class="category" for="catPerso">
+                                <input type="radio" name="category" id="catPerso" value="1">
+                                <span tabindex="0" role="button">👤Personal</span>
+                            </label>
+                            <label class="category" for="catPro">
+                                <input type="radio" name="category" id="catPro" value="2">
+                                <span tabindex="0" role="button">💼Work</span>
+                            </label>
+                            <label class="category" for="catVoyage">
+                                <input type="radio" name="category" id="catVoyage" value="3">
+                                <span tabindex="0" role="button">🏖️Travel</span>
+                            </label>
+                            <label class="category" for="catTask">
+                                <input type="radio" name="category" id="catTask" value="4">
+                                <span tabindex="0" role="button">📓Tasks</span>
+                            </label>
+                            <label class="category" for="catRappel">
+                                <input type="radio" name="category" id="catRappel" value="5">
+                                <span tabindex="0" role="button">🕰️Reminder</span>
+                            </label>
+                            <label class="category" for="catIdees">
+                                <input type="radio" name="category" id="catIdees" value="6">
+                                <span tabindex="0" role="button">💡Ideas</span>
+                            </label>
+                        </div>
+                        <div class="row">
                             Hidden note
                             <label for="checkHidden" class="switch" aria-label="Hidden note">
                                 <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
@@ -230,6 +317,14 @@ if (isset($_SESSION['name']) === false) {
                             </span>
                         </div>
                         <div class="row">
+                            <span class="linkp">
+                                <a href="https://github.com/seguinleo/Bloc-notes/discussions" target="_blank" rel="noreferrer">
+                                    Help and discussions
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="row">
                             <i class="fa-solid fa-fingerprint"></i>
                             <label for="checkFingerprint" class="switch" aria-label="Fingerprint lock">
                                 <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
@@ -249,12 +344,12 @@ if (isset($_SESSION['name']) === false) {
                                 <button id="submitChangePsswd" type="submit">Change password</button>
                             </form>
                             <div class="row">
-                                <span id="delete-account" class="warning" tabindex="0">Delete my account</span>
+                                <span id="delete-account" class="linkp warning" tabindex="0">Delete my account</span>
                             </div>
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
@@ -320,7 +415,7 @@ if (isset($_SESSION['name']) === false) {
                         </form>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
@@ -361,7 +456,7 @@ if (isset($_SESSION['name']) === false) {
                         </form>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.2</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
@@ -372,7 +467,7 @@ if (isset($_SESSION['name']) === false) {
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
-            <h2>v23.12.2🎉</h2>
+            <h2>v23.12.3🎉</h2>
             <p>
                 Bloc-notes has been updated!
             </p>

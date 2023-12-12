@@ -1,7 +1,4 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-undef */
 /* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
 let isUpdate = false;
 let timeoutCopy = null;
 let timeoutNotification = null;
@@ -9,119 +6,18 @@ let touchstartX = 0;
 let touchendX = 0;
 const noteBox = document.querySelector('.note-popup-box');
 const sortBox = document.querySelector('.sort-popup-box');
+const filterBox = document.querySelector('.filter-popup-box');
 const popupBoxManage = document.querySelector('.manage-popup-box');
 const privateNote = document.querySelector('.private-note-popup-box');
 const publicNote = document.querySelector('.public-note-popup-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
-const switchElement = document.querySelector('.switch');
+const switchElement = document.querySelectorAll('.switch');
 const colors = document.querySelectorAll('.colors span');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('.sideBar');
 const metaTheme = document.querySelectorAll('.themecolor');
 const buttonTheme = document.querySelector('#iconTheme');
-
-function generateRandomBytes(length) {
-  const array = new Uint8Array(length);
-  window.crypto.getRandomValues(array);
-  return array;
-}
-
-const submitFingerprint = async () => {
-  try {
-    const challenge = generateRandomBytes(32);
-    const userId = generateRandomBytes(16);
-    const credential = await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-        },
-        timeout: 60000,
-        attestation: 'direct',
-      },
-    });
-    const credentialObject = {
-      id: credential.id,
-      rawId: credential.rawId,
-      response: {
-        attestationObject: credential.response.attestationObject,
-        clientDataJSON: credential.response.clientDataJSON,
-      },
-      type: credential.type,
-    };
-    localStorage.setItem('fingerprint', 'true');
-  } catch (error) {
-    document.querySelector('#checkFingerprint').checked = false;
-  }
-};
-
-const verifyFingerprint = async () => {
-  try {
-    const challenge = generateRandomBytes(32);
-    const userId = generateRandomBytes(16);
-    const credential = await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-        },
-        timeout: 60000,
-        attestation: 'direct',
-      },
-    });
-    const credentialObject = {
-      id: credential.id,
-      rawId: credential.rawId,
-      response: {
-        attestationObject: credential.response.attestationObject,
-        clientDataJSON: credential.response.clientDataJSON,
-      },
-      type: credential.type,
-    };
-    await showNotes();
-  } catch (error) {
-    window.location.href = '/error/403/';
-  }
-};
-
-document.querySelector('#checkFingerprint').addEventListener('change', () => {
-  if (document.querySelector('#checkFingerprint').checked) submitFingerprint();
-  else localStorage.removeItem('fingerprint');
-});
-
-if (localStorage.getItem('fingerprint') === 'true') {
-  verifyFingerprint();
-  document.querySelector('#checkFingerprint').checked = true;
-}
 
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
@@ -136,14 +32,14 @@ if (localStorage.getItem('theme') === 'light') {
   });
   buttonTheme.className = 'fa-solid fa-star';
 }
-
 if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 
-document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
-  const e = element;
-  if (e.value === localStorage.getItem('sort_notes')) e.checked = true;
-});
+function generateRandomBytes(length) {
+  const array = new Uint8Array(length);
+  window.crypto.getRandomValues(array);
+  return array;
+}
 
 const showSuccess = (message) => {
   if (timeoutNotification) clearTimeout(timeoutNotification);
@@ -165,24 +61,6 @@ const showError = (message) => {
   }, 5000);
 };
 
-const searchSideBar = () => {
-  sideBar.querySelectorAll('p').forEach((element) => {
-    element.addEventListener('click', () => {
-      const e = element.querySelector('.titleList').textContent;
-      document.querySelectorAll('.note').forEach((note) => {
-        const t = note.querySelector('.title').textContent;
-        if (t === e) {
-          note.scrollIntoView();
-          note.focus();
-        }
-      });
-    });
-    element.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') element.click();
-    });
-  });
-};
-
 const openSidebar = () => sideBar.classList.add('show');
 const closeSidebar = () => sideBar.classList.remove('show');
 const handleGesture = () => {
@@ -190,6 +68,7 @@ const handleGesture = () => {
   else if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) closeSidebar();
 };
 
+// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -198,8 +77,8 @@ converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
 
 const showNotes = async () => {
-  document.querySelector('.sideBar .listNotes').textContent = '';
-  document.querySelectorAll('.note').forEach((note) => note.remove());
+  document.querySelectorAll('.listNotes p').forEach((e) => e.remove());
+  document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
   const response = await fetch('/seguinleo-notes/assets/php/getNotes.php', {
@@ -214,16 +93,15 @@ const showNotes = async () => {
 
   if (data.length === 0) return;
 
-  document.querySelector('.lastSync span').textContent = new Date().toLocaleTimeString();
-
   data.forEach((row) => {
     const {
-      id, title, content, color, date, hidden, link,
+      id, title, content, color, date, hidden, category, link,
     } = row;
 
-    if (!id || !title) return;
+    if (!id || !title || !color || !date) return;
 
     const contentHtml = converter.makeHtml(content);
+    // eslint-disable-next-line no-undef
     const contentHtmlPurify = DOMPurify.sanitize(contentHtml);
     const noteElement = document.createElement('div');
     noteElement.id = `note${id}`;
@@ -234,6 +112,7 @@ const showNotes = async () => {
     noteElement.setAttribute('data-note-content', content);
     noteElement.setAttribute('data-note-color', color);
     noteElement.setAttribute('data-note-hidden', hidden);
+    noteElement.setAttribute('data-note-category', category);
     noteElement.setAttribute('data-note-link', link);
 
     const detailsElement = document.createElement('div');
@@ -249,6 +128,14 @@ const showNotes = async () => {
     else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
     detailsElement.appendChild(titleElement);
+
+    if (category !== 0) {
+      const categoryElement = document.createElement('span');
+      categoryElement.classList.add('category');
+      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
+      detailsElement.appendChild(categoryElement);
+    }
+
     detailsElement.appendChild(contentElement);
 
     const bottomContentElement = document.createElement('div');
@@ -311,23 +198,82 @@ const showNotes = async () => {
     const titleSpan = document.createElement('span');
     titleSpan.classList.add('titleList');
     titleSpan.textContent = title;
+    if (link !== '') {
+      const iconLink = document.createElement('i');
+      iconLink.classList.add('fa-solid', 'fa-link');
+      titleSpan.appendChild(iconLink);
+    }
 
     const dateSpan = document.createElement('span');
     dateSpan.classList.add('dateList');
     dateSpan.textContent = date;
-    paragraph.appendChild(titleSpan);
 
-    if (link !== '') {
-      const iconLink = document.createElement('i');
-      iconLink.classList.add('fa-solid', 'fa-link');
-      paragraph.appendChild(iconLink);
+    if (category !== 0) {
+      const categoryElement = document.createElement('span');
+      categoryElement.classList.add('category');
+      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
+      paragraph.appendChild(categoryElement);
     }
 
+    paragraph.appendChild(titleSpan);
     paragraph.appendChild(dateSpan);
     sideBar.querySelector('.listNotes').appendChild(paragraph);
   });
   searchSideBar();
+  noteActions();
+  document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
 };
+
+const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    // eslint-disable-next-line no-unused-vars
+    const credentialObject = {
+      id: credential.id,
+      rawId: credential.rawId,
+      response: {
+        attestationObject: credential.response.attestationObject,
+        clientDataJSON: credential.response.clientDataJSON,
+      },
+      type: credential.type,
+    };
+    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
+    else localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    if (localStorage.getItem('fingerprint') === 'true') window.location.href = '/error/403/';
+    else document.querySelector('#checkFingerprint').checked = false;
+  }
+};
+
+if (localStorage.getItem('fingerprint') === 'true') {
+  verifyFingerprint();
+  document.querySelector('#checkFingerprint').checked = true;
+}
 
 const fetchDelete = async (e) => {
   try {
@@ -380,20 +326,19 @@ const toggleFullscreen = (id) => {
   note.classList.toggle('fullscreen');
 };
 
-const updateNote = (id, title, content, color, hidden, link) => {
-  document.querySelectorAll('.note').forEach((note) => {
-    note.classList.remove('fullscreen');
-  });
+const updateNote = (id, title, content, color, hidden, category, link) => {
   isUpdate = true;
+  document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.querySelector('.iconConnect').click();
   document.querySelector('#idNote').value = id;
   document.querySelector('#checkLink').value = link;
   titleNote.value = title;
   contentNote.value = content;
-  colors.forEach((colorSpan) => {
-    if (colorSpan.classList.contains(color)) colorSpan.classList.add('selectionne');
-    else colorSpan.classList.remove('selectionne');
+  colors.forEach((e) => {
+    if (e.classList.contains(color)) e.classList.add('selectionne');
+    else e.classList.remove('selectionne');
   });
+  document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
   if (link === '') {
     document.querySelector('#checkHidden').disabled = false;
     if (hidden === '1') document.querySelector('#checkHidden').checked = true;
@@ -428,13 +373,12 @@ const deleteNote = (e) => {
   else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
   else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
   else message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  // eslint-disable-next-line no-alert
   if (window.confirm(message)) fetchDelete(e);
 };
 
 const noteAccess = (id, link) => {
-  document.querySelectorAll('.note').forEach((note) => {
-    note.classList.remove('fullscreen');
-  });
+  document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   if (link === '') {
     privateNote.classList.add('show');
     document.querySelector('#idNotePublic').value = id;
@@ -449,67 +393,88 @@ const noteAccess = (id, link) => {
   }
 };
 
-document.querySelector('main').addEventListener('click', (event) => {
-  const { target } = event;
-  if (target.classList.contains('note-action')) {
-    const noteId = target.closest('.note').getAttribute('data-note-id');
-    const noteTitle = target.closest('.note').getAttribute('data-note-title');
-    const noteContent = target.closest('.note').getAttribute('data-note-content');
-    const noteColor = target.closest('.note').getAttribute('data-note-color');
-    const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
-    const noteLink = target.closest('.note').getAttribute('data-note-link');
+const searchSideBar = () => {
+  sideBar.querySelectorAll('p').forEach((e) => {
+    e.addEventListener('click', () => {
+      const titleList = e.querySelector('.titleList').textContent;
+      document.querySelectorAll('.note').forEach((note) => {
+        const title = note.querySelector('.title').textContent;
+        if (title === titleList) {
+          note.scrollIntoView();
+          note.focus();
+        }
+      });
+    });
+    e.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') e.click();
+    });
+  });
+};
 
-    if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteLink);
-    else if (target.classList.contains('fa-clipboard')) copy(noteContent);
-    else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
-    else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
-    else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
-    else if (target.classList.contains('fa-link')) noteAccess(noteId, noteLink, noteTitle, noteContent);
-  }
+const noteActions = () => {
+  document.querySelectorAll('.bottom-content i').forEach((e) => {
+    e.addEventListener('click', (event) => {
+      const { target } = event;
+      const noteId = target.closest('.note').getAttribute('data-note-id');
+      const noteTitle = target.closest('.note').getAttribute('data-note-title');
+      const noteContent = target.closest('.note').getAttribute('data-note-content');
+      const noteColor = target.closest('.note').getAttribute('data-note-color');
+      const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
+      const noteCategory = target.closest('.note').getAttribute('data-note-category');
+      const noteLink = target.closest('.note').getAttribute('data-note-link');
+      if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteLink);
+      else if (target.classList.contains('fa-clipboard')) copy(noteContent);
+      else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
+      else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
+      else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
+      else if (target.classList.contains('fa-link')) noteAccess(noteId, noteLink, noteTitle, noteContent);
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'k') {
+      e.preventDefault();
+      document.querySelector('#search-input').focus();
+    }
+  });
+};
+
+switchElement.forEach((e) => {
+  e.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const checkbox = e.querySelector('input[type="checkbox"]');
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change'));
+    }
+  });
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-trash-can')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-pen')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-expand')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-download')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-link')) document.activeElement.click();
-  } else if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.querySelector('#search-input').focus();
-  }
-});
-
-switchElement.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    const checkbox = switchElement.querySelector('input[type="checkbox"]');
-    checkbox.checked = !checkbox.checked;
-    switchElement.classList.toggle('checked');
-  }
-});
-
-document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((element) => {
-  element.addEventListener('click', () => {
+document.querySelectorAll('.iconConnect, .iconConnectFloat').forEach((e) => {
+  e.addEventListener('click', () => {
     noteBox.classList.add('show');
     titleNote.focus();
     document.querySelector('#textareaLength').textContent = '0/5000';
   });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') element.click();
-  });
 });
 
-document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
+document.querySelector('#checkFingerprint').addEventListener('change', () => {
+  if (document.querySelector('#checkFingerprint').checked) verifyFingerprint();
+  else localStorage.removeItem('fingerprint');
+});
 
-document.querySelectorAll('.manage-account').forEach((element) => {
-  element.addEventListener('click', () => {
+document.querySelectorAll('input[name="sortNotes"]').forEach((e) => {
+  if (e.value === localStorage.getItem('sort_notes')) e.checked = true;
+});
+
+document.querySelectorAll('.manage-account').forEach((e) => {
+  e.addEventListener('click', () => {
     popupBoxManage.classList.add('show');
     popupBoxManage.querySelector('i').focus();
   });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') element.click();
+});
+
+document.querySelectorAll('.linkp').forEach((e) => {
+  e.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') e.click();
   });
 });
 
@@ -519,19 +484,12 @@ document.querySelector('#delete-account').addEventListener('click', () => {
   else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
   else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
   else message = 'Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.';
+  // eslint-disable-next-line no-alert
   if (window.confirm(message)) deleteAccount();
 });
 
-document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
-
-forms.forEach((element) => {
-  element.addEventListener('submit', (event) => {
-    event.preventDefault();
-  });
-});
-
-document.querySelectorAll('header i').forEach((element) => {
-  element.addEventListener('click', () => {
+document.querySelectorAll('header i').forEach((e) => {
+  e.addEventListener('click', () => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
     noteBox.classList.remove('show');
@@ -539,20 +497,20 @@ document.querySelectorAll('header i').forEach((element) => {
     publicNote.classList.remove('show');
     privateNote.classList.remove('show');
     sortBox.classList.remove('show');
+    filterBox.classList.remove('show');
     closeSidebar();
   });
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') element.click();
+  e.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') e.click();
   });
 });
 
 document.querySelector('#search-input').addEventListener('input', () => {
-  const e = document.querySelector('#search-input').value.trim().toLowerCase();
-  document.querySelectorAll('.note').forEach((element) => {
-    const note = element;
-    const t = note.querySelector('.note h2').textContent.toLowerCase();
-    if (t.includes(e)) note.style.display = 'flex';
-    else note.style.display = 'none';
+  const searchValue = document.querySelector('#search-input').value.trim().toLowerCase();
+  document.querySelectorAll('.note').forEach((e) => {
+    const title = e.querySelector('.note h2').textContent.toLowerCase();
+    if (title.includes(searchValue)) e.style.display = 'flex';
+    else e.style.display = 'none';
   });
 });
 
@@ -598,9 +556,9 @@ document.querySelector('#newVersion header i').addEventListener('click', () => {
 document.querySelector('#export-all-notes').addEventListener('click', () => {
   if (document.querySelector('.note') === null) return;
   const notes = [];
-  document.querySelectorAll('.note').forEach((note) => {
-    const title = note.querySelector('.title').textContent;
-    const content = note.querySelector('.details span').textContent;
+  document.querySelectorAll('.note').forEach((e) => {
+    const title = e.querySelector('.title').textContent;
+    const content = e.querySelector('.details span').textContent;
     const noteObject = {
       title,
       content,
@@ -642,15 +600,66 @@ contentNote.addEventListener('input', () => {
 
 colors.forEach((span, index) => {
   span.addEventListener('click', (event) => {
-    colors.forEach((s) => {
-      s.classList.remove('selectionne');
-    });
+    colors.forEach((e) => e.classList.remove('selectionne'));
     event.target.classList.add('selectionne');
   });
   span.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') span.click();
   });
   if (index === 0) span.classList.add('selectionne');
+});
+
+document.querySelector('#copyNoteLink').addEventListener('click', async () => {
+  const link = document.querySelector('#copyNoteLink').textContent;
+  const notification = document.querySelector('#copyNotification');
+  navigator.clipboard.writeText(link);
+  notification.classList.add('show');
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 2000);
+});
+
+document.addEventListener('touchstart', (event) => {
+  touchstartX = event.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener('touchend', (event) => {
+  touchendX = event.changedTouches[0].screenX;
+  handleGesture();
+}, false);
+
+document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
+document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
+document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
+document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
+forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
+
+document.querySelectorAll('input[name="filterNotes"]').forEach((e) => {
+  e.addEventListener('change', () => {
+    const categories = [];
+    document.querySelectorAll('input[name="filterNotes"]:checked').forEach((t) => categories.push(t.value));
+    document.querySelectorAll('.note').forEach((n) => {
+      const note = n;
+      const category = note.getAttribute('data-note-category');
+      if (categories.includes(category)) note.style.display = 'flex';
+      else note.style.display = 'none';
+    });
+  });
+});
+
+document.querySelectorAll('input[name="sortNotes"]').forEach((e) => {
+  e.addEventListener('change', () => {
+    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
+      localStorage.setItem('sort_notes', e.value);
+      showNotes();
+    }
+  });
+});
+
+document.querySelectorAll('.category').forEach((e) => {
+  e.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') e.click();
+  });
 });
 
 document.querySelector('#submitNote').addEventListener('click', async () => {
@@ -665,8 +674,9 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
     const color = encodeURIComponent(colorSpan.classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
+    const category = document.querySelector('input[name="category"]:checked').value;
     const link = encodeURIComponent(document.querySelector('#checkLink').value);
-    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
+    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
@@ -741,7 +751,7 @@ document.querySelector('#submitPrivateNote').addEventListener('click', async () 
 
 document.querySelector('#submitPublicNote').addEventListener('click', async () => {
   const id = document.querySelector('#idNotePublic').value;
-  const link = Math.random().toString(36).substring(2, 15);
+  const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {
     const response = await fetch('/seguinleo-notes/assets/php/publicNote.php', {
       method: 'POST',
@@ -759,49 +769,8 @@ document.querySelector('#submitPublicNote').addEventListener('click', async () =
   }
 });
 
-document.querySelector('#copyNoteLink').addEventListener('click', async () => {
-  const link = document.querySelector('#copyNoteLink').textContent;
-  const notification = document.querySelector('#copyNotification');
-  navigator.clipboard.writeText(link);
-  notification.classList.add('show');
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 2000);
-});
-
-document.querySelector('#copyNoteLink').addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') document.querySelector('#copyNoteLink').click();
-});
-
-document.addEventListener('touchstart', (event) => {
-  touchstartX = event.changedTouches[0].screenX;
-}, false);
-
-document.addEventListener('touchend', (event) => {
-  touchendX = event.changedTouches[0].screenX;
-  handleGesture();
-}, false);
-
-document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
-
-document.querySelectorAll('input[name="sortNotes"]').forEach((element) => {
-  element.addEventListener('change', () => {
-    if (element.value === '1' || element.value === '2' || element.value === '3' || element.value === '4') {
-      localStorage.setItem('sort_notes', element.value);
-      showNotes();
-    }
-  });
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
-  document.querySelectorAll('.resync').forEach((resync) => {
-    resync.addEventListener('click', () => {
-      window.location.reload();
-    });
-    resync.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') window.location.reload();
-    });
-  });
+  document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
 });

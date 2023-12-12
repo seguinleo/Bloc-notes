@@ -28,25 +28,32 @@ try {
     );
     $query->closeCursor();
     $PDO = null;
-} catch (Exception $e) {
-    http_response_code(500);
-    return;
-}
-
-$directoryPath = '../../share/' . htmlspecialchars($noteLink);
-if (is_dir($directoryPath)) {
-    $files = glob($directoryPath . '/*.*');
-    foreach ($files as $file) {
-        unlink($file);
-    }
-    if (rmdir($directoryPath)) {
-        http_response_code(200);
-        return;
-    } else {
+    if ($query->rowCount() === 0) {
         http_response_code(403);
         return;
     }
-} else {
-    http_response_code(404);
+    $directoryPath = '../../share/' . htmlspecialchars($noteLink);
+    if (is_dir($directoryPath)) {
+        $files = glob($directoryPath . '/*.*');
+        if ($files === false) {
+            http_response_code(403);
+            return;
+        }
+        foreach ($files as $file) {
+            unlink($file);
+        }
+        if (rmdir($directoryPath)) {
+            http_response_code(200);
+            return;
+        } else {
+            http_response_code(403);
+            return;
+        }
+    } else {
+        http_response_code(404);
+        return;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
     return;
 }

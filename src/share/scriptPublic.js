@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
 const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
-
+// eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
 converter.setOption('tasklists', true);
@@ -25,7 +24,7 @@ const showSharedNote = async () => {
       title, content, color, date,
     } = row;
 
-    if (!title || !content) return;
+    if (!title || !content || !color || !date) return;
 
     const contentHtml = converter.makeHtml(content);
     const noteElement = document.createElement('div');
@@ -40,6 +39,7 @@ const showSharedNote = async () => {
     titleElement.textContent = title;
 
     const contentElement = document.createElement('span');
+    // eslint-disable-next-line no-undef
     contentElement.innerHTML = DOMPurify.sanitize(contentHtml);
     detailsElement.appendChild(titleElement);
     detailsElement.appendChild(contentElement);
