@@ -2,11 +2,11 @@
 session_name('__Secure-notes');
 session_start();
 
-if (isset($_SESSION['name'], $_POST['noteId'], $_POST['noteLink']) === false) {
+if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteLink']) === false) {
     http_response_code(403);
     return;
 }
-if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
+if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || is_string($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
     http_response_code(403);
     return;
 }
@@ -32,9 +32,9 @@ try {
         http_response_code(403);
         return;
     }
-    $directoryPath = '../../share/' . htmlspecialchars($noteLink);
+    $directoryPath = realpath(__DIR__ . '/../../share/') . '/' . $noteLink;
     if (is_dir($directoryPath)) {
-        $files = glob($directoryPath . '/*.*');
+        $files = glob($directoryPath . '/index.html');
         if ($files === false) {
             http_response_code(403);
             return;

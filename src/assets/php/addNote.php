@@ -5,7 +5,7 @@ if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
     http_response_code(403);
     return;
 }
-if (isset($_SESSION['name'], $_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
+if (isset($_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;
 }

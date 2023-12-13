@@ -648,13 +648,14 @@ document.querySelector('#submitLogIn').addEventListener('click', async () => {
 });
 
 document.querySelector('#submitNote').addEventListener('click', async () => {
-  const colorSpan = document.querySelector('.colors span.selectionne');
-  const color = colorSpan.classList[0];
   const title = titleNote.value.trim();
   const content = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const color = document.querySelector('.colors span.selectionne').classList[0];
   const hidden = document.querySelector('#checkHidden').checked;
   const category = document.querySelector('input[name="category"]:checked').value;
-  if (!title || title.length > 30 || content.length > 5000) return;
+
+  if (!title || title.length > 30 || content.length > 5000 || !color) return;
+
   const dbName = 'notes_db';
   const objectStoreName = 'key';
   const db = await openIndexedDB(dbName, objectStoreName);

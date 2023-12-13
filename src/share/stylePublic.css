@@ -260,16 +260,6 @@ img {
   margin-left: -2.4rem;
 }
 
-footer {
-  font-size: .8rem;
-  text-align: center;
-  width: 100%;
-  -webkit-user-select: none;
-  user-select: none;
-  position: fixed;
-  bottom: 1rem;
-}
-
 @media(max-width: 900px) {
   body {
     padding: 10px;

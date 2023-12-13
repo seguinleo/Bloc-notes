@@ -667,15 +667,17 @@ document.querySelector('#submitNote').addEventListener('click', async () => {
     const idNote = document.querySelector('#idNote').value;
     const titleBrut = titleNote.value.trim();
     const contentBrut = contentNote.value.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    if (!titleBrut || titleBrut.length > 30 || contentBrut.length > 5000) return;
     const title = encodeURIComponent(titleBrut);
     const content = encodeURIComponent(contentBrut);
-    const colorSpan = document.querySelector('.colors span.selectionne');
-    const color = encodeURIComponent(colorSpan.classList[0]);
+    const color = encodeURIComponent(document.querySelector('.colors span.selectionne').classList[0]);
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
     const category = document.querySelector('input[name="category"]:checked').value;
     const link = encodeURIComponent(document.querySelector('#checkLink').value);
+
+    if (!titleBrut || !color || !date || titleBrut.length > 30 || contentBrut.length > 5000) return;
+    if (isUpdate && !idNote) return;
+
     const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
     const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
     const response = await fetch(url, {
@@ -732,6 +734,7 @@ document.querySelector('#submitChangePsswd').addEventListener('click', async () 
 document.querySelector('#submitPrivateNote').addEventListener('click', async () => {
   const id = document.querySelector('#idNotePrivate').value;
   const link = document.querySelector('#linkNotePrivate').value;
+  if (!id || !link) return;
   try {
     const response = await fetch('/seguinleo-notes/assets/php/privateNote.php', {
       method: 'POST',
@@ -751,6 +754,7 @@ document.querySelector('#submitPrivateNote').addEventListener('click', async () 
 
 document.querySelector('#submitPublicNote').addEventListener('click', async () => {
   const id = document.querySelector('#idNotePublic').value;
+  if (!id) return;
   const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {
     const response = await fetch('/seguinleo-notes/assets/php/publicNote.php', {

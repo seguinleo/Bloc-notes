@@ -3,7 +3,7 @@ if (empty($_POST['noteLink'])) {
     http_response_code(403);
     return;
 }
-if (preg_match('/^[a-z0-9]+$/', $_POST['noteLink']) === false) {
+if (is_string($_POST['noteLink']) === false) {
     http_response_code(403);
     return;
 }

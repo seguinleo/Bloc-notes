@@ -28,7 +28,7 @@ try {
         [
             ':nameCreate' => $nameCreate,
             ':psswdHash'  => $psswdCreateHash,
-            ':OneKey'     => htmlspecialchars($key)
+            ':OneKey'     => htmlspecialchars($key, ENT_QUOTES, 'UTF-8'),
         ]
     );
 } catch (Exception $e) {

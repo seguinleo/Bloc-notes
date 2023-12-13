@@ -9,6 +9,7 @@ $cookieParams = [
 ];
 session_set_cookie_params($cookieParams);
 session_start();
+session_regenerate_id();
 
 if (isset($_SESSION['name']) === false) {
     $_SESSION['csrf_token_connect'] = bin2hex(random_bytes(32));

@@ -10,6 +10,10 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdNew']) === false)
     http_response_code(403);
     return;
 }
+if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
+    http_response_code(403);
+    return;
+}
 
 require_once __DIR__ . '/config/config.php';
 
