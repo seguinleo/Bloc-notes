@@ -1,13 +1,13 @@
-<p style="text-align:center;">
+<p align="center">
 <img src="https://raw.githubusercontent.com/seguinleo/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
 </p>
-<h1 style="text-align:center;">Bloc-notes</h1>
+<h1 align="center">Bloc-notes</h1>
 
-<p style="text-align:center;">
+<p align="center">
 <b>Bloc-notes</b> is a free, open source and encrypted notebook.
 </p>
 
-<p style="text-align:center;">
+<p align="center">
 <img alt="Status" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr?color=8ab4f8&style=for-the-badge">
 <img alt="License" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
 <img alt="Issues" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
