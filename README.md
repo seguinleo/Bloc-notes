@@ -1,17 +1,17 @@
-<p align="center">
+<p style="text-align:center;">
 <img src="https://raw.githubusercontent.com/seguinleo/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
 </p>
-<h1 align="center">Bloc-notes</h1>
+<h1 style="text-align:center;">Bloc-notes</h1>
 
-<p align="center">
+<p style="text-align:center;">
 <b>Bloc-notes</b> is a free, open source and encrypted notebook.
 </p>
 
-<p align="center">
-<img alt="" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr?color=8ab4f8&style=for-the-badge">
-<img alt="" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
-<img alt="" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
-<img alt="" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
+<p style="text-align:center;">
+<img alt="Status" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr?color=8ab4f8&style=for-the-badge">
+<img alt="License" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="Issues" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
+<img alt="MozillaObservatory" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
 </p>
 
 ## Table of contents
@@ -30,7 +30,7 @@ When I was looking for a note-taking application, I faced several difficulties: 
 ## Features
 All notes are encrypted with ``AES-256-GCM``.
 
-The user can save and edit notes, change color, copy, export and use Markdown. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
+The user can save and edit notes, change color, copy, export and use Markdown/HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
 
 The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
@@ -82,8 +82,6 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure
 
 > [!NOTE]
 > Base URL is ``localhost/seguinleo-notes/``, just put ``src/`` in your localhost and rename it ``seguinleo-notes/``. Database name is ``seguinleo-notes``.
-
-LICENSE: [GPL-3.0](https://github.com/seguinleo/Bloc-notes/blob/main/LICENSE)
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
 ![Mobile preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/mobile.png)

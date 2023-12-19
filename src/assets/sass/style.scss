@@ -155,8 +155,8 @@ img {
   border-radius: 10px;
 }
 
-.noscript {
-  padding: 5px;
+#noscript {
+  padding: 4px;
 }
 
 nav {
@@ -187,7 +187,7 @@ nav {
     width: 200px;
   }
 
-  .search-input {
+  #divSearch {
     width: 300px;
     height: 50px;
     border-radius: 10px;
@@ -242,8 +242,10 @@ main {
   gap: 2rem;
 }
 
-.sideBar {
+#sideBar {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   -webkit-user-select: none;
   user-select: none;
   left: 0;
@@ -254,9 +256,9 @@ main {
   border-radius: 1rem;
   margin: 1rem;
 
-  .listNotes {
-    max-height: 70vh;
-    overflow-y: scroll;
+  #listNotes {
+    flex-grow: 1;
+    overflow-y: auto;
   }
 
   header {
@@ -268,11 +270,12 @@ main {
   }
 
   p {
-    border-radius: 5px;
     margin: 5px 0;
     padding: 5px;
     border-radius: 0 1rem 1rem 0;
     font-size: .8rem;
+    font-weight: 700;
+    overflow: hidden;
     cursor: pointer;
 
     &:hover,
@@ -289,20 +292,10 @@ main {
       }
     }
 
-    .titleList,
-    .dateList {
-      max-width: 200px;
-      overflow: hidden;
-      white-space: nowrap;
-      font-weight: 700;
-      vertical-align: middle;
-      margin: 0 10px;
-    }
-
     .category {
       background: rgba(100, 100, 125, 20%);
-      margin: 0;
-      padding: 5px 10px;
+      padding: 4px 8px;
+      margin: 0 8px 0 0;
       border-radius: 24px;
       vertical-align: middle;
     }
@@ -379,7 +372,7 @@ form {
   margin: 10px 0;
 }
 
-p.welcome {
+#welcome {
   font-size: 1.2rem;
 }
 
@@ -436,7 +429,7 @@ p.welcome {
 
   .category {
     background: rgba(100, 100, 125, 20%);
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 24px;
     margin: 5px 0;
   }
@@ -530,10 +523,10 @@ button {
   border-radius: 10px;
 }
 
-.colors {
+#colors {
   display: flex;
   justify-content: center;
-  min-height: 30px;
+  min-height: 26px;
 
   span {
     width: 20px;
@@ -544,20 +537,20 @@ button {
     transition: .1s;
   }
 
-  span.selectionne {
+  span.selected {
     width: 26px;
     height: 26px;
   }
 }
 
-.connect-box,
-.create-box,
-.manage-popup-box,
-.public-note-popup-box,
-.private-note-popup-box,
-.note-popup-box,
-.sort-popup-box,
-.filter-popup-box {
+#connect-box,
+#create-box,
+#manage-popup-box,
+#public-note-popup-box,
+#private-note-popup-box,
+#note-popup-box,
+#sort-popup-box,
+#filter-popup-box {
   display: none;
   position: fixed;
   top: 0;
@@ -581,25 +574,25 @@ button {
   }
 }
 
-.connect-box.show,
-.create-box.show,
-.manage-popup-box.show,
-.note-popup-box.show,
-.public-note-popup-box.show,
-.private-note-popup-box.show,
-.sort-popup-box.show,
-.filter-popup-box.show {
+#connect-box.show,
+#create-box.show,
+#manage-popup-box.show,
+#note-popup-box.show,
+#public-note-popup-box.show,
+#private-note-popup-box.show,
+#sort-popup-box.show,
+#filter-popup-box.show {
   display: flex;
 }
 
-.connect-box.show .popup,
-.create-box.show .popup,
-.manage-popup-box.show .popup,
-.note-popup-box.show .popup,
-.public-note-popup-box.show .popup,
-.private-note-popup-box.show .popup,
-.sort-popup-box.show .popup,
-.filter-popup-box.show .popup {
+#connect-box.show .popup,
+#create-box.show .popup,
+#manage-popup-box.show .popup,
+#note-popup-box.show .popup,
+#public-note-popup-box.show .popup,
+#private-note-popup-box.show .popup,
+#sort-popup-box.show .popup,
+#filter-popup-box.show .popup {
   display: flex;
   max-height: 100vh;
   transform: translate(-50%, -50%);
@@ -610,7 +603,7 @@ button {
   padding: 5px 1rem;
 }
 
-.note-popup-box .content {
+#note-popup-box .content {
   width: 900px;
 }
 
@@ -619,11 +612,11 @@ button {
 }
 
 .category {
-  margin: 2px;
+  margin: 2px 1px;
   display: inline-flex;
 
   span {
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 24px;
     cursor: pointer;
   }
@@ -650,6 +643,10 @@ button {
       &:before {
         left: 2rem;
       }
+    }
+
+    &:disabled+.slider {
+      cursor: not-allowed;
     }
   }
 
@@ -706,7 +703,6 @@ button {
 }
 
 #textareaLength {
-  margin: 5px 0;
   font-size: .8rem;
 }
 
@@ -729,9 +725,7 @@ button {
   cursor: pointer;
 }
 
-.copyright {
-  position: absolute;
-  bottom: 1rem;
+#copyright {
   font-size: .8rem;
 }
 
@@ -838,8 +832,7 @@ button {
 
 @media (min-width: 901px) {
 
-  .iconFloat,
-  .iconConnectFloat {
+  #iconFloatAdd {
     display: none;
   }
 }
@@ -853,21 +846,15 @@ button {
     box-shadow: none;
 
     div {
-      margin: 10px 0;
-      display: block;
+      margin: 10px 5px;
     }
 
     button.log-in,
-    .welcome {
+    #welcome {
       display: none;
     }
 
-    .icon,
-    .iconConnect {
-      position: absolute;
-    }
-
-    .search-input {
+    #divSearch {
       width: 75%;
 
       input {
@@ -910,16 +897,11 @@ button {
     gap: 10px;
   }
 
-  .iconFloat,
-  .iconConnectFloat {
+  #iconFloatAdd {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     z-index: 2;
-  }
-
-  #iconButtonFloat,
-  #iconButtonConnectFloat {
     width: 60px;
     height: 60px;
     font-size: 1.4rem;
@@ -933,18 +915,13 @@ button {
     display: none;
   }
 
-  .sideBar {
+  #sideBar {
     display: none;
-    width: 94vw;
-    padding: 1rem;
+    width: 95vw;
     margin: 0;
     top: 0;
     border-radius: 0 1rem 1rem 0;
     animation: slide-right .3s ease-in-out;
-
-    .listNotes {
-      margin-top: 1rem;
-    }
 
     header {
       display: flex;
@@ -959,8 +936,8 @@ button {
     }
   }
 
-  .sideBar.show {
-    display: block;
+  #sideBar.show {
+    display: flex;
     z-index: 3;
     animation: slide-left .3s ease-in-out;
   }
@@ -999,7 +976,7 @@ button {
     }
   }
 
-  .colors span {
+  #colors span {
     margin: 0 4px;
   }
 
@@ -1011,14 +988,8 @@ button {
     margin: 0 2px;
   }
 
-  .divTheme {
-    display: inline;
-    vertical-align: middle;
-    margin-left: 10px;
-
-    #btnTheme {
-      display: inline-flex;
-    }
+  #btnTheme {
+    display: inline-flex;
   }
 
   #copyNotification.show {
@@ -1046,7 +1017,7 @@ html.dark {
   nav {
     background: $color02;
 
-    .search-input {
+    #divSearch {
       background: $color01;
 
       input {
@@ -1060,7 +1031,7 @@ html.dark {
     }
   }
 
-  .sideBar {
+  #sideBar {
     background: $color02;
   }
 
@@ -1100,7 +1071,7 @@ html.dark {
     color: $color03;
   }
 
-  .colors span {
+  #colors span {
     border: 1px solid $color01;
   }
 
@@ -1141,6 +1112,12 @@ html.dark {
       &:checked+.slider {
         background: $color04;
       }
+
+      &:disabled+.slider {
+        &:before {
+          background: $color03;
+        }
+      }
     }
 
     .slider {
@@ -1152,18 +1129,18 @@ html.dark {
     }
   }
 
-  .note-popup-box,
-  .create-box,
-  .manage-popup-box,
-  .connect-box,
-  .private-note-popup-box,
-  .public-note-popup-box,
-  .sort-popup-box,
-  .filter-popup-box {
+  #note-popup-box,
+  #create-box,
+  #manage-popup-box,
+  #connect-box,
+  #private-note-popup-box,
+  #public-note-popup-box,
+  #sort-popup-box,
+  #filter-popup-box {
     background: rgba(0, 0, 0, 50%);
   }
 
-  .noscript {
+  #noscript {
     background: #fe7575;
     color: $color01;
   }
@@ -1216,7 +1193,7 @@ html.dusk {
   nav {
     background: $color10;
 
-    .search-input {
+    #divSearch {
       background: $color11;
 
       input {
@@ -1230,7 +1207,7 @@ html.dusk {
     }
   }
 
-  .sideBar {
+  #sideBar {
     background: $color10;
   }
 
@@ -1270,7 +1247,7 @@ html.dusk {
     color: $color12;
   }
 
-  .colors span {
+  #colors span {
     border: 1px solid $color10;
   }
 
@@ -1311,29 +1288,35 @@ html.dusk {
       &:checked+.slider {
         background: $color04;
       }
+
+      &:disabled+.slider {
+        &:before {
+          background: $color03;
+        }
+      }
     }
 
     .slider {
       background: $color10;
 
       &:before {
-        background: $color08;
+        background: $color12;
       }
     }
   }
 
-  .note-popup-box,
-  .create-box,
-  .manage-popup-box,
-  .connect-box,
-  .private-note-popup-box,
-  .public-note-popup-box,
-  .sort-popup-box,
-  .filter-popup-box {
+  #note-popup-box,
+  #create-box,
+  #manage-popup-box,
+  #connect-box,
+  #private-note-popup-box,
+  #public-note-popup-box,
+  #sort-popup-box,
+  #filter-popup-box {
     background: rgba(0, 0, 0, 50%);
   }
 
-  .noscript {
+  #noscript {
     background: #fe7575;
     color: $color01;
   }
@@ -1396,7 +1379,7 @@ html.light {
   nav {
     background: $color09;
 
-    .search-input {
+    #divSearch {
       background: $color08;
 
       input {
@@ -1410,7 +1393,7 @@ html.light {
     }
   }
 
-  .sideBar {
+  #sideBar {
     background: $color09;
   }
 
@@ -1441,7 +1424,7 @@ html.light {
     color: $color02;
   }
 
-  .colors span {
+  #colors span {
     border: 1px solid $color03;
   }
 
@@ -1481,6 +1464,12 @@ html.light {
       &:checked+.slider {
         background: $color06;
       }
+
+      &:disabled+.slider {
+        &:before {
+          background: $color03;
+        }
+      }
     }
 
     .slider {
@@ -1492,18 +1481,18 @@ html.light {
     }
   }
 
-  .note-popup-box,
-  .create-box,
-  .manage-popup-box,
-  .connect-box,
-  .private-note-popup-box,
-  .public-note-popup-box,
-  .sort-popup-box,
-  .filter-popup-box {
+  #note-popup-box,
+  #create-box,
+  #manage-popup-box,
+  #connect-box,
+  #private-note-popup-box,
+  #public-note-popup-box,
+  #sort-popup-box,
+  #filter-popup-box {
     background: rgba(220, 220, 220, 50%);
   }
 
-  .noscript {
+  #noscript {
     background: #a93b3b;
     color: $color08;
   }
@@ -1586,4 +1575,36 @@ html.light {
 .Violet,
 .Rose {
   color: $color01;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-justify {
+  text-align: justify;
 }

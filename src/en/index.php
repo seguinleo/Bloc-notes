@@ -45,25 +45,25 @@ if (isset($_SESSION['name']) === false) {
 <body>
     <nav>
         <noscript>
-            <p class="noscript">You need to enable JavaScript to run Bloc-notes.</p>
+            <p id="noscript">You need to enable JavaScript to run Bloc-notes.</p>
         </noscript>
         <?php if (isset($name) === true) { ?>
             <div>
-                <h1 class="welcome">
+                <h1 id="welcome">
                     <span class="manage-account linkp" tabindex="0" role="button" aria-label="Manage account">
                         <i class="fa-solid fa-circle-user"></i>
                     </span>
                 </h1>
             </div>
         <?php } else { ?>
-            <div>
+            <div id="welcome">
                 <h1>Bloc-notes</h1>
             </div>
             <div>
                 <button type="button" class="log-in">Sign in</button>
             </div>
         <?php } ?>
-        <div class="search-input">
+        <div id="divSearch">
             <i class="fa-solid fa-bars" id="menuIcon" tabindex="0" aria-label="Menu" role="button"></i>
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="search" id="search-input" maxlength="30" aria-label="Search" placeholder="Search">
@@ -84,7 +84,7 @@ if (isset($_SESSION['name']) === false) {
                 <span></span>
             </div>
         <?php } ?>
-        <div class="divTheme">
+        <div>
             <button type="button" id="btnTheme" aria-label="Theme">
                 <i id="iconTheme" class="fa-solid fa-moon"></i>
             </button>
@@ -92,26 +92,26 @@ if (isset($_SESSION['name']) === false) {
     </nav>
     <main>
         <?php if (isset($name) === true) { ?>
-            <button id="iconButtonConnectFloat" class="iconConnectFloat" type="button" aria-label="Add a cloud note"><i class="fa-solid fa-plus"></i></button>
+            <button id="iconFloatAdd" type="button" aria-label="Add a cloud note"><i class="fa-solid fa-plus"></i></button>
         <?php } else { ?>
-            <button id="iconButtonFloat" class="iconFloat" type="button" aria-label="Add a local note"><i class="fa-solid fa-plus"></i></button>
+            <button id="iconFloatAdd" type="button" aria-label="Add a local note"><i class="fa-solid fa-plus"></i></button>
         <?php } ?>
         <div id="successNotification"></div>
         <div id="errorNotification"></div>
         <div id="copyNotification">Copied!</div>
-        <div class="sideBar">
+        <div id="sideBar">
             <header>
                 <i class="fa-solid fa-xmark" tabindex="0"></i>
             </header>
             <?php if (isset($name) === true) { ?>
-                <button id="iconButtonConnect" class="iconConnect" type="button">Add a cloud note</button>
+                <button id="iconAdd" type="button">Add a cloud note</button>
             <?php } else { ?>
-                <button id="iconButton" class="icon" type="button">Add a local note</button>
+                <button id="iconAdd" type="button">Add a local note</button>
             <?php } ?>
-            <div class="listNotes"></div>
-            <div class="copyright">
-                <a href="https://leoseguin.fr/mentionslegales/" target="_blank" rel="noreferrer">Legal notice / Privacy policy</a>
-                <div class="divLanguage">
+            <div id="listNotes"></div>
+            <div id="copyright">
+                <a href="https://leoseguin.fr/mentionslegales/">Legal notice / Privacy policy</a>
+                <div>
                     <select id="language" aria-label="Langue">
                         <option value="fr">🇫🇷</option>
                         <option value="en" selected>🇬🇧</option>
@@ -119,7 +119,7 @@ if (isset($_SESSION['name']) === false) {
                         <option value="es">🇪🇸</option>
                     </select>
                 </div>
-                <span class="license">GPL-3.0 &copy;<?= date('Y') ?></span>
+                <span>GPL-3.0 &copy;<?= date('Y') ?></span>
             </div>
         </div>
         <button type="button" id="btnSort" aria-label="Sort my notes">
@@ -128,7 +128,7 @@ if (isset($_SESSION['name']) === false) {
         <button type="button" id="btnFilter" aria-label="Filter my notes">
             <i class="fa-solid fa-filter"></i>
         </button>
-        <div class="filter-popup-box">
+        <div id="filter-popup-box">
             <div class="popup">
                 <div class="content">
                     <header>
@@ -182,7 +182,7 @@ if (isset($_SESSION['name']) === false) {
                 </div>
             </div>
         </div>
-        <div class="sort-popup-box">
+        <div id="sort-popup-box">
             <div class="popup">
                 <div class="content">
                     <header>
@@ -218,13 +218,13 @@ if (isset($_SESSION['name']) === false) {
                 </div>
             </div>
         </div>
-        <div class="note-popup-box">
+        <div id="note-popup-box">
             <div class="popup">
                 <div class="content">
                     <header>
                         <i class="fa-solid fa-xmark" tabindex="0"></i>
                     </header>
-                    <form id="addForm" method="post" enctype="application/x-www-form-urlencoded">
+                    <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
                         <input id="idNote" type="hidden">
                         <input id="checkLink" type="hidden">
                         <input type="hidden" id="csrf_token_note" value="<?= $csrf_token_note ?>">
@@ -234,14 +234,14 @@ if (isset($_SESSION['name']) === false) {
                         <div class="row">
                             <textarea
                                 id="content"
-                                placeholder="Content (Plain text or Markdown)"
-                                aria-label="Content"
+                                placeholder="Content (Plain text, Markdown or HTML)"
+                                aria-label="Content (Plain text, Markdown or HTML)"
                                 maxlength="5000"
                             ></textarea>
                             <span id="textareaLength">0/5000</span>
                         </div>
                         <div class="row">
-                            <div class="colors">
+                            <div id="colors">
                                 <span class="Noir" role="button" tabindex="0" aria-label="Default"></span>
                                 <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
                                 <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
@@ -288,16 +288,16 @@ if (isset($_SESSION['name']) === false) {
                             Hidden note
                             <label for="checkHidden" class="switch" aria-label="Hidden note">
                                 <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                <span class="slider" tabindex="0"></span>
+                                <span class="slider" tabindex="0" role="button"></span>
                             </label>
                         </div>
-                        <button id="submitNote" type="submit">Save note</button>
+                        <button type="submit">Save note</button>
                     </form>
                 </div>
             </div>
         </div>
         <?php if (isset($name) === true) { ?>
-            <div class="manage-popup-box">
+            <div id="manage-popup-box">
                 <div class="popup">
                     <div class="content">
                         <header>
@@ -311,7 +311,7 @@ if (isset($_SESSION['name']) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" target="_blank" rel="noreferrer">
+                                <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noreferrer">
                                     Markdown guide
                                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 </a>
@@ -319,7 +319,7 @@ if (isset($_SESSION['name']) === false) {
                         </div>
                         <div class="row">
                             <span class="linkp">
-                                <a href="https://github.com/seguinleo/Bloc-notes/discussions" target="_blank" rel="noreferrer">
+                                <a href="https://github.com/seguinleo/Bloc-notes/discussions" rel="noreferrer">
                                     Help and discussions
                                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 </a>
@@ -329,7 +329,7 @@ if (isset($_SESSION['name']) === false) {
                             <i class="fa-solid fa-fingerprint"></i>
                             <label for="checkFingerprint" class="switch" aria-label="Fingerprint lock">
                                 <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
-                                <span class="slider" tabindex="0"></span>
+                                <span class="slider" tabindex="0" role="button"></span>
                             </label>
                         </div>
                         <details>
@@ -342,7 +342,7 @@ if (isset($_SESSION['name']) === false) {
                                 <div class="row">
                                     <input id="newPsswdValid" placeholder="Retype your new password" type="password" minlength="6" maxlength="50" aria-label="Retype your new password" required>
                                 </div>
-                                <button id="submitChangePsswd" type="submit">Change password</button>
+                                <button type="submit">Change password</button>
                             </form>
                             <div class="row">
                                 <span id="delete-account" class="linkp warning" tabindex="0">Delete my account</span>
@@ -350,13 +350,13 @@ if (isset($_SESSION['name']) === false) {
                         </details>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="private-note-popup-box">
+            <div id="private-note-popup-box">
                 <div class="popup">
                     <div class="content">
                         <header>
@@ -368,13 +368,13 @@ if (isset($_SESSION['name']) === false) {
                             </div>
                             <input id="idNotePublic" type="hidden">
                             <div class="row">
-                                <button id="submitPublicNote" type="submit">Make the note public</button>
+                                <button type="submit">Make the note public</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="public-note-popup-box">
+            <div id="public-note-popup-box">
                 <div class="popup">
                     <div class="content">
                         <header>
@@ -388,14 +388,14 @@ if (isset($_SESSION['name']) === false) {
                             <input id="idNotePrivate" type="hidden">
                             <input id="linkNotePrivate" type="hidden">
                             <div class="row">
-                                <button id="submitPrivateNote" type="submit">Make the note private</button>
+                                <button type="submit">Make the note private</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         <?php } else { ?>
-            <div class="connect-box">
+            <div id="connect-box">
                 <div class="popup">
                     <div class="content">
                         <header>
@@ -412,17 +412,17 @@ if (isset($_SESSION['name']) === false) {
                             <div class="row">
                                 <input id="psswdConnect" placeholder="Password" type="password" maxlength="50" aria-label="Password" required>
                             </div>
-                            <button id="submitLogIn" type="submit">Sign in</button>
+                            <button type="submit">Sign in</button>
                         </form>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="create-box">
+            <div id="create-box">
                 <div class="popup">
                     <div class="content">
                         <header>
@@ -453,11 +453,11 @@ if (isset($_SESSION['name']) === false) {
                                     </button>
                                 </div>
                             </details>
-                            <button id="submitCreate" type="submit">Sign up</button>
+                            <button type="submit">Sign up</button>
                         </form>
                         <div class="row">
                             <p class="version">
-                                <a href="https://github.com/seguinleo/Bloc-notes/" target="_blank" rel="noreferrer">v23.12.3</a>
+                                <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v23.12.3</a>
                             </p>
                         </div>
                     </div>
@@ -473,7 +473,7 @@ if (isset($_SESSION['name']) === false) {
                 Bloc-notes has been updated!
             </p>
             <p>
-                <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" target="_blank" rel="noreferrer">Changelog</a>
+                <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noreferrer">Changelog</a>
             </p>
         </div>
     </main>

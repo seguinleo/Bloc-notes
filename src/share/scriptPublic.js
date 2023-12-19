@@ -1,5 +1,6 @@
 const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
+
 // eslint-disable-next-line no-undef
 const converter = new showdown.Converter();
 converter.setOption('tables', true);
@@ -7,6 +8,7 @@ converter.setOption('tasklists', true);
 converter.setOption('strikethrough', true);
 converter.setOption('parseImgDimensions', true);
 converter.setOption('simpleLineBreaks', true);
+converter.setOption('simplifiedAutoLink', true);
 
 const showSharedNote = async () => {
   const response = await fetch('/seguinleo-notes/assets/php/getSharedNote.php', {
@@ -24,7 +26,7 @@ const showSharedNote = async () => {
       title, content, color, date,
     } = row;
 
-    if (!title || !content || !color || !date) return;
+    if (!title || !content) return;
 
     const contentHtml = converter.makeHtml(content);
     const noteElement = document.createElement('div');
@@ -39,6 +41,7 @@ const showSharedNote = async () => {
     titleElement.textContent = title;
 
     const contentElement = document.createElement('span');
+
     // eslint-disable-next-line no-undef
     contentElement.innerHTML = DOMPurify.sanitize(contentHtml);
     detailsElement.appendChild(titleElement);

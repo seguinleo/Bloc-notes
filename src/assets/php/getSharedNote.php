@@ -1,4 +1,5 @@
 <?php
+global $PDO;
 if (empty($_POST['noteLink'])) {
     http_response_code(403);
     return;

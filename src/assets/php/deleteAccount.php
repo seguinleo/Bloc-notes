@@ -1,4 +1,5 @@
 <?php
+global $PDO;
 session_name('__Secure-notes');
 session_start();
 

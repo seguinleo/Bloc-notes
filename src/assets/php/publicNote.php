@@ -1,4 +1,5 @@
 <?php
+global $PDO;
 session_name('__Secure-notes');
 session_start();
 
@@ -59,6 +60,11 @@ try {
             </head>
             <body>
                 <main data-link="%s"></main>
+                <footer>
+                    <a href="/seguinleo-notes/" target="_blank" rel="noreferrer">
+                        Bloc-notes &#8211; Léo SEGUIN
+                    </a>
+                </footer>
                 <script src="/seguinleo-notes/assets/js/purify.min.js" defer></script>
                 <script src="/seguinleo-notes/assets/js/showdown.min.js" defer></script>
                 <script src="/seguinleo-notes/share/scriptPublic.js" defer></script>

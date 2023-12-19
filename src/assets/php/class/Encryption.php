@@ -2,6 +2,8 @@
 
 namespace Encryption;
 
+use Random\RandomException;
+
 /**
  * Class Encryption
  * @package Encryption
@@ -11,7 +13,7 @@ class Encryption
     /**
      * @return string
      */
-    protected function generateSalt()
+    protected function generateSalt(): string
     {
         return openssl_random_pseudo_bytes(16);
     }
@@ -21,15 +23,16 @@ class Encryption
      * @param string $salt
      * @return string
      */
-    protected function deriveKey($password, $salt)
+    protected function deriveKey(string $password, string $salt): string
     {
         return hash('sha256', $password . $salt, true);
     }
 
     /**
      * @return string
+     * @throws RandomException
      */
-    protected function generateIV()
+    protected function generateIV(): string
     {
         return random_bytes(12);
     }
@@ -38,8 +41,9 @@ class Encryption
      * @param string $plaintext
      * @param string $password
      * @return string
+     * @throws RandomException
      */
-    public function encryptData($plaintext, $password)
+    public function encryptData(string $plaintext, string $password): string
     {
         $salt = $this->generateSalt();
         $one_key = $this->deriveKey($password, $salt);
@@ -64,7 +68,7 @@ class Encryption
      * @param string $password
      * @return string
      */
-    public function decryptData($ciphertext, $password)
+    public function decryptData(string $ciphertext, string $password): string
     {
         $salt = base64_decode(substr($ciphertext, 0, 24), true);
         $ciphertext = substr($ciphertext, 24);
@@ -73,7 +77,7 @@ class Encryption
         $ciphertext = base64_decode(substr($ciphertext, 16), true);
         $tag = substr($ciphertext, strlen($ciphertext) - 16);
         $ciphertext = substr($ciphertext, 0, strlen($ciphertext) - 16);
-        $plaintext = openssl_decrypt(
+        return openssl_decrypt(
             $ciphertext,
             'aes-256-gcm',
             $one_key,
@@ -81,6 +85,5 @@ class Encryption
             $iv,
             $tag
         );
-        return $plaintext;
     }
 }

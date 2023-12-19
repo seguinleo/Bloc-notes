@@ -1,4 +1,5 @@
 <?php
+global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
 
 $sort = $_POST['sort'];

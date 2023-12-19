@@ -1,4 +1,5 @@
 <?php
+global $PDO, $key, $name;
 require_once __DIR__ . '/getKey.php';
 
 if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
