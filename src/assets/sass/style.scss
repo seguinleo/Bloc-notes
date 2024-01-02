@@ -103,8 +103,6 @@ table {
 
 a {
   text-decoration: none;
-  display: inline;
-  word-wrap: break-word;
   font-weight: 700;
 }
 
@@ -140,13 +138,12 @@ code {
   background: #383a59;
   color: #8be9fd;
   border-radius: 5px;
-  padding: 0 4px;
-  white-space: pre-wrap;
+  padding: 0 2px;
+  white-space: break-spaces;
 }
 
 li {
   margin-left: -1.4rem;
-  word-break: break-word;
 }
 
 img {
@@ -170,28 +167,26 @@ nav {
   user-select: none;
 
   h1 {
-    display: inline-block;
+    display: none;
+  }
 
-    i {
-      font-size: 2rem;
-    }
+  .log-in,
+  .manage-account {
+    font-size: 2rem;
   }
 
   div {
     margin: 10px 2rem;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     vertical-align: middle;
-  }
-
-  button {
-    width: 200px;
   }
 
   #divSearch {
     width: 300px;
     height: 50px;
     border-radius: 10px;
-    display: inline-block;
+    padding: 0 10px;
 
     &:focus-within {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
@@ -206,19 +201,11 @@ nav {
       width: 180px;
       border: none;
       border-radius: 24px;
-      margin-right: 5px;
       padding: 0 10px;
 
       &:focus {
         outline: none;
       }
-    }
-
-    .manage-account,
-    .log-in,
-    .fa-bars {
-      display: none;
-      cursor: pointer;
     }
   }
 
@@ -259,55 +246,65 @@ main {
   #listNotes {
     flex-grow: 1;
     overflow-y: auto;
+
+    p {
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 0 1rem 1rem 0;
+      font-size: .8rem;
+      font-weight: 700;
+      overflow: hidden;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        outline: none;
+        background: rgba(100, 100, 125, 20%);
+
+        .titleList {
+          display: none;
+        }
+
+        .dateList {
+          display: inline-flex;
+        }
+      }
+
+      .category {
+        background: rgba(100, 100, 125, 20%);
+        padding: 4px 8px;
+        margin: 0 8px 0 0;
+        border-radius: 24px;
+      }
+
+      .titleList {
+        display: inline-flex;
+      }
+
+      .dateList {
+        display: none;
+      }
+    }
   }
 
-  header {
+  #close-sidebar {
     display: none;
   }
 
   button {
     margin: 1rem auto;
   }
+}
 
-  p {
-    margin: 5px 0;
-    padding: 5px;
-    border-radius: 0 1rem 1rem 0;
-    font-size: .8rem;
-    font-weight: 700;
-    overflow: hidden;
-    cursor: pointer;
-
-    &:hover,
-    &:focus {
-      outline: none;
-      background: rgba(100, 100, 125, 20%);
-
-      .titleList {
-        display: none;
-      }
-
-      .dateList {
-        display: inline-block;
-      }
-    }
-
-    .category {
-      background: rgba(100, 100, 125, 20%);
-      padding: 4px 8px;
-      margin: 0 8px 0 0;
-      border-radius: 24px;
-      vertical-align: middle;
-    }
-
-    .titleList {
-      display: inline-block;
-    }
-
-    .dateList {
-      display: none;
-    }
-  }
+#sidebar-indicator {
+  position: fixed;
+  height: 20vh;
+  width: 4px;
+  border-radius: 5px;
+  background: rgba(100, 100, 125, 50%);
+  left: 4px;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 input {
@@ -335,6 +332,10 @@ input[type="password"]:disabled {
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 10px;
+}
+
+input[type="checkbox"] {
+  pointer-events: none;
 }
 
 select,
@@ -370,10 +371,6 @@ button {
 
 form {
   margin: 10px 0;
-}
-
-#welcome {
-  font-size: 1.2rem;
 }
 
 .note {
@@ -425,13 +422,6 @@ form {
     text-align: right;
     font-weight: 700;
     margin: 0 10px;
-  }
-
-  .category {
-    background: rgba(100, 100, 125, 20%);
-    padding: 4px 8px;
-    border-radius: 24px;
-    margin: 5px 0;
   }
 
   a {
@@ -490,6 +480,10 @@ form {
   font-weight: 700;
 }
 
+.body-fullscreen {
+  overflow: hidden;
+}
+
 .fullscreen {
   position: fixed;
   z-index: 3;
@@ -506,13 +500,6 @@ form {
   .details {
     max-height: 100%;
   }
-}
-
-.popup,
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .popup .content,
@@ -546,6 +533,7 @@ button {
 #connect-box,
 #create-box,
 #manage-popup-box,
+#settings-popup-box,
 #public-note-popup-box,
 #private-note-popup-box,
 #note-popup-box,
@@ -569,7 +557,6 @@ button {
     left: 50%;
     z-index: 3;
     overflow-y: auto;
-    justify-content: center;
     transform: translate(-50%, -50%);
   }
 }
@@ -577,6 +564,7 @@ button {
 #connect-box.show,
 #create-box.show,
 #manage-popup-box.show,
+#settings-popup-box.show,
 #note-popup-box.show,
 #public-note-popup-box.show,
 #private-note-popup-box.show,
@@ -585,21 +573,9 @@ button {
   display: flex;
 }
 
-#connect-box.show .popup,
-#create-box.show .popup,
-#manage-popup-box.show .popup,
-#note-popup-box.show .popup,
-#public-note-popup-box.show .popup,
-#private-note-popup-box.show .popup,
-#sort-popup-box.show .popup,
-#filter-popup-box.show .popup {
-  display: flex;
-  max-height: 100vh;
-  transform: translate(-50%, -50%);
-}
-
 .content {
   width: 500px;
+  max-width: 98vw;
   padding: 5px 1rem;
 }
 
@@ -628,7 +604,7 @@ button {
 
 .switch {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
   vertical-align: middle;
   width: 4rem;
   height: 2rem;
@@ -680,25 +656,27 @@ button {
 #newVersion {
   -webkit-user-select: none;
   user-select: none;
-  width: 350px;
-  height: 350px;
   border: 2px dashed rgba(100, 100, 125, 20%);
   text-align: center;
   border-radius: 1rem;
+  margin: 10px 0;
+  padding-bottom: 1.5rem;
+  font-size: .9rem;
 
-  h2 {
-    font-size: 1.6rem;
-    margin: 1.6rem auto;
+  header {
+    padding: 4px;
+    text-align: left;
   }
 
   p {
-    margin: 3rem 1rem;
+    margin: .5rem;
   }
 }
 
 #language {
   width: 50px;
   height: 40px;
+  vertical-align: middle;
   padding: 0;
 }
 
@@ -725,7 +703,14 @@ button {
   cursor: pointer;
 }
 
-#copyright {
+#settings {
+  font-size: 1.2rem;
+  vertical-align: middle;
+  margin-right: 1rem;
+}
+
+#legal,
+#license {
   font-size: .8rem;
 }
 
@@ -765,7 +750,7 @@ button {
   z-index: 999;
 
   &.show {
-    display: block;
+    display: flex;
   }
 }
 
@@ -832,7 +817,8 @@ button {
 
 @media (min-width: 901px) {
 
-  #iconFloatAdd {
+  #iconFloatAdd,
+  #sidebar-indicator {
     display: none;
   }
 }
@@ -842,48 +828,21 @@ button {
   nav {
     position: fixed;
     margin: 0;
-    background: none;
-    box-shadow: none;
 
     div {
       margin: 10px 5px;
     }
 
-    button.log-in,
-    #welcome {
-      display: none;
-    }
-
     #divSearch {
-      width: 75%;
+      width: 60%;
 
       input {
-        width: 60%;
+        width: 80%;
         padding: 5px;
       }
 
       .linkp {
         margin: 0;
-      }
-
-      .manage-account,
-      .log-in,
-      .fa-bars {
-        display: inline;
-        cursor: pointer;
-      }
-
-      i {
-        vertical-align: middle;
-        font-size: 1.8rem;
-      }
-
-      .fa-bars {
-        font-size: 1.3rem;
-      }
-
-      .fa-magnifying-glass {
-        display: none;
       }
     }
 
@@ -923,10 +882,6 @@ button {
     border-radius: 0 1rem 1rem 0;
     animation: slide-right .3s ease-in-out;
 
-    header {
-      display: flex;
-    }
-
     button {
       display: none;
     }
@@ -961,11 +916,6 @@ button {
     }
   }
 
-  #newVersion {
-    width: 100%;
-    margin: 0 10px;
-  }
-
   .fullscreen {
     min-height: 100vh;
     inset: auto;
@@ -980,16 +930,8 @@ button {
     margin: 0 4px;
   }
 
-  .popup {
-    max-width: 98vw;
-  }
-
   .bottom-content i {
     margin: 0 2px;
-  }
-
-  #btnTheme {
-    display: inline-flex;
   }
 
   #copyNotification.show {
@@ -1132,6 +1074,7 @@ html.dark {
   #note-popup-box,
   #create-box,
   #manage-popup-box,
+  #settings-popup-box,
   #connect-box,
   #private-note-popup-box,
   #public-note-popup-box,
@@ -1308,6 +1251,7 @@ html.dusk {
   #note-popup-box,
   #create-box,
   #manage-popup-box,
+  #settings-popup-box,
   #connect-box,
   #private-note-popup-box,
   #public-note-popup-box,
@@ -1484,6 +1428,7 @@ html.light {
   #note-popup-box,
   #create-box,
   #manage-popup-box,
+  #settings-popup-box,
   #connect-box,
   #private-note-popup-box,
   #public-note-popup-box,

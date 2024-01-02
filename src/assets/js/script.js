@@ -8,6 +8,7 @@ const connectBox = document.querySelector('#connect-box');
 const sortBox = document.querySelector('#sort-popup-box');
 const filterBox = document.querySelector('#filter-popup-box');
 const createBox = document.querySelector('#create-box');
+const popupBoxSettings = document.querySelector('#settings-popup-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
 const colors = document.querySelectorAll('#colors span');
@@ -33,6 +34,12 @@ if (localStorage.getItem('theme') === 'light') {
 if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 
+function generateRandomBytes(length) {
+  const array = new Uint8Array(length);
+  window.crypto.getRandomValues(array);
+  return array;
+}
+
 const showSuccess = (message) => {
   if (timeoutNotification) clearTimeout(timeoutNotification);
   const notification = document.querySelector('#successNotification');
@@ -54,7 +61,7 @@ const showError = (message) => {
 };
 
 const searchSideBar = () => {
-  sideBar.querySelectorAll('p').forEach((e) => {
+  sideBar.querySelectorAll('#listNotes p').forEach((e) => {
     e.addEventListener('click', () => {
       const titleList = e.querySelector('.titleList').textContent;
       document.querySelectorAll('.note').forEach((note) => {
@@ -193,6 +200,16 @@ const showNotes = async () => {
     const deContentString = JSON.parse(new TextDecoder().decode(deContent));
     const contentHtml = converter.makeHtml(deContentString);
     const noteElement = document.createElement('div');
+    const detailsElement = document.createElement('div');
+    const titleElement = document.createElement('h2');
+    const contentElement = document.createElement('span');
+    const bottomContentElement = document.createElement('div');
+    const editIconElement = document.createElement('i');
+    const trashIconElement = document.createElement('i');
+    const paragraph = document.createElement('p');
+    const titleSpan = document.createElement('span');
+    const dateSpan = document.createElement('span');
+
     noteElement.id = `note${id}`;
     noteElement.classList.add('note', color);
     noteElement.tabIndex = 0;
@@ -202,40 +219,20 @@ const showNotes = async () => {
     noteElement.setAttribute('data-note-color', color);
     noteElement.setAttribute('data-note-hidden', hidden);
     noteElement.setAttribute('data-note-category', category);
-
-    const detailsElement = document.createElement('div');
     detailsElement.classList.add('details');
-
-    const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
     titleElement.textContent = deTitleString;
-
-    const contentElement = document.createElement('span');
 
     if (hidden === false) contentElement.innerHTML = contentHtml;
     else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
     detailsElement.appendChild(titleElement);
-
-    if (category !== '0') {
-      const categoryElement = document.createElement('span');
-      categoryElement.classList.add('category');
-      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
-      detailsElement.appendChild(categoryElement);
-    }
-
     detailsElement.appendChild(contentElement);
-
-    const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
-
-    const editIconElement = document.createElement('i');
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
     editIconElement.setAttribute('role', 'button');
     editIconElement.setAttribute('aria-label', 'Edit');
-
-    const trashIconElement = document.createElement('i');
     trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
     trashIconElement.tabIndex = 0;
     trashIconElement.setAttribute('role', 'button');
@@ -268,17 +265,10 @@ const showNotes = async () => {
 
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
-    document.querySelector('main').appendChild(noteElement);
-
-    const paragraph = document.createElement('p');
     paragraph.setAttribute('tabindex', '0');
     paragraph.setAttribute('role', 'button');
-
-    const titleSpan = document.createElement('span');
     titleSpan.classList.add('titleList');
     titleSpan.textContent = deTitleString;
-
-    const dateSpan = document.createElement('span');
     dateSpan.classList.add('dateList');
     dateSpan.textContent = date;
 
@@ -289,21 +279,66 @@ const showNotes = async () => {
       paragraph.appendChild(categoryElement);
     }
 
+    document.querySelector('main').appendChild(noteElement);
     paragraph.appendChild(titleSpan);
     paragraph.appendChild(dateSpan);
     sideBar.querySelector('#listNotes').appendChild(paragraph);
     searchSideBar();
   });
+  document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
 };
+
+const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
+    else localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    if (localStorage.getItem('fingerprint') === 'true') window.location.href = '/error/403/';
+    else document.querySelector('#checkFingerprint').checked = false;
+  }
+};
+
+if (localStorage.getItem('fingerprint') === 'true') {
+  verifyFingerprint();
+  document.querySelector('#checkFingerprint').checked = true;
+}
 
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
+  document.body.classList.toggle('body-fullscreen');
 };
 
 const updateNote = (id, title, content, color, hidden, category) => {
   isUpdate = true;
   document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
+  document.body.classList.remove('body-fullscreen');
   document.querySelector('#idNote').value = id;
   document.querySelector('#iconAdd').click();
   titleNote.value = title;
@@ -339,7 +374,7 @@ const copy = (content) => {
 };
 
 const deleteNote = (e) => {
-  let message;
+  let message = '';
   if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete this note?';
   else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
   else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
@@ -398,6 +433,19 @@ document.querySelector('#create-account').addEventListener('click', () => {
   document.querySelector('#nameCreate').focus();
 });
 
+document.querySelectorAll('#settings').forEach((e) => {
+  e.addEventListener('click', () => {
+    popupBoxSettings.classList.add('show');
+    popupBoxSettings.querySelector('i').focus();
+    sideBar.classList.remove('show');
+  });
+});
+
+document.querySelector('#checkFingerprint').addEventListener('change', () => {
+  if (document.querySelector('#checkFingerprint').checked) verifyFingerprint();
+  else localStorage.removeItem('fingerprint');
+});
+
 document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
   e.addEventListener('click', () => {
     noteBox.classList.add('show');
@@ -431,11 +479,32 @@ document.querySelectorAll('header i').forEach((e) => {
     createBox.classList.remove('show');
     sortBox.classList.remove('show');
     filterBox.classList.remove('show');
-    closeSidebar();
+    popupBoxSettings.classList.remove('show');
   });
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
   });
+});
+
+document.querySelector('#export-all-notes').addEventListener('click', () => {
+  if (document.querySelector('.note') === null) return;
+  const notes = [];
+  document.querySelectorAll('.note').forEach((e) => {
+    const title = e.querySelector('.title').textContent;
+    const content = e.querySelector('.details span').textContent;
+    const noteObject = {
+      title,
+      content,
+    };
+    notes.push(noteObject);
+  });
+  const a = document.createElement('a');
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(JSON.stringify(notes))}`);
+  a.setAttribute('download', 'notes.json');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 });
 
 document.querySelector('#search-input').addEventListener('input', () => {
@@ -514,7 +583,6 @@ document.addEventListener('touchend', (event) => {
   handleGesture();
 }, false);
 
-document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
 document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
 document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
 document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
@@ -592,7 +660,7 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
     if (response.ok) {
       createBox.classList.remove('show');
       forms.forEach((form) => form.reset());
-      let message;
+      let message = '';
       if (window.location.href.endsWith('/en/')) message = 'Account created successfully! You can now log in.';
       else if (window.location.href.endsWith('/de/')) message = 'Konto erfolgreich erstellt! Sie können sich jetzt anmelden.';
       else if (window.location.href.endsWith('/es/')) message = '¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.';
@@ -699,5 +767,6 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  await showNotes();
+  if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
+  document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
 });

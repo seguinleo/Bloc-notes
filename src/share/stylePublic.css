@@ -78,17 +78,13 @@ a {
   color: #8ab4f8;
 }
 
-progress {
-  width: 100%;
-}
-
 pre,
 code {
   background: #383a59;
   color: #8be9fd;
   border-radius: 5px;
-  padding: 2px 5px;
-  white-space: pre-wrap;
+  padding: 0 2px;
+  white-space: break-spaces;
 }
 
 li {
@@ -100,6 +96,11 @@ img {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
+}
+
+input[type="checkbox"] {
+  pointer-events: none;
+  margin-right: 10px;
 }
 
 .note {
@@ -180,12 +181,12 @@ img {
   text-decoration: none;
 }
 
-.note .details {
+.details {
   overflow-x: hidden;
   overflow-y: auto;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding-right: 5px;
+  padding: 0 4px;
   font-size: .9rem;
   font-weight: 700;
 }
@@ -294,12 +295,10 @@ img {
 
 footer {
   font-size: .8rem;
-  text-align: center;
-  width: 100%;
   -webkit-user-select: none;
   user-select: none;
-  position: fixed;
-  bottom: 1rem;
+  text-align: center;
+  margin: 1rem auto;
 }
 
 @media(max-width: 900px) {

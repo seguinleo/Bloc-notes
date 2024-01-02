@@ -55,6 +55,5 @@ $cookieParams = [
 ];
 session_set_cookie_params($cookieParams);
 session_start();
-
 $_SESSION['name'] = $row['name'];
 $_SESSION['userId'] = $row['id'];

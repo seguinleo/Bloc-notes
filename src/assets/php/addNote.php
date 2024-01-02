@@ -1,11 +1,7 @@
 <?php
-global $PDO, $key, $name;
+global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
 
-if ($_POST['csrf_token_note'] !== $_SESSION['csrf_token_note']) {
-    http_response_code(403);
-    return;
-}
 if (isset($_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
     http_response_code(403);
     return;

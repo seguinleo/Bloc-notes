@@ -8,6 +8,7 @@ const noteBox = document.querySelector('#note-popup-box');
 const sortBox = document.querySelector('#sort-popup-box');
 const filterBox = document.querySelector('#filter-popup-box');
 const popupBoxManage = document.querySelector('#manage-popup-box');
+const popupBoxSettings = document.querySelector('#settings-popup-box');
 const privateNote = document.querySelector('#private-note-popup-box');
 const publicNote = document.querySelector('#public-note-popup-box');
 const titleNote = noteBox.querySelector('#title');
@@ -93,6 +94,8 @@ const showNotes = async () => {
 
   if (data.length === 0) return;
 
+  const fragment = document.createDocumentFragment();
+
   data.forEach((row) => {
     const {
       id, title, content, color, date, hidden, category, link,
@@ -102,6 +105,15 @@ const showNotes = async () => {
 
     const contentHtml = converter.makeHtml(content);
     const noteElement = document.createElement('div');
+    const detailsElement = document.createElement('div');
+    const titleElement = document.createElement('h2');
+    const contentElement = document.createElement('span');
+    const bottomContentElement = document.createElement('div');
+    const editIconElement = document.createElement('i');
+    const paragraph = document.createElement('p');
+    const titleSpan = document.createElement('span');
+    const dateSpan = document.createElement('span');
+
     noteElement.id = `note${id}`;
     noteElement.classList.add('note', color);
     noteElement.tabIndex = 0;
@@ -112,34 +124,16 @@ const showNotes = async () => {
     noteElement.setAttribute('data-note-hidden', hidden);
     noteElement.setAttribute('data-note-category', category);
     noteElement.setAttribute('data-note-link', link);
-
-    const detailsElement = document.createElement('div');
     detailsElement.classList.add('details');
-
-    const titleElement = document.createElement('h2');
     titleElement.classList.add('title');
     titleElement.textContent = title;
-
-    const contentElement = document.createElement('span');
 
     if (hidden === 0) contentElement.innerHTML = contentHtml;
     else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
     detailsElement.appendChild(titleElement);
-
-    if (category !== 0) {
-      const categoryElement = document.createElement('span');
-      categoryElement.classList.add('category');
-      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
-      detailsElement.appendChild(categoryElement);
-    }
-
     detailsElement.appendChild(contentElement);
-
-    const bottomContentElement = document.createElement('div');
     bottomContentElement.classList.add('bottom-content');
-
-    const editIconElement = document.createElement('i');
     editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
     editIconElement.tabIndex = 0;
     editIconElement.setAttribute('role', 'button');
@@ -153,6 +147,10 @@ const showNotes = async () => {
       trashIconElement.setAttribute('role', 'button');
       trashIconElement.setAttribute('aria-label', 'Supprimer la note');
       bottomContentElement.appendChild(trashIconElement);
+
+      const iconLink = document.createElement('i');
+      iconLink.classList.add('fa-solid', 'fa-link');
+      titleSpan.appendChild(iconLink);
     }
 
     if (hidden === 0 && content !== '') {
@@ -187,22 +185,10 @@ const showNotes = async () => {
 
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
-    document.querySelector('main').appendChild(noteElement);
-
-    const paragraph = document.createElement('p');
     paragraph.setAttribute('tabindex', '0');
     paragraph.setAttribute('role', 'button');
-
-    const titleSpan = document.createElement('span');
     titleSpan.classList.add('titleList');
     titleSpan.textContent = title;
-    if (link !== '') {
-      const iconLink = document.createElement('i');
-      iconLink.classList.add('fa-solid', 'fa-link');
-      titleSpan.appendChild(iconLink);
-    }
-
-    const dateSpan = document.createElement('span');
     dateSpan.classList.add('dateList');
     dateSpan.textContent = date;
 
@@ -213,10 +199,13 @@ const showNotes = async () => {
       paragraph.appendChild(categoryElement);
     }
 
+    fragment.appendChild(noteElement);
     paragraph.appendChild(titleSpan);
     paragraph.appendChild(dateSpan);
     sideBar.querySelector('#listNotes').appendChild(paragraph);
   });
+
+  document.querySelector('main').appendChild(fragment);
   searchSideBar();
   noteActions();
   document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
@@ -312,11 +301,13 @@ const fetchLogout = async () => {
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
+  document.body.classList.toggle('body-fullscreen');
 };
 
 const updateNote = (id, title, content, color, hidden, category, link) => {
   isUpdate = true;
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
+  document.body.classList.remove('body-fullscreen');
   document.querySelector('#iconAdd').click();
   document.querySelector('#idNote').value = id;
   document.querySelector('#checkLink').value = link;
@@ -356,7 +347,7 @@ const copy = (content) => {
 };
 
 const deleteNote = (e) => {
-  let message;
+  let message = '';
   if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete this note?';
   else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
   else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
@@ -367,6 +358,7 @@ const deleteNote = (e) => {
 
 const noteAccess = (id, link) => {
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
+  document.body.classList.remove('body-fullscreen');
   if (link === '') {
     privateNote.classList.add('show');
     document.querySelector('#idNotePublic').value = id;
@@ -382,7 +374,7 @@ const noteAccess = (id, link) => {
 };
 
 const searchSideBar = () => {
-  sideBar.querySelectorAll('p').forEach((e) => {
+  sideBar.querySelectorAll('#listNotes p').forEach((e) => {
     e.addEventListener('click', () => {
       const titleList = e.querySelector('.titleList').textContent;
       document.querySelectorAll('.note').forEach((note) => {
@@ -454,6 +446,14 @@ document.querySelectorAll('.manage-account').forEach((e) => {
   });
 });
 
+document.querySelectorAll('#settings').forEach((e) => {
+  e.addEventListener('click', () => {
+    popupBoxSettings.classList.add('show');
+    popupBoxSettings.querySelector('i').focus();
+    sideBar.classList.remove('show');
+  });
+});
+
 document.querySelectorAll('.linkp').forEach((e) => {
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
@@ -461,7 +461,7 @@ document.querySelectorAll('.linkp').forEach((e) => {
 });
 
 document.querySelector('#delete-account').addEventListener('click', () => {
-  let message;
+  let message = '';
   if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.';
   else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
   else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
@@ -480,7 +480,7 @@ document.querySelectorAll('header i').forEach((e) => {
     privateNote.classList.remove('show');
     sortBox.classList.remove('show');
     filterBox.classList.remove('show');
-    closeSidebar();
+    popupBoxSettings.classList.remove('show');
   });
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
@@ -611,7 +611,6 @@ document.addEventListener('touchend', (event) => {
 }, false);
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#menuIcon').addEventListener('click', () => openSidebar());
 document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
 document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
@@ -667,7 +666,7 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
     if (!titleBrut || titleBrut.length > 30 || contentBrut.length > 5000) return;
     if (isUpdate && !idNote) return;
 
-    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&link=${link}&csrf_token_note=${document.querySelector('#csrf_token_note').value}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token_note=${document.querySelector('#csrf_token_note').value}`;
+    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&link=${link}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}`;
     const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
