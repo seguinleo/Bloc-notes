@@ -1,3 +1,7 @@
+#----v24.1.2----#
+-Add accent color customization
+-Improve UI/UX
+
 #----v24.1.1----#
 -Better local use
 -Improve code structure

@@ -1,6 +1,6 @@
 {
   "name": "bloc-notes",
-  "version": "24.1.1",
+  "version": "24.1.2",
   "author": "seguinleo",
   "license": "GPL-3.0",
   "description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML and export.",
@@ -12,7 +12,7 @@
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "sass": "^1.69.6",
+    "sass": "^1.69.7",
     "typescript": "^5.3.3"
   }
 }

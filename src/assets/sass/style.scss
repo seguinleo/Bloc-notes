@@ -1,15 +1,11 @@
-$color01: #000000;
-$color02: #171717;
-$color03: #c6c6c6;
-$color04: #8ab4f8;
-$color05: #9ec3ff;
-$color06: #2b5790;
-$color07: #34629f;
-$color08: #ffffff;
-$color09: #eeeeee;
-$color10: #1c1936;
-$color11: #272342;
-$color12: #cecbe3;
+$color1: #000000;
+$color2: #171717;
+$color3: #c6c6c6;
+$color4: #ffffff;
+$color5: #eeeeee;
+$color6: #1c1936;
+$color7: #272342;
+$color8: #cecbe3;
 
 @keyframes slide-left {
   0% {
@@ -50,7 +46,7 @@ $color12: #cecbe3;
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
-  scrollbar-color: rgba(100, 100, 125, 50%) rgba(0, 0, 0, 0);
+  scrollbar-color: rgba(100, 100, 100, 50%) rgba(0, 0, 0, 0);
   font-family: OpenSans, sans-serif;
 }
 
@@ -60,7 +56,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 125, 50%);
+  background: rgba(100, 100, 100, 50%);
 }
 
 ::-webkit-scrollbar {
@@ -87,17 +83,17 @@ h3 {
 table {
   border-collapse: collapse;
   text-align: center;
-  border: 1px solid $color01;
+  border: 1px solid $color1;
   margin: 10px 0;
 
   thead {
-    background: rgba(100, 100, 125, 20%);
+    background: rgba(100, 100, 100, 20%);
   }
 
   th,
   td {
     padding: 4px 8px;
-    border: 1px solid $color01;
+    border: 1px solid $color1;
   }
 }
 
@@ -112,6 +108,12 @@ kbd {
   font-size: .8rem;
   font-weight: 700;
   padding: 2px 4px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
+}
+
+blockquote {
+  border-left: 3px solid rgba(100, 100, 100, 50%);
+  padding-left: 10px;
 }
 
 header {
@@ -128,17 +130,21 @@ header {
     transition: .1s;
 
     &:hover {
-      background: rgba(100, 100, 125, 20%);
+      background: rgba(100, 100, 100, 20%);
     }
   }
 }
 
+pre {
+  margin: 10px auto;
+}
+
 pre,
 code {
-  background: #383a59;
-  color: #8be9fd;
-  border-radius: 5px;
-  padding: 0 2px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 4px;
   white-space: break-spaces;
 }
 
@@ -259,7 +265,7 @@ main {
       &:hover,
       &:focus {
         outline: none;
-        background: rgba(100, 100, 125, 20%);
+        background: rgba(100, 100, 100, 20%);
 
         .titleList {
           display: none;
@@ -271,7 +277,7 @@ main {
       }
 
       .category {
-        background: rgba(100, 100, 125, 20%);
+        background: rgba(100, 100, 100, 20%);
         padding: 4px 8px;
         margin: 0 8px 0 0;
         border-radius: 24px;
@@ -279,6 +285,7 @@ main {
 
       .titleList {
         display: inline-flex;
+        align-items: baseline;
       }
 
       .dateList {
@@ -301,7 +308,7 @@ main {
   height: 20vh;
   width: 4px;
   border-radius: 5px;
-  background: rgba(100, 100, 125, 50%);
+  background: rgba(100, 100, 100, 50%);
   left: 4px;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -332,10 +339,23 @@ input[type="password"]:disabled {
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 10px;
+  vertical-align: middle;
 }
 
 input[type="checkbox"] {
   pointer-events: none;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  &:focus {
+    outline: 2px solid rgba(100, 100, 100, 50%);
+  }
+}
+
+.task-list-item input[type="checkbox"]:checked+label {
+  text-decoration: line-through;
 }
 
 select,
@@ -377,11 +397,10 @@ form {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 1rem;
   clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
   transition: clip-path .4s;
-  width: 350px;
+  max-width: 50vw;
   line-height: 2;
   padding: 10px 1rem;
 
@@ -411,11 +430,9 @@ form {
     transform: translate(-100%, -100%);
   }
 
-  &:focus-within {
-    .bottom-content {
-      visibility: visible;
-      opacity: 1;
-    }
+  &:focus-within .bottom-content {
+    visibility: visible;
+    opacity: 1;
   }
 
   .title {
@@ -469,7 +486,7 @@ form {
       transition: .1s;
 
       &:hover {
-        background: rgba(100, 100, 125, 20%);
+        background: rgba(100, 100, 100, 20%);
       }
     }
   }
@@ -488,6 +505,7 @@ form {
   position: fixed;
   z-index: 3;
   width: 100vw;
+  max-width: 100vw;
   min-height: 100vh;
   margin: auto;
   inset: 0;
@@ -495,6 +513,7 @@ form {
 
   .title {
     text-align: center;
+    margin-bottom: 1rem;
   }
 
   .details {
@@ -510,10 +529,11 @@ button {
   border-radius: 10px;
 }
 
-#colors {
+#colors,
+#accent-colors {
   display: flex;
-  justify-content: center;
-  min-height: 26px;
+  align-items: center;
+  min-height: 30px;
 
   span {
     width: 20px;
@@ -525,9 +545,13 @@ button {
   }
 
   span.selected {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
   }
+}
+
+#colors {
+  justify-content: center;
 }
 
 #connect-box,
@@ -615,10 +639,8 @@ button {
     width: 0;
     height: 0;
 
-    &:checked+.slider {
-      &:before {
-        left: 2rem;
-      }
+    &:checked+.slider:before {
+      left: 2rem;
     }
 
     &:disabled+.slider {
@@ -649,14 +671,10 @@ button {
   margin: 0 5px;
 }
 
-.fa-eye-slash {
-  margin: 10px;
-}
-
 #newVersion {
   -webkit-user-select: none;
   user-select: none;
-  border: 2px dashed rgba(100, 100, 125, 20%);
+  border: 2px dashed rgba(100, 100, 100, 50%);
   text-align: center;
   border-radius: 1rem;
   margin: 10px 0;
@@ -721,10 +739,10 @@ button {
   right: 2rem;
   text-align: center;
   font-weight: 700;
-  max-width: 300px;
+  max-width: 320px;
   padding: 10px;
   border-radius: 5px;
-  color: $color08;
+  color: $color4;
   display: none;
   z-index: 999;
 }
@@ -811,8 +829,8 @@ button {
 }
 
 .task-list-item {
-  list-style-type: none;
   margin-left: -2.4rem;
+  pointer-events: none;
 }
 
 @media (min-width: 901px) {
@@ -844,6 +862,10 @@ button {
       .linkp {
         margin: 0;
       }
+
+      kbd {
+        display: none;
+      }
     }
 
     #last-sync {
@@ -870,16 +892,13 @@ button {
     align-items: center;
   }
 
-  kbd {
-    display: none;
-  }
-
   #sideBar {
     display: none;
     width: 95vw;
     margin: 0;
     top: 0;
     border-radius: 0 1rem 1rem 0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
     animation: slide-right .3s ease-in-out;
 
     button {
@@ -899,6 +918,7 @@ button {
 
   .note {
     width: 100%;
+    max-width: 100vw;
     max-height: 300px;
     margin: 0 10px;
 
@@ -926,7 +946,8 @@ button {
     }
   }
 
-  #colors span {
+  #colors span,
+  #accent-colors span {
     margin: 0 4px;
   }
 
@@ -940,30 +961,121 @@ button {
 }
 
 html.dark {
-  background: $color01;
-  color: $color03;
-  accent-color: $color04;
+  background: $color1;
+  color: $color3;
 
-  ::placeholder {
-    color: $color03;
+  .accentBlue {
+    accent-color: #8ab4f8;
+
+    ::selection {
+      background: #8ab4f8;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #8ab4f8;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #8ab4f8;
+    }
   }
 
-  a {
-    color: $color04;
+  .accentGreen {
+    accent-color: #8af8a4;
+
+    ::selection {
+      background: #8af8a4;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #8af8a4;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #8af8a4;
+    }
+  }
+
+  .accentYellow {
+    accent-color: #f8f48a;
+
+    ::selection {
+      background: #f8f48a;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #f8f48a;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #f8f48a;
+    }
+  }
+
+  .accentPink {
+    accent-color: #f68af8;
+
+    ::selection {
+      background: #f68af8;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #f68af8;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #f68af8;
+    }
+  }
+
+  .accentBlueSpan {
+    background: #8ab4f8;
+  }
+
+  .accentGreenSpan {
+    background: #8af8a4;
+  }
+
+  .accentYellowSpan {
+    background: #f8f48a;
+  }
+
+  .accentPinkSpan {
+    background: #f68af8;
+  }
+
+  ::placeholder {
+    color: $color3;
   }
 
   kbd {
-    background: $color02;
+    background: $color2;
   }
 
   nav {
-    background: $color02;
+    background: $color2;
 
     #divSearch {
-      background: $color01;
+      background: $color1;
 
       input {
-        background: $color01;
+        background: $color1;
         border: none;
 
         &:focus {
@@ -974,47 +1086,34 @@ html.dark {
   }
 
   #sideBar {
-    background: $color02;
+    background: $color2;
   }
 
   input,
   textarea,
   select {
-    border: 2px solid $color01;
-
-    &:focus {
-      outline: $color04 solid 2px;
-    }
+    border: 2px solid $color1;
   }
 
   button {
-    color: $color01;
-    background: $color04;
-
-    &:hover,
-    &:focus {
-      background: $color05;
-    }
+    color: $color1;
 
     &:disabled {
-      background: $color03;
+      background: $color3;
     }
-  }
-
-  .linkp {
-    color: $color04;
   }
 
   .popup .content,
   input,
   textarea,
   select {
-    background: $color02;
-    color: $color03;
+    background: $color2;
+    color: $color3;
   }
 
-  #colors span {
-    border: 1px solid $color01;
+  #colors span,
+  #accent-colors span {
+    border: 1px solid $color1;
   }
 
   .Rouge,
@@ -1027,46 +1126,34 @@ html.dark {
   .Violet,
   .Rose {
     a {
-      color: $color01;
+      color: $color1;
     }
   }
 
   .Noir {
-    background: $color02;
+    background: $color2;
   }
 
   .category {
     span {
-      background: $color01;
+      background: $color1;
     }
 
-    input[type="radio"] {
-      &:checked+span {
-        background: $color04;
-        color: $color01;
-      }
+    input[type="radio"]:checked+span {
+      color: $color1;
     }
   }
 
   .switch {
-    input {
-
-      &:checked+.slider {
-        background: $color04;
-      }
-
-      &:disabled+.slider {
-        &:before {
-          background: $color03;
-        }
-      }
+    input:disabled+.slider:before {
+      background: $color3;
     }
 
     .slider {
-      background: $color01;
+      background: $color1;
 
       &:before {
-        background: $color08;
+        background: $color4;
       }
     }
   }
@@ -1085,30 +1172,30 @@ html.dark {
 
   #noscript {
     background: #fe7575;
-    color: $color01;
+    color: $color1;
   }
 
-  .warning {
+  .linkp.warning {
     color: #fe7575;
   }
 
   #btnTheme {
-    background: $color01;
-    color: $color03;
+    background: $color1;
+    color: $color3;
   }
 
   #language {
     border: none;
-    background: $color02;
+    background: $color2;
   }
 
   #copyNotification {
-    background: $color01;
-    color: $color03;
+    background: $color1;
+    color: $color3;
   }
 
   #copyNoteLink {
-    background: $color01;
+    background: $color1;
 
     &:hover {
       opacity: .8;
@@ -1117,30 +1204,121 @@ html.dark {
 }
 
 html.dusk {
-  background: $color11;
-  color: $color12;
-  accent-color: $color04;
+  background: $color7;
+  color: $color8;
 
-  ::placeholder {
-    color: $color12;
+  .accentBlue {
+    accent-color: #8ab4f8;
+
+    ::selection {
+      background: #8ab4f8;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #8ab4f8;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #8ab4f8;
+    }
   }
 
-  a {
-    color: $color04;
+  .accentGreen {
+    accent-color: #8af8a4;
+
+    ::selection {
+      background: #8af8a4;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #8af8a4;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #8af8a4;
+    }
+  }
+
+  .accentYellow {
+    accent-color: #f8f48a;
+
+    ::selection {
+      background: #f8f48a;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #f8f48a;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #f8f48a;
+    }
+  }
+
+  .accentPink {
+    accent-color: #f68af8;
+
+    ::selection {
+      background: #f68af8;
+      color: #000000;
+    }
+
+    a,
+    .linkp {
+      color: #f68af8;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #f68af8;
+    }
+  }
+
+  .accentBlueSpan {
+    background: #8ab4f8;
+  }
+
+  .accentGreenSpan {
+    background: #8af8a4;
+  }
+
+  .accentYellowSpan {
+    background: #f8f48a;
+  }
+
+  .accentPinkSpan {
+    background: #f68af8;
+  }
+
+  ::placeholder {
+    color: $color8;
   }
 
   kbd {
-    background: $color10;
+    background: $color6;
   }
 
   nav {
-    background: $color10;
+    background: $color6;
 
     #divSearch {
-      background: $color11;
+      background: $color7;
 
       input {
-        background: $color11;
+        background: $color7;
         border: none;
 
         &:focus {
@@ -1151,47 +1329,34 @@ html.dusk {
   }
 
   #sideBar {
-    background: $color10;
+    background: $color6;
   }
 
   input,
   textarea,
   select {
-    border: 2px solid $color10;
-
-    &:focus {
-      outline: $color04 solid 2px;
-    }
+    border: 2px solid $color6;
   }
 
   button {
-    color: $color11;
-    background: $color04;
-
-    &:hover,
-    &:focus {
-      background: $color05;
-    }
+    color: $color7;
 
     &:disabled {
-      background: $color12;
+      background: $color8;
     }
-  }
-
-  .linkp {
-    color: $color04;
   }
 
   .popup .content,
   input,
   textarea,
   select {
-    background: $color11;
-    color: $color12;
+    background: $color7;
+    color: $color8;
   }
 
-  #colors span {
-    border: 1px solid $color10;
+  #colors span,
+  #accent-colors span {
+    border: 1px solid $color6;
   }
 
   .Rouge,
@@ -1204,46 +1369,34 @@ html.dusk {
   .Violet,
   .Rose {
     a {
-      color: $color11;
+      color: $color7;
     }
   }
 
   .Noir {
-    background: $color10;
+    background: $color6;
   }
 
   .category {
     span {
-      background: $color10;
+      background: $color6;
     }
 
-    input[type="radio"] {
-      &:checked+span {
-        background: $color04;
-        color: $color01;
-      }
+    input[type="radio"]:checked+span {
+      color: $color1;
     }
   }
 
   .switch {
-    input {
-
-      &:checked+.slider {
-        background: $color04;
-      }
-
-      &:disabled+.slider {
-        &:before {
-          background: $color03;
-        }
-      }
+    input:disabled+.slider:before {
+      background: $color3;
     }
 
     .slider {
-      background: $color10;
+      background: $color6;
 
       &:before {
-        background: $color12;
+        background: $color8;
       }
     }
   }
@@ -1262,30 +1415,30 @@ html.dusk {
 
   #noscript {
     background: #fe7575;
-    color: $color01;
+    color: $color1;
   }
 
-  .warning {
+  .linkp.warning {
     color: #fe7575;
   }
 
   #btnTheme {
-    background: $color11;
-    color: $color12;
+    background: $color7;
+    color: $color8;
   }
 
   #language {
     border: none;
-    background: $color10;
+    background: $color6;
   }
 
   #copyNotification {
-    background: $color11;
-    color: $color12;
+    background: $color7;
+    color: $color8;
   }
 
   #copyNoteLink {
-    background: $color10;
+    background: $color6;
 
     &:hover {
       opacity: .8;
@@ -1294,40 +1447,127 @@ html.dusk {
 }
 
 html.light {
-  background: $color08;
-  color: $color02;
-  accent-color: $color06;
+  background: $color4;
+  color: $color2;
 
-  ::placeholder {
-    color: $color02;
+  .accentBlue {
+    accent-color: #2b5790;
+
+    ::selection {
+      background: #2b5790;
+      color: #ffffff;
+    }
+
+    a,
+    .linkp {
+      color: #2b5790;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #2b5790;
+    }
   }
 
-  a {
-    color: $color06;
+  .accentGreen {
+    accent-color: #146727;
+
+    ::selection {
+      background: #146727;
+      color: #ffffff;
+    }
+
+    a,
+    .linkp {
+      color: #146727;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #146727;
+    }
+  }
+
+  .accentYellow {
+    accent-color: #a25c00;
+
+    ::selection {
+      background: #a25c00;
+      color: #ffffff;
+    }
+
+    a,
+    .linkp {
+      color: #a25c00;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #a25c00;
+    }
+  }
+
+  .accentPink {
+    accent-color: #942796;
+
+    ::selection {
+      background: #942796;
+      color: #ffffff;
+    }
+
+    a,
+    .linkp {
+      color: #942796;
+    }
+
+    button,
+    input[type="radio"]:checked+span,
+    .switch input:checked+.slider {
+      background: #942796;
+    }
+  }
+
+  .accentBlueSpan {
+    background: #2b5790;
+  }
+
+  .accentGreenSpan {
+    background: #146727;
+  }
+
+  .accentYellowSpan {
+    background: #a25c00;
+  }
+
+  .accentPinkSpan {
+    background: #942796;
+  }
+
+  ::placeholder {
+    color: $color2;
   }
 
   kbd {
-    background: $color09;
+    background: $color5;
   }
 
   input,
   textarea,
   select {
-    border: 2px solid $color03;
-
-    &:focus {
-      outline: $color06 solid 2px;
-    }
+    border: 2px solid $color3;
   }
 
   nav {
-    background: $color09;
+    background: $color5;
 
     #divSearch {
-      background: $color08;
+      background: $color4;
 
       input {
-        background: $color08;
+        background: $color4;
         border: none;
 
         &:focus {
@@ -1338,38 +1578,29 @@ html.light {
   }
 
   #sideBar {
-    background: $color09;
+    background: $color5;
   }
 
   button {
-    color: $color08;
-    background: $color06;
-
-    &:hover,
-    &:focus {
-      background: $color07;
-    }
+    color: $color4;
 
     &:disabled {
-      background: $color03;
-      color: $color01;
+      background: $color3;
+      color: $color1;
     }
-  }
-
-  .linkp {
-    color: $color06;
   }
 
   .popup .content,
   input,
   textarea,
   select {
-    background: $color08;
-    color: $color02;
+    background: $color4;
+    color: $color2;
   }
 
-  #colors span {
-    border: 1px solid $color03;
+  #colors span,
+  #accent-colors span {
+    border: 1px solid $color3;
   }
 
   .Rouge,
@@ -1382,45 +1613,30 @@ html.light {
   .Violet,
   .Rose {
     a {
-      color: $color01;
+      color: $color1;
     }
   }
 
   .Noir {
-    background: $color09;
+    background: $color5;
   }
 
   .category {
     span {
-      background: $color09;
-    }
-
-    input[type="radio"] {
-      &:checked+span {
-        background: $color05;
-      }
+      background: $color5;
     }
   }
 
   .switch {
-    input {
-
-      &:checked+.slider {
-        background: $color06;
-      }
-
-      &:disabled+.slider {
-        &:before {
-          background: $color03;
-        }
-      }
+    input:disabled+.slider:before {
+      background: $color3;
     }
 
     .slider {
-      background: $color09;
+      background: $color5;
 
       &:before {
-        background: $color08;
+        background: $color4;
       }
     }
   }
@@ -1439,20 +1655,20 @@ html.light {
 
   #noscript {
     background: #a93b3b;
-    color: $color08;
+    color: $color4;
   }
 
-  .warning {
+  .linkp.warning {
     color: #a93b3b;
   }
 
   #copyNotification {
-    background: $color08;
-    color: $color02;
+    background: $color4;
+    color: $color2;
   }
 
   #copyNoteLink {
-    background: $color09;
+    background: $color5;
 
     &:hover {
       opacity: .8;
@@ -1460,8 +1676,8 @@ html.light {
   }
 
   #btnTheme {
-    background: $color08;
-    color: $color02;
+    background: $color4;
+    color: $color2;
   }
 
   #language {
@@ -1519,7 +1735,7 @@ html.light {
 .Bleu,
 .Violet,
 .Rose {
-  color: $color01;
+  color: $color1;
 }
 
 .bold {
@@ -1552,4 +1768,24 @@ html.light {
 
 .align-justify {
   text-align: justify;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-inline {
+  display: inline;
+}
+
+.d-inline-block {
+  display: inline-block;
 }

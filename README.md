@@ -30,14 +30,14 @@ When I was looking for a note-taking application, I faced several difficulties: 
 ## Features
 All notes are encrypted with ``AES-256-GCM``.
 
-The user can save and edit notes, change color, copy, export and use Markdown/HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
+The user can save and edit notes, change color, copy, export and use Markdown/HTML5. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
 
 The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
 This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
 ## Design
-The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available.
+The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
 ## Security and Privacy
 The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches.
@@ -66,7 +66,7 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 ## For developers
 Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
-Technologies: JavaScript, PHP and MySQL
+Technologies: JavaScript, PHP8+ and MySQL
 
 Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure53/DOMPurify) and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
 

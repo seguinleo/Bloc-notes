@@ -29,14 +29,13 @@ require_once __DIR__ . '/class/Encryption.php';
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT title,content,dateNote,color FROM notes WHERE link=:NoteLink LIMIT 1");
+    $query = $PDO->prepare("SELECT title,content,dateNote FROM notes WHERE link=:NoteLink LIMIT 1");
     $query->execute([':NoteLink' => $noteLink]);
     $row = $query->fetch();
     $items[] = [
         'title'   => $encryption->decryptData($row['title'], $key),
         'content'    => $encryption->decryptData($row['content'], $key),
-        'date'    => $row['dateNote'],
-        'color' => $row['color']
+        'date'    => $row['dateNote']
     ];
 } catch (Exception $e) {
     http_response_code(404);

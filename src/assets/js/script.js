@@ -12,6 +12,7 @@ const popupBoxSettings = document.querySelector('#settings-popup-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
 const colors = document.querySelectorAll('#colors span');
+const accentColors = document.querySelectorAll('#accent-colors span');
 const forms = document.querySelectorAll('form');
 const sideBar = document.querySelector('#sideBar');
 const metaTheme = document.querySelectorAll('.themecolor');
@@ -30,6 +31,19 @@ if (localStorage.getItem('theme') === 'light') {
     e.content = '#1c1936';
   });
   buttonTheme.className = 'fa-solid fa-star';
+}
+if (localStorage.getItem('accent_color') === 'pink') {
+  document.querySelector('body').classList = 'accentPink';
+  document.querySelector('#accent-colors .accentPinkSpan').classList.add('selected');
+} else if (localStorage.getItem('accent_color') === 'green') {
+  document.querySelector('body').classList = 'accentGreen';
+  document.querySelector('#accent-colors .accentGreenSpan').classList.add('selected');
+} else if (localStorage.getItem('accent_color') === 'yellow') {
+  document.querySelector('body').classList = 'accentYellow';
+  document.querySelector('#accent-colors .accentYellowSpan').classList.add('selected');
+} else {
+  document.querySelector('body').classList = 'accentBlue';
+  document.querySelector('#accent-colors .accentBlueSpan').classList.add('selected');
 }
 if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
@@ -468,6 +482,29 @@ colors.forEach((span, index) => {
     if (event.key === 'Enter') span.click();
   });
   if (index === 0) span.classList.add('selected');
+});
+
+accentColors.forEach((span) => {
+  span.addEventListener('click', (event) => {
+    accentColors.forEach((e) => e.classList.remove('selected'));
+    event.target.classList.add('selected');
+    if (span.classList.contains('accentPinkSpan')) {
+      document.querySelector('body').classList = 'accentPink';
+      localStorage.setItem('accent_color', 'pink');
+    } else if (span.classList.contains('accentGreenSpan')) {
+      document.querySelector('body').classList = 'accentGreen';
+      localStorage.setItem('accent_color', 'green');
+    } else if (span.classList.contains('accentYellowSpan')) {
+      document.querySelector('body').classList = 'accentYellow';
+      localStorage.setItem('accent_color', 'yellow');
+    } else {
+      document.querySelector('body').classList = 'accentBlue';
+      localStorage.setItem('accent_color', 'blue');
+    }
+  });
+  span.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') span.click();
+  });
 });
 
 document.querySelectorAll('header i').forEach((e) => {

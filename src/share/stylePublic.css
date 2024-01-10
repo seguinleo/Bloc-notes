@@ -17,7 +17,7 @@
 html {
   -webkit-tap-highlight-color: transparent;
   scrollbar-color: rgba(100, 100, 125, 50%) rgba(0, 0, 0, 0);
-  background-color: #000;
+  background: #000;
   color: #c6c6c6;
   font-family: OpenSans, sans-serif;
   min-height: 100dvh;
@@ -62,7 +62,7 @@ table {
 }
 
 thead {
-  background-color: rgba(100, 100, 125, 20%);
+  background: rgba(100, 100, 125, 20%);
 }
 
 th,
@@ -78,18 +78,40 @@ a {
   color: #8ab4f8;
 }
 
+kbd {
+  border-radius: 5px;
+  margin: 0 2px;
+  font-size: .8rem;
+  font-weight: 700;
+  padding: 2px 4px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
+}
+
+pre {
+  margin: 10px auto;
+}
+
 pre,
 code {
-  background: #383a59;
-  color: #8be9fd;
-  border-radius: 5px;
-  padding: 0 2px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 4px;
   white-space: break-spaces;
+}
+
+blockquote {
+  border-left: 3px solid rgba(100, 100, 125, 50%);
+  padding-left: 10px;
 }
 
 li {
   margin-left: -1.4rem;
   word-break: break-word;
+}
+
+.task-list-item input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
 }
 
 img {
@@ -108,12 +130,12 @@ input[type="checkbox"] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: #171717;
   border-radius: 1rem;
   clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
   transition: clip-path .4s;
   width: fit-content;
-  height: fit-content;
-  max-height: calc(100dvh - 4rem);
+  max-height: 80vh;
   margin: auto;
   line-height: 2;
   padding: 10px 1rem;
@@ -191,74 +213,13 @@ input[type="checkbox"] {
   font-weight: 700;
 }
 
-.Noir {
-  background-color: #171717;
-}
-
-.Rouge {
-  background-color: #fd948a;
-}
-
-.Orange {
-  background-color: #ffc65c;
-}
-
-.Jaune {
-  background-color: #fdf488;
-}
-
-.Vert {
-  background-color: #d6fe9d;
-}
-
-.Cyan {
-  background-color: #bbfdec;
-}
-
-.BleuCiel {
-  background-color: #d2eff7;
-}
-
-.Bleu {
-  background-color: #b4caf6;
-}
-
-.Violet {
-  background-color: #d1acff;
-}
-
-.Rose {
-  background-color: #fdd0e7;
-}
-
-.Rouge,
-.Orange,
-.Jaune,
-.Vert,
-.Cyan,
-.BleuCiel,
-.Bleu,
-.Violet,
-.Rose,
-.Rouge a,
-.Orange a,
-.Jaune a,
-.Vert a,
-.Cyan a,
-.BleuCiel a,
-.Bleu a,
-.Violet a,
-.Rose a {
-  color: #000;
-}
-
 .bottom-content i:hover {
   background: rgba(100, 100, 125, 20%);
 }
 
 .task-list-item {
-  list-style-type: none;
   margin-left: -2.4rem;
+  pointer-events: none;
 }
 
 .bold {
@@ -291,6 +252,26 @@ input[type="checkbox"] {
 
 .align-justify {
   text-align: justify;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-inline {
+  display: inline;
+}
+
+.d-inline-block {
+  display: inline-block;
 }
 
 footer {

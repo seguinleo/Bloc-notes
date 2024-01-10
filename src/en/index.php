@@ -86,7 +86,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                 <header>
                     <i class="fa-solid fa-xmark" tabindex="0"></i>
                 </header>
-                <h2>v24.1.1🎉</h2>
+                <h2>v24.1.2🎉</h2>
                 <p>
                     Bloc-notes has been updated!
                 </p>
@@ -311,6 +311,14 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                         </span>
                     </div>
                     <div class="row">
+                        <div id="accent-colors">
+                            <span class="accentBlueSpan" role="button" tabindex="0" aria-label="Blue"></span>
+                            <span class="accentGreenSpan" role="button" tabindex="0" aria-label="Green"></span>
+                            <span class="accentYellowSpan" role="button" tabindex="0" aria-label="Yellow"></span>
+                            <span class="accentPinkSpan" role="button" tabindex="0" aria-label="Pink"></span>
+                        </div>
+                    </div>
+                    <div class="row">
                         <i class="fa-solid fa-fingerprint"></i>
                         <label for="checkFingerprint" class="switch" aria-label="Fingerprint lock">
                             <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
@@ -319,7 +327,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v24.1.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v24.1.2</a>
                         </p>
                     </div>
                 </div>
@@ -332,6 +340,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                         <header>
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
                         </header>
+                        <div class="row bold">
+                            <?= $name ?>
+                        </div>
                         <div class="row">
                             <span id="log-out" class="linkp" tabindex="0" role="button">Sign out</span>
                         </div>

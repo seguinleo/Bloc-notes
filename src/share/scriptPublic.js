@@ -23,14 +23,14 @@ const showSharedNote = async () => {
 
   data.forEach((row) => {
     const {
-      title, content, color, date,
+      title, content, date,
     } = row;
 
     if (!title || !content) return;
 
     const contentHtml = converter.makeHtml(content);
     const noteElement = document.createElement('div');
-    noteElement.classList.add('note', color);
+    noteElement.classList.add('note');
     noteElement.tabIndex = 0;
 
     const detailsElement = document.createElement('div');
@@ -59,6 +59,7 @@ const showSharedNote = async () => {
     clipboardIconElement.tabIndex = 0;
     clipboardIconElement.setAttribute('data-note-content', content);
     clipboardIconElement.setAttribute('role', 'button');
+    clipboardIconElement.setAttribute('aria-label', 'Copy note to clipboard');
     bottomContentElement.appendChild(clipboardIconElement);
 
     const downloadIconElement = document.createElement('i');
@@ -67,6 +68,7 @@ const showSharedNote = async () => {
     downloadIconElement.setAttribute('data-note-title', title);
     downloadIconElement.setAttribute('data-note-content', content);
     downloadIconElement.setAttribute('role', 'button');
+    downloadIconElement.setAttribute('aria-label', 'Download note');
     bottomContentElement.appendChild(downloadIconElement);
     noteElement.appendChild(detailsElement);
     noteElement.appendChild(bottomContentElement);
