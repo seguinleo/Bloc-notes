@@ -1,9 +1,9 @@
 {
   "name": "bloc-notes",
-  "version": "24.1.2",
+  "version": "24.1.3",
   "author": "seguinleo",
   "license": "GPL-3.0",
-  "description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML and export.",
+  "description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass": "sass --watch assets/sass:assets/css --style compressed"
@@ -12,7 +12,6 @@
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "sass": "^1.69.7",
-    "typescript": "^5.3.3"
+    "sass": "^1.69.7"
   }
 }

@@ -6,7 +6,7 @@
 	"background_color": "#000000",
 	"theme_color": "#000000",
 	"orientation": "portrait-primary",
-	"lang": "fr",
+	"lang": "en",
 	"scope": "./",
 	"screenshots": [
 		{
@@ -21,7 +21,7 @@
 			"sizes": "320x605"
 		}
 	],
-	"description": "Enregistrez des notes sur votre appareil ou connectez-vous pour synchroniser et chiffrer vos notes.",
+	"description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",
 	"icons": [
 		{
 			"src": "./assets/icons/icon48.png",

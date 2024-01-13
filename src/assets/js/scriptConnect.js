@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 let isUpdate = false;
-let timeoutCopy = null;
 let timeoutNotification = null;
 let touchstartX = 0;
 let touchendX = 0;
@@ -53,6 +52,202 @@ function generateRandomBytes(length) {
   const array = new Uint8Array(length);
   window.crypto.getRandomValues(array);
   return array;
+}
+
+function changeLanguage(language) {
+  if (language === 'fr') {
+    document.documentElement.setAttribute('lang', 'fr');
+    document.querySelector('#language').value = 'fr';
+    document.querySelector('#iconAdd').textContent = 'Ajouter une note';
+    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes à été mis à jour !';
+    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
+    document.querySelector('#sort-popup-box h2').textContent = 'Trier les notes par :';
+    document.querySelector('#sortNotes1Span').textContent = 'Date de création';
+    document.querySelector('#sortNotes2Span').textContent = 'Date de création (Z-A)';
+    document.querySelector('#sortNotes3Span').textContent = 'Date de modification';
+    document.querySelector('#sortNotes4Span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#filter-popup-box h2').textContent = 'Filtrer les notes par catégorie :';
+    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
+      e.textContent = '❌';
+    });
+    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
+      e.textContent = '👤Perso';
+    });
+    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
+      e.textContent = '💼Travail';
+    });
+    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
+      e.textContent = '🏖️Voyage';
+    });
+    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
+      e.textContent = '📓Tâches';
+    });
+    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
+      e.textContent = '🕰️Rappel';
+    });
+    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
+      e.textContent = '💡Idées';
+    });
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
+    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes';
+    document.querySelector('#linkMarkdown').textContent = 'Guide Markdown';
+    document.querySelector('#linkHelp').textContent = 'Aide et discussions';
+    document.querySelector('#log-out').textContent = 'Déconnexion';
+    document.querySelector('#newPsswd').setAttribute('placeholder', 'Nouveau mot de passe');
+    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmer le mot de passe');
+    document.querySelector('#changePsswd button').textContent = 'Changer le mot de passe';
+    document.querySelector('#delete-account').textContent = 'Supprimer le compte';
+    document.querySelector('#privateNote span').textContent = 'Voulez-vous rendre votre note privée ? Le lien ne sera plus disponible.';
+    document.querySelector('#privateNote button').textContent = 'Rendre privée';
+    document.querySelector('#publicNote span').textContent = 'Voulez-vous rendre votre note publique ? Un lien sera disponible pour la partager.';
+    document.querySelector('#publicNote button').textContent = 'Rendre publique';
+  } else if (language === 'de') {
+    document.documentElement.setAttribute('lang', 'de');
+    document.querySelector('#language').value = 'de';
+    document.querySelector('#iconAdd').textContent = 'Notiz hinzufügen';
+    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes wurde aktualisiert!';
+    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
+    document.querySelector('#sort-popup-box h2').textContent = 'Notizen sortieren nach:';
+    document.querySelector('#sortNotes1Span').textContent = 'Erstellungsdatum';
+    document.querySelector('#sortNotes2Span').textContent = 'Erstellungsdatum (Z-A)';
+    document.querySelector('#sortNotes3Span').textContent = 'Änderungsdatum';
+    document.querySelector('#sortNotes4Span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#filter-popup-box h2').textContent = 'Notizen filtern nach Kategorie:';
+    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
+      e.textContent = '❌';
+    });
+    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
+      e.textContent = '👤Persönlich';
+    });
+    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
+      e.textContent = '💼Arbeit';
+    });
+    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
+      e.textContent = '🏖️Reise';
+    });
+    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
+      e.textContent = '📓Aufgaben';
+    });
+    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
+      e.textContent = '🕰️Erinnerung';
+    });
+    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
+      e.textContent = '💡Ideen';
+    });
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Speichern';
+    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren';
+    document.querySelector('#linkMarkdown').textContent = 'Markdown-Anleitung';
+    document.querySelector('#linkHelp').textContent = 'Hilfe und Diskussionen';
+    document.querySelector('#log-out').textContent = 'Abmelden';
+    document.querySelector('#newPsswd').setAttribute('placeholder', 'Neues Passwort');
+    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Passwort bestätigen');
+    document.querySelector('#changePsswd button').textContent = 'Passwort ändern';
+    document.querySelector('#delete-account').textContent = 'Konto löschen';
+    document.querySelector('#privateNote span').textContent = 'Möchten Sie Ihre Notiz privat machen? Der Link wird nicht mehr verfügbar sein.';
+    document.querySelector('#privateNote button').textContent = 'Privat machen';
+    document.querySelector('#publicNote span').textContent = 'Möchten Sie Ihre Notiz öffentlich machen? Ein Link wird verfügbar sein, um es zu teilen.';
+    document.querySelector('#publicNote button').textContent = 'Öffentlich machen';
+  } else if (language === 'es') {
+    document.documentElement.setAttribute('lang', 'es');
+    document.querySelector('#language').value = 'es';
+    document.querySelector('#iconAdd').textContent = 'Agregar una nota';
+    document.querySelector('#newVersionInfos').textContent = '¡Bloc-notes ha sido actualizado!';
+    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
+    document.querySelector('#sort-popup-box h2').textContent = 'Ordenar notas por:';
+    document.querySelector('#sortNotes1Span').textContent = 'Fecha de creación';
+    document.querySelector('#sortNotes2Span').textContent = 'Fecha de creación (Z-A)';
+    document.querySelector('#sortNotes3Span').textContent = 'Fecha de modificación';
+    document.querySelector('#sortNotes4Span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#filter-popup-box h2').textContent = 'Filtrar notas por categoría:';
+    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
+      e.textContent = '❌';
+    });
+    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
+      e.textContent = '👤Personal';
+    });
+    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
+      e.textContent = '💼Trabajo';
+    });
+    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
+      e.textContent = '🏖️Viaje';
+    });
+    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
+      e.textContent = '📓Tareas';
+    });
+    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
+      e.textContent = '🕰️Recordatorio';
+    });
+    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
+      e.textContent = '💡Ideas';
+    });
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Guardar';
+    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas';
+    document.querySelector('#linkMarkdown').textContent = 'Guía de Markdown';
+    document.querySelector('#linkHelp').textContent = 'Ayuda y discusiones';
+    document.querySelector('#log-out').textContent = 'Cerrar sesión';
+    document.querySelector('#newPsswd').setAttribute('placeholder', 'Nueva contraseña');
+    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmar contraseña');
+    document.querySelector('#changePsswd button').textContent = 'Cambiar contraseña';
+    document.querySelector('#delete-account').textContent = 'Eliminar cuenta';
+    document.querySelector('#privateNote span').textContent = '¿Quieres hacer tu nota privada? El enlace ya no estará disponible.';
+    document.querySelector('#privateNote button').textContent = 'Hacer privado';
+    document.querySelector('#publicNote span').textContent = '¿Quieres hacer tu nota pública? Un enlace estará disponible para compartirlo.';
+    document.querySelector('#publicNote button').textContent = 'Hacer público';
+  } else {
+    document.documentElement.setAttribute('lang', 'en');
+    document.querySelector('#language').value = 'en';
+    document.querySelector('#iconAdd').textContent = 'Add a note';
+    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes has been updated!';
+    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
+    document.querySelector('#sort-popup-box h2').textContent = 'Sort notes by:';
+    document.querySelector('#sortNotes1Span').textContent = 'Creation date';
+    document.querySelector('#sortNotes2Span').textContent = 'Creation date (Z-A)';
+    document.querySelector('#sortNotes3Span').textContent = 'Modification date';
+    document.querySelector('#sortNotes4Span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#filter-popup-box h2').textContent = 'Filter notes by category:';
+    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
+      e.textContent = '❌';
+    });
+    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
+      e.textContent = '👤Personal';
+    });
+    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
+      e.textContent = '💼Work';
+    });
+    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
+      e.textContent = '🏖️Travel';
+    });
+    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
+      e.textContent = '📓Tasks';
+    });
+    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
+      e.textContent = '🕰️Reminder';
+    });
+    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
+      e.textContent = '💡Ideas';
+    });
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Save';
+    document.querySelector('#export-all-notes').textContent = 'Export all notes';
+    document.querySelector('#linkMarkdown').textContent = 'Markdown guide';
+    document.querySelector('#linkHelp').textContent = 'Help and discussions';
+    document.querySelector('#log-out').textContent = 'Log out';
+    document.querySelector('#newPsswd').setAttribute('placeholder', 'New password');
+    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirm password');
+    document.querySelector('#changePsswd button').textContent = 'Change password';
+    document.querySelector('#delete-account').textContent = 'Delete account';
+    document.querySelector('#privateNote span').textContent = 'Do you want to make your note private? The link will no longer be available.';
+    document.querySelector('#privateNote button').textContent = 'Make private';
+    document.querySelector('#publicNote span').textContent = 'Do you want to make your note public? A link will be available to share it.';
+    document.querySelector('#publicNote button').textContent = 'Make public';
+  }
 }
 
 const showSuccess = (message) => {
@@ -355,13 +550,7 @@ const downloadNote = (title, content) => {
 };
 
 const copy = (content) => {
-  if (timeoutCopy) clearTimeout(timeoutCopy);
-  const notification = document.querySelector('#copyNotification');
   navigator.clipboard.writeText(content);
-  notification.classList.add('show');
-  timeoutCopy = setTimeout(() => {
-    notification.classList.remove('show');
-  }, 2000);
 };
 
 const deleteNote = (e) => {
@@ -385,7 +574,7 @@ const noteAccess = (id, link) => {
     publicNote.classList.add('show');
     document.querySelector('#idNotePrivate').value = id;
     document.querySelector('#linkNotePrivate').value = link;
-    document.querySelector('#copyNoteLink').textContent = `localhost/seguinleo-notes/share/${link}`;
+    document.querySelector('#copyNoteLink').textContent = link;
     publicNote.querySelector('i').focus();
   }
 };
@@ -573,23 +762,25 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   document.body.removeChild(a);
 });
 
-document.querySelector('#language').addEventListener('change', () => {
+document.querySelector('#language').addEventListener('change', async () => {
   const e = document.querySelector('#language').value;
-  if (window.location.href.endsWith('/en/')) {
-    if (e === 'fr') window.location.href = '../';
-    else if (e === 'de') window.location.href = '../de/';
-    else if (e === 'es') window.location.href = '../es/';
-  } else if (window.location.href.endsWith('/de/')) {
-    if (e === 'fr') window.location.href = '../';
-    else if (e === 'en') window.location.href = '../en/';
-    else if (e === 'es') window.location.href = '../es/';
-  } else if (window.location.href.endsWith('/es/')) {
-    if (e === 'fr') window.location.href = '../';
-    else if (e === 'en') window.location.href = '../en/';
-    else if (e === 'de') window.location.href = '../de/';
-  } else if (e === 'en') window.location.href += 'en/';
-  else if (e === 'de') window.location.href += 'de/';
-  else if (e === 'es') window.location.href += 'es/';
+  if (e === 'fr') {
+    localStorage.setItem('language', 'fr');
+    changeLanguage('fr');
+    await showNotes();
+  } else if (e === 'de') {
+    localStorage.setItem('language', 'de');
+    changeLanguage('de');
+    await showNotes();
+  } else if (e === 'es') {
+    localStorage.setItem('language', 'es');
+    changeLanguage('es');
+    await showNotes();
+  } else {
+    localStorage.setItem('language', 'en');
+    changeLanguage('en');
+    await showNotes();
+  }
 });
 
 contentNote.addEventListener('input', () => {
@@ -631,14 +822,9 @@ accentColors.forEach((span) => {
   });
 });
 
-document.querySelector('#copyNoteLink').addEventListener('click', async () => {
+document.querySelector('#copyNoteLinkBtn').addEventListener('click', () => {
   const link = document.querySelector('#copyNoteLink').textContent;
-  const notification = document.querySelector('#copyNotification');
-  navigator.clipboard.writeText(link);
-  notification.classList.add('show');
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 2000);
+  navigator.clipboard.writeText(`localhost/seguinleo-notes/share/${link}`);
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -668,11 +854,11 @@ document.querySelectorAll('input[name="filterNotes"]').forEach((e) => {
   });
 });
 
-document.querySelectorAll('input[name="sortNotes"]').forEach((e) => {
-  e.addEventListener('change', () => {
+document.querySelectorAll('input[name="sortNotes"]').forEach(async (e) => {
+  e.addEventListener('change', async () => {
     if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
       localStorage.setItem('sort_notes', e.value);
-      showNotes();
+      await showNotes();
     }
   });
 });
@@ -803,6 +989,7 @@ document.querySelector('#publicNote').addEventListener('submit', async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
   document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
+  changeLanguage(localStorage.getItem('language'));
+  if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
 });

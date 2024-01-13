@@ -215,6 +215,14 @@ nav {
     }
   }
 
+  #dot-connected {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0f0;
+    margin-top: -15px;
+  }
+
   #last-sync {
     font-size: .8rem;
 
@@ -305,7 +313,7 @@ main {
 
 #sidebar-indicator {
   position: fixed;
-  height: 20vh;
+  height: 15vh;
   width: 4px;
   border-radius: 5px;
   background: rgba(100, 100, 100, 50%);
@@ -709,11 +717,6 @@ button {
     margin: 10px auto;
     width: 65%;
   }
-
-  button {
-    margin: 10px auto;
-    width: 15%;
-  }
 }
 
 .delete-account {
@@ -755,44 +758,37 @@ button {
   background: #a93b3b;
 }
 
-#copyNotification {
-  position: fixed;
-  top: 1rem;
-  right: 2rem;
-  text-align: center;
-  font-weight: 700;
-  max-width: 125px;
-  padding: 10px;
-  border-radius: 5px;
-  display: none;
-  z-index: 999;
-
-  &.show {
-    display: flex;
-  }
-}
-
-#copyNoteLink {
+#copyNoteLink,
+#psswdGen {
+  display: inline-flex;
+  width: 70%;
   margin: auto;
   border-radius: 20px;
-  text-align: center;
+  justify-content: center;
   padding: 10px;
   font-weight: 700;
   word-break: break-all;
-  cursor: pointer;
+}
+
+#copyNoteLinkBtn,
+#copyPasswordBtn,
+#submitGenPsswd {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 48px;
+  justify-content: center;
+  align-items: center;
 }
 
 #btnTheme {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1.2rem;
   width: 36px;
   height: 36px;
   border-radius: 48px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: .1s;
 
   &:focus {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
@@ -802,18 +798,15 @@ button {
 #btnSort,
 #btnFilter {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   right: 1.5rem;
   font-size: 1.2rem;
   width: 36px;
   height: 36px;
   border-radius: 48px;
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
   z-index: 2;
-  transition: .1s;
 
   &:focus {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
@@ -954,10 +947,6 @@ button {
   .bottom-content i {
     margin: 0 2px;
   }
-
-  #copyNotification.show {
-    display: none;
-  }
 }
 
 html.dark {
@@ -978,7 +967,7 @@ html.dark {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #8ab4f8;
     }
@@ -998,7 +987,7 @@ html.dark {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #8af8a4;
     }
@@ -1018,7 +1007,7 @@ html.dark {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #f8f48a;
     }
@@ -1038,7 +1027,7 @@ html.dark {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #f68af8;
     }
@@ -1175,6 +1164,7 @@ html.dark {
     color: $color1;
   }
 
+  .warning,
   .linkp.warning {
     color: #fe7575;
   }
@@ -1189,17 +1179,9 @@ html.dark {
     background: $color2;
   }
 
-  #copyNotification {
+  #copyNoteLink,
+  #psswdGen {
     background: $color1;
-    color: $color3;
-  }
-
-  #copyNoteLink {
-    background: $color1;
-
-    &:hover {
-      opacity: .8;
-    }
   }
 }
 
@@ -1221,7 +1203,7 @@ html.dusk {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #8ab4f8;
     }
@@ -1241,7 +1223,7 @@ html.dusk {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #8af8a4;
     }
@@ -1261,7 +1243,7 @@ html.dusk {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #f8f48a;
     }
@@ -1281,7 +1263,7 @@ html.dusk {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #f68af8;
     }
@@ -1418,6 +1400,7 @@ html.dusk {
     color: $color1;
   }
 
+  .warning,
   .linkp.warning {
     color: #fe7575;
   }
@@ -1432,17 +1415,9 @@ html.dusk {
     background: $color6;
   }
 
-  #copyNotification {
-    background: $color7;
-    color: $color8;
-  }
-
-  #copyNoteLink {
+  #copyNoteLink,
+  #psswdGen {
     background: $color6;
-
-    &:hover {
-      opacity: .8;
-    }
   }
 }
 
@@ -1464,7 +1439,7 @@ html.light {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #2b5790;
     }
@@ -1484,7 +1459,7 @@ html.light {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #146727;
     }
@@ -1504,7 +1479,7 @@ html.light {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #a25c00;
     }
@@ -1524,7 +1499,7 @@ html.light {
     }
 
     button,
-    input[type="radio"]:checked+span,
+    .category input[type="radio"]:checked+span,
     .switch input:checked+.slider {
       background: #942796;
     }
@@ -1658,21 +1633,14 @@ html.light {
     color: $color4;
   }
 
+  .warning,
   .linkp.warning {
     color: #a93b3b;
   }
 
-  #copyNotification {
-    background: $color4;
-    color: $color2;
-  }
-
-  #copyNoteLink {
+  #copyNoteLink,
+  #psswdGen {
     background: $color5;
-
-    &:hover {
-      opacity: .8;
-    }
   }
 
   #btnTheme {
