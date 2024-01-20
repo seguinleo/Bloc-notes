@@ -365,11 +365,17 @@ async function storeKeyInDB(db, objectStoreName, key) {
 }
 
 const showNotes = async () => {
-  document.querySelectorAll('#listNotes p').forEach((e) => e.remove());
+  document.querySelectorAll('#listNotes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
   if (notesJSON.length === 0) return;
+
+  const numberOfNotesElement = document.createElement('h2');
+  if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
+  else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
+  else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
+  sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
 
   const dbName = 'notes_db';
   const objectStoreName = 'key';
@@ -415,7 +421,7 @@ const showNotes = async () => {
     const noteElement = document.createElement('div');
     const detailsElement = document.createElement('div');
     const titleElement = document.createElement('h2');
-    const contentElement = document.createElement('span');
+    const contentElement = document.createElement('div');
     const bottomContentElement = document.createElement('div');
     const editIconElement = document.createElement('i');
     const trashIconElement = document.createElement('i');
@@ -435,6 +441,7 @@ const showNotes = async () => {
     detailsElement.classList.add('details');
     titleElement.classList.add('title');
     titleElement.textContent = deTitleString;
+    contentElement.classList.add('detailsContent');
 
     if (hidden === false) contentElement.innerHTML = contentHtml;
     else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
@@ -581,6 +588,8 @@ const copy = (content) => {
 };
 
 const deleteNote = async (e) => {
+  document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
+  document.body.classList.remove('body-fullscreen');
   let message = '';
   if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
   else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
@@ -726,7 +735,7 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {
     const title = e.querySelector('.title').textContent;
-    const content = e.querySelector('.details span').textContent;
+    const content = e.querySelector('.detailsContent').textContent;
     const noteObject = {
       title,
       content,

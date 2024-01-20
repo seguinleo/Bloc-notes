@@ -15,7 +15,7 @@ class Encryption
      */
     protected function generateSalt(): string
     {
-        return openssl_random_pseudo_bytes(16);
+        return random_bytes(16);
     }
 
     /**

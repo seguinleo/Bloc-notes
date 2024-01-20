@@ -73,7 +73,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
         <div id="successNotification"></div>
         <div id="errorNotification"></div>
         <div id="sideBar">
-            <button id="iconAdd" type="button"></button>
+            <div class="row">
+                <button id="iconAdd" type="button"></button>
+            </div>
             <div id="listNotes"></div>
             <div id="newVersion">
                 <header>

@@ -135,6 +135,14 @@ header {
   }
 }
 
+details {
+  margin: 10px auto;
+
+  summary {
+    margin: 5px;
+  }
+}
+
 pre {
   margin: 10px auto;
 }
@@ -219,8 +227,9 @@ nav {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #0f0;
-    margin-top: -15px;
+    background: #2adc2d;
+    margin-top: -20px;
+    margin-left: -8px;
   }
 
   #last-sync {
@@ -260,6 +269,10 @@ main {
   #listNotes {
     flex-grow: 1;
     overflow-y: auto;
+
+    h2 {
+      margin-bottom: 1rem;
+    }
 
     p {
       margin: 5px 0;
@@ -304,10 +317,6 @@ main {
 
   #close-sidebar {
     display: none;
-  }
-
-  button {
-    margin: 1rem auto;
   }
 }
 
@@ -525,6 +534,7 @@ form {
   }
 
   .details {
+    flex-grow: 1;
     max-height: 100%;
   }
 }
@@ -710,15 +720,6 @@ button {
   font-size: .8rem;
 }
 
-#genPsswd {
-  margin: 10px auto;
-
-  input {
-    margin: 10px auto;
-    width: 65%;
-  }
-}
-
 .delete-account {
   font-weight: 700;
   cursor: pointer;
@@ -761,11 +762,13 @@ button {
 #copyNoteLink,
 #psswdGen {
   display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  height: 36px;
   width: 70%;
   margin: auto;
   border-radius: 20px;
   justify-content: center;
-  padding: 10px;
   font-weight: 700;
   word-break: break-all;
 }
@@ -774,6 +777,7 @@ button {
 #copyPasswordBtn,
 #submitGenPsswd {
   display: inline-flex;
+  vertical-align: middle;
   width: 36px;
   height: 36px;
   border-radius: 48px;

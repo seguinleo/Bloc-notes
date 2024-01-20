@@ -24,10 +24,10 @@ $psswdNew = $_POST['psswdNew'];
 $psswdNewSecure = password_hash($psswdNew, PASSWORD_DEFAULT);
 
 try {
-    $query = $PDO->prepare("UPDATE users SET psswd=:psswdHash WHERE name=:CurrentUser AND id=:UserId");
+    $query = $PDO->prepare("UPDATE users SET psswd=:PsswdHash WHERE name=:CurrentUser AND id=:UserId");
     $query->execute(
         [
-            ':psswdHash'   => $psswdNewSecure,
+            ':PsswdHash'   => $psswdNewSecure,
             ':CurrentUser' => $name,
             ':UserId'      => $userId
         ]

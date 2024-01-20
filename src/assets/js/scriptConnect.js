@@ -287,7 +287,7 @@ converter.setOption('simpleLineBreaks', true);
 converter.setOption('simplifiedAutoLink', true);
 
 const showNotes = async () => {
-  document.querySelectorAll('#listNotes p').forEach((e) => e.remove());
+  document.querySelectorAll('#listNotes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
@@ -303,6 +303,12 @@ const showNotes = async () => {
 
   if (data.length === 0) return;
 
+  const numberOfNotesElement = document.createElement('h2');
+  if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${data.length})`;
+  else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${data.length})`;
+  else numberOfNotesElement.textContent = `Notes (${data.length})`;
+  sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
+
   const fragment = document.createDocumentFragment();
 
   data.forEach((row) => {
@@ -316,7 +322,7 @@ const showNotes = async () => {
     const noteElement = document.createElement('div');
     const detailsElement = document.createElement('div');
     const titleElement = document.createElement('h2');
-    const contentElement = document.createElement('span');
+    const contentElement = document.createElement('div');
     const bottomContentElement = document.createElement('div');
     const editIconElement = document.createElement('i');
     const paragraph = document.createElement('p');
@@ -336,6 +342,7 @@ const showNotes = async () => {
     detailsElement.classList.add('details');
     titleElement.classList.add('title');
     titleElement.textContent = title;
+    contentElement.classList.add('detailsContent');
 
     if (hidden === 0) contentElement.innerHTML = contentHtml;
     else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
@@ -554,11 +561,13 @@ const copy = (content) => {
 };
 
 const deleteNote = (e) => {
+  document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
+  document.body.classList.remove('body-fullscreen');
   let message = '';
-  if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete this note?';
-  else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie diese Notiz wirklich löschen?';
-  else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro que quieres eliminar esta nota?';
-  else message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
+  else if (localStorage.getItem('language') === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
+  else message = 'Do you really want to delete this note?';
   // eslint-disable-next-line no-alert
   if (window.confirm(message)) fetchDelete(e);
 };
@@ -668,10 +677,10 @@ document.querySelectorAll('.linkp').forEach((e) => {
 
 document.querySelector('#delete-account').addEventListener('click', () => {
   let message = '';
-  if (window.location.href.endsWith('/en/')) message = 'Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.';
-  else if (window.location.href.endsWith('/de/')) message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
-  else if (window.location.href.endsWith('/es/')) message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
-  else message = 'Voulez-vous vraiment supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur redeviendra disponible pour les autres utilisateurs.';
+  if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur sera à nouveau disponible pour les autres utilisateurs.';
+  else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
+  else if (localStorage.getItem('language') === 'es') message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
+  else message = 'Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.';
   // eslint-disable-next-line no-alert
   if (window.confirm(message)) deleteAccount();
 });
@@ -746,7 +755,7 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {
     const title = e.querySelector('.title').textContent;
-    const content = e.querySelector('.details span').textContent;
+    const content = e.querySelector('.detailsContent').textContent;
     const noteObject = {
       title,
       content,

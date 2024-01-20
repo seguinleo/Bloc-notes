@@ -21,15 +21,15 @@ require_once __DIR__ . '/config/config.php';
 $nameCreate = $_POST['nameCreate'];
 $psswdCreate = $_POST['psswdCreate'];
 $psswdCreateHash = password_hash($psswdCreate, PASSWORD_DEFAULT);
-$key = openssl_random_pseudo_bytes(32);
+$key = bin2hex(random_bytes(32));
 
 try {
-    $query = $PDO->prepare("INSERT INTO users (name,psswd,oneKey) VALUES (:nameCreate,:psswdHash,:OneKey)");
+    $query = $PDO->prepare("INSERT INTO users (name,psswd,oneKey) VALUES (:NameCreate,:PsswdHash,:OneKey)");
     $query->execute(
         [
-            ':nameCreate' => $nameCreate,
-            ':psswdHash'  => $psswdCreateHash,
-            ':OneKey'     => htmlspecialchars($key, ENT_QUOTES, 'UTF-8'),
+            ':NameCreate' => $nameCreate,
+            ':PsswdHash'  => $psswdCreateHash,
+            ':OneKey'     => $key
         ]
     );
 } catch (Exception $e) {

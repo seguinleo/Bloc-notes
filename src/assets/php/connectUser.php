@@ -21,8 +21,8 @@ require_once __DIR__ . '/config/config.php';
 $nameConnect = $_POST['nameConnect'];
 
 try {
-    $query = $PDO->prepare("SELECT id,name,psswd FROM users WHERE name=:nameConnect LIMIT 1");
-    $query->execute([':nameConnect' => $nameConnect]);
+    $query = $PDO->prepare("SELECT id,name,psswd FROM users WHERE name=:NameConnect LIMIT 1");
+    $query->execute([':NameConnect' => $nameConnect]);
     $row = $query->fetch();
     if (!$row) {
         http_response_code(401);
