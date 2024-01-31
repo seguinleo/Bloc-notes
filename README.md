@@ -51,7 +51,7 @@ Bloc-notes stores the username, hashed password, and encrypted notes in a secure
 The user can use its fingerprint to unlock the notes. The fingerprint is stored in the browser's local storage and is not sent to the server.
 
 > [!WARNING]
-> Never store passwords or too personal data in your notes regardless of the service.
+> Never store passwords or too personal data in your notes regardless of the service, even if it is encrypted.
 
 ## Languages
 🇫🇷French, 🇬🇧English, 🇩🇪German, 🇪🇸Spanish
@@ -81,7 +81,6 @@ Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure
 ``docker-compose up --build`` to build the Docker container
 
 > [!NOTE]
-> For self-hosting, base URL is ``localhost/seguinleo-notes/``, just put ``src`` folder in your localhost and rename it ``seguinleo-notes``. Database name is ``seguinleo-notes``.
+> For self-hosting, base URL is ``localhost/seguinleo-notes/``, just put ``src`` folder in your localhost and rename it ``seguinleo-notes``. Database name is ``seguinleo-notes``. HTTPS is highly recommended.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
-![Mobile preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/mobile.png)

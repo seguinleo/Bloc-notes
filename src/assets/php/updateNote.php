@@ -1,5 +1,5 @@
 <?php
-global $key, $PDO, $name;
+global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
 
 if (isset($_POST['noteId'], $_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
@@ -17,9 +17,7 @@ $encryption = new Encryption\Encryption();
 
 $noteId = $_POST['noteId'];
 $title = $_POST['title'];
-$titleEncrypted = $encryption->encryptData($title, $key);
 $content = $_POST['content'];
-$contentEncrypted = $encryption->encryptData($content, $key);
 $color = $_POST['color'];
 $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
@@ -46,8 +44,8 @@ try {
     $query->execute(
         [
             ':NoteId'     => $noteId,
-            ':Title'      => $titleEncrypted,
-            ':Content'    => $contentEncrypted,
+            ':Title'      => $encryption->encryptData($title, $key),
+            ':Content'    => $encryption->encryptData($content, $key),
             ':Color'      => $color,
             ':DateNote'   => $dateNote,
             ':HiddenNote' => $hidden,

@@ -1,3 +1,9 @@
+#----v24.2.1----#
+-Improve accessibility
+-Improve code structure
+-Improve UI/UX
+-Bug fixes
+
 #----v24.1.3----#
 -Better languages (single page url)
 

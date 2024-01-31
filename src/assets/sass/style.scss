@@ -111,28 +111,20 @@ kbd {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
 }
 
+fieldset {
+  border: 2px solid rgba(100, 100, 100, 20%);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+
+  legend {
+    font-weight: 700;
+  }
+}
+
 blockquote {
   border-left: 3px solid rgba(100, 100, 100, 50%);
   padding-left: 10px;
-}
-
-header {
-  padding: 10px;
-
-  .fa-xmark {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    transition: .1s;
-
-    &:hover {
-      background: rgba(100, 100, 100, 20%);
-    }
-  }
 }
 
 details {
@@ -163,14 +155,10 @@ li {
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
-#noscript {
-  padding: 4px;
-}
-
-nav {
+header {
   top: 0;
   left: 0;
   right: 0;
@@ -184,16 +172,16 @@ nav {
     display: none;
   }
 
-  .log-in,
-  .manage-account {
-    font-size: 2rem;
-  }
-
   div {
-    margin: 10px 2rem;
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
+    margin: 10px 2rem;
+  }
+
+  .log-in,
+  .manage-account {
+    font-size: 2rem;
   }
 
   #divSearch {
@@ -236,20 +224,101 @@ nav {
     font-size: .8rem;
 
     i {
-      margin: 0 5px;
       cursor: pointer;
+      margin: 0 5px;
     }
   }
 }
 
 main {
-  margin: 86px auto 2rem;
-  padding: 0 2rem 0 414px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 86px auto 2rem;
+  padding: 0 2rem 0 414px;
   flex-wrap: wrap;
   gap: 2rem;
+}
+
+select,
+option {
+  font-family: Arial, sans-serif;
+}
+
+textarea {
+  font-family: OpenSans, sans-serif;
+  font-size: 1rem;
+  height: 35vh;
+  width: 100%;
+  min-height: 200px;
+  max-height: 600px;
+  resize: vertical;
+  padding: 10px;
+}
+
+button {
+  cursor: pointer;
+  font-family: OpenSans, sans-serif;
+  font-size: 1rem;
+  width: 100%;
+  height: 50px;
+  border: none;
+  padding: 0 1rem;
+  transition: .1s;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+form {
+  margin: 10px 0;
+}
+
+input {
+  font-family: OpenSans, sans-serif;
+}
+
+input,
+textarea,
+select,
+button {
+  border-radius: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+select {
+  height: 50px;
+  width: 100%;
+  font-size: 1rem;
+  padding: 0 1rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+  }
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+input[type="checkbox"] {
+  pointer-events: none;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  &:focus {
+    outline: 2px solid rgba(100, 100, 100, 50%);
+  }
 }
 
 #sideBar {
@@ -262,26 +331,36 @@ main {
   top: 70px;
   bottom: 0;
   width: 382px;
-  padding: 1rem;
-  border-radius: 1rem;
-  margin: 1rem;
+
+  nav,
+  footer {
+    padding: 1rem;
+    border-radius: 1rem;
+    margin: 1rem;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
   #listNotes {
     flex-grow: 1;
     overflow-y: auto;
 
     h2 {
-      margin-bottom: 1rem;
+      margin: 1rem 0;
     }
 
     p {
+      cursor: pointer;
       margin: 5px 0;
       padding: 5px;
       border-radius: 0 1rem 1rem 0;
       font-size: .8rem;
       font-weight: 700;
       overflow: hidden;
-      cursor: pointer;
 
       &:hover,
       &:focus {
@@ -331,83 +410,12 @@ main {
   transform: translate(-50%, -50%);
 }
 
-input {
-  font-family: OpenSans, sans-serif;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="search"],
-input[type="number"],
-input[type="date"],
-select {
-  height: 50px;
-  width: 100%;
-  font-size: 1rem;
-  padding: 0 1rem;
-}
-
-input[type="text"]:disabled,
-input[type="password"]:disabled {
-  cursor: not-allowed;
-  opacity: .6;
-}
-
-input[type="radio"],
-input[type="checkbox"] {
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-input[type="checkbox"] {
-  pointer-events: none;
-}
-
-input[type="text"],
-input[type="password"],
-textarea {
-  &:focus {
-    outline: 2px solid rgba(100, 100, 100, 50%);
-  }
+#noscript {
+  padding: 4px;
 }
 
 .task-list-item input[type="checkbox"]:checked+label {
   text-decoration: line-through;
-}
-
-select,
-option {
-  font-family: Arial, sans-serif;
-}
-
-textarea {
-  font-family: OpenSans, sans-serif;
-  font-size: 1rem;
-  height: 35vh;
-  width: 100%;
-  min-height: 200px;
-  max-height: 600px;
-  resize: vertical;
-  padding: 10px;
-}
-
-button {
-  font-family: OpenSans, sans-serif;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  height: 50px;
-  border: none;
-  padding: 0 1rem;
-  transition: .1s;
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-}
-
-form {
-  margin: 10px 0;
 }
 
 .note {
@@ -421,8 +429,7 @@ form {
   line-height: 2;
   padding: 10px 1rem;
 
-  &:hover,
-  &:focus {
+  &:hover {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
 
     .bottom-content {
@@ -432,30 +439,19 @@ form {
   }
 
   &:after {
-    position: absolute;
     content: '';
+    position: absolute;
     top: 0;
     left: 0;
     width: 1rem;
     height: 1rem;
     border-radius: 0 0 1rem;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 20%);
     transition: transform .4s;
   }
 
-  &:hover:after,
-  &:focus:after {
+  &:hover:after {
     transform: translate(-100%, -100%);
-  }
-
-  &:focus-within .bottom-content {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .title {
-    text-align: right;
-    font-weight: 700;
-    margin: 0 10px;
   }
 
   a {
@@ -464,6 +460,12 @@ form {
     &:hover {
       text-decoration: none;
     }
+  }
+
+  .title {
+    text-align: right;
+    font-weight: 700;
+    margin: 0 10px;
   }
 
   .details {
@@ -486,16 +488,11 @@ form {
     visibility: hidden;
     transition: opacity .1s;
 
-    &:focus-within {
-      opacity: 1;
-      visibility: visible;
-    }
-
     i {
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       margin: 0 5px;
       width: 30px;
       height: 30px;
@@ -505,6 +502,27 @@ form {
       &:hover {
         background: rgba(100, 100, 100, 20%);
       }
+    }
+  }
+}
+
+.close {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+
+  .fa-xmark {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: .1s;
+
+    &:hover {
+      background: rgba(100, 100, 100, 20%);
     }
   }
 }
@@ -539,14 +557,6 @@ form {
   }
 }
 
-.popup .content,
-input,
-textarea,
-select,
-button {
-  border-radius: 10px;
-}
-
 #colors,
 #accent-colors {
   display: flex;
@@ -554,11 +564,11 @@ button {
   min-height: 30px;
 
   span {
+    cursor: pointer;
     width: 20px;
     height: 20px;
     margin: 0 10px;
     border-radius: 50%;
-    cursor: pointer;
     transition: .1s;
   }
 
@@ -619,6 +629,7 @@ button {
   width: 500px;
   max-width: 98vw;
   padding: 5px 1rem;
+  border-radius: 1rem;
 }
 
 #note-popup-box .content {
@@ -630,13 +641,13 @@ button {
 }
 
 .category {
-  margin: 2px 1px;
   display: inline-flex;
+  margin: 2px 1px;
 
   span {
+    cursor: pointer;
     padding: 4px 8px;
     border-radius: 24px;
-    cursor: pointer;
   }
 
   input[type="radio"] {
@@ -667,8 +678,8 @@ button {
   }
 
   .slider {
-    position: absolute;
     cursor: pointer;
+    position: absolute;
     border-radius: 2rem;
     inset: 0;
 
@@ -694,18 +705,16 @@ button {
   user-select: none;
   border: 2px dashed rgba(100, 100, 100, 50%);
   text-align: center;
-  border-radius: 1rem;
-  margin: 10px 0;
-  padding-bottom: 1.5rem;
+  border-radius: 10px;
+  padding-bottom: 1rem;
   font-size: .9rem;
-
-  header {
-    padding: 4px;
-    text-align: left;
-  }
 
   p {
     margin: .5rem;
+  }
+
+  .close {
+    padding: 10px;
   }
 }
 
@@ -721,8 +730,8 @@ button {
 }
 
 .delete-account {
-  font-weight: 700;
   cursor: pointer;
+  font-weight: 700;
 }
 
 #settings {
@@ -739,6 +748,7 @@ button {
 #successNotification,
 #errorNotification {
   position: fixed;
+  display: none;
   top: 1rem;
   right: 2rem;
   text-align: center;
@@ -747,7 +757,6 @@ button {
   padding: 10px;
   border-radius: 5px;
   color: $color4;
-  display: none;
   z-index: 999;
 }
 
@@ -840,7 +849,7 @@ button {
 
 @media(max-width: 900px) {
 
-  nav {
+  header {
     position: fixed;
     margin: 0;
 
@@ -877,6 +886,9 @@ button {
 
   #iconFloatAdd {
     position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     bottom: 2rem;
     right: 2rem;
     z-index: 2;
@@ -884,19 +896,23 @@ button {
     height: 60px;
     font-size: 1.4rem;
     border-radius: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   #sideBar {
     display: none;
-    width: 95vw;
+    width: 100vw;
     margin: 0;
     top: 0;
     border-radius: 0 1rem 1rem 0;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 20%), 0 2px 6px 0 rgba(0, 0, 0, 20%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     animation: slide-right .3s ease-in-out;
+
+    nav,
+    footer {
+      margin: 10px;
+    }
 
     button {
       display: none;
@@ -953,10 +969,8 @@ button {
   }
 }
 
-html.dark {
-  background: $color1;
-  color: $color3;
-
+html.dark,
+html.dusk {
   .accentBlue {
     accent-color: #8ab4f8;
 
@@ -1052,6 +1066,11 @@ html.dark {
   .accentPinkSpan {
     background: #f68af8;
   }
+}
+
+html.dark {
+  background: $color1;
+  color: $color3;
 
   ::placeholder {
     color: $color3;
@@ -1061,7 +1080,7 @@ html.dark {
     background: $color2;
   }
 
-  nav {
+  header {
     background: $color2;
 
     #divSearch {
@@ -1078,7 +1097,8 @@ html.dark {
     }
   }
 
-  #sideBar {
+  nav,
+  footer {
     background: $color2;
   }
 
@@ -1193,102 +1213,6 @@ html.dusk {
   background: $color7;
   color: $color8;
 
-  .accentBlue {
-    accent-color: #8ab4f8;
-
-    ::selection {
-      background: #8ab4f8;
-      color: #000000;
-    }
-
-    a,
-    .linkp {
-      color: #8ab4f8;
-    }
-
-    button,
-    .category input[type="radio"]:checked+span,
-    .switch input:checked+.slider {
-      background: #8ab4f8;
-    }
-  }
-
-  .accentGreen {
-    accent-color: #8af8a4;
-
-    ::selection {
-      background: #8af8a4;
-      color: #000000;
-    }
-
-    a,
-    .linkp {
-      color: #8af8a4;
-    }
-
-    button,
-    .category input[type="radio"]:checked+span,
-    .switch input:checked+.slider {
-      background: #8af8a4;
-    }
-  }
-
-  .accentYellow {
-    accent-color: #f8f48a;
-
-    ::selection {
-      background: #f8f48a;
-      color: #000000;
-    }
-
-    a,
-    .linkp {
-      color: #f8f48a;
-    }
-
-    button,
-    .category input[type="radio"]:checked+span,
-    .switch input:checked+.slider {
-      background: #f8f48a;
-    }
-  }
-
-  .accentPink {
-    accent-color: #f68af8;
-
-    ::selection {
-      background: #f68af8;
-      color: #000000;
-    }
-
-    a,
-    .linkp {
-      color: #f68af8;
-    }
-
-    button,
-    .category input[type="radio"]:checked+span,
-    .switch input:checked+.slider {
-      background: #f68af8;
-    }
-  }
-
-  .accentBlueSpan {
-    background: #8ab4f8;
-  }
-
-  .accentGreenSpan {
-    background: #8af8a4;
-  }
-
-  .accentYellowSpan {
-    background: #f8f48a;
-  }
-
-  .accentPinkSpan {
-    background: #f68af8;
-  }
-
   ::placeholder {
     color: $color8;
   }
@@ -1297,7 +1221,7 @@ html.dusk {
     background: $color6;
   }
 
-  nav {
+  header {
     background: $color6;
 
     #divSearch {
@@ -1314,7 +1238,8 @@ html.dusk {
     }
   }
 
-  #sideBar {
+  nav,
+  footer {
     background: $color6;
   }
 
@@ -1434,7 +1359,7 @@ html.light {
 
     ::selection {
       background: #2b5790;
-      color: #ffffff;
+      color: $color4;
     }
 
     a,
@@ -1454,7 +1379,7 @@ html.light {
 
     ::selection {
       background: #146727;
-      color: #ffffff;
+      color: $color4;
     }
 
     a,
@@ -1474,7 +1399,7 @@ html.light {
 
     ::selection {
       background: #a25c00;
-      color: #ffffff;
+      color: $color4;
     }
 
     a,
@@ -1494,7 +1419,7 @@ html.light {
 
     ::selection {
       background: #942796;
-      color: #ffffff;
+      color: $color4;
     }
 
     a,
@@ -1539,7 +1464,7 @@ html.light {
     border: 2px solid $color3;
   }
 
-  nav {
+  header {
     background: $color5;
 
     #divSearch {
@@ -1556,7 +1481,8 @@ html.light {
     }
   }
 
-  #sideBar {
+  nav,
+  footer {
     background: $color5;
   }
 
@@ -1656,10 +1582,6 @@ html.light {
     border: none;
     background: none;
   }
-}
-
-.note:after {
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 20%);
 }
 
 .Rouge {

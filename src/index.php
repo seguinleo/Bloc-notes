@@ -36,7 +36,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
     <link rel="manifest" href="/seguinleo-notes/app.webmanifest">
 </head>
 <body class="accentBlue">
-    <nav>
+    <header>
         <noscript>
             <p id="noscript">You must enable JavaScript to use Bloc-notes.</p>
         </noscript>
@@ -53,13 +53,13 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                 </span>
             <?php } ?>
         </div>
-        <div id="divSearch">
+        <div id="divSearch" role="search">
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="search" id="search-input" maxlength="30" aria-label="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
         </div>
-        <div id="last-sync">
-            <i class="fa-solid fa-sync" tabindex="0" role="button" aria-label="Sync"></i>
+        <div id="last-sync" tabindex="0" role="button" aria-label="Sync">
+            <i class="fa-solid fa-sync"></i>
             <span></span>
         </div>
         <div>
@@ -67,46 +67,48 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                 <i id="iconTheme" class="fa-solid fa-moon"></i>
             </button>
         </div>
-    </nav>
-    <main>
-        <button id="iconFloatAdd" type="button" aria-label="Add a note"><i class="fa-solid fa-plus"></i></button>
-        <div id="successNotification"></div>
-        <div id="errorNotification"></div>
-        <div id="sideBar">
+    </header>
+    <div id="sideBar">
+        <nav>
             <div class="row">
                 <button id="iconAdd" type="button"></button>
             </div>
             <div id="listNotes"></div>
             <div id="newVersion">
-                <header>
-                    <i class="fa-solid fa-xmark" tabindex="0"></i>
-                </header>
-                <h2>v24.1.3🎉</h2>
+                <div class="close">
+                    <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                </div>
+                <h2>v24.2.1🎉</h2>
                 <p id="newVersionInfos"></p>
                 <p>
                     <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noreferrer">Changelog</a>
                 </p>
             </div>
-            <div id="copyright">
-                <div class="row">
-                    <span id="settings" class="linkp" tabindex="0" role="button" aria-label="Settings">
-                        <i class="fa-solid fa-gear"></i>
-                    </span>
-                    <select id="language" aria-label="Language">
-                        <option value="fr">🇫🇷</option>
-                        <option value="en" selected>🇬🇧</option>
-                        <option value="de">🇩🇪</option>
-                        <option value="es">🇪🇸</option>
-                    </select>
-                </div>
-                <div id="legal" class="row">
-                    <a href="https://leoseguin.fr/mentionslegales/"></a>
-                </div>
-                <div id="license" class="row">
-                    GPL-3.0 &copy;<?= date('Y') ?>
-                </div>
+        </nav>
+        <footer>
+            <div class="row">
+                <span id="settings" class="linkp" tabindex="0" role="button" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </span>
+                <select id="language" aria-label="Language">
+                    <option value="fr">🇫🇷</option>
+                    <option value="en" selected>🇬🇧</option>
+                    <option value="de">🇩🇪</option>
+                    <option value="es">🇪🇸</option>
+                </select>
             </div>
-        </div>
+            <div id="legal" class="row">
+                <a href="https://leoseguin.fr/mentionslegales/"></a>
+            </div>
+            <div id="license" class="row">
+                GPL-3.0 &copy;<?= date('Y') ?>
+            </div>
+        </footer>
+    </div>
+    <main>
+        <button id="iconFloatAdd" type="button" aria-label="Add a note"><i class="fa-solid fa-plus"></i></button>
+        <div id="successNotification"></div>
+        <div id="errorNotification"></div>
         <div id="sidebar-indicator"></div>
         <button type="button" id="btnSort" aria-label="Sort notes">
             <i class="fa-solid fa-arrow-up-wide-short"></i>
@@ -117,99 +119,99 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
         <div id="sort-popup-box">
             <div class="popup">
                 <div class="content">
-                    <header>
-                        <i class="fa-solid fa-xmark" tabindex="0"></i>
-                    </header>
-                    <div class="row">
-                        <h2>Sort notes by:</h2>
+                    <div class="close">
+                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
                     </div>
-                    <div class="row">
-                        <label for="sortNotes1">
-                            <input type="radio" name="sortNotes" value="1" id="sortNotes1">
-                            <span id="sortNotes1Span"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="sortNotes2">
-                            <input type="radio" name="sortNotes" value="2" id="sortNotes2">
-                            <span id="sortNotes2Span"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="sortNotes3">
-                            <input type="radio" name="sortNotes" value="3" id="sortNotes3" checked>
-                            <span id="sortNotes3Span"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="sortNotes4">
-                            <input type="radio" name="sortNotes" value="4" id="sortNotes4">
-                            <span id="sortNotes4Span"></span>
-                        </label>
-                    </div>
+                    <fieldset>
+                        <legend></legend>
+                        <div class="row">
+                            <label for="sortNotes1">
+                                <input type="radio" name="sortNotes" value="1" id="sortNotes1">
+                                <span id="sortNotes1Span"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="sortNotes2">
+                                <input type="radio" name="sortNotes" value="2" id="sortNotes2">
+                                <span id="sortNotes2Span"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="sortNotes3">
+                                <input type="radio" name="sortNotes" value="3" id="sortNotes3" checked>
+                                <span id="sortNotes3Span"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="sortNotes4">
+                                <input type="radio" name="sortNotes" value="4" id="sortNotes4">
+                                <span id="sortNotes4Span"></span>
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
         <div id="filter-popup-box">
             <div class="popup">
                 <div class="content">
-                    <header>
-                        <i class="fa-solid fa-xmark" tabindex="0"></i>
-                    </header>
-                    <div class="row">
-                        <h2>Filter notes by category:</h2>
+                    <div class="close">
+                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
                     </div>
-                    <div class="row">
-                        <label for="noCatFilter">
-                            <input type="checkbox" name="filterNotes" value="0" id="noCatFilter" checked>
-                            <span class="noCatFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catPersoFilter">
-                            <input type="checkbox" name="filterNotes" value="1" id="catPersoFilter" checked>
-                            <span class="catPersoFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catProFilter">
-                            <input type="checkbox" name="filterNotes" value="2" id="catProFilter" checked>
-                            <span class="catProFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catVoyageFilter">
-                            <input type="checkbox" name="filterNotes" value="3" id="catVoyageFilter" checked>
-                            <span class="catVoyageFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catTaskFilter">
-                            <input type="checkbox" name="filterNotes" value="4" id="catTaskFilter" checked>
-                            <span class="catTaskFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catRappelFilter">
-                            <input type="checkbox" name="filterNotes" value="5" id="catRappelFilter" checked>
-                            <span class="catRappelFilterSpan"></span>
-                        </label>
-                    </div>
-                    <div class="row">
-                        <label for="catIdeesFilter">
-                            <input type="checkbox" name="filterNotes" value="6" id="catIdeesFilter" checked>
-                            <span class="catIdeesFilterSpan"></span>
-                        </label>
-                    </div>
+                    <fieldset>
+                        <legend></legend>
+                        <div class="row">
+                            <label for="noCatFilter">
+                                <input type="checkbox" name="filterNotes" value="0" id="noCatFilter" checked>
+                                <span class="noCatFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catPersoFilter">
+                                <input type="checkbox" name="filterNotes" value="1" id="catPersoFilter" checked>
+                                <span class="catPersoFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catProFilter">
+                                <input type="checkbox" name="filterNotes" value="2" id="catProFilter" checked>
+                                <span class="catProFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catVoyageFilter">
+                                <input type="checkbox" name="filterNotes" value="3" id="catVoyageFilter" checked>
+                                <span class="catVoyageFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catTaskFilter">
+                                <input type="checkbox" name="filterNotes" value="4" id="catTaskFilter" checked>
+                                <span class="catTaskFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catRappelFilter">
+                                <input type="checkbox" name="filterNotes" value="5" id="catRappelFilter" checked>
+                                <span class="catRappelFilterSpan"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="catIdeesFilter">
+                                <input type="checkbox" name="filterNotes" value="6" id="catIdeesFilter" checked>
+                                <span class="catIdeesFilterSpan"></span>
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
         <div id="note-popup-box">
             <div class="popup">
                 <div class="content">
-                    <header>
-                        <i class="fa-solid fa-xmark" tabindex="0"></i>
-                    </header>
+                    <div class="close">
+                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                    </div>
                     <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
                         <input id="idNote" type="hidden">
                         <?php if (isset($name) === true) { ?>
@@ -270,7 +272,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                             <i class="fa-solid fa-eye-slash"></i>
                             <label for="checkHidden" class="switch" aria-label="Hide">
                                 <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
-                                <span class="slider" tabindex="0" role="button"></span>
+                                <span class="slider"></span>
                             </label>
                         </div>
                         <button type="submit"></button>
@@ -281,9 +283,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
         <div id="settings-popup-box">
             <div class="popup">
                 <div class="content">
-                    <header>
-                        <i class="fa-solid fa-xmark" tabindex="0"></i>
-                    </header>
+                    <div class="close">
+                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                    </div>
                     <div class="row">
                         <span id="export-all-notes" class=" linkp" tabindex="0"></span>
                     </div>
@@ -311,12 +313,12 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                         <i class="fa-solid fa-fingerprint"></i>
                         <label for="checkFingerprint" class="switch" aria-label="Lock app">
                             <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
-                            <span class="slider" tabindex="0" role="button"></span>
+                            <span class="slider"></span>
                         </label>
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v24.1.3</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v24.2.1</a>
                         </p>
                     </div>
                 </div>
@@ -326,9 +328,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
             <div id="manage-popup-box">
                 <div class="popup">
                     <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
+                        <div class="close">
+                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        </div>
                         <div class="row bold">
                             <?= $name ?>
                         </div>
@@ -354,9 +356,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
             <div id="private-note-popup-box">
                 <div class="popup">
                     <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
+                        <div class="close">
+                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        </div>
                         <form id="publicNote" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 <span></span>
@@ -372,9 +374,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
             <div id="public-note-popup-box">
                 <div class="popup">
                     <div class="content">
-                        <header>
+                        <div class="close">
                             <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
+                        </div>
                         <p id="copyNoteLink"></p>
                         <button type="button" id="copyNoteLinkBtn" aria-label="Copy link">
                             <i class="fa-solid fa-clipboard"></i>
@@ -396,9 +398,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
             <div id="connect-box">
                 <div class="popup">
                     <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
+                        <div class="close">
+                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        </div>
                         <div class="row">
                             <span id="create-account" class="linkp" tabindex="0" role="button"></span>
                         </div>
@@ -418,9 +420,9 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
             <div id="create-box">
                 <div class="popup">
                     <div class="content">
-                        <header>
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
-                        </header>
+                        <div class="close">
+                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        </div>
                         <form id="createForm" method="post" enctype="application/x-www-form-urlencoded">
                             <input type="hidden" id="csrf_token_create" value="<?= $csrf_token_create ?>">
                             <div class="row">

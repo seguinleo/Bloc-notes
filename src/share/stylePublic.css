@@ -37,6 +37,11 @@ body {
   height: 5px;
 }
 
+::selection {
+  background: #8ab4f8;
+  color: #000000;
+}
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -110,14 +115,10 @@ li {
   word-break: break-word;
 }
 
-.task-list-item input[type="checkbox"]:checked + label {
-  text-decoration: line-through;
-}
-
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 input[type="checkbox"] {
@@ -132,10 +133,9 @@ input[type="checkbox"] {
   justify-content: space-between;
   background: #171717;
   border-radius: 1rem;
+  width: fit-content;
   clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
   transition: clip-path .4s;
-  width: fit-content;
-  max-height: 80vh;
   margin: auto;
   line-height: 2;
   padding: 10px 1rem;
@@ -205,7 +205,6 @@ input[type="checkbox"] {
 
 .details {
   overflow-x: hidden;
-  overflow-y: auto;
   overflow-wrap: break-word;
   word-break: break-word;
   padding: 0 4px;
@@ -220,6 +219,10 @@ input[type="checkbox"] {
 .task-list-item {
   margin-left: -2.4rem;
   pointer-events: none;
+}
+
+.task-list-item input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
 }
 
 .bold {

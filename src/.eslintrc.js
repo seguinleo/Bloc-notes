@@ -11,5 +11,7 @@ module.exports = {
   },
   ignorePatterns: ['*.min.js'],
   rules: {
+    'no-alert': 'off',
+    'no-use-before-define': 'off',
   },
 };
