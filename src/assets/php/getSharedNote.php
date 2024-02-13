@@ -3,7 +3,7 @@ if (empty($_POST['noteLink'])) {
     throw new Exception('Note retrieval failed');
     return;
 }
-if (is_string($_POST['noteLink']) === false) {
+if (ctype_alnum($_POST['noteLink']) === false) {
     throw new Exception('Note retrieval failed');
     return;
 }

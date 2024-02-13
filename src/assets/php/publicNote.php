@@ -10,7 +10,7 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId'], $_POST['note
     throw new Exception('Note modification failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || is_string($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
+if (ctype_alnum($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || ctype_alnum($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
     throw new Exception('Note modification failed');
     return;
 }
@@ -20,7 +20,7 @@ require_once __DIR__ . '/config/config.php';
 
 $name = $_SESSION['name'];
 $noteId = $_POST['noteId'];
-$noteLink = $_POST['noteLink'];
+$noteLink = basename($_POST['noteLink']);
 
 try {
     $query = $PDO->prepare("UPDATE notes SET link=:NoteLink WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");

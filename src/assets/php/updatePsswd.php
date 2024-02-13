@@ -10,7 +10,7 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdOld'], $_POST['ps
     throw new Exception('Password update failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
+if (ctype_alnum($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
     throw new Exception('Password update failed');
     return;
 }

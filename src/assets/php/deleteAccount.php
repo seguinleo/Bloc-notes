@@ -10,7 +10,7 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswd']) === false) {
     throw new Exception('Account deletion failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
+if (ctype_alnum($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
     throw new Exception('Account deletion failed');
     return;
 }
@@ -64,3 +64,4 @@ $query->closeCursor();
 $PDO = null;
 session_unset();
 session_destroy();
+header('Clear-Site-Data: "cache", "cookies", "storage", "executionContexts"');
