@@ -1,24 +1,24 @@
 <?php
-global $PDO;
 if (empty($_POST['noteLink'])) {
-    http_response_code(403);
+    throw new Exception('Note retrieval failed');
     return;
 }
 if (is_string($_POST['noteLink']) === false) {
-    http_response_code(403);
+    throw new Exception('Note retrieval failed');
     return;
 }
 
+global $PDO;
 require_once __DIR__ . '/config/config.php';
 
-$noteLink = $_POST['noteLink'];
+$link = $_POST['noteLink'];
 
 try {
     $query = $PDO->prepare("SELECT users.oneKey FROM users,notes WHERE notes.link=:NoteLink AND notes.user=users.name LIMIT 1");
-    $query->execute([':NoteLink' => $noteLink]);
+    $query->execute([':NoteLink' => $link]);
     $key = $query->fetch()['oneKey'];
 } catch (Exception $e) {
-    http_response_code(404);
+    throw new Exception('Note retrieval failed');
     return;
 }
 
@@ -30,18 +30,18 @@ $encryption = new Encryption\Encryption();
 
 try {
     $query = $PDO->prepare("SELECT title,content,dateNote FROM notes WHERE link=:NoteLink LIMIT 1");
-    $query->execute([':NoteLink' => $noteLink]);
+    $query->execute([':NoteLink' => $link]);
     $row = $query->fetch();
-    $items[] = [
-        'title'   => $encryption->decryptData($row['title'], $key),
-        'content'    => $encryption->decryptData($row['content'], $key),
-        'date'    => $row['dateNote']
+    $note = [
+        'title'     => $encryption->decryptData($row['title'], $key),
+        'content'   => $encryption->decryptData($row['content'], $key),
+        'date'      => $row['dateNote']
     ];
 } catch (Exception $e) {
-    http_response_code(404);
+    throw new Exception('Note retrieval failed');
     return;
 }
 
-echo json_encode($items);
+echo json_encode($note);
 $query->closeCursor();
 $PDO = null;

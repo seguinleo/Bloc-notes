@@ -14,6 +14,7 @@ const contentNote = noteBox.querySelector('#content');
 const colors = document.querySelectorAll('#colors span');
 const accentColors = document.querySelectorAll('#accent-colors span');
 const forms = document.querySelectorAll('form');
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const sideBar = document.querySelector('#sideBar');
 const metaTheme = document.querySelectorAll('.themecolor');
 const buttonTheme = document.querySelector('#iconTheme');
@@ -51,6 +52,17 @@ function generateRandomBytes(length) {
   const array = new Uint8Array(length);
   window.crypto.getRandomValues(array);
   return array;
+}
+
+function getPassword(length) {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&~"#\'(-_)=^$€*!?,.;:/|\\@%+{}[]<>`';
+  let password = '';
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
+  for (let i = 0; i < length; i += 1) password += chars[array[i] % chars.length];
+  document.querySelector('#psswdGen').textContent = password;
+  document.querySelector('#newPsswd').value = password;
+  document.querySelector('#newPsswdValid').value = password;
 }
 
 function changeLanguage(language) {
@@ -94,10 +106,14 @@ function changeLanguage(language) {
     document.querySelector('#linkMarkdown').textContent = 'Guide Markdown';
     document.querySelector('#linkHelp').textContent = 'Aide et discussions';
     document.querySelector('#log-out').textContent = 'Déconnexion';
+    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Ancien mot de passe');
     document.querySelector('#newPsswd').setAttribute('placeholder', 'Nouveau mot de passe');
     document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmer le mot de passe');
-    document.querySelector('#changePsswd button').textContent = 'Changer le mot de passe';
-    document.querySelector('#delete-account').textContent = 'Supprimer le compte';
+    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Changer le mot de passe';
+    document.querySelector('#genPsswd summary').textContent = 'Changer le mot de passe';
+    document.querySelector('#deleteUser summary').textContent = 'Supprimer le compte';
+    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Mot de passe');
+    document.querySelector('#deleteUser button').textContent = 'Supprimer le compte';
     document.querySelector('#privateNote span').textContent = 'Voulez-vous rendre votre note privée ? Le lien ne sera plus disponible.';
     document.querySelector('#privateNote button').textContent = 'Rendre privée';
     document.querySelector('#publicNote span').textContent = 'Voulez-vous rendre votre note publique ? Un lien sera disponible pour la partager.';
@@ -142,10 +158,14 @@ function changeLanguage(language) {
     document.querySelector('#linkMarkdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#linkHelp').textContent = 'Hilfe und Diskussionen';
     document.querySelector('#log-out').textContent = 'Abmelden';
+    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Altes Passwort');
     document.querySelector('#newPsswd').setAttribute('placeholder', 'Neues Passwort');
     document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Passwort bestätigen');
-    document.querySelector('#changePsswd button').textContent = 'Passwort ändern';
-    document.querySelector('#delete-account').textContent = 'Konto löschen';
+    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Passwort ändern';
+    document.querySelector('#genPsswd summary').textContent = 'Passwort ändern';
+    document.querySelector('#deleteUser summary').textContent = 'Konto löschen';
+    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Passwort');
+    document.querySelector('#deleteUser button').textContent = 'Konto löschen';
     document.querySelector('#privateNote span').textContent = 'Möchten Sie Ihre Notiz privat machen? Der Link wird nicht mehr verfügbar sein.';
     document.querySelector('#privateNote button').textContent = 'Privat machen';
     document.querySelector('#publicNote span').textContent = 'Möchten Sie Ihre Notiz öffentlich machen? Ein Link wird verfügbar sein, um es zu teilen.';
@@ -190,10 +210,14 @@ function changeLanguage(language) {
     document.querySelector('#linkMarkdown').textContent = 'Guía de Markdown';
     document.querySelector('#linkHelp').textContent = 'Ayuda y discusiones';
     document.querySelector('#log-out').textContent = 'Cerrar sesión';
+    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Contraseña antigua');
     document.querySelector('#newPsswd').setAttribute('placeholder', 'Nueva contraseña');
     document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmar contraseña');
-    document.querySelector('#changePsswd button').textContent = 'Cambiar contraseña';
-    document.querySelector('#delete-account').textContent = 'Eliminar cuenta';
+    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Cambiar contraseña';
+    document.querySelector('#genPsswd summary').textContent = 'Cambiar contraseña';
+    document.querySelector('#deleteUser summary').textContent = 'Eliminar cuenta';
+    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Contraseña');
+    document.querySelector('#deleteUser button').textContent = 'Eliminar cuenta';
     document.querySelector('#privateNote span').textContent = '¿Quieres hacer tu nota privada? El enlace ya no estará disponible.';
     document.querySelector('#privateNote button').textContent = 'Hacer privado';
     document.querySelector('#publicNote span').textContent = '¿Quieres hacer tu nota pública? Un enlace estará disponible para compartirlo.';
@@ -238,15 +262,61 @@ function changeLanguage(language) {
     document.querySelector('#linkMarkdown').textContent = 'Markdown guide';
     document.querySelector('#linkHelp').textContent = 'Help and discussions';
     document.querySelector('#log-out').textContent = 'Log out';
+    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Old password');
     document.querySelector('#newPsswd').setAttribute('placeholder', 'New password');
     document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirm password');
-    document.querySelector('#changePsswd button').textContent = 'Change password';
-    document.querySelector('#delete-account').textContent = 'Delete account';
+    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Change password';
+    document.querySelector('#genPsswd summary').textContent = 'Change password';
+    document.querySelector('#deleteUser summary').textContent = 'Delete account';
+    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Password');
+    document.querySelector('#deleteUser button').textContent = 'Delete account';
     document.querySelector('#privateNote span').textContent = 'Do you want to make your note private? The link will no longer be available.';
     document.querySelector('#privateNote button').textContent = 'Make private';
     document.querySelector('#publicNote span').textContent = 'Do you want to make your note public? A link will be available to share it.';
     document.querySelector('#publicNote button').textContent = 'Make public';
   }
+}
+
+const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
+    else localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    if (localStorage.getItem('fingerprint') === 'true') {
+      window.location.href = '/error/403/';
+    } else document.querySelector('#checkFingerprint').checked = false;
+  }
+};
+
+if (localStorage.getItem('fingerprint') === 'true') {
+  verifyFingerprint();
+  document.querySelector('#checkFingerprint').checked = true;
 }
 
 const showSuccess = (message) => {
@@ -272,7 +342,7 @@ const showError = (message) => {
 const noteAccess = (id, link) => {
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
-  if (link === '') {
+  if (link === null) {
     privateNote.classList.add('show');
     document.querySelector('#idNotePublic').value = id;
     privateNote.querySelector('i').focus();
@@ -317,7 +387,7 @@ const noteActions = () => {
       const noteColor = target.closest('.note').getAttribute('data-note-color');
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
-      const noteLink = target.closest('.note').getAttribute('data-note-link');
+      const noteLink = target.closest('.note').getAttribute('data-note-link') || null;
       if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteLink);
       else if (target.classList.contains('fa-clipboard')) copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
@@ -347,6 +417,8 @@ converter.setOption('simpleLineBreaks', true);
 converter.setOption('simplifiedAutoLink', true);
 
 const showNotes = async () => {
+  const sortOption = localStorage.getItem('sort_notes');
+  if (Number.isNaN(sortOption)) return;
   document.querySelectorAll('#listNotes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
@@ -356,7 +428,7 @@ const showNotes = async () => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `sort=${encodeURIComponent(localStorage.getItem('sort_notes'))}`,
+    body: `sort=${sortOption}&csrf_token=${csrfToken}`,
   });
 
   const notesJSON = await response.json();
@@ -397,7 +469,6 @@ const showNotes = async () => {
     noteElement.setAttribute('data-note-color', color);
     noteElement.setAttribute('data-note-hidden', hidden);
     noteElement.setAttribute('data-note-category', category);
-    noteElement.setAttribute('data-note-link', link);
     detailsElement.classList.add('details');
     titleElement.classList.add('title');
     titleElement.textContent = title;
@@ -415,7 +486,7 @@ const showNotes = async () => {
     editIconElement.setAttribute('aria-label', 'Modifier la note');
     bottomContentElement.appendChild(editIconElement);
 
-    if (link === '') {
+    if (link === null) {
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
@@ -464,12 +535,20 @@ const showNotes = async () => {
     paragraph.setAttribute('role', 'button');
     titleSpan.classList.add('titleList');
     titleSpan.textContent = title;
-    if (link !== '') {
+    if (link !== null) {
+      noteElement.setAttribute('data-note-link', link);
       titleSpan.appendChild(document.createElement('i'));
       titleSpan.querySelector('i').classList.add('fa-solid', 'fa-link');
     }
     dateSpan.classList.add('dateList');
-    dateSpan.textContent = date;
+    dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
+      weekday: 'short',
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
     if (category !== 0) {
       const categoryElement = document.createElement('span');
@@ -490,61 +569,20 @@ const showNotes = async () => {
   document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
 };
 
-const verifyFingerprint = async () => {
-  try {
-    const challenge = generateRandomBytes(32);
-    const userId = generateRandomBytes(16);
-    await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-        },
-        timeout: 60000,
-        attestation: 'direct',
-      },
-    });
-    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
-    else localStorage.setItem('fingerprint', 'true');
-  } catch (error) {
-    if (localStorage.getItem('fingerprint') === 'true') window.location.href = '/error/403/';
-    else document.querySelector('#checkFingerprint').checked = false;
-  }
-};
-
-if (localStorage.getItem('fingerprint') === 'true') {
-  verifyFingerprint();
-  document.querySelector('#checkFingerprint').checked = true;
-}
-
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
   note.classList.toggle('fullscreen');
   document.body.classList.toggle('body-fullscreen');
 };
 
-const fetchDelete = async (e) => {
+const fetchDelete = async (id) => {
   try {
     const response = await fetch('/seguinleo-notes/assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `noteId=${encodeURIComponent(e)}`,
+      body: `noteId=${id}&csrf_token=${csrfToken}`,
     });
     if (response.ok) await showNotes();
     else showError('An error occurred...');
@@ -574,7 +612,6 @@ const updateNote = (id, title, content, color, hidden, category, link) => {
   document.body.classList.remove('body-fullscreen');
   document.querySelector('#iconAdd').click();
   document.querySelector('#idNote').value = id;
-  document.querySelector('#checkLink').value = link;
   titleNote.value = title;
   contentNote.value = content;
   colors.forEach((e) => {
@@ -582,7 +619,7 @@ const updateNote = (id, title, content, color, hidden, category, link) => {
     else e.classList.remove('selected');
   });
   document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
-  if (link === '') {
+  if (link === null) {
     document.querySelector('#checkHidden').disabled = false;
     if (hidden === '1') document.querySelector('#checkHidden').checked = true;
   } else document.querySelector('#checkHidden').disabled = true;
@@ -605,6 +642,7 @@ const copy = (content) => {
 };
 
 const deleteNote = (e) => {
+  if (Number.isNaN(e)) return;
   document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
   let message = '';
@@ -613,21 +651,6 @@ const deleteNote = (e) => {
   else if (localStorage.getItem('language') === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
   else message = 'Do you really want to delete this note?';
   if (window.confirm(message)) fetchDelete(e);
-};
-
-const deleteAccount = async () => {
-  try {
-    const response = await fetch('/seguinleo-notes/assets/php/deleteAccount.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    if (response.ok) window.location.reload();
-    else showError('An error occurred...');
-  } catch (error) {
-    showError('An error occurred...');
-  }
 };
 
 document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
@@ -663,15 +686,6 @@ document.querySelectorAll('.linkp').forEach((e) => {
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
   });
-});
-
-document.querySelector('#delete-account').addEventListener('click', () => {
-  let message = '';
-  if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer votre compte ainsi que toutes vos notes enregistrées dans le cloud ? Votre nom d\'utilisateur sera à nouveau disponible pour les autres utilisateurs.';
-  else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie wirklich Ihr Konto sowie alle Ihre in der Cloud gespeicherten Notizen löschen? Ihr Benutzername wird für andere Benutzer wieder verfügbar.';
-  else if (localStorage.getItem('language') === 'es') message = '¿Estás seguro de que quieres eliminar tu cuenta y todas tus notas almacenadas en la nube? Su nombre de usuario volverá a estar disponible para otros usuarios.';
-  else message = 'Do you really want to delete your account as well as all your notes saved in the cloud? Your username will become available again for other users.';
-  if (window.confirm(message)) deleteAccount();
 });
 
 document.querySelectorAll('.fa-xmark').forEach((e) => {
@@ -837,7 +851,13 @@ document.addEventListener('touchend', (event) => {
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
 document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
 document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
+document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
+
+document.querySelector('#copyPasswordBtn').addEventListener('click', () => {
+  const psswd = document.querySelector('#psswdGen').textContent;
+  navigator.clipboard.writeText(psswd);
+});
 
 document.querySelectorAll('input[name="sortNotes"]').forEach((e) => {
   if (e.value === localStorage.getItem('sort_notes')) e.checked = true;
@@ -882,19 +902,23 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
     const idNote = document.querySelector('#idNote').value;
     const titleBrut = titleNote.value.trim();
     // eslint-disable-next-line no-undef
-    const contentBrut = DOMPurify.sanitize(contentNote.value.trim());
+    const contentBrut = DOMPurify.sanitize(contentNote.value.trim(), {
+      SANITIZE_NAMED_PROPS: true,
+    });
     const title = encodeURIComponent(titleBrut);
     const content = encodeURIComponent(contentBrut);
     const color = document.querySelector('#colors .selected').classList[0];
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
     const category = document.querySelector('input[name="category"]:checked').value;
-    const link = encodeURIComponent(document.querySelector('#checkLink').value);
 
     if (!titleBrut || titleBrut.length > 30 || contentBrut.length > 5000) return;
     if (isUpdate && !idNote) return;
+    if (idNote && Number.isNaN(idNote)) return;
+    if (!/^[a-zA-Z]+$/.test(color)) return;
+    if (!/^[0-9]+$/.test(category)) return;
 
-    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&link=${link}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}`;
+    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}`;
     const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
@@ -914,9 +938,10 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
 });
 
 document.querySelector('#changePsswd').addEventListener('submit', async () => {
+  const a = document.querySelector('#oldPsswd').value;
   const e = document.querySelector('#newPsswd').value;
   const t = document.querySelector('#newPsswdValid').value;
-  if (!e || !t || e.length < 6 || e.length > 50) return;
+  if (!a || !e || !t || e.length < 8 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
     showError('Password too weak (only numbers)...');
     return;
@@ -929,6 +954,7 @@ document.querySelector('#changePsswd').addEventListener('submit', async () => {
     showError('Passwords do not match...');
     return;
   }
+  const psswdOld = encodeURIComponent(a);
   const psswdNew = encodeURIComponent(e);
   try {
     const response = await fetch('/seguinleo-notes/assets/php/updatePsswd.php', {
@@ -936,28 +962,55 @@ document.querySelector('#changePsswd').addEventListener('submit', async () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `psswdNew=${psswdNew}&csrf_token_psswd=${document.querySelector('#csrf_token_psswd').value}`,
+      body: `psswdOld=${psswdOld}&psswdNew=${psswdNew}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
       popupBoxManage.classList.remove('show');
       showSuccess('Successfully changed password!');
-    } else showError('An error occurred...');
+      forms.forEach((form) => form.reset());
+    } else {
+      showError('An error occurred...');
+      forms.forEach((form) => form.reset());
+    }
   } catch (error) {
     showError('An error occurred...');
+    forms.forEach((form) => form.reset());
+  }
+});
+
+document.querySelector('#deleteAccount').addEventListener('submit', async () => {
+  const psswd = document.querySelector('#deletePsswd').value;
+  if (!psswd || psswd.length < 8) return;
+  try {
+    const response = await fetch('/seguinleo-notes/assets/php/deleteAccount.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `psswd=${encodeURIComponent(psswd)}&csrf_token=${csrfToken}`,
+    });
+    if (response.ok) window.location.reload();
+    else {
+      showError('An error occurred...');
+      forms.forEach((form) => form.reset());
+    }
+  } catch (error) {
+    showError('An error occurred...');
+    forms.forEach((form) => form.reset());
   }
 });
 
 document.querySelector('#privateNote').addEventListener('submit', async () => {
   const id = document.querySelector('#idNotePrivate').value;
   const link = document.querySelector('#linkNotePrivate').value;
-  if (!id || !link) return;
+  if (!id || !link || Number.isNaN(id) || !/^[a-zA-Z0-9]+$/.test(link)) return;
   try {
     const response = await fetch('/seguinleo-notes/assets/php/privateNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `noteId=${encodeURIComponent(id)}&noteLink=${encodeURIComponent(link)}`,
+      body: `noteId=${id}&noteLink=${link}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
       publicNote.classList.remove('show');
@@ -970,7 +1023,7 @@ document.querySelector('#privateNote').addEventListener('submit', async () => {
 
 document.querySelector('#publicNote').addEventListener('submit', async () => {
   const id = document.querySelector('#idNotePublic').value;
-  if (!id) return;
+  if (!id || Number.isNaN(id)) return;
   const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {
     const response = await fetch('/seguinleo-notes/assets/php/publicNote.php', {
@@ -978,7 +1031,7 @@ document.querySelector('#publicNote').addEventListener('submit', async () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `noteId=${encodeURIComponent(id)}&noteLink=${link}`,
+      body: `noteId=${id}&noteLink=${link}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
       privateNote.classList.remove('show');

@@ -1,20 +1,22 @@
 <?php
+if (isset($_POST['sort']) === false) {
+    throw new Exception('Note retrieval failed');
+    return;
+}
+
 global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
 
 $sort = $_POST['sort'];
 
-if ($sort === "1") {
+if ($sort === '1') {
     $orderBy = 'ORDER BY id DESC';
-} elseif ($sort === "2") {
+} elseif ($sort === '2') {
     $orderBy = 'ORDER BY id';
-} elseif ($sort === "3") {
+} elseif ($sort === '3') {
     $orderBy = 'ORDER BY dateNote DESC, id DESC';
-} elseif ($sort === "4") {
-    $orderBy = 'ORDER BY dateNote, id DESC';
 } else {
-    http_response_code(403);
-    return;
+    $orderBy = 'ORDER BY dateNote, id DESC';
 }
 
 require_once __DIR__ . '/class/Encryption.php';
@@ -35,11 +37,11 @@ try {
             'date'      => $row['dateNote'],
             'hidden'    => $row['hiddenNote'],
             'category'  => $row['category'],
-            'link'      => $row['link'] === null ? '' : $row['link']
+            'link'      => $row['link'] ?? null
         ];
     }
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Note retrieval failed');
     return;
 }
 

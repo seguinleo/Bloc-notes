@@ -59,6 +59,8 @@ The user can use its fingerprint to unlock the notes. The fingerprint is stored 
 ## Todo
 *   Pin notes
 *   2FA
+*   Password recovery
+*   Password protected notes
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!

@@ -11,12 +11,8 @@ session_set_cookie_params($cookieParams);
 session_start();
 session_regenerate_id();
 $name = $_SESSION['name'] ?? null;
-$csrf_token_connect = bin2hex(random_bytes(16));
-$csrf_token_create = bin2hex(random_bytes(16));
-$csrf_token_psswd = bin2hex(random_bytes(16));
-$_SESSION['csrf_token_connect'] = $csrf_token_connect;
-$_SESSION['csrf_token_create'] = $csrf_token_create;
-$_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
+$csrf_token = bin2hex(random_bytes(32));
+$_SESSION['csrf_token'] = $csrf_token;
 ?>
 <!DOCTYPE html>
 <html class="dark" lang="en">
@@ -25,6 +21,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
     <meta name="description" content="Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="<?= $csrf_token ?>">
     <meta name="theme-color" content="#171717" class="themecolor">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
@@ -78,10 +75,10 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                 <div class="close">
                     <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
                 </div>
-                <h2>v24.2.1🎉</h2>
+                <h2>v24.2.2🎉</h2>
                 <p id="newVersionInfos"></p>
                 <p>
-                    <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noreferrer">Changelog</a>
+                    <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noopener noreferrer">Changelog</a>
                 </p>
             </div>
         </nav>
@@ -214,9 +211,6 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                     </div>
                     <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
                         <input id="idNote" type="hidden">
-                        <?php if (isset($name) === true) { ?>
-                            <input id="checkLink" type="hidden">
-                        <?php } ?>
                         <div class="row">
                             <input type="text" id="title" maxlength="30" aria-label="Title" required>
                         </div>
@@ -291,13 +285,13 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                     </div>
                     <div class="row">
                         <span class="linkp">
-                            <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="linkMarkdown" rel="noreferrer"></a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="linkMarkdown" rel="noopener noreferrer"></a>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </span>
                     </div>
                     <div class="row">
                         <span class="linkp">
-                            <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="linkHelp" rel="noreferrer"></a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="linkHelp" rel="noopener noreferrer"></a>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </span>
                     </div>
@@ -318,7 +312,7 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noreferrer">v24.2.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.2.2</a>
                         </p>
                     </div>
                 </div>
@@ -337,19 +331,39 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                         <div class="row">
                             <span id="log-out" class="linkp" tabindex="0" role="button"></span>
                         </div>
-                        <form id="changePsswd" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_psswd" value="<?= $csrf_token_psswd ?>">
-                            <div class="row">
-                                <input id="newPsswd" type="password" minlength="6" maxlength="50" aria-label="New password" required>
-                            </div>
-                            <div class="row">
-                                <input id="newPsswdValid" type="password" minlength="6" maxlength="50" aria-label="Confirm new password" required>
-                            </div>
-                            <button type="submit"></button>
-                        </form>
-                        <div class="row">
-                            <span id="delete-account" class="linkp warning" tabindex="0"></span>
-                        </div>
+                        <details id="genPsswd">
+                            <summary></summary>
+                            <form id="changePsswd" method="post" enctype="application/x-www-form-urlencoded">
+                                <div class="row">
+                                    <input id="oldPsswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
+                                </div>
+                                <div class="row">
+                                    <input id="newPsswd" type="password" minlength="8" maxlength="64" aria-label="New password" required>
+                                </div>
+                                <div class="row">
+                                    <input id="newPsswdValid" type="password" minlength="8" maxlength="64" aria-label="Confirm new password" required>
+                                </div>
+                                <div class="row">
+                                    <p id="psswdGen"></p>
+                                    <button type="button" id="copyPasswordBtn" aria-label="Copy password">
+                                        <i class="fa-solid fa-clipboard"></i>
+                                    </button>
+                                    <button type="button" id="submitGenPsswd" aria-label="Generate password">
+                                        <i class="fa-solid fa-arrow-rotate-right"></i>
+                                    </button>
+                                </div>
+                                <button type="submit"></button>
+                            </form>
+                        </details>
+                        <details id="deleteUser">
+                            <summary></summary>
+                            <form id="deleteAccount" method="post" enctype="application/x-www-form-urlencoded">
+                                <div class="row">
+                                    <input id="deletePsswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                </div>
+                                <button type="submit"></button>
+                            </form>
+                        </details>
                     </div>
                 </div>
             </div>
@@ -405,12 +419,25 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                             <span id="create-account" class="linkp" tabindex="0" role="button"></span>
                         </div>
                         <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_connect" value="<?= $csrf_token_connect ?>">
                             <div class="row">
-                                <input id="nameConnect" type="text" maxlength="25" aria-label="Name" required>
+                                <input
+                                    id="nameConnect"
+                                    type="text"
+                                    minlength="4"
+                                    maxlength="25"
+                                    spellcheck="false"
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    aria-label="Name"
+                                    required
+                                >
                             </div>
                             <div class="row">
-                                <input id="psswdConnect" type="password" maxlength="50" aria-label="Password" required>
+                                <input id="psswdConnect" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                            </div>
+                            <div class="row">
+                                <div id="cf-turnstile"></div>
                             </div>
                             <button type="submit"></button>
                         </form>
@@ -424,15 +451,25 @@ $_SESSION['csrf_token_psswd'] = $csrf_token_psswd;
                             <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
                         </div>
                         <form id="createForm" method="post" enctype="application/x-www-form-urlencoded">
-                            <input type="hidden" id="csrf_token_create" value="<?= $csrf_token_create ?>">
                             <div class="row">
-                                <input id="nameCreate" type="text" minlength="4" maxlength="25" aria-label="Name" required>
+                                <input
+                                    id="nameCreate"
+                                    type="text"
+                                    minlength="4"
+                                    maxlength="25"
+                                    spellcheck="false"
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    aria-label="Name"
+                                    required
+                                >
                             </div>
                             <div class="row">
-                                <input id="psswdCreate" type="password" minlength="6" maxlength="50" aria-label="Password" required>
+                                <input id="psswdCreate" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                             </div>
                             <div class="row">
-                                <input id="psswdCreateValid" type="password" minlength="6" maxlength="50" aria-label="Confirm password" required>
+                                <input id="psswdCreateValid" type="password" minlength="8" maxlength="64" aria-label="Confirm password" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>

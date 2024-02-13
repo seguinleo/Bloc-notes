@@ -13,6 +13,7 @@ const contentNote = noteBox.querySelector('#content');
 const colors = document.querySelectorAll('#colors span');
 const accentColors = document.querySelectorAll('#accent-colors span');
 const forms = document.querySelectorAll('form');
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const sideBar = document.querySelector('#sideBar');
 const metaTheme = document.querySelectorAll('.themecolor');
 const buttonTheme = document.querySelector('#iconTheme');
@@ -251,6 +252,48 @@ function changeLanguage(language) {
     document.querySelector('#genPsswd summary').textContent = 'Generate a password';
     document.querySelector('#createForm button[type="submit"]').textContent = 'Create my account';
   }
+}
+
+const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const userId = generateRandomBytes(16);
+    await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+        },
+        timeout: 60000,
+        attestation: 'direct',
+      },
+    });
+    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
+    else localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    if (localStorage.getItem('fingerprint') === 'true') {
+      window.location.href = '/error/403/';
+    } else document.querySelector('#checkFingerprint').checked = false;
+  }
+};
+
+if (localStorage.getItem('fingerprint') === 'true') {
+  verifyFingerprint();
+  document.querySelector('#checkFingerprint').checked = true;
 }
 
 const showSuccess = (message) => {
@@ -517,7 +560,14 @@ const showNotes = async () => {
     titleSpan.classList.add('titleList');
     titleSpan.textContent = deTitleString;
     dateSpan.classList.add('dateList');
-    dateSpan.textContent = date;
+    dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
+      weekday: 'short',
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
     if (category !== '0') {
       const categoryElement = document.createElement('span');
@@ -538,47 +588,6 @@ const showNotes = async () => {
   noteActions();
   document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
 };
-
-const verifyFingerprint = async () => {
-  try {
-    const challenge = generateRandomBytes(32);
-    const userId = generateRandomBytes(16);
-    await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-        },
-        timeout: 60000,
-        attestation: 'direct',
-      },
-    });
-    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
-    else localStorage.setItem('fingerprint', 'true');
-  } catch (error) {
-    if (localStorage.getItem('fingerprint') === 'true') window.location.href = '/error/403/';
-    else document.querySelector('#checkFingerprint').checked = false;
-  }
-};
-
-if (localStorage.getItem('fingerprint') === 'true') {
-  verifyFingerprint();
-  document.querySelector('#checkFingerprint').checked = true;
-}
 
 const toggleFullscreen = (id) => {
   const note = document.querySelector(`#note${id}`);
@@ -885,7 +894,7 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
   const e = document.querySelector('#nameCreate').value.trim();
   const t = document.querySelector('#psswdCreate').value;
   const o = document.querySelector('#psswdCreateValid').value;
-  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 6 || t.length > 50) return;
+  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 8 || t.length > 50) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     showError('Name can only contain letters...');
     return;
@@ -914,7 +923,7 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nameCreate=${nameCreate}&psswdCreate=${psswdCreate}&csrf_token_create=${document.querySelector('#csrf_token_create').value}`,
+      body: `nameCreate=${nameCreate}&psswdCreate=${psswdCreate}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
       createBox.classList.remove('show');
@@ -925,9 +934,13 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
       else if (localStorage.getItem('language') === 'es') message = '¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.';
       else message = 'Account successfully created! You can now log in.';
       showSuccess(message);
-    } else showError('Username already taken...');
+    } else {
+      showError('Username already taken...');
+      forms.forEach((form) => form.reset());
+    }
   } catch (error) {
     showError('An error occurred...');
+    forms.forEach((form) => form.reset());
   }
 });
 
@@ -943,11 +956,12 @@ document.querySelector('#connectForm').addEventListener('submit', async () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `nameConnect=${nameConnect}&psswdConnect=${psswdConnect}&csrf_token_connect=${document.querySelector('#csrf_token_connect').value}`,
+      body: `nameConnect=${nameConnect}&psswdConnect=${psswdConnect}&csrf_token=${csrfToken}`,
     });
-    if (response.ok) window.location.reload();
-    else {
-      document.querySelector('#psswdConnect').value = '';
+    if (response.ok) {
+      window.location.reload();
+    } else {
+      forms.forEach((form) => form.reset());
       let time = 10;
       const btn = document.querySelector('#connectForm').querySelector('button[type="submit"]');
       const btnText = btn.textContent;
@@ -965,18 +979,21 @@ document.querySelector('#connectForm').addEventListener('submit', async () => {
     }
   } catch (error) {
     showError('An error occurred...');
+    forms.forEach((form) => form.reset());
   }
 });
 
 document.querySelector('#addNote').addEventListener('submit', async () => {
   const title = titleNote.value.trim();
   // eslint-disable-next-line no-undef
-  const content = DOMPurify.sanitize(contentNote.value.trim());
+  const content = DOMPurify.sanitize(contentNote.value.trim(), { SANITIZE_NAMED_PROPS: true });
   const color = document.querySelector('#colors .selected').classList[0];
   const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
   const category = document.querySelector('input[name="category"]:checked').value;
 
   if (!title || title.length > 30 || content.length > 5000 || !color) return;
+  if (!/^[a-zA-Z]+$/.test(color)) return;
+  if (!/^[0-9]+$/.test(category)) return;
 
   const dbName = 'notes_db';
   const objectStoreName = 'key';

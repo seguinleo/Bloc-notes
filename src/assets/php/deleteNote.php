@@ -1,17 +1,21 @@
 <?php
-global $PDO;
 session_name('__Secure-notes');
 session_start();
 
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    throw new Exception('Note deletion failed');
+    return;
+}
 if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId']) === false) {
-    http_response_code(403);
+    throw new Exception('Note deletion failed');
     return;
 }
 if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || is_numeric($_POST['noteId']) === false) {
-    http_response_code(403);
+    throw new Exception('Note deletion failed');
     return;
 }
 
+global $PDO;
 require_once __DIR__ . '/config/config.php';
 
 $name = $_SESSION['name'];
@@ -26,7 +30,7 @@ try {
         ]
     );
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Note deletion failed');
     return;
 }
 

@@ -1,21 +1,21 @@
 <?php
-global $PDO;
 session_name('__Secure-notes');
 session_start();
 
 if (isset($_SESSION['name']) === true) {
-    http_response_code(403);
+    throw new Exception('Account creation failed');
     return;
 }
-if ($_POST['csrf_token_create'] !== $_SESSION['csrf_token_create']) {
-    http_response_code(403);
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    throw new Exception('Account creation failed');
     return;
 }
 if (isset($_POST['nameCreate'], $_POST['psswdCreate']) === false) {
-    http_response_code(403);
+    throw new Exception('Account creation failed');
     return;
 }
 
+global $PDO;
 require_once __DIR__ . '/config/config.php';
 
 $nameCreate = $_POST['nameCreate'];
@@ -33,7 +33,7 @@ try {
         ]
     );
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Account creation failed');
     return;
 }
 

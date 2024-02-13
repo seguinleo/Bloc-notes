@@ -20,12 +20,12 @@ html {
   background: #000;
   color: #c6c6c6;
   font-family: OpenSans, sans-serif;
-  min-height: 100dvh;
+  height: 100svh;
   accent-color: #8ab4f8;
 }
 
 body {
-  padding: 1rem;
+  padding: 1rem 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -100,8 +100,8 @@ pre,
 code {
   background: #000000;
   color: #ffffff;
-  border-radius: 4px;
-  padding: 4px;
+  border-radius: 5px;
+  line-height: 1.5;
   white-space: break-spaces;
 }
 
@@ -141,8 +141,7 @@ input[type="checkbox"] {
   padding: 10px 1rem;
 }
 
-.note:hover,
-.note:focus {
+.note:hover {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)
 }
 
@@ -157,8 +156,7 @@ input[type="checkbox"] {
   transition: transform .4s
 }
 
-.note:hover:after,
-.note:focus:after {
+.note:hover:after {
   transform: translate(-100%, -100%)
 }
 
@@ -283,10 +281,4 @@ footer {
   user-select: none;
   text-align: center;
   margin: 1rem auto;
-}
-
-@media(max-width: 900px) {
-  body {
-    padding: 10px;
-  }
 }

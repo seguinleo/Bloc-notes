@@ -1,17 +1,21 @@
 <?php
-global $PDO;
 session_name('__Secure-notes');
 session_start();
 
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    throw new Exception('Note modification failed');
+    return;
+}
 if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteLink']) === false) {
-    http_response_code(403);
+    throw new Exception('Note modification failed');
     return;
 }
 if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || is_string($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
-    http_response_code(403);
+    throw new Exception('Note modification failed');
     return;
 }
 
+global $PDO;
 require_once __DIR__ . '/config/config.php';
 
 $name = $_SESSION['name'];
@@ -30,15 +34,15 @@ try {
     $query->closeCursor();
     $PDO = null;
     if ($query->rowCount() === 0) {
-        http_response_code(403);
+        throw new Exception('Note modification failed');
         return;
     }
     $directoryPath = realpath(__DIR__ . '/../../share/') . '/' . $noteLink;
     if (is_dir($directoryPath) === false) {
-        if (mkdir($directoryPath, 0755, true)) {
+        if (mkdir($directoryPath, 0700, true)) {
             $index = fopen($directoryPath . '/index.html', 'w');
             if ($index === false) {
-                http_response_code(500);
+                throw new Exception('Note modification failed');
                 return;
             }
             $indexContent =
@@ -75,14 +79,14 @@ try {
             fwrite($index, $indexContent);
             fclose($index);
         } else {
-            http_response_code(403);
+            throw new Exception('Note modification failed');
             return;
         }
     } else {
-        http_response_code(500);
+        throw new Exception('Note modification failed');
         return;
     }
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Note modification failed');
     return;
 }

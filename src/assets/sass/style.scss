@@ -143,8 +143,8 @@ pre,
 code {
   background: #000000;
   color: #ffffff;
-  border-radius: 4px;
-  padding: 4px;
+  border-radius: 5px;
+  line-height: 1.5;
   white-space: break-spaces;
 }
 
@@ -247,13 +247,18 @@ option {
 
 textarea {
   font-family: OpenSans, sans-serif;
-  font-size: 1rem;
-  height: 35vh;
+  font-size: .9rem;
   width: 100%;
-  min-height: 200px;
-  max-height: 600px;
+  height: 250px;
+  min-height: 50px;
+  max-height: 1000px;
   resize: vertical;
   padding: 10px;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 button {
@@ -280,7 +285,6 @@ input {
 }
 
 input,
-textarea,
 select,
 button {
   border-radius: 10px;
@@ -314,8 +318,7 @@ input[type="checkbox"] {
 }
 
 input[type="text"],
-input[type="password"],
-textarea {
+input[type="password"] {
   &:focus {
     outline: 2px solid rgba(100, 100, 100, 50%);
   }
@@ -578,10 +581,6 @@ textarea {
   }
 }
 
-#colors {
-  justify-content: center;
-}
-
 #connect-box,
 #create-box,
 #manage-popup-box,
@@ -597,6 +596,8 @@ textarea {
   left: 0;
   z-index: 2;
   height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
   width: 100vw;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -608,6 +609,7 @@ textarea {
     top: 50%;
     left: 50%;
     z-index: 3;
+    max-height: 100svh;
     overflow-y: auto;
     transform: translate(-50%, -50%);
   }
@@ -633,7 +635,7 @@ textarea {
 }
 
 #note-popup-box .content {
-  width: 900px;
+  width: 1000px;
 }
 
 .row {
@@ -642,6 +644,7 @@ textarea {
 
 .category {
   display: inline-flex;
+  font-size: .9rem;
   margin: 2px 1px;
 
   span {
@@ -1103,7 +1106,6 @@ html.dark {
   }
 
   input,
-  textarea,
   select {
     border: 2px solid $color1;
   }
@@ -1126,7 +1128,7 @@ html.dark {
 
   #colors span,
   #accent-colors span {
-    border: 1px solid $color1;
+    border: 2px solid $color1;
   }
 
   .Rouge,
@@ -1244,7 +1246,6 @@ html.dusk {
   }
 
   input,
-  textarea,
   select {
     border: 2px solid $color6;
   }
@@ -1267,7 +1268,7 @@ html.dusk {
 
   #colors span,
   #accent-colors span {
-    border: 1px solid $color6;
+    border: 2px solid $color6;
   }
 
   .Rouge,
@@ -1459,7 +1460,6 @@ html.light {
   }
 
   input,
-  textarea,
   select {
     border: 2px solid $color3;
   }
@@ -1505,7 +1505,7 @@ html.light {
 
   #colors span,
   #accent-colors span {
-    border: 1px solid $color3;
+    border: 2px solid $color3;
   }
 
   .Rouge,

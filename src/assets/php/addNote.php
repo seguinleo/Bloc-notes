@@ -1,16 +1,14 @@
 <?php
-global $PDO, $name, $key;
-require_once __DIR__ . '/getKey.php';
-
 if (isset($_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
-    http_response_code(403);
+    throw new Exception('Insert failed');
     return;
 }
 
+global $PDO, $name, $key;
+require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
-
 $title = $_POST['title'];
 $content = $_POST['content'];
 $color = $_POST['color'];
@@ -18,18 +16,18 @@ $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $category = $_POST['category'];
 $allColors = [
-    "Noir",
-    "Rouge",
-    "Orange",
-    "Jaune",
-    "Vert",
-    "Cyan",
-    "BleuCiel",
-    "Bleu",
-    "Violet",
-    "Rose"
+    'Noir',
+    'Rouge',
+    'Orange',
+    'Jaune',
+    'Vert',
+    'Cyan',
+    'BleuCiel',
+    'Bleu',
+    'Violet',
+    'Rose'
 ];
-$allCategories = ["0","1","2","3","4","5","6"];
+$allCategories = ['0','1','2','3','4','5','6'];
 
 if (in_array($color, $allColors) === false) $color = 'Noir';
 if (in_array($category, $allCategories) === false) $category = '0';
@@ -48,7 +46,7 @@ try {
         ]
     );
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Insert failed');
     return;
 }
 

@@ -1,21 +1,21 @@
 <?php
-global $PDO;
 session_name('__Secure-notes');
 session_start();
 
 if (isset($_SESSION['name']) === true) {
-    http_response_code(403);
+    throw new Exception('Connection failed');
     return;
 }
-if ($_POST['csrf_token_connect'] !== $_SESSION['csrf_token_connect']) {
-    http_response_code(403);
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection failed');
     return;
 }
 if (isset($_POST['nameConnect'], $_POST['psswdConnect']) === false) {
-    http_response_code(403);
+    throw new Exception('Connection failed');
     return;
 }
 
+global $PDO;
 require_once __DIR__ . '/config/config.php';
 
 $nameConnect = $_POST['nameConnect'];
@@ -25,21 +25,20 @@ try {
     $query->execute([':NameConnect' => $nameConnect]);
     $row = $query->fetch();
     if (!$row) {
-        http_response_code(401);
+        throw new Exception('Connection failed');
         return;
     }
 } catch (Exception $e) {
-    http_response_code(500);
+    throw new Exception('Connection failed');
     return;
 }
 
 $query->closeCursor();
 $PDO = null;
-
 $psswdConnect = $_POST['psswdConnect'];
 
 if (!password_verify($psswdConnect, $row['psswd'])) {
-    http_response_code(403);
+    throw new Exception('Connection failed');
     return;
 }
 
