@@ -10,7 +10,7 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId'], $_POST['note
     throw new Exception('Note modification failed');
     return;
 }
-if (ctype_alnum($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || ctype_alnum($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
+if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || ctype_alnum($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
     throw new Exception('Note modification failed');
     return;
 }
