@@ -93,6 +93,7 @@ kbd {
 }
 
 pre {
+  padding: 4px;
   margin: 10px auto;
 }
 
@@ -102,7 +103,7 @@ code {
   color: #ffffff;
   border-radius: 5px;
   line-height: 1.5;
-  white-space: break-spaces;
+  white-space: pre-wrap;
 }
 
 blockquote {
@@ -205,7 +206,6 @@ input[type="checkbox"] {
   overflow-x: hidden;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: 0 4px;
   font-size: .9rem;
   font-weight: 700;
 }
@@ -273,6 +273,10 @@ input[type="checkbox"] {
 
 .d-inline-block {
   display: inline-block;
+}
+
+.d-none {
+  display: none;
 }
 
 footer {

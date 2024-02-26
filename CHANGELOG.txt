@@ -1,3 +1,9 @@
+#----v24.2.3----#
+-Add compact mode for mobile
+-Improve accessibility
+-Improve UI/UX
+-Bug fixes
+
 #----v24.2.2----#
 -Improve security
     -Better input sanitization

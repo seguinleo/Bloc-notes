@@ -55,7 +55,7 @@ $_SESSION['csrf_token'] = $csrf_token;
             <input type="search" id="search-input" maxlength="30" aria-label="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
         </div>
-        <div id="last-sync" tabindex="0" role="button" aria-label="Sync">
+        <div id="last-sync">
             <i class="fa-solid fa-sync"></i>
             <span></span>
         </div>
@@ -73,9 +73,9 @@ $_SESSION['csrf_token'] = $csrf_token;
             <div id="listNotes"></div>
             <div id="newVersion">
                 <div class="close">
-                    <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                    <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Hide"></i>
                 </div>
-                <h2>v24.2.2🎉</h2>
+                <h2>v24.2.3🎉</h2>
                 <p id="newVersionInfos"></p>
                 <p>
                     <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noopener noreferrer">Changelog</a>
@@ -113,11 +113,11 @@ $_SESSION['csrf_token'] = $csrf_token;
         <button type="button" id="btnFilter" aria-label="Filter notes">
             <i class="fa-solid fa-filter"></i>
         </button>
-        <div id="sort-popup-box">
+        <dialog id="sort-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
-                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        <i class="fa-solid fa-xmark"></i>
                     </div>
                     <fieldset>
                         <legend></legend>
@@ -148,12 +148,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </fieldset>
                 </div>
             </div>
-        </div>
-        <div id="filter-popup-box">
+        </dialog>
+        <dialog id="filter-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
-                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        <i class="fa-solid fa-xmark"></i>
                     </div>
                     <fieldset>
                         <legend></legend>
@@ -202,17 +202,17 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </fieldset>
                 </div>
             </div>
-        </div>
-        <div id="note-popup-box">
+        </dialog>
+        <dialog id="note-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
-                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        <i class="fa-solid fa-xmark"></i>
                     </div>
                     <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
                         <input id="idNote" type="hidden">
                         <div class="row">
-                            <input type="text" id="title" maxlength="30" aria-label="Title" required>
+                            <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
                         </div>
                         <div class="row">
                             <textarea id="content" maxlength="5000" aria-label="Content"></textarea>
@@ -263,7 +263,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             </label>
                         </div>
                         <div class="row">
-                            <i class="fa-solid fa-eye-slash"></i>
+                            <span class="txt"><i class="fa-solid fa-eye-slash"></i></span>
                             <label for="checkHidden" class="switch" aria-label="Hide">
                                 <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
                                 <span class="slider"></span>
@@ -273,12 +273,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </form>
                 </div>
             </div>
-        </div>
-        <div id="settings-popup-box">
+        </dialog>
+        <dialog id="settings-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
-                        <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                        <i class="fa-solid fa-xmark"></i>
                     </div>
                     <div class="row">
                         <span id="export-all-notes" class=" linkp" tabindex="0"></span>
@@ -303,8 +303,15 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <span class="accentPinkSpan" role="button" tabindex="0" aria-label="Pink"></span>
                         </div>
                     </div>
+                    <div id="compact-mode" class="row">
+                        <span class="txt"><i class="fa-solid fa-grip-vertical"></i></span>
+                        <label for="checkCompact" class="switch" aria-label="Compact mode">
+                            <input type="checkbox" id="checkCompact" aria-hidden="true" tabindex="-1">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                     <div class="row">
-                        <i class="fa-solid fa-fingerprint"></i>
+                        <span class="txt"><i class="fa-solid fa-fingerprint"></i></span>
                         <label for="checkFingerprint" class="switch" aria-label="Lock app">
                             <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
@@ -312,18 +319,18 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.2.2</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.2.3</a>
                         </p>
                     </div>
                 </div>
             </div>
-        </div>
+        </dialog>
         <?php if (isset($name) === true) { ?>
-            <div id="manage-popup-box">
+            <dialog id="manage-popup-box">
                 <div class="popup">
                     <div class="content">
                         <div class="close">
-                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                            <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row bold">
                             <?= $name ?>
@@ -361,17 +368,17 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 <div class="row">
                                     <input id="deletePsswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                                 </div>
-                                <button type="submit"></button>
+                                <button type="submit" class="btnWarning"></button>
                             </form>
                         </details>
                     </div>
                 </div>
-            </div>
-            <div id="private-note-popup-box">
+            </dialog>
+            <dialog id="private-note-popup-box">
                 <div class="popup">
                     <div class="content">
                         <div class="close">
-                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                            <i class="fa-solid fa-xmark"></i>
                         </div>
                         <form id="publicNote" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
@@ -384,12 +391,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                         </form>
                     </div>
                 </div>
-            </div>
-            <div id="public-note-popup-box">
+            </dialog>
+            <dialog id="public-note-popup-box">
                 <div class="popup">
                     <div class="content">
                         <div class="close">
-                            <i class="fa-solid fa-xmark" tabindex="0"></i>
+                            <i class="fa-solid fa-xmark"></i>
                         </div>
                         <p id="copyNoteLink"></p>
                         <button type="button" id="copyNoteLinkBtn" aria-label="Copy link">
@@ -407,13 +414,13 @@ $_SESSION['csrf_token'] = $csrf_token;
                         </form>
                     </div>
                 </div>
-            </div>
+            </dialog>
         <?php } else { ?>
-            <div id="connect-box">
+            <dialog id="connect-box">
                 <div class="popup">
                     <div class="content">
                         <div class="close">
-                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                            <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row">
                             <span id="create-account" class="linkp" tabindex="0" role="button"></span>
@@ -427,7 +434,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                                     maxlength="25"
                                     spellcheck="false"
                                     autocomplete="off"
-                                    autocorrect="off"
                                     autocapitalize="off"
                                     aria-label="Name"
                                     required
@@ -436,19 +442,16 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <div class="row">
                                 <input id="psswdConnect" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                             </div>
-                            <div class="row">
-                                <div id="cf-turnstile"></div>
-                            </div>
                             <button type="submit"></button>
                         </form>
                     </div>
                 </div>
-            </div>
-            <div id="create-box">
+            </dialog>
+            <dialog id="create-box">
                 <div class="popup">
                     <div class="content">
                         <div class="close">
-                            <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Close"></i>
+                            <i class="fa-solid fa-xmark"></i>
                         </div>
                         <form id="createForm" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
@@ -459,7 +462,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                                     maxlength="25"
                                     spellcheck="false"
                                     autocomplete="off"
-                                    autocorrect="off"
                                     autocapitalize="off"
                                     aria-label="Name"
                                     required
@@ -491,7 +493,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         </form>
                     </div>
                 </div>
-            </div>
+            </dialog>
         <?php } ?>
     </main>
     <script src="/seguinleo-notes/assets/js/purify.min.js" defer></script>

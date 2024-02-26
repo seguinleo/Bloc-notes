@@ -40,15 +40,15 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
 ## Security and Privacy
-The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches.
+The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches and protected by 2FA. The online website is also protected by Cloudflare's captcha.
 
 Passwords are hashed with the latest algorithms before being sent to the database.
 
-Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF and SQL injections.
+Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF, SSRF and SQL injections.
 
 Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes. The website editor disclaims any responsibility for the content of user notes.
 
-The user can use its fingerprint to unlock the notes. The fingerprint is stored in the browser's local storage and is not sent to the server.
+The user can use its fingerprint to unlock the notes. The fingerprint is stored in the browser's local storage and is never sent to the server.
 
 > [!WARNING]
 > Never store passwords or too personal data in your notes regardless of the service, even if it is encrypted.
@@ -61,6 +61,8 @@ The user can use its fingerprint to unlock the notes. The fingerprint is stored 
 *   2FA
 *   Password recovery
 *   Password protected notes
+*   Node.js/MongoDB ?
+*   ...
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
@@ -69,6 +71,8 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
 Technologies: JavaScript, PHP8+ and MySQL
+
+Analyzers: [Mozilla Observatory](https://observatory.mozilla.org/), [Google Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/), [W3C Markup Validation Service](https://validator.w3.org/), [Hardenize](https://www.hardenize.com/)
 
 Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure53/DOMPurify) and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
 

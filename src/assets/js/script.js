@@ -47,6 +47,7 @@ if (localStorage.getItem('accent_color') === 'pink') {
 }
 if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
+if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
 function generateRandomBytes(length) {
   const array = new Uint8Array(length);
@@ -296,6 +297,11 @@ if (localStorage.getItem('fingerprint') === 'true') {
   document.querySelector('#checkFingerprint').checked = true;
 }
 
+if (localStorage.getItem('compact') === 'true') {
+  document.querySelector('#checkCompact').checked = true;
+  document.querySelector('main').classList.add('compact');
+}
+
 const showSuccess = (message) => {
   if (timeoutNotification) clearTimeout(timeoutNotification);
   const notification = document.querySelector('#successNotification');
@@ -357,12 +363,6 @@ const noteActions = () => {
     e.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') e.click();
     });
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'k') {
-      e.preventDefault();
-      document.querySelector('#search-input').focus();
-    }
   });
 };
 
@@ -644,8 +644,7 @@ const deleteNote = async (e) => {
 
 document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
   e.addEventListener('click', () => {
-    noteBox.classList.add('show');
-    titleNote.focus();
+    noteBox.showModal();
     document.querySelector('#textareaLength').textContent = '0/5000';
   });
 });
@@ -653,6 +652,16 @@ document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
 document.querySelector('#checkFingerprint').addEventListener('change', () => {
   if (document.querySelector('#checkFingerprint').checked) verifyFingerprint();
   else localStorage.removeItem('fingerprint');
+});
+
+document.querySelector('#checkCompact').addEventListener('change', () => {
+  if (document.querySelector('#checkCompact').checked) {
+    localStorage.setItem('compact', 'true');
+    document.querySelector('main').classList.add('compact');
+  } else {
+    localStorage.removeItem('compact');
+    document.querySelector('main').classList.remove('compact');
+  }
 });
 
 document.addEventListener('keydown', (e) => {
@@ -675,8 +684,7 @@ document.querySelector('#copyPasswordBtn').addEventListener('click', () => {
 
 document.querySelectorAll('.log-in').forEach((e) => {
   e.addEventListener('click', () => {
-    connectBox.classList.add('show');
-    document.querySelector('#nameConnect').focus();
+    connectBox.showModal();
   });
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
@@ -684,15 +692,13 @@ document.querySelectorAll('.log-in').forEach((e) => {
 });
 
 document.querySelector('#create-account').addEventListener('click', () => {
-  connectBox.classList.remove('show');
-  createBox.classList.add('show');
-  document.querySelector('#nameCreate').focus();
+  connectBox.close();
+  createBox.showModal();
 });
 
 document.querySelectorAll('#settings').forEach((e) => {
   e.addEventListener('click', () => {
-    popupBoxSettings.classList.add('show');
-    popupBoxSettings.querySelector('i').focus();
+    popupBoxSettings.showModal();
     sideBar.classList.remove('show');
   });
 });
@@ -740,12 +746,7 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
   e.addEventListener('click', () => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
-    noteBox.classList.remove('show');
-    connectBox.classList.remove('show');
-    createBox.classList.remove('show');
-    sortBox.classList.remove('show');
-    filterBox.classList.remove('show');
-    popupBoxSettings.classList.remove('show');
+    document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
   });
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
@@ -851,8 +852,8 @@ document.addEventListener('touchend', (event) => {
   handleGesture();
 }, false);
 
-document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
-document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
+document.querySelector('#btnFilter').addEventListener('click', () => filterBox.showModal());
+document.querySelector('#btnSort').addEventListener('click', () => sortBox.showModal());
 document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
@@ -926,7 +927,7 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
       body: `nameCreate=${nameCreate}&psswdCreate=${psswdCreate}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
-      createBox.classList.remove('show');
+      createBox.close();
       forms.forEach((form) => form.reset());
       let message = '';
       if (localStorage.getItem('language') === 'fr') message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
@@ -1037,7 +1038,7 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
   } else notesJSON.push(note);
 
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-  noteBox.classList.remove('show');
+  noteBox.close();
   await showNotes();
 });
 

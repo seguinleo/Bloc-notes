@@ -47,6 +47,7 @@ if (localStorage.getItem('accent_color') === 'pink') {
 }
 if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
+if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
 function generateRandomBytes(length) {
   const array = new Uint8Array(length);
@@ -300,6 +301,7 @@ const verifyFingerprint = async () => {
         ],
         authenticatorSelection: {
           authenticatorAttachment: 'platform',
+          userVerification: 'required',
         },
         timeout: 60000,
         attestation: 'direct',
@@ -317,6 +319,11 @@ const verifyFingerprint = async () => {
 if (localStorage.getItem('fingerprint') === 'true') {
   verifyFingerprint();
   document.querySelector('#checkFingerprint').checked = true;
+}
+
+if (localStorage.getItem('compact') === 'true') {
+  document.querySelector('#checkCompact').checked = true;
+  document.querySelector('main').classList.add('compact');
 }
 
 const showSuccess = (message) => {
@@ -343,15 +350,13 @@ const noteAccess = (id, link) => {
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
   if (link === null) {
-    privateNote.classList.add('show');
+    privateNote.showModal();
     document.querySelector('#idNotePublic').value = id;
-    privateNote.querySelector('i').focus();
   } else {
-    publicNote.classList.add('show');
+    publicNote.showModal();
     document.querySelector('#idNotePrivate').value = id;
     document.querySelector('#linkNotePrivate').value = link;
     document.querySelector('#copyNoteLink').textContent = link;
-    publicNote.querySelector('i').focus();
   }
 };
 
@@ -655,8 +660,7 @@ const deleteNote = (e) => {
 
 document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
   e.addEventListener('click', () => {
-    noteBox.classList.add('show');
-    titleNote.focus();
+    noteBox.showModal();
     document.querySelector('#textareaLength').textContent = '0/5000';
     document.querySelector('#checkHidden').disabled = false;
   });
@@ -667,17 +671,25 @@ document.querySelector('#checkFingerprint').addEventListener('change', () => {
   else localStorage.removeItem('fingerprint');
 });
 
+document.querySelector('#checkCompact').addEventListener('change', () => {
+  if (document.querySelector('#checkCompact').checked) {
+    localStorage.setItem('compact', 'true');
+    document.querySelector('main').classList.add('compact');
+  } else {
+    localStorage.removeItem('compact');
+    document.querySelector('main').classList.remove('compact');
+  }
+});
+
 document.querySelectorAll('.manage-account').forEach((e) => {
   e.addEventListener('click', () => {
-    popupBoxManage.classList.add('show');
-    popupBoxManage.querySelector('i').focus();
+    popupBoxManage.showModal();
   });
 });
 
 document.querySelectorAll('#settings').forEach((e) => {
   e.addEventListener('click', () => {
-    popupBoxSettings.classList.add('show');
-    popupBoxSettings.querySelector('i').focus();
+    popupBoxSettings.showModal();
     sideBar.classList.remove('show');
   });
 });
@@ -692,13 +704,7 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
   e.addEventListener('click', () => {
     isUpdate = false;
     forms.forEach((form) => form.reset());
-    noteBox.classList.remove('show');
-    popupBoxManage.classList.remove('show');
-    publicNote.classList.remove('show');
-    privateNote.classList.remove('show');
-    sortBox.classList.remove('show');
-    filterBox.classList.remove('show');
-    popupBoxSettings.classList.remove('show');
+    document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
   });
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
@@ -836,7 +842,7 @@ accentColors.forEach((span) => {
 
 document.querySelector('#copyNoteLinkBtn').addEventListener('click', () => {
   const link = document.querySelector('#copyNoteLink').textContent;
-  navigator.clipboard.writeText(`localhost/seguinleo-notes/share/${link}`);
+  navigator.clipboard.writeText(`https://leoseguin.fr/seguinleo-notes/share/${link}`);
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -849,8 +855,8 @@ document.addEventListener('touchend', (event) => {
 }, false);
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#btnSort').addEventListener('click', () => sortBox.classList.add('show'));
-document.querySelector('#btnFilter').addEventListener('click', () => filterBox.classList.add('show'));
+document.querySelector('#btnSort').addEventListener('click', () => sortBox.showModal());
+document.querySelector('#btnFilter').addEventListener('click', () => filterBox.showModal());
 document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
@@ -929,7 +935,7 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
     });
     if (response.ok) {
       isUpdate = false;
-      noteBox.classList.remove('show');
+      noteBox.close();
       await showNotes();
     } else showError('An error occurred...');
   } catch (error) {
@@ -965,7 +971,7 @@ document.querySelector('#changePsswd').addEventListener('submit', async () => {
       body: `psswdOld=${psswdOld}&psswdNew=${psswdNew}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
-      popupBoxManage.classList.remove('show');
+      popupBoxManage.close();
       showSuccess('Successfully changed password!');
       forms.forEach((form) => form.reset());
     } else {
@@ -1013,7 +1019,7 @@ document.querySelector('#privateNote').addEventListener('submit', async () => {
       body: `noteId=${id}&noteLink=${link}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
-      publicNote.classList.remove('show');
+      publicNote.close();
       await showNotes();
     } else showError('An error occurred...');
   } catch (error) {
@@ -1034,7 +1040,7 @@ document.querySelector('#publicNote').addEventListener('submit', async () => {
       body: `noteId=${id}&noteLink=${link}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
-      privateNote.classList.remove('show');
+      privateNote.close();
       await showNotes();
     } else showError('An error occurred...');
   } catch (error) {
