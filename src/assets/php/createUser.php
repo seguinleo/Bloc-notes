@@ -1,4 +1,9 @@
 <?php
+if (isset($_POST['nameCreate'], $_POST['psswdCreate']) === false) {
+    throw new Exception('Account creation failed');
+    return;
+}
+
 session_name('__Secure-notes');
 session_start();
 
@@ -7,10 +12,6 @@ if (isset($_SESSION['name']) === true) {
     return;
 }
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Account creation failed');
-    return;
-}
-if (isset($_POST['nameCreate'], $_POST['psswdCreate']) === false) {
     throw new Exception('Account creation failed');
     return;
 }

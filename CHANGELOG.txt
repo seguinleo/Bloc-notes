@@ -1,3 +1,9 @@
+#----v24.3.1----#
+-Improve code structure
+-Replace Showdown by Marked
+    -Faster
+    -More maintained
+
 #----v24.2.3----#
 -Add compact mode for mobile
 -Improve accessibility

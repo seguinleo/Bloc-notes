@@ -1,4 +1,9 @@
 <?php
+if (isset($_POST['nameConnect'], $_POST['psswdConnect']) === false) {
+    throw new Exception('Connection failed');
+    return;
+}
+
 session_name('__Secure-notes');
 session_start();
 
@@ -7,10 +12,6 @@ if (isset($_SESSION['name']) === true) {
     return;
 }
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection failed');
-    return;
-}
-if (isset($_POST['nameConnect'], $_POST['psswdConnect']) === false) {
     throw new Exception('Connection failed');
     return;
 }
@@ -54,5 +55,6 @@ $cookieParams = [
 ];
 session_set_cookie_params($cookieParams);
 session_start();
+session_regenerate_id();
 $_SESSION['name'] = $row['name'];
 $_SESSION['userId'] = $row['id'];

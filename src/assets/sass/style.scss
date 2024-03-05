@@ -150,7 +150,11 @@ code {
 }
 
 li {
-  margin-left: -1.4rem;
+  margin-left: -1rem;
+
+  input[type="checkbox"]:checked+label {
+    text-decoration: line-through;
+  }
 }
 
 img {
@@ -425,10 +429,6 @@ input[type="password"] {
   padding: 4px;
 }
 
-.task-list-item input[type="checkbox"]:checked+label {
-  text-decoration: line-through;
-}
-
 .note {
   position: relative;
   display: flex;
@@ -564,6 +564,8 @@ input[type="password"] {
   .details {
     min-height: calc(100svh - 57px);
     max-height: calc(100svh - 57px);
+    width: fit-content;
+    margin: auto;
   }
 }
 
@@ -825,11 +827,6 @@ dialog {
   top: 195px;
 }
 
-.task-list-item {
-  margin-left: -2.4rem;
-  pointer-events: none;
-}
-
 @media (min-width: 901px) {
 
   #iconFloatAdd,
@@ -857,10 +854,6 @@ dialog {
   main {
     padding: 0 0 5rem;
     gap: 10px;
-  }
-
-  h2 {
-    font-size: 1rem;
   }
 
   #iconFloatAdd {
@@ -923,12 +916,7 @@ dialog {
       opacity: 1;
     }
 
-    .title {
-      font-size: 1.1rem;
-    }
-
     .details {
-      font-size: .8rem;
       overflow: hidden;
     }
   }
@@ -960,6 +948,8 @@ dialog {
 
     .details {
       overflow: auto;
+      width: 100%;
+      margin: 0;
     }
   }
 

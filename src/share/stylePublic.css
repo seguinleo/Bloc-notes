@@ -112,8 +112,11 @@ blockquote {
 }
 
 li {
-  margin-left: -1.4rem;
-  word-break: break-word;
+  margin-left: -1rem;
+}
+
+li input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
 }
 
 img {
@@ -212,15 +215,6 @@ input[type="checkbox"] {
 
 .bottom-content i:hover {
   background: rgba(100, 100, 125, 20%);
-}
-
-.task-list-item {
-  margin-left: -2.4rem;
-  pointer-events: none;
-}
-
-.task-list-item input[type="checkbox"]:checked + label {
-  text-decoration: line-through;
 }
 
 .bold {

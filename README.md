@@ -4,7 +4,7 @@
 <h1 align="center">Bloc-notes</h1>
 
 <p align="center">
-<b>Bloc-notes</b> is a free, open source and encrypted notebook.
+<b>Bloc-notes</b> is an encrypted, private and secure notebook.
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
 ## Security and Privacy
-The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches and protected by 2FA. The online website is also protected by Cloudflare's captcha.
+The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches and protected by 2FA. The online login is also protected by Cloudflare's captcha.
 
 Passwords are hashed with the latest algorithms before being sent to the database.
 
@@ -72,17 +72,13 @@ Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozi
 
 Technologies: JavaScript, PHP8+ and MySQL
 
-Analyzers: [Mozilla Observatory](https://observatory.mozilla.org/), [Google Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/), [W3C Markup Validation Service](https://validator.w3.org/), [Hardenize](https://www.hardenize.com/)
+Website analyzers: [Mozilla Observatory](https://observatory.mozilla.org/), [Google Lighthouse](https://github.com/GoogleChrome/lighthouse), [W3C Markup Validation Service](https://validator.w3.org/)
 
-Dependencies: ESLint, PHP_CodeSniffer, Sass, [DOMPurify](https://github.com/cure53/DOMPurify) and [Showdownjs](https://github.com/showdownjs/showdown) (modified)
+Dependencies: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes for accessibility)
 
-``npm i`` and ``composer i`` to install all dependencies
+``npm i`` to install all dependencies
 
-``npx eslint file.js`` to verify JavaScript files
-
-``vendor/bin/phpcs --standard=PSR2 file.php`` to verify PHP files
-
-``npm run sass`` to compile Saas files
+``npm run sass`` to auto compile Saas to CSS
 
 ``docker-compose up --build`` to build the Docker container
 

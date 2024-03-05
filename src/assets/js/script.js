@@ -1,3 +1,6 @@
+import './marked.min.js';
+import './purify.min.js';
+
 let isUpdate = false;
 let timeoutNotification = null;
 let touchstartX = 0;
@@ -423,15 +426,6 @@ async function storeKeyInDB(db, objectStoreName, key) {
   });
 }
 
-// eslint-disable-next-line no-undef
-const converter = new showdown.Converter();
-converter.setOption('tables', true);
-converter.setOption('tasklists', true);
-converter.setOption('strikethrough', true);
-converter.setOption('parseImgDimensions', true);
-converter.setOption('simpleLineBreaks', true);
-converter.setOption('simplifiedAutoLink', true);
-
 const showNotes = async () => {
   document.querySelectorAll('#listNotes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
@@ -439,154 +433,158 @@ const showNotes = async () => {
 
   if (notesJSON.length === 0) return;
 
-  const numberOfNotesElement = document.createElement('h2');
-  if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
-  else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
-  else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
-  sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
+  try {
+    const numberOfNotesElement = document.createElement('h2');
+    if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
+    else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
+    else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
+    sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
 
-  const dbName = 'notes_db';
-  const objectStoreName = 'key';
-  const db = await openIndexedDB(dbName, objectStoreName);
-  const key = await getKeyFromDB(db, objectStoreName);
+    const dbName = 'notes_db';
+    const objectStoreName = 'key';
+    const db = await openIndexedDB(dbName, objectStoreName);
+    const key = await getKeyFromDB(db, objectStoreName);
 
-  if (localStorage.getItem('sort_notes') === '1') {
-    notesJSON.sort((a, b) => b.id - a.id);
-    document.querySelector('input[name="sortNotes"][value="1"]').checked = true;
-  } else if (localStorage.getItem('sort_notes') === '2') {
-    notesJSON.sort((a, b) => a.id - b.id);
-    document.querySelector('input[name="sortNotes"][value="2"]').checked = true;
-  } else if (localStorage.getItem('sort_notes') === '4') {
-    notesJSON.sort((a, b) => new Date(a.date) - new Date(b.date));
-    document.querySelector('input[name="sortNotes"][value="4"]').checked = true;
-  } else {
-    notesJSON.sort((a, b) => new Date(b.date) - new Date(a.date));
-    document.querySelector('input[name="sortNotes"][value="3"]').checked = true;
-  }
-
-  const fragment = document.createDocumentFragment();
-
-  const promises = notesJSON.map(async (row, id) => {
-    const {
-      title, content, color, date, hidden, category,
-    } = row;
-
-    if (!title || !color || !date) return;
-
-    const deTitle = await window.crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: new Uint8Array(12) },
-      key,
-      base64ToArrayBuffer(title),
-    );
-
-    const deContent = await window.crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: new Uint8Array(12) },
-      key,
-      base64ToArrayBuffer(content),
-    );
-
-    const deTitleString = JSON.parse(new TextDecoder().decode(deTitle));
-    const deContentString = JSON.parse(new TextDecoder().decode(deContent));
-    const contentHtml = converter.makeHtml(deContentString);
-    const noteElement = document.createElement('div');
-    const detailsElement = document.createElement('div');
-    const titleElement = document.createElement('h2');
-    const contentElement = document.createElement('div');
-    const bottomContentElement = document.createElement('div');
-    const editIconElement = document.createElement('i');
-    const paragraph = document.createElement('p');
-    const titleSpan = document.createElement('span');
-    const dateSpan = document.createElement('span');
-
-    noteElement.id = `note${id}`;
-    noteElement.classList.add('note', color);
-    noteElement.setAttribute('data-note-id', id);
-    noteElement.setAttribute('data-note-title', deTitleString);
-    noteElement.setAttribute('data-note-content', deContentString);
-    noteElement.setAttribute('data-note-color', color);
-    noteElement.setAttribute('data-note-hidden', hidden);
-    noteElement.setAttribute('data-note-category', category);
-    detailsElement.classList.add('details');
-    titleElement.classList.add('title');
-    titleElement.textContent = deTitleString;
-    contentElement.classList.add('detailsContent');
-
-    if (hidden === '0') contentElement.innerHTML = contentHtml;
-    else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-
-    detailsElement.appendChild(titleElement);
-    detailsElement.appendChild(contentElement);
-    bottomContentElement.classList.add('bottom-content');
-    editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
-    editIconElement.tabIndex = 0;
-    editIconElement.setAttribute('role', 'button');
-    editIconElement.setAttribute('aria-label', 'Modifier la note');
-    bottomContentElement.appendChild(editIconElement);
-
-    const trashIconElement = document.createElement('i');
-    trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
-    trashIconElement.tabIndex = 0;
-    trashIconElement.setAttribute('role', 'button');
-    trashIconElement.setAttribute('aria-label', 'Supprimer la note');
-    bottomContentElement.appendChild(trashIconElement);
-
-    if (hidden === '0' && deContentString !== '') {
-      const clipboardIconElement = document.createElement('i');
-      clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
-      clipboardIconElement.tabIndex = 0;
-      clipboardIconElement.setAttribute('role', 'button');
-      clipboardIconElement.setAttribute('aria-label', 'Copier la note');
-      bottomContentElement.appendChild(clipboardIconElement);
-
-      const downloadIconElement = document.createElement('i');
-      downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
-      downloadIconElement.tabIndex = 0;
-      downloadIconElement.setAttribute('role', 'button');
-      downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
-      bottomContentElement.appendChild(downloadIconElement);
-
-      const expandIconElement = document.createElement('i');
-      expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
-      expandIconElement.tabIndex = 0;
-      expandIconElement.setAttribute('role', 'button');
-      expandIconElement.setAttribute('aria-label', 'Agrandir la note');
-      bottomContentElement.appendChild(expandIconElement);
+    if (localStorage.getItem('sort_notes') === '1') {
+      notesJSON.sort((a, b) => b.id - a.id);
+      document.querySelector('input[name="sortNotes"][value="1"]').checked = true;
+    } else if (localStorage.getItem('sort_notes') === '2') {
+      notesJSON.sort((a, b) => a.id - b.id);
+      document.querySelector('input[name="sortNotes"][value="2"]').checked = true;
+    } else if (localStorage.getItem('sort_notes') === '4') {
+      notesJSON.sort((a, b) => new Date(a.date) - new Date(b.date));
+      document.querySelector('input[name="sortNotes"][value="4"]').checked = true;
+    } else {
+      notesJSON.sort((a, b) => new Date(b.date) - new Date(a.date));
+      document.querySelector('input[name="sortNotes"][value="3"]').checked = true;
     }
 
-    noteElement.appendChild(detailsElement);
-    noteElement.appendChild(bottomContentElement);
-    paragraph.setAttribute('tabindex', '0');
-    paragraph.setAttribute('role', 'button');
-    titleSpan.classList.add('titleList');
-    titleSpan.textContent = deTitleString;
-    dateSpan.classList.add('dateList');
-    dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
-      weekday: 'short',
-      year: '2-digit',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
+    const fragment = document.createDocumentFragment();
+
+    const promises = notesJSON.map(async (row, id) => {
+      const {
+        title, content, color, date, hidden, category,
+      } = row;
+
+      if (!title || !color || !date) return;
+
+      const deTitle = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(12) },
+        key,
+        base64ToArrayBuffer(title),
+      );
+
+      const deContent = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(12) },
+        key,
+        base64ToArrayBuffer(content),
+      );
+
+      const deTitleString = JSON.parse(new TextDecoder().decode(deTitle));
+      const deContentString = JSON.parse(new TextDecoder().decode(deContent));
+      const contentHtml = marked.parse(deContentString);
+      const noteElement = document.createElement('div');
+      const detailsElement = document.createElement('div');
+      const titleElement = document.createElement('h2');
+      const contentElement = document.createElement('div');
+      const bottomContentElement = document.createElement('div');
+      const editIconElement = document.createElement('i');
+      const paragraph = document.createElement('p');
+      const titleSpan = document.createElement('span');
+      const dateSpan = document.createElement('span');
+
+      noteElement.id = `note${id}`;
+      noteElement.classList.add('note', color);
+      noteElement.setAttribute('data-note-id', id);
+      noteElement.setAttribute('data-note-title', deTitleString);
+      noteElement.setAttribute('data-note-content', deContentString);
+      noteElement.setAttribute('data-note-color', color);
+      noteElement.setAttribute('data-note-hidden', hidden);
+      noteElement.setAttribute('data-note-category', category);
+      detailsElement.classList.add('details');
+      titleElement.classList.add('title');
+      titleElement.textContent = deTitleString;
+      contentElement.classList.add('detailsContent');
+
+      if (hidden === '0') contentElement.innerHTML = contentHtml;
+      else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+
+      detailsElement.appendChild(titleElement);
+      detailsElement.appendChild(contentElement);
+      bottomContentElement.classList.add('bottom-content');
+      editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
+      editIconElement.tabIndex = 0;
+      editIconElement.setAttribute('role', 'button');
+      editIconElement.setAttribute('aria-label', 'Modifier la note');
+      bottomContentElement.appendChild(editIconElement);
+
+      const trashIconElement = document.createElement('i');
+      trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
+      trashIconElement.tabIndex = 0;
+      trashIconElement.setAttribute('role', 'button');
+      trashIconElement.setAttribute('aria-label', 'Supprimer la note');
+      bottomContentElement.appendChild(trashIconElement);
+
+      if (hidden === '0' && deContentString !== '') {
+        const clipboardIconElement = document.createElement('i');
+        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
+        clipboardIconElement.tabIndex = 0;
+        clipboardIconElement.setAttribute('role', 'button');
+        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
+        bottomContentElement.appendChild(clipboardIconElement);
+
+        const downloadIconElement = document.createElement('i');
+        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
+        downloadIconElement.tabIndex = 0;
+        downloadIconElement.setAttribute('role', 'button');
+        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
+        bottomContentElement.appendChild(downloadIconElement);
+
+        const expandIconElement = document.createElement('i');
+        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+        expandIconElement.tabIndex = 0;
+        expandIconElement.setAttribute('role', 'button');
+        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
+        bottomContentElement.appendChild(expandIconElement);
+      }
+
+      noteElement.appendChild(detailsElement);
+      noteElement.appendChild(bottomContentElement);
+      paragraph.setAttribute('tabindex', '0');
+      paragraph.setAttribute('role', 'button');
+      titleSpan.classList.add('titleList');
+      titleSpan.textContent = deTitleString;
+      dateSpan.classList.add('dateList');
+      dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
+        weekday: 'short',
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      if (category !== '0') {
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
+        paragraph.appendChild(categoryElement);
+      }
+
+      fragment.appendChild(noteElement);
+      paragraph.appendChild(titleSpan);
+      paragraph.appendChild(dateSpan);
+      sideBar.querySelector('#listNotes').appendChild(paragraph);
     });
 
-    if (category !== '0') {
-      const categoryElement = document.createElement('span');
-      categoryElement.classList.add('category');
-      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
-      paragraph.appendChild(categoryElement);
-    }
-
-    fragment.appendChild(noteElement);
-    paragraph.appendChild(titleSpan);
-    paragraph.appendChild(dateSpan);
-    sideBar.querySelector('#listNotes').appendChild(paragraph);
-  });
-
-  await Promise.all(promises);
-  document.querySelector('main').appendChild(fragment);
-  searchSideBar();
-  noteActions();
-  document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
+    await Promise.all(promises);
+    document.querySelector('main').appendChild(fragment);
+    searchSideBar();
+    noteActions();
+    document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
+  } catch (error) {
+    showError('An error occurred while decrypting the notes.');
+  }
 };
 
 const toggleFullscreen = (id) => {
@@ -919,7 +917,7 @@ document.querySelector('#createForm').addEventListener('submit', async () => {
   const nameCreate = encodeURIComponent(e);
   const psswdCreate = encodeURIComponent(t);
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/createUser.php', {
+    const response = await fetch('./assets/php/createUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -952,7 +950,7 @@ document.querySelector('#connectForm').addEventListener('submit', async () => {
   const nameConnect = encodeURIComponent(e);
   const psswdConnect = encodeURIComponent(t);
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/connectUser.php', {
+    const response = await fetch('./assets/php/connectUser.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -985,61 +983,70 @@ document.querySelector('#connectForm').addEventListener('submit', async () => {
 });
 
 document.querySelector('#addNote').addEventListener('submit', async () => {
-  const title = titleNote.value.trim();
-  // eslint-disable-next-line no-undef
-  const content = DOMPurify.sanitize(contentNote.value.trim(), { SANITIZE_NAMED_PROPS: true });
-  const color = document.querySelector('#colors .selected').classList[0];
-  const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
-  const category = document.querySelector('input[name="category"]:checked').value;
+  try {
+    const idNote = notesJSON.length;
+    const title = titleNote.value.trim();
+    const content = contentNote.value.trim();
+    const color = document.querySelector('#colors .selected').classList[0];
+    const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
+    const category = document.querySelector('input[name="category"]:checked').value;
 
-  if (!title || title.length > 30 || content.length > 5000 || !color) return;
-  if (!/^[a-zA-Z]+$/.test(color)) return;
-  if (!/^[0-9]+$/.test(category)) return;
+    if (!title || title.length > 30 || content.length > 5000 || !color) return;
+    if (!/^[a-zA-Z]+$/.test(color)) return;
+    if (!/^[0-9]+$/.test(category)) return;
 
-  const dbName = 'notes_db';
-  const objectStoreName = 'key';
-  const db = await openIndexedDB(dbName, objectStoreName);
-  let key = await getKeyFromDB(db, objectStoreName);
+    const mdContent = DOMPurify.sanitize(content, {
+      SANITIZE_NAMED_PROPS: true,
+    });
 
-  if (!key) {
-    key = await window.crypto.subtle.generateKey(
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt'],
+    const dbName = 'notes_db';
+    const objectStoreName = 'key';
+    const db = await openIndexedDB(dbName, objectStoreName);
+    let key = await getKeyFromDB(db, objectStoreName);
+
+    if (!key) {
+      key = await window.crypto.subtle.generateKey(
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt', 'decrypt'],
+      );
+      await storeKeyInDB(db, objectStoreName, key);
+    }
+
+    const enTitle = await window.crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv: new Uint8Array(12) },
+      key,
+      new TextEncoder().encode(JSON.stringify(title)),
     );
-    await storeKeyInDB(db, objectStoreName, key);
+
+    const enContent = await window.crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv: new Uint8Array(12) },
+      key,
+      new TextEncoder().encode(JSON.stringify(mdContent)),
+    );
+
+    const note = {
+      id: idNote,
+      title: arrayBufferToBase64(enTitle),
+      content: arrayBufferToBase64(enContent),
+      color,
+      date,
+      hidden,
+      category,
+    };
+
+    if (isUpdate) {
+      isUpdate = false;
+      notesJSON[document.querySelector('#idNote').value] = note;
+    } else notesJSON.push(note);
+
+    localStorage.setItem('local_notes', JSON.stringify(notesJSON));
+    noteBox.close();
+    await showNotes();
+  } catch (error) {
+    showError('An error occurred...');
   }
-
-  const enTitle = await window.crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: new Uint8Array(12) },
-    key,
-    new TextEncoder().encode(JSON.stringify(title)),
-  );
-
-  const enContent = await window.crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: new Uint8Array(12) },
-    key,
-    new TextEncoder().encode(JSON.stringify(content)),
-  );
-
-  const note = {
-    id: notesJSON.length,
-    title: arrayBufferToBase64(enTitle),
-    content: arrayBufferToBase64(enContent),
-    color,
-    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-    hidden,
-    category,
-  };
-
-  if (isUpdate) {
-    isUpdate = false;
-    notesJSON[document.querySelector('#idNote').value] = note;
-  } else notesJSON.push(note);
-
-  localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-  noteBox.close();
-  await showNotes();
 });
 
 document.addEventListener('DOMContentLoaded', async () => {

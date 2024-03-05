@@ -26,11 +26,11 @@ $_SESSION['csrf_token'] = $csrf_token;
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
-    <link rel="apple-touch-icon" href="/seguinleo-notes/assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="/seguinleo-notes/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/seguinleo-notes/assets/css/style.css">
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="manifest" href="/seguinleo-notes/app.webmanifest">
+    <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accentBlue">
     <header>
@@ -75,7 +75,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                 <div class="close">
                     <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Hide"></i>
                 </div>
-                <h2>v24.2.3🎉</h2>
+                <h2>v24.3.1🎉</h2>
                 <p id="newVersionInfos"></p>
                 <p>
                     <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noopener noreferrer">Changelog</a>
@@ -319,7 +319,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.2.3</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.1</a>
                         </p>
                     </div>
                 </div>
@@ -333,7 +333,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row bold">
-                            <?= $name ?>
+                            <?= htmlspecialchars($name) ?>
                         </div>
                         <div class="row">
                             <span id="log-out" class="linkp" tabindex="0" role="button"></span>
@@ -496,12 +496,10 @@ $_SESSION['csrf_token'] = $csrf_token;
             </dialog>
         <?php } ?>
     </main>
-    <script src="/seguinleo-notes/assets/js/purify.min.js" defer></script>
-    <script src="/seguinleo-notes/assets/js/showdown.min.js" defer></script>
     <?php if (isset($name) === true) { ?>
-        <script src="/seguinleo-notes/assets/js/scriptConnect.js" defer></script>
+        <script type="module" src="./assets/js/scriptConnect.js"></script>
     <?php } else { ?>
-        <script src="/seguinleo-notes/assets/js/script.js" defer></script>
+        <script type="module" src="./assets/js/script.js"></script>
     <?php } ?>
 </body>
 </html>

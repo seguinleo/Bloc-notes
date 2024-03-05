@@ -1,3 +1,6 @@
+import './marked.min.js';
+import './purify.min.js';
+
 let isUpdate = false;
 let timeoutNotification = null;
 let touchstartX = 0;
@@ -412,15 +415,6 @@ const noteActions = () => {
   });
 };
 
-// eslint-disable-next-line no-undef
-const converter = new showdown.Converter();
-converter.setOption('tables', true);
-converter.setOption('tasklists', true);
-converter.setOption('strikethrough', true);
-converter.setOption('parseImgDimensions', true);
-converter.setOption('simpleLineBreaks', true);
-converter.setOption('simplifiedAutoLink', true);
-
 const showNotes = async () => {
   const sortOption = localStorage.getItem('sort_notes');
   if (Number.isNaN(sortOption)) return;
@@ -428,150 +422,154 @@ const showNotes = async () => {
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
-  const response = await fetch('/seguinleo-notes/assets/php/getNotes.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `sort=${sortOption}&csrf_token=${csrfToken}`,
-  });
-
-  const notesJSON = await response.json();
-
-  if (notesJSON.length === 0) return;
-
-  const numberOfNotesElement = document.createElement('h2');
-  if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
-  else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
-  else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
-  sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
-
-  const fragment = document.createDocumentFragment();
-
-  notesJSON.forEach((row) => {
-    const {
-      id, title, content, color, date, hidden, category, link,
-    } = row;
-
-    if (!id || !title || !color || !date) return;
-
-    const contentHtml = converter.makeHtml(content);
-    const noteElement = document.createElement('div');
-    const detailsElement = document.createElement('div');
-    const titleElement = document.createElement('h2');
-    const contentElement = document.createElement('div');
-    const bottomContentElement = document.createElement('div');
-    const editIconElement = document.createElement('i');
-    const paragraph = document.createElement('p');
-    const titleSpan = document.createElement('span');
-    const dateSpan = document.createElement('span');
-
-    noteElement.id = `note${id}`;
-    noteElement.classList.add('note', color);
-    noteElement.setAttribute('data-note-id', id);
-    noteElement.setAttribute('data-note-title', title);
-    noteElement.setAttribute('data-note-content', content);
-    noteElement.setAttribute('data-note-color', color);
-    noteElement.setAttribute('data-note-hidden', hidden);
-    noteElement.setAttribute('data-note-category', category);
-    detailsElement.classList.add('details');
-    titleElement.classList.add('title');
-    titleElement.textContent = title;
-    contentElement.classList.add('detailsContent');
-
-    if (hidden === 0) contentElement.innerHTML = contentHtml;
-    else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-
-    detailsElement.appendChild(titleElement);
-    detailsElement.appendChild(contentElement);
-    bottomContentElement.classList.add('bottom-content');
-    editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
-    editIconElement.tabIndex = 0;
-    editIconElement.setAttribute('role', 'button');
-    editIconElement.setAttribute('aria-label', 'Modifier la note');
-    bottomContentElement.appendChild(editIconElement);
-
-    if (link === null) {
-      const trashIconElement = document.createElement('i');
-      trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
-      trashIconElement.tabIndex = 0;
-      trashIconElement.setAttribute('role', 'button');
-      trashIconElement.setAttribute('aria-label', 'Supprimer la note');
-      bottomContentElement.appendChild(trashIconElement);
-
-      const iconLink = document.createElement('i');
-      iconLink.classList.add('fa-solid', 'fa-link');
-      titleSpan.appendChild(iconLink);
-    }
-
-    if (hidden === 0 && content !== '') {
-      const clipboardIconElement = document.createElement('i');
-      clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
-      clipboardIconElement.tabIndex = 0;
-      clipboardIconElement.setAttribute('role', 'button');
-      clipboardIconElement.setAttribute('aria-label', 'Copier la note');
-      bottomContentElement.appendChild(clipboardIconElement);
-
-      const downloadIconElement = document.createElement('i');
-      downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
-      downloadIconElement.tabIndex = 0;
-      downloadIconElement.setAttribute('role', 'button');
-      downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
-      bottomContentElement.appendChild(downloadIconElement);
-
-      const expandIconElement = document.createElement('i');
-      expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
-      expandIconElement.tabIndex = 0;
-      expandIconElement.setAttribute('role', 'button');
-      expandIconElement.setAttribute('aria-label', 'Agrandir la note');
-      bottomContentElement.appendChild(expandIconElement);
-
-      const linkIconElement = document.createElement('i');
-      linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
-      linkIconElement.tabIndex = 0;
-      linkIconElement.setAttribute('role', 'button');
-      linkIconElement.setAttribute('aria-label', 'Statut de la note');
-      bottomContentElement.appendChild(linkIconElement);
-    }
-
-    noteElement.appendChild(detailsElement);
-    noteElement.appendChild(bottomContentElement);
-    paragraph.setAttribute('tabindex', '0');
-    paragraph.setAttribute('role', 'button');
-    titleSpan.classList.add('titleList');
-    titleSpan.textContent = title;
-    if (link !== null) {
-      noteElement.setAttribute('data-note-link', link);
-      titleSpan.appendChild(document.createElement('i'));
-      titleSpan.querySelector('i').classList.add('fa-solid', 'fa-link');
-    }
-    dateSpan.classList.add('dateList');
-    dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
-      weekday: 'short',
-      year: '2-digit',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
+  try {
+    const response = await fetch('./assets/php/getNotes.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `sort=${sortOption}&csrf_token=${csrfToken}`,
     });
 
-    if (category !== 0) {
-      const categoryElement = document.createElement('span');
-      categoryElement.classList.add('category');
-      categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
-      paragraph.appendChild(categoryElement);
-    }
+    const notesJSON = await response.json();
 
-    fragment.appendChild(noteElement);
-    paragraph.appendChild(titleSpan);
-    paragraph.appendChild(dateSpan);
-    sideBar.querySelector('#listNotes').appendChild(paragraph);
-  });
+    if (notesJSON.length === 0) return;
 
-  document.querySelector('main').appendChild(fragment);
-  searchSideBar();
-  noteActions();
-  document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
+    const numberOfNotesElement = document.createElement('h2');
+    if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
+    else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
+    else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
+    sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
+
+    const fragment = document.createDocumentFragment();
+
+    notesJSON.forEach((row) => {
+      const {
+        id, title, content, color, date, hidden, category, link,
+      } = row;
+
+      if (!id || !title || !color || !date) return;
+
+      const contentHtml = marked.parse(content);
+      const noteElement = document.createElement('div');
+      const detailsElement = document.createElement('div');
+      const titleElement = document.createElement('h2');
+      const contentElement = document.createElement('div');
+      const bottomContentElement = document.createElement('div');
+      const editIconElement = document.createElement('i');
+      const paragraph = document.createElement('p');
+      const titleSpan = document.createElement('span');
+      const dateSpan = document.createElement('span');
+
+      noteElement.id = `note${id}`;
+      noteElement.classList.add('note', color);
+      noteElement.setAttribute('data-note-id', id);
+      noteElement.setAttribute('data-note-title', title);
+      noteElement.setAttribute('data-note-content', content);
+      noteElement.setAttribute('data-note-color', color);
+      noteElement.setAttribute('data-note-hidden', hidden);
+      noteElement.setAttribute('data-note-category', category);
+      detailsElement.classList.add('details');
+      titleElement.classList.add('title');
+      titleElement.textContent = title;
+      contentElement.classList.add('detailsContent');
+
+      if (hidden === 0) contentElement.innerHTML = contentHtml;
+      else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+
+      detailsElement.appendChild(titleElement);
+      detailsElement.appendChild(contentElement);
+      bottomContentElement.classList.add('bottom-content');
+      editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
+      editIconElement.tabIndex = 0;
+      editIconElement.setAttribute('role', 'button');
+      editIconElement.setAttribute('aria-label', 'Modifier la note');
+      bottomContentElement.appendChild(editIconElement);
+
+      if (link === null) {
+        const trashIconElement = document.createElement('i');
+        trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
+        trashIconElement.tabIndex = 0;
+        trashIconElement.setAttribute('role', 'button');
+        trashIconElement.setAttribute('aria-label', 'Supprimer la note');
+        bottomContentElement.appendChild(trashIconElement);
+
+        const iconLink = document.createElement('i');
+        iconLink.classList.add('fa-solid', 'fa-link');
+        titleSpan.appendChild(iconLink);
+      }
+
+      if (hidden === 0 && content !== '') {
+        const clipboardIconElement = document.createElement('i');
+        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
+        clipboardIconElement.tabIndex = 0;
+        clipboardIconElement.setAttribute('role', 'button');
+        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
+        bottomContentElement.appendChild(clipboardIconElement);
+
+        const downloadIconElement = document.createElement('i');
+        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
+        downloadIconElement.tabIndex = 0;
+        downloadIconElement.setAttribute('role', 'button');
+        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
+        bottomContentElement.appendChild(downloadIconElement);
+
+        const expandIconElement = document.createElement('i');
+        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+        expandIconElement.tabIndex = 0;
+        expandIconElement.setAttribute('role', 'button');
+        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
+        bottomContentElement.appendChild(expandIconElement);
+
+        const linkIconElement = document.createElement('i');
+        linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
+        linkIconElement.tabIndex = 0;
+        linkIconElement.setAttribute('role', 'button');
+        linkIconElement.setAttribute('aria-label', 'Statut de la note');
+        bottomContentElement.appendChild(linkIconElement);
+      }
+
+      noteElement.appendChild(detailsElement);
+      noteElement.appendChild(bottomContentElement);
+      paragraph.setAttribute('tabindex', '0');
+      paragraph.setAttribute('role', 'button');
+      titleSpan.classList.add('titleList');
+      titleSpan.textContent = title;
+      if (link !== null) {
+        noteElement.setAttribute('data-note-link', link);
+        titleSpan.appendChild(document.createElement('i'));
+        titleSpan.querySelector('i').classList.add('fa-solid', 'fa-link');
+      }
+      dateSpan.classList.add('dateList');
+      dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
+        weekday: 'short',
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      if (category !== 0) {
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
+        paragraph.appendChild(categoryElement);
+      }
+
+      fragment.appendChild(noteElement);
+      paragraph.appendChild(titleSpan);
+      paragraph.appendChild(dateSpan);
+      sideBar.querySelector('#listNotes').appendChild(paragraph);
+    });
+
+    document.querySelector('main').appendChild(fragment);
+    searchSideBar();
+    noteActions();
+    document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
+  } catch (error) {
+    showError('An error occurred...');
+  }
 };
 
 const toggleFullscreen = (id) => {
@@ -582,7 +580,7 @@ const toggleFullscreen = (id) => {
 
 const fetchDelete = async (id) => {
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/deleteNote.php', {
+    const response = await fetch('./assets/php/deleteNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -598,7 +596,7 @@ const fetchDelete = async (id) => {
 
 const fetchLogout = async () => {
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/logout.php', {
+    const response = await fetch('./assets/php/logout.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -842,7 +840,7 @@ accentColors.forEach((span) => {
 
 document.querySelector('#copyNoteLinkBtn').addEventListener('click', () => {
   const link = document.querySelector('#copyNoteLink').textContent;
-  navigator.clipboard.writeText(`https://leoseguin.fr/seguinleo-notes/share/${link}`);
+  navigator.clipboard.writeText(`localhost/seguinleo-notes/share/${link}`);
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -906,26 +904,25 @@ document.querySelectorAll('.switch').forEach((e) => {
 document.querySelector('#addNote').addEventListener('submit', async () => {
   try {
     const idNote = document.querySelector('#idNote').value;
-    const titleBrut = titleNote.value.trim();
-    // eslint-disable-next-line no-undef
-    const contentBrut = DOMPurify.sanitize(contentNote.value.trim(), {
-      SANITIZE_NAMED_PROPS: true,
-    });
-    const title = encodeURIComponent(titleBrut);
-    const content = encodeURIComponent(contentBrut);
+    const title = titleNote.value.trim();
+    const content = contentNote.value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
     const category = document.querySelector('input[name="category"]:checked').value;
 
-    if (!titleBrut || titleBrut.length > 30 || contentBrut.length > 5000) return;
+    if (!title || title.length > 30 || content.length > 5000 || !color) return;
     if (isUpdate && !idNote) return;
     if (idNote && Number.isNaN(idNote)) return;
     if (!/^[a-zA-Z]+$/.test(color)) return;
     if (!/^[0-9]+$/.test(category)) return;
 
-    const data = isUpdate ? `noteId=${idNote}&title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}` : `title=${title}&content=${content}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}`;
-    const url = isUpdate ? '/seguinleo-notes/assets/php/updateNote.php' : '/seguinleo-notes/assets/php/addNote.php';
+    const cleanContent = DOMPurify.sanitize(content, {
+      SANITIZE_NAMED_PROPS: true,
+    });
+
+    const data = isUpdate ? `noteId=${idNote}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}` : `title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}`;
+    const url = isUpdate ? './assets/php/updateNote.php' : './assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -963,7 +960,7 @@ document.querySelector('#changePsswd').addEventListener('submit', async () => {
   const psswdOld = encodeURIComponent(a);
   const psswdNew = encodeURIComponent(e);
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/updatePsswd.php', {
+    const response = await fetch('./assets/php/updatePsswd.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -988,7 +985,7 @@ document.querySelector('#deleteAccount').addEventListener('submit', async () => 
   const psswd = document.querySelector('#deletePsswd').value;
   if (!psswd || psswd.length < 8) return;
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/deleteAccount.php', {
+    const response = await fetch('./assets/php/deleteAccount.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1011,7 +1008,7 @@ document.querySelector('#privateNote').addEventListener('submit', async () => {
   const link = document.querySelector('#linkNotePrivate').value;
   if (!id || !link || Number.isNaN(id) || !/^[a-zA-Z0-9]+$/.test(link)) return;
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/privateNote.php', {
+    const response = await fetch('./assets/php/privateNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1032,7 +1029,7 @@ document.querySelector('#publicNote').addEventListener('submit', async () => {
   if (!id || Number.isNaN(id)) return;
   const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {
-    const response = await fetch('/seguinleo-notes/assets/php/publicNote.php', {
+    const response = await fetch('./assets/php/publicNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

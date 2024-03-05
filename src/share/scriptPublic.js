@@ -1,18 +1,12 @@
+import '../assets/js/marked.min.js';
+
 const notesContainer = document.querySelector('main');
 const link = notesContainer.getAttribute('data-link');
-// eslint-disable-next-line no-undef
-const converter = new showdown.Converter();
-converter.setOption('tables', true);
-converter.setOption('tasklists', true);
-converter.setOption('strikethrough', true);
-converter.setOption('parseImgDimensions', true);
-converter.setOption('simpleLineBreaks', true);
-converter.setOption('simplifiedAutoLink', true);
 
 const showSharedNote = async () => {
   if (!link || !/^[a-zA-Z0-9]+$/.test(link)) return;
 
-  const response = await fetch('/seguinleo-notes/assets/php/getSharedNote.php', {
+  const response = await fetch('../../assets/php/getSharedNote.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -20,7 +14,7 @@ const showSharedNote = async () => {
     body: `noteLink=${link}`,
   });
 
-  if (response.status !== 200) {
+  if (!response.ok) {
     const notFoundElement = document.createElement('h1');
     notFoundElement.classList.add('align-center');
     notFoundElement.textContent = 'Note not found or expired.';
@@ -36,7 +30,9 @@ const showSharedNote = async () => {
 
   if (!title || !content || content.length > 5000 || !date) return;
 
-  const contentHtml = converter.makeHtml(content);
+  document.title = title;
+
+  const contentHtml = marked.parse(content);
   const noteElement = document.createElement('div');
   noteElement.classList.add('note');
   noteElement.tabIndex = 0;
@@ -49,8 +45,7 @@ const showSharedNote = async () => {
   titleElement.textContent = title;
 
   const contentElement = document.createElement('span');
-  // eslint-disable-next-line no-undef
-  contentElement.innerHTML = DOMPurify.sanitize(contentHtml);
+  contentElement.innerHTML = contentHtml;
   detailsElement.appendChild(titleElement);
   detailsElement.appendChild(contentElement);
 

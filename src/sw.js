@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 const addResourcesToCache = async (resources) => {
   const cache = await caches.open('v1');
   await cache.addAll(resources);
@@ -17,7 +16,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
-      './assets/js/showdown.min.js',
+      './assets/js/marked.min.js',
       './assets/js/purify.min.js',
     ]),
   );
