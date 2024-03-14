@@ -74,15 +74,12 @@ Technologies: JavaScript, PHP8+ and MySQL
 
 Website analyzers: [Mozilla Observatory](https://observatory.mozilla.org/), [Google Lighthouse](https://github.com/GoogleChrome/lighthouse), [W3C Markup Validation Service](https://validator.w3.org/)
 
-Dependencies: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes for accessibility)
+Dependencies: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes for accessibility, and crossorigin images)
 
 ``npm i`` to install all dependencies
 
-``npm run sass`` to auto compile Saas to CSS
+``npm run sass`` to auto compile SASS to CSS
 
 ``docker-compose up --build`` to build the Docker container
-
-> [!NOTE]
-> For self-hosting, base URL is ``localhost/seguinleo-notes/``, just put ``src`` folder in your localhost and rename it ``seguinleo-notes``. Database name is ``seguinleo-notes``. HTTPS is highly recommended.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)

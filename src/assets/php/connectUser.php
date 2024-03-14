@@ -47,7 +47,6 @@ session_unset();
 session_destroy();
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => '/seguinleo-notes/',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,

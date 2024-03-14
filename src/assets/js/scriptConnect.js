@@ -18,9 +18,9 @@ const colors = document.querySelectorAll('#colors span');
 const accentColors = document.querySelectorAll('#accent-colors span');
 const forms = document.querySelectorAll('form');
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const sideBar = document.querySelector('#sideBar');
-const metaTheme = document.querySelectorAll('.themecolor');
-const buttonTheme = document.querySelector('#iconTheme');
+const sidebar = document.querySelector('#sidebar');
+const metaTheme = document.querySelectorAll('.theme-color');
+const buttonTheme = document.querySelector('#icon-theme');
 
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
@@ -35,20 +35,23 @@ if (localStorage.getItem('theme') === 'light') {
   });
   buttonTheme.className = 'fa-solid fa-star';
 }
-if (localStorage.getItem('accent_color') === 'pink') {
-  document.querySelector('body').classList = 'accentPink';
-  document.querySelector('#accent-colors .accentPinkSpan').classList.add('selected');
-} else if (localStorage.getItem('accent_color') === 'green') {
-  document.querySelector('body').classList = 'accentGreen';
-  document.querySelector('#accent-colors .accentGreenSpan').classList.add('selected');
-} else if (localStorage.getItem('accent_color') === 'yellow') {
-  document.querySelector('body').classList = 'accentYellow';
-  document.querySelector('#accent-colors .accentYellowSpan').classList.add('selected');
+if (localStorage.getItem('accent_color') === '5') {
+  document.querySelector('body').classList = 'accent5';
+  document.querySelector('#accent-colors .accent5-span').classList.add('selected');
+} else if (localStorage.getItem('accent_color') === '4') {
+  document.querySelector('body').classList = 'accent4';
+  document.querySelector('#accent-colors .accent4-span').classList.add('selected');
+} else if (localStorage.getItem('accent_color') === '3') {
+  document.querySelector('body').classList = 'accent3';
+  document.querySelector('#accent-colors .accent3-span').classList.add('selected');
+} else if (localStorage.getItem('accent_color') === '2') {
+  document.querySelector('body').classList = 'accent2';
+  document.querySelector('#accent-colors .accent2-span').classList.add('selected');
 } else {
-  document.querySelector('body').classList = 'accentBlue';
-  document.querySelector('#accent-colors .accentBlueSpan').classList.add('selected');
+  document.querySelector('body').classList = 'accent1';
+  document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-if (localStorage.getItem('version') === 'hide') document.querySelector('#newVersion').style.display = 'none';
+if (localStorage.getItem('version') === 'hide') document.querySelector('#new-version').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
@@ -58,233 +61,249 @@ function generateRandomBytes(length) {
   return array;
 }
 
+function changeLanguage(language) {
+  if (language === 'fr') {
+    document.documentElement.setAttribute('lang', 'fr-FR');
+    document.querySelector('#language').value = 'fr';
+    document.querySelector('#icon-add').textContent = 'Ajouter une note';
+    document.querySelector('#new-version-infos').textContent = 'Bloc-notes à été mis à jour !';
+    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
+    document.querySelector('#search-option').options[0].textContent = 'Titre';
+    document.querySelector('#search-option').options[1].textContent = 'Contenu';
+    document.querySelector('#search-option').options[2].textContent = 'Tout';
+    document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
+    document.querySelector('#sort-notes1-span').textContent = 'Date de création';
+    document.querySelector('#sort-notes2-span').textContent = 'Date de création (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Date de modification';
+    document.querySelector('#sort-notes4-span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
+    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
+      e.textContent = 'Aucune catégorie';
+    });
+    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
+      e.textContent = 'Perso';
+    });
+    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
+      e.textContent = 'Travail';
+    });
+    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
+      e.textContent = 'Voyage';
+    });
+    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
+      e.textContent = 'Tâches';
+    });
+    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
+      e.textContent = 'Rappel';
+    });
+    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
+      e.textContent = 'Idées';
+    });
+    document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
+    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes';
+    document.querySelector('#link-markdown').textContent = 'Guide Markdown';
+    document.querySelector('#link-help').textContent = 'Aide et discussions';
+    document.querySelector('#log-out').textContent = 'Déconnexion';
+    document.querySelector('#old-psswd').setAttribute('placeholder', 'Ancien mot de passe');
+    document.querySelector('#new-psswd').setAttribute('placeholder', 'Nouveau mot de passe');
+    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmer le mot de passe');
+    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Changer le mot de passe';
+    document.querySelector('#gen-psswd summary').textContent = 'Changer le mot de passe';
+    document.querySelector('#delete-user summary').textContent = 'Supprimer le compte';
+    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Mot de passe');
+    document.querySelector('#delete-user button').textContent = 'Supprimer le compte';
+    document.querySelector('#private-note span').textContent = 'Voulez-vous rendre votre note privée ? Le lien ne sera plus disponible.';
+    document.querySelector('#private-note button').textContent = 'Rendre privée';
+    document.querySelector('#public-note span').textContent = 'Voulez-vous rendre votre note publique ? Un lien sera disponible pour la partager.';
+    document.querySelector('#public-note button').textContent = 'Rendre publique';
+  } else if (language === 'de') {
+    document.documentElement.setAttribute('lang', 'de');
+    document.querySelector('#language').value = 'de';
+    document.querySelector('#icon-add').textContent = 'Notiz hinzufügen';
+    document.querySelector('#new-version-infos').textContent = 'Bloc-notes wurde aktualisiert!';
+    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
+    document.querySelector('#search-option').options[0].textContent = 'Titel';
+    document.querySelector('#search-option').options[1].textContent = 'Inhalt';
+    document.querySelector('#search-option').options[2].textContent = 'Alles';
+    document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
+    document.querySelector('#sort-notes1-span').textContent = 'Erstellungsdatum';
+    document.querySelector('#sort-notes2-span').textContent = 'Erstellungsdatum (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Änderungsdatum';
+    document.querySelector('#sort-notes4-span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
+    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
+      e.textContent = 'Keine Kategorie';
+    });
+    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
+      e.textContent = 'Persönlich';
+    });
+    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
+      e.textContent = 'Arbeit';
+    });
+    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
+      e.textContent = 'Reise';
+    });
+    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
+      e.textContent = 'Aufgaben';
+    });
+    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
+      e.textContent = 'Erinnerung';
+    });
+    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
+      e.textContent = 'Ideen';
+    });
+    document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Speichern';
+    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren';
+    document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
+    document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
+    document.querySelector('#log-out').textContent = 'Abmelden';
+    document.querySelector('#old-psswd').setAttribute('placeholder', 'Altes Passwort');
+    document.querySelector('#new-psswd').setAttribute('placeholder', 'Neues Passwort');
+    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Passwort bestätigen');
+    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Passwort ändern';
+    document.querySelector('#gen-psswd summary').textContent = 'Passwort ändern';
+    document.querySelector('#delete-user summary').textContent = 'Konto löschen';
+    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Passwort');
+    document.querySelector('#delete-user button').textContent = 'Konto löschen';
+    document.querySelector('#private-note span').textContent = 'Möchten Sie Ihre Notiz privat machen? Der Link wird nicht mehr verfügbar sein.';
+    document.querySelector('#private-note button').textContent = 'Privat machen';
+    document.querySelector('#public-note span').textContent = 'Möchten Sie Ihre Notiz öffentlich machen? Ein Link wird verfügbar sein, um es zu teilen.';
+    document.querySelector('#public-note button').textContent = 'Öffentlich machen';
+  } else if (language === 'es') {
+    document.documentElement.setAttribute('lang', 'es');
+    document.querySelector('#language').value = 'es';
+    document.querySelector('#icon-add').textContent = 'Agregar una nota';
+    document.querySelector('#new-version-infos').textContent = '¡Bloc-notes ha sido actualizado!';
+    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
+    document.querySelector('#search-option').options[0].textContent = 'Título';
+    document.querySelector('#search-option').options[1].textContent = 'Contenido';
+    document.querySelector('#search-option').options[2].textContent = 'Todo';
+    document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
+    document.querySelector('#sort-notes1-span').textContent = 'Fecha de creación';
+    document.querySelector('#sort-notes2-span').textContent = 'Fecha de creación (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Fecha de modificación';
+    document.querySelector('#sort-notes4-span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
+    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
+      e.textContent = 'Sin categoría';
+    });
+    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
+      e.textContent = 'Personal';
+    });
+    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
+      e.textContent = 'Trabajo';
+    });
+    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
+      e.textContent = 'Viaje';
+    });
+    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
+      e.textContent = 'Tareas';
+    });
+    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
+      e.textContent = 'Recordatorio';
+    });
+    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
+      e.textContent = 'Ideas';
+    });
+    document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Guardar';
+    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas';
+    document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
+    document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
+    document.querySelector('#log-out').textContent = 'Cerrar sesión';
+    document.querySelector('#old-psswd').setAttribute('placeholder', 'Contraseña antigua');
+    document.querySelector('#new-psswd').setAttribute('placeholder', 'Nueva contraseña');
+    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmar contraseña');
+    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Cambiar contraseña';
+    document.querySelector('#gen-psswd summary').textContent = 'Cambiar contraseña';
+    document.querySelector('#delete-user summary').textContent = 'Eliminar cuenta';
+    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Contraseña');
+    document.querySelector('#delete-user button').textContent = 'Eliminar cuenta';
+    document.querySelector('#private-note span').textContent = '¿Quieres hacer tu nota privada? El enlace ya no estará disponible.';
+    document.querySelector('#private-note button').textContent = 'Hacer privado';
+    document.querySelector('#public-note span').textContent = '¿Quieres hacer tu nota pública? Un enlace estará disponible para compartirlo.';
+    document.querySelector('#public-note button').textContent = 'Hacer público';
+  } else {
+    document.documentElement.setAttribute('lang', 'en');
+    document.querySelector('#language').value = 'en';
+    document.querySelector('#icon-add').textContent = 'Add a note';
+    document.querySelector('#new-version-infos').textContent = 'Bloc-notes has been updated!';
+    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
+    document.querySelector('#search-option').options[0].textContent = 'Title';
+    document.querySelector('#search-option').options[1].textContent = 'Content';
+    document.querySelector('#search-option').options[2].textContent = 'All';
+    document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
+    document.querySelector('#sort-notes1-span').textContent = 'Creation date';
+    document.querySelector('#sort-notes2-span').textContent = 'Creation date (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Modification date';
+    document.querySelector('#sort-notes4-span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
+    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
+      e.textContent = 'No category';
+    });
+    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
+      e.textContent = 'Personal';
+    });
+    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
+      e.textContent = 'Work';
+    });
+    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
+      e.textContent = 'Travel';
+    });
+    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
+      e.textContent = 'Tasks';
+    });
+    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
+      e.textContent = 'Reminder';
+    });
+    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
+      e.textContent = 'Ideas';
+    });
+    document.querySelector('#hide-infos').textContent = 'Hide content';
+    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
+    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
+    document.querySelector('#note-popup-box button').textContent = 'Save';
+    document.querySelector('#export-all-notes').textContent = 'Export all notes';
+    document.querySelector('#link-markdown').textContent = 'Markdown guide';
+    document.querySelector('#link-help').textContent = 'Help and discussions';
+    document.querySelector('#log-out').textContent = 'Log out';
+    document.querySelector('#old-psswd').setAttribute('placeholder', 'Old password');
+    document.querySelector('#new-psswd').setAttribute('placeholder', 'New password');
+    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirm password');
+    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Change password';
+    document.querySelector('#gen-psswd summary').textContent = 'Change password';
+    document.querySelector('#delete-user summary').textContent = 'Delete account';
+    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Password');
+    document.querySelector('#delete-user button').textContent = 'Delete account';
+    document.querySelector('#private-note span').textContent = 'Do you want to make your note private? The link will no longer be available.';
+    document.querySelector('#private-note button').textContent = 'Make private';
+    document.querySelector('#public-note span').textContent = 'Do you want to make your note public? A link will be available to share it.';
+    document.querySelector('#public-note button').textContent = 'Make public';
+  }
+}
+
 function getPassword(length) {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&~"#\'(-_)=^$€*!?,.;:/|\\@%+{}[]<>`';
   let password = '';
   const array = new Uint32Array(length);
   window.crypto.getRandomValues(array);
   for (let i = 0; i < length; i += 1) password += chars[array[i] % chars.length];
-  document.querySelector('#psswdGen').textContent = password;
-  document.querySelector('#newPsswd').value = password;
-  document.querySelector('#newPsswdValid').value = password;
-}
-
-function changeLanguage(language) {
-  if (language === 'fr') {
-    document.documentElement.setAttribute('lang', 'fr-FR');
-    document.querySelector('#language').value = 'fr';
-    document.querySelector('#iconAdd').textContent = 'Ajouter une note';
-    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes à été mis à jour !';
-    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
-    document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
-    document.querySelector('#sortNotes1Span').textContent = 'Date de création';
-    document.querySelector('#sortNotes2Span').textContent = 'Date de création (Z-A)';
-    document.querySelector('#sortNotes3Span').textContent = 'Date de modification';
-    document.querySelector('#sortNotes4Span').textContent = 'Date de modification (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
-    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
-      e.textContent = '❌';
-    });
-    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
-      e.textContent = '👤Perso';
-    });
-    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
-      e.textContent = '💼Travail';
-    });
-    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
-      e.textContent = '🏖️Voyage';
-    });
-    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
-      e.textContent = '📓Tâches';
-    });
-    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
-      e.textContent = '🕰️Rappel';
-    });
-    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
-      e.textContent = '💡Idées';
-    });
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
-    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes';
-    document.querySelector('#linkMarkdown').textContent = 'Guide Markdown';
-    document.querySelector('#linkHelp').textContent = 'Aide et discussions';
-    document.querySelector('#log-out').textContent = 'Déconnexion';
-    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Ancien mot de passe');
-    document.querySelector('#newPsswd').setAttribute('placeholder', 'Nouveau mot de passe');
-    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmer le mot de passe');
-    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Changer le mot de passe';
-    document.querySelector('#genPsswd summary').textContent = 'Changer le mot de passe';
-    document.querySelector('#deleteUser summary').textContent = 'Supprimer le compte';
-    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Mot de passe');
-    document.querySelector('#deleteUser button').textContent = 'Supprimer le compte';
-    document.querySelector('#privateNote span').textContent = 'Voulez-vous rendre votre note privée ? Le lien ne sera plus disponible.';
-    document.querySelector('#privateNote button').textContent = 'Rendre privée';
-    document.querySelector('#publicNote span').textContent = 'Voulez-vous rendre votre note publique ? Un lien sera disponible pour la partager.';
-    document.querySelector('#publicNote button').textContent = 'Rendre publique';
-  } else if (language === 'de') {
-    document.documentElement.setAttribute('lang', 'de');
-    document.querySelector('#language').value = 'de';
-    document.querySelector('#iconAdd').textContent = 'Notiz hinzufügen';
-    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes wurde aktualisiert!';
-    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
-    document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
-    document.querySelector('#sortNotes1Span').textContent = 'Erstellungsdatum';
-    document.querySelector('#sortNotes2Span').textContent = 'Erstellungsdatum (Z-A)';
-    document.querySelector('#sortNotes3Span').textContent = 'Änderungsdatum';
-    document.querySelector('#sortNotes4Span').textContent = 'Änderungsdatum (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
-    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
-      e.textContent = '❌';
-    });
-    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
-      e.textContent = '👤Persönlich';
-    });
-    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
-      e.textContent = '💼Arbeit';
-    });
-    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
-      e.textContent = '🏖️Reise';
-    });
-    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
-      e.textContent = '📓Aufgaben';
-    });
-    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
-      e.textContent = '🕰️Erinnerung';
-    });
-    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
-      e.textContent = '💡Ideen';
-    });
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Speichern';
-    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren';
-    document.querySelector('#linkMarkdown').textContent = 'Markdown-Anleitung';
-    document.querySelector('#linkHelp').textContent = 'Hilfe und Diskussionen';
-    document.querySelector('#log-out').textContent = 'Abmelden';
-    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Altes Passwort');
-    document.querySelector('#newPsswd').setAttribute('placeholder', 'Neues Passwort');
-    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Passwort bestätigen');
-    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Passwort ändern';
-    document.querySelector('#genPsswd summary').textContent = 'Passwort ändern';
-    document.querySelector('#deleteUser summary').textContent = 'Konto löschen';
-    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Passwort');
-    document.querySelector('#deleteUser button').textContent = 'Konto löschen';
-    document.querySelector('#privateNote span').textContent = 'Möchten Sie Ihre Notiz privat machen? Der Link wird nicht mehr verfügbar sein.';
-    document.querySelector('#privateNote button').textContent = 'Privat machen';
-    document.querySelector('#publicNote span').textContent = 'Möchten Sie Ihre Notiz öffentlich machen? Ein Link wird verfügbar sein, um es zu teilen.';
-    document.querySelector('#publicNote button').textContent = 'Öffentlich machen';
-  } else if (language === 'es') {
-    document.documentElement.setAttribute('lang', 'es');
-    document.querySelector('#language').value = 'es';
-    document.querySelector('#iconAdd').textContent = 'Agregar una nota';
-    document.querySelector('#newVersionInfos').textContent = '¡Bloc-notes ha sido actualizado!';
-    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
-    document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
-    document.querySelector('#sortNotes1Span').textContent = 'Fecha de creación';
-    document.querySelector('#sortNotes2Span').textContent = 'Fecha de creación (Z-A)';
-    document.querySelector('#sortNotes3Span').textContent = 'Fecha de modificación';
-    document.querySelector('#sortNotes4Span').textContent = 'Fecha de modificación (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
-    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
-      e.textContent = '❌';
-    });
-    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
-      e.textContent = '👤Personal';
-    });
-    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
-      e.textContent = '💼Trabajo';
-    });
-    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
-      e.textContent = '🏖️Viaje';
-    });
-    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
-      e.textContent = '📓Tareas';
-    });
-    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
-      e.textContent = '🕰️Recordatorio';
-    });
-    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
-      e.textContent = '💡Ideas';
-    });
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Guardar';
-    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas';
-    document.querySelector('#linkMarkdown').textContent = 'Guía de Markdown';
-    document.querySelector('#linkHelp').textContent = 'Ayuda y discusiones';
-    document.querySelector('#log-out').textContent = 'Cerrar sesión';
-    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Contraseña antigua');
-    document.querySelector('#newPsswd').setAttribute('placeholder', 'Nueva contraseña');
-    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirmar contraseña');
-    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Cambiar contraseña';
-    document.querySelector('#genPsswd summary').textContent = 'Cambiar contraseña';
-    document.querySelector('#deleteUser summary').textContent = 'Eliminar cuenta';
-    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Contraseña');
-    document.querySelector('#deleteUser button').textContent = 'Eliminar cuenta';
-    document.querySelector('#privateNote span').textContent = '¿Quieres hacer tu nota privada? El enlace ya no estará disponible.';
-    document.querySelector('#privateNote button').textContent = 'Hacer privado';
-    document.querySelector('#publicNote span').textContent = '¿Quieres hacer tu nota pública? Un enlace estará disponible para compartirlo.';
-    document.querySelector('#publicNote button').textContent = 'Hacer público';
-  } else {
-    document.documentElement.setAttribute('lang', 'en');
-    document.querySelector('#language').value = 'en';
-    document.querySelector('#iconAdd').textContent = 'Add a note';
-    document.querySelector('#newVersionInfos').textContent = 'Bloc-notes has been updated!';
-    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
-    document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
-    document.querySelector('#sortNotes1Span').textContent = 'Creation date';
-    document.querySelector('#sortNotes2Span').textContent = 'Creation date (Z-A)';
-    document.querySelector('#sortNotes3Span').textContent = 'Modification date';
-    document.querySelector('#sortNotes4Span').textContent = 'Modification date (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
-    document.querySelectorAll('.noCatFilterSpan').forEach((e) => {
-      e.textContent = '❌';
-    });
-    document.querySelectorAll('.catPersoFilterSpan').forEach((e) => {
-      e.textContent = '👤Personal';
-    });
-    document.querySelectorAll('.catProFilterSpan').forEach((e) => {
-      e.textContent = '💼Work';
-    });
-    document.querySelectorAll('.catVoyageFilterSpan').forEach((e) => {
-      e.textContent = '🏖️Travel';
-    });
-    document.querySelectorAll('.catTaskFilterSpan').forEach((e) => {
-      e.textContent = '📓Tasks';
-    });
-    document.querySelectorAll('.catRappelFilterSpan').forEach((e) => {
-      e.textContent = '🕰️Reminder';
-    });
-    document.querySelectorAll('.catIdeesFilterSpan').forEach((e) => {
-      e.textContent = '💡Ideas';
-    });
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Save';
-    document.querySelector('#export-all-notes').textContent = 'Export all notes';
-    document.querySelector('#linkMarkdown').textContent = 'Markdown guide';
-    document.querySelector('#linkHelp').textContent = 'Help and discussions';
-    document.querySelector('#log-out').textContent = 'Log out';
-    document.querySelector('#oldPsswd').setAttribute('placeholder', 'Old password');
-    document.querySelector('#newPsswd').setAttribute('placeholder', 'New password');
-    document.querySelector('#newPsswdValid').setAttribute('placeholder', 'Confirm password');
-    document.querySelector('#changePsswd button[type="submit"]').textContent = 'Change password';
-    document.querySelector('#genPsswd summary').textContent = 'Change password';
-    document.querySelector('#deleteUser summary').textContent = 'Delete account';
-    document.querySelector('#deletePsswd').setAttribute('placeholder', 'Password');
-    document.querySelector('#deleteUser button').textContent = 'Delete account';
-    document.querySelector('#privateNote span').textContent = 'Do you want to make your note private? The link will no longer be available.';
-    document.querySelector('#privateNote button').textContent = 'Make private';
-    document.querySelector('#publicNote span').textContent = 'Do you want to make your note public? A link will be available to share it.';
-    document.querySelector('#publicNote button').textContent = 'Make public';
-  }
+  document.querySelector('#psswd-gen').textContent = password;
+  document.querySelector('#new-psswd').value = password;
+  document.querySelector('#new-psswd-valid').value = password;
 }
 
 const verifyFingerprint = async () => {
   try {
-    const challenge = generateRandomBytes(32);
-    const userId = generateRandomBytes(16);
+    const challenge = generateRandomBytes(16);
+    const userId = generateRandomBytes(8);
     await navigator.credentials.create({
       publicKey: {
         challenge,
@@ -315,23 +334,28 @@ const verifyFingerprint = async () => {
   } catch (error) {
     if (localStorage.getItem('fingerprint') === 'true') {
       window.location.href = '/error/403/';
-    } else document.querySelector('#checkFingerprint').checked = false;
+    } else document.querySelector('#check-fingerprint').checked = false;
   }
 };
 
+if (localStorage.getItem('spellcheck') === 'false') {
+  document.querySelector('#spellcheck').checked = false;
+  contentNote.setAttribute('spellcheck', 'false');
+}
+
 if (localStorage.getItem('fingerprint') === 'true') {
   verifyFingerprint();
-  document.querySelector('#checkFingerprint').checked = true;
+  document.querySelector('#check-fingerprint').checked = true;
 }
 
 if (localStorage.getItem('compact') === 'true') {
-  document.querySelector('#checkCompact').checked = true;
+  document.querySelector('#check-compact').checked = true;
   document.querySelector('main').classList.add('compact');
 }
 
 const showSuccess = (message) => {
   if (timeoutNotification) clearTimeout(timeoutNotification);
-  const notification = document.querySelector('#successNotification');
+  const notification = document.querySelector('#success-notification');
   notification.textContent = message;
   notification.style.display = 'block';
   timeoutNotification = setTimeout(() => {
@@ -341,7 +365,7 @@ const showSuccess = (message) => {
 
 const showError = (message) => {
   if (timeoutNotification) clearTimeout(timeoutNotification);
-  const notification = document.querySelector('#errorNotification');
+  const notification = document.querySelector('#error-notification');
   notification.textContent = message;
   notification.style.display = 'block';
   timeoutNotification = setTimeout(() => {
@@ -354,19 +378,19 @@ const noteAccess = (id, link) => {
   document.body.classList.remove('body-fullscreen');
   if (link === null) {
     privateNote.showModal();
-    document.querySelector('#idNotePublic').value = id;
+    document.querySelector('#id-note-public').value = id;
   } else {
     publicNote.showModal();
-    document.querySelector('#idNotePrivate').value = id;
-    document.querySelector('#linkNotePrivate').value = link;
-    document.querySelector('#copyNoteLink').textContent = link;
+    document.querySelector('#id-note-private').value = id;
+    document.querySelector('#link-note-private').value = link;
+    document.querySelector('#copy-note-link').textContent = link;
   }
 };
 
-const searchSideBar = () => {
-  sideBar.querySelectorAll('#listNotes p').forEach((e) => {
+const searchSidebar = () => {
+  sidebar.querySelectorAll('#list-notes p').forEach((e) => {
     e.addEventListener('click', () => {
-      const titleList = e.querySelector('.titleList').textContent;
+      const titleList = e.querySelector('.title-list').textContent;
       document.querySelectorAll('.note').forEach((note) => {
         const title = note.querySelector('.title').textContent;
         if (title === titleList) note.scrollIntoView();
@@ -378,11 +402,11 @@ const searchSideBar = () => {
   });
 };
 
-const openSidebar = () => sideBar.classList.add('show');
-const closeSidebar = () => sideBar.classList.remove('show');
+const openSidebar = () => sidebar.classList.add('show');
+const closeSidebar = () => sidebar.classList.remove('show');
 const handleGesture = () => {
-  if (touchendX - touchstartX > 75 && !sideBar.classList.contains('show')) openSidebar();
-  else if (touchendX - touchstartX < -75 && sideBar.classList.contains('show')) closeSidebar();
+  if (touchendX - touchstartX > 75 && !sidebar.classList.contains('show')) openSidebar();
+  else if (touchendX - touchstartX < -75 && sidebar.classList.contains('show')) closeSidebar();
 };
 
 const noteActions = () => {
@@ -418,7 +442,7 @@ const noteActions = () => {
 const showNotes = async () => {
   const sortOption = localStorage.getItem('sort_notes');
   if (Number.isNaN(sortOption)) return;
-  document.querySelectorAll('#listNotes *').forEach((e) => e.remove());
+  document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
@@ -439,7 +463,7 @@ const showNotes = async () => {
     if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
     else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
     else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
-    sideBar.querySelector('#listNotes').appendChild(numberOfNotesElement);
+    sidebar.querySelector('#list-notes').appendChild(numberOfNotesElement);
 
     const fragment = document.createDocumentFragment();
 
@@ -472,7 +496,7 @@ const showNotes = async () => {
       detailsElement.classList.add('details');
       titleElement.classList.add('title');
       titleElement.textContent = title;
-      contentElement.classList.add('detailsContent');
+      contentElement.classList.add('details-content');
 
       if (hidden === 0) contentElement.innerHTML = contentHtml;
       else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
@@ -533,14 +557,14 @@ const showNotes = async () => {
       noteElement.appendChild(bottomContentElement);
       paragraph.setAttribute('tabindex', '0');
       paragraph.setAttribute('role', 'button');
-      titleSpan.classList.add('titleList');
+      titleSpan.classList.add('title-list');
       titleSpan.textContent = title;
       if (link !== null) {
         noteElement.setAttribute('data-note-link', link);
         titleSpan.appendChild(document.createElement('i'));
         titleSpan.querySelector('i').classList.add('fa-solid', 'fa-link');
       }
-      dateSpan.classList.add('dateList');
+      dateSpan.classList.add('date-list');
       dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
         weekday: 'short',
         year: '2-digit',
@@ -560,11 +584,11 @@ const showNotes = async () => {
       fragment.appendChild(noteElement);
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
-      sideBar.querySelector('#listNotes').appendChild(paragraph);
+      sidebar.querySelector('#list-notes').appendChild(paragraph);
     });
 
     document.querySelector('main').appendChild(fragment);
-    searchSideBar();
+    searchSidebar();
     noteActions();
     document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
@@ -613,8 +637,8 @@ const updateNote = (id, title, content, color, hidden, category, link) => {
   isUpdate = true;
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
-  document.querySelector('#iconAdd').click();
-  document.querySelector('#idNote').value = id;
+  document.querySelector('#icon-add').click();
+  document.querySelector('#id-note').value = id;
   titleNote.value = title;
   contentNote.value = content;
   colors.forEach((e) => {
@@ -623,10 +647,10 @@ const updateNote = (id, title, content, color, hidden, category, link) => {
   });
   document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
   if (link === null) {
-    document.querySelector('#checkHidden').disabled = false;
-    if (hidden === '1') document.querySelector('#checkHidden').checked = true;
-  } else document.querySelector('#checkHidden').disabled = true;
-  document.querySelector('#textareaLength').textContent = `${contentNote.value.length}/5000`;
+    document.querySelector('#check-hidden').disabled = false;
+    if (hidden === '1') document.querySelector('#check-hidden').checked = true;
+  } else document.querySelector('#check-hidden').disabled = true;
+  document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
 
@@ -656,21 +680,48 @@ const deleteNote = (e) => {
   if (window.confirm(message)) fetchDelete(e);
 };
 
-document.querySelectorAll('#iconAdd, #iconFloatAdd').forEach((e) => {
+document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
   e.addEventListener('click', () => {
     noteBox.showModal();
-    document.querySelector('#textareaLength').textContent = '0/5000';
-    document.querySelector('#checkHidden').disabled = false;
+    document.querySelector('#textarea-length').textContent = '0/5000';
+    document.querySelector('#check-hidden').disabled = false;
   });
 });
 
-document.querySelector('#checkFingerprint').addEventListener('change', () => {
-  if (document.querySelector('#checkFingerprint').checked) verifyFingerprint();
+document.querySelector('#control-back').addEventListener('click', () => document.execCommand('undo'));
+document.querySelector('#control-back').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') e.click();
+});
+
+document.querySelector('#control-forward').addEventListener('click', () => document.execCommand('redo'));
+document.querySelector('#control-forward').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') e.click();
+});
+
+document.querySelector('#control-clear').addEventListener('click', () => {
+  contentNote.value = '';
+});
+document.querySelector('#control-clear').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') e.click();
+});
+
+document.querySelector('#spellcheck').addEventListener('change', () => {
+  if (!document.querySelector('#spellcheck').checked) {
+    localStorage.setItem('spellcheck', 'false');
+    contentNote.setAttribute('spellcheck', 'false');
+  } else {
+    localStorage.removeItem('spellcheck');
+    contentNote.setAttribute('spellcheck', 'true');
+  }
+});
+
+document.querySelector('#check-fingerprint').addEventListener('change', () => {
+  if (document.querySelector('#check-fingerprint').checked) verifyFingerprint();
   else localStorage.removeItem('fingerprint');
 });
 
-document.querySelector('#checkCompact').addEventListener('change', () => {
-  if (document.querySelector('#checkCompact').checked) {
+document.querySelector('#check-compact').addEventListener('change', () => {
+  if (document.querySelector('#check-compact').checked) {
     localStorage.setItem('compact', 'true');
     document.querySelector('main').classList.add('compact');
   } else {
@@ -679,20 +730,16 @@ document.querySelector('#checkCompact').addEventListener('change', () => {
   }
 });
 
-document.querySelectorAll('.manage-account').forEach((e) => {
-  e.addEventListener('click', () => {
-    popupBoxManage.showModal();
-  });
+document.querySelector('#manage-account').addEventListener('click', () => {
+  popupBoxManage.showModal();
 });
 
-document.querySelectorAll('#settings').forEach((e) => {
-  e.addEventListener('click', () => {
-    popupBoxSettings.showModal();
-    sideBar.classList.remove('show');
-  });
+document.querySelector('#settings').addEventListener('click', () => {
+  popupBoxSettings.showModal();
+  sidebar.classList.remove('show');
 });
 
-document.querySelectorAll('.linkp').forEach((e) => {
+document.querySelectorAll('.link').forEach((e) => {
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
   });
@@ -704,21 +751,29 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
     forms.forEach((form) => form.reset());
     document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
   });
-  e.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') e.click();
-  });
 });
 
 document.querySelector('#search-input').addEventListener('input', () => {
   const searchValue = document.querySelector('#search-input').value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((e) => {
-    const title = e.querySelector('.note h2').textContent.toLowerCase();
-    if (title.includes(searchValue)) e.style.display = 'flex';
-    else e.style.display = 'none';
+    if (document.querySelector('#search-option').value === '0') {
+      const title = e.querySelector('.note h2').textContent.toLowerCase();
+      if (title.includes(searchValue)) e.style.display = 'flex';
+      else e.style.display = 'none';
+    } else if (document.querySelector('#search-option').value === '1') {
+      const content = e.querySelector('.details-content').textContent.toLowerCase();
+      if (content.includes(searchValue)) e.style.display = 'flex';
+      else e.style.display = 'none';
+    } else {
+      const title = e.querySelector('.note h2').textContent.toLowerCase();
+      const content = e.querySelector('.details-content').textContent.toLowerCase();
+      if (title.includes(searchValue) || content.includes(searchValue)) e.style.display = 'flex';
+      else e.style.display = 'none';
+    }
   });
 });
 
-document.querySelector('#btnTheme').addEventListener('click', () => {
+document.querySelector('#btn-theme').addEventListener('click', () => {
   if (localStorage.getItem('theme') === null) {
     document.querySelector('html').className = 'light';
     metaTheme.forEach((e) => {
@@ -752,8 +807,8 @@ document.querySelector('#btnTheme').addEventListener('click', () => {
   }
 });
 
-document.querySelector('#newVersion .fa-xmark').addEventListener('click', () => {
-  document.querySelector('#newVersion').style.display = 'none';
+document.querySelector('#new-version .fa-xmark').addEventListener('click', () => {
+  document.querySelector('#new-version').style.display = 'none';
   localStorage.setItem('version', 'hide');
 });
 
@@ -762,7 +817,7 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {
     const title = e.querySelector('.title').textContent;
-    const content = e.querySelector('.detailsContent').textContent;
+    const content = e.querySelector('.details-content').textContent;
     const noteObject = {
       title,
       content,
@@ -801,7 +856,7 @@ document.querySelector('#language').addEventListener('change', async () => {
 
 contentNote.addEventListener('input', () => {
   const e = contentNote.value.length;
-  document.querySelector('#textareaLength').textContent = `${e}/5000`;
+  document.querySelector('#textarea-length').textContent = `${e}/5000`;
 });
 
 colors.forEach((span, index) => {
@@ -819,18 +874,21 @@ accentColors.forEach((span) => {
   span.addEventListener('click', (event) => {
     accentColors.forEach((e) => e.classList.remove('selected'));
     event.target.classList.add('selected');
-    if (span.classList.contains('accentPinkSpan')) {
-      document.querySelector('body').classList = 'accentPink';
-      localStorage.setItem('accent_color', 'pink');
-    } else if (span.classList.contains('accentGreenSpan')) {
-      document.querySelector('body').classList = 'accentGreen';
-      localStorage.setItem('accent_color', 'green');
-    } else if (span.classList.contains('accentYellowSpan')) {
-      document.querySelector('body').classList = 'accentYellow';
-      localStorage.setItem('accent_color', 'yellow');
+    if (span.classList.contains('accent5-span')) {
+      document.querySelector('body').classList = 'accent5';
+      localStorage.setItem('accent_color', '5');
+    } else if (span.classList.contains('accent4-span')) {
+      document.querySelector('body').classList = 'accent4';
+      localStorage.setItem('accent_color', '4');
+    } else if (span.classList.contains('accent3-span')) {
+      document.querySelector('body').classList = 'accent3';
+      localStorage.setItem('accent_color', '3');
+    } else if (span.classList.contains('accent2-span')) {
+      document.querySelector('body').classList = 'accent2';
+      localStorage.setItem('accent_color', '2');
     } else {
-      document.querySelector('body').classList = 'accentBlue';
-      localStorage.setItem('accent_color', 'blue');
+      document.querySelector('body').classList = 'accent1';
+      localStorage.setItem('accent_color', '1');
     }
   });
   span.addEventListener('keydown', (event) => {
@@ -838,9 +896,9 @@ accentColors.forEach((span) => {
   });
 });
 
-document.querySelector('#copyNoteLinkBtn').addEventListener('click', () => {
-  const link = document.querySelector('#copyNoteLink').textContent;
-  navigator.clipboard.writeText(`localhost/seguinleo-notes/share/${link}`);
+document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
+  const link = document.querySelector('#copy-note-link').textContent;
+  navigator.clipboard.writeText(link);
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -853,21 +911,21 @@ document.addEventListener('touchend', (event) => {
 }, false);
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#btnSort').addEventListener('click', () => sortBox.showModal());
-document.querySelector('#btnFilter').addEventListener('click', () => filterBox.showModal());
-document.querySelector('#submitGenPsswd').addEventListener('click', () => getPassword(16));
+document.querySelector('#btn-sort').addEventListener('click', () => sortBox.showModal());
+document.querySelector('#btn-filter').addEventListener('click', () => filterBox.showModal());
+document.querySelector('#submit-gen-psswd').addEventListener('click', () => getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
-document.querySelector('#copyPasswordBtn').addEventListener('click', () => {
-  const psswd = document.querySelector('#psswdGen').textContent;
+document.querySelector('#copy-password-btn').addEventListener('click', () => {
+  const psswd = document.querySelector('#psswd-gen').textContent;
   navigator.clipboard.writeText(psswd);
 });
 
-document.querySelectorAll('input[name="sortNotes"]').forEach((e) => {
+document.querySelectorAll('input[name="sort-notes"]').forEach((e) => {
   if (e.value === localStorage.getItem('sort_notes')) e.checked = true;
 });
 
-document.querySelectorAll('input[name="sortNotes"]').forEach(async (e) => {
+document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
     if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
       localStorage.setItem('sort_notes', e.value);
@@ -876,10 +934,10 @@ document.querySelectorAll('input[name="sortNotes"]').forEach(async (e) => {
   });
 });
 
-document.querySelectorAll('input[name="filterNotes"]').forEach((e) => {
+document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
   e.addEventListener('change', () => {
     const categories = [];
-    document.querySelectorAll('input[name="filterNotes"]:checked').forEach((t) => categories.push(t.value));
+    document.querySelectorAll('input[name="filter-notes"]:checked').forEach((t) => categories.push(t.value));
     document.querySelectorAll('.note').forEach((n) => {
       const note = n;
       const category = note.getAttribute('data-note-category');
@@ -895,26 +953,19 @@ document.querySelectorAll('.category').forEach((e) => {
   });
 });
 
-document.querySelectorAll('.switch').forEach((e) => {
-  e.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') e.click();
-  });
-});
-
-document.querySelector('#addNote').addEventListener('submit', async () => {
+document.querySelector('#add-note').addEventListener('submit', async () => {
   try {
-    const idNote = document.querySelector('#idNote').value;
+    const idNote = document.querySelector('#id-note').value;
     const title = titleNote.value.trim();
     const content = contentNote.value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const hidden = document.querySelector('#checkHidden').checked ? '1' : '0';
+    const hidden = document.querySelector('#check-hidden').checked ? '1' : '0';
     const category = document.querySelector('input[name="category"]:checked').value;
 
     if (!title || title.length > 30 || content.length > 5000 || !color) return;
     if (isUpdate && !idNote) return;
     if (idNote && Number.isNaN(idNote)) return;
-    if (!/^[a-zA-Z]+$/.test(color)) return;
     if (!/^[0-9]+$/.test(category)) return;
 
     const cleanContent = DOMPurify.sanitize(content, {
@@ -940,10 +991,10 @@ document.querySelector('#addNote').addEventListener('submit', async () => {
   }
 });
 
-document.querySelector('#changePsswd').addEventListener('submit', async () => {
-  const a = document.querySelector('#oldPsswd').value;
-  const e = document.querySelector('#newPsswd').value;
-  const t = document.querySelector('#newPsswdValid').value;
+document.querySelector('#change-psswd').addEventListener('submit', async () => {
+  const a = document.querySelector('#old-psswd').value;
+  const e = document.querySelector('#new-psswd').value;
+  const t = document.querySelector('#new-psswd-valid').value;
   if (!a || !e || !t || e.length < 8 || e.length > 50) return;
   if (/^[0-9]+$/.test(e)) {
     showError('Password too weak (only numbers)...');
@@ -981,8 +1032,8 @@ document.querySelector('#changePsswd').addEventListener('submit', async () => {
   }
 });
 
-document.querySelector('#deleteAccount').addEventListener('submit', async () => {
-  const psswd = document.querySelector('#deletePsswd').value;
+document.querySelector('#delete-account').addEventListener('submit', async () => {
+  const psswd = document.querySelector('#delete-psswd').value;
   if (!psswd || psswd.length < 8) return;
   try {
     const response = await fetch('./assets/php/deleteAccount.php', {
@@ -1003,9 +1054,9 @@ document.querySelector('#deleteAccount').addEventListener('submit', async () => 
   }
 });
 
-document.querySelector('#privateNote').addEventListener('submit', async () => {
-  const id = document.querySelector('#idNotePrivate').value;
-  const link = document.querySelector('#linkNotePrivate').value;
+document.querySelector('#private-note').addEventListener('submit', async () => {
+  const id = document.querySelector('#id-note-private').value;
+  const link = document.querySelector('#link-note-private').value;
   if (!id || !link || Number.isNaN(id) || !/^[a-zA-Z0-9]+$/.test(link)) return;
   try {
     const response = await fetch('./assets/php/privateNote.php', {
@@ -1024,8 +1075,8 @@ document.querySelector('#privateNote').addEventListener('submit', async () => {
   }
 });
 
-document.querySelector('#publicNote').addEventListener('submit', async () => {
-  const id = document.querySelector('#idNotePublic').value;
+document.querySelector('#public-note').addEventListener('submit', async () => {
+  const id = document.querySelector('#id-note-public').value;
   if (!id || Number.isNaN(id)) return;
   const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {

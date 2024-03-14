@@ -16,7 +16,7 @@
 
 html {
   -webkit-tap-highlight-color: transparent;
-  scrollbar-color: rgba(100, 100, 125, 50%) rgba(0, 0, 0, 0);
+  scrollbar-color: rgba(150, 150, 150, 0.4) transparent;
   background: #000;
   color: #c6c6c6;
   font-family: OpenSans, sans-serif;
@@ -29,7 +29,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 125, 50%);
+  background: rgba(150, 150, 150, 0.4);
 }
 
 ::-webkit-scrollbar {
@@ -39,7 +39,7 @@ body {
 
 ::selection {
   background: #8ab4f8;
-  color: #000000;
+  color: #000;
 }
 
 * {
@@ -62,25 +62,27 @@ h3 {
 table {
   border-collapse: collapse;
   text-align: center;
-  border: 1px solid #000;
+  border: 2px solid rgba(150, 150, 150, 0.4);
   margin: 10px 0;
 }
 
 thead {
-  background: rgba(100, 100, 125, 20%);
+  background: rgba(150, 150, 150, 0.4);
 }
 
 th,
 td {
   padding: 4px 8px;
-  border: 1px solid #000;
+  border: 2px solid rgba(150, 150, 150, 0.4);
 }
 
 a {
-  text-decoration: none;
-  word-wrap: break-word;
   font-weight: 700;
   color: #8ab4f8;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 kbd {
@@ -89,25 +91,25 @@ kbd {
   font-size: .8rem;
   font-weight: 700;
   padding: 2px 4px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 20%);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
 }
 
 pre {
-  padding: 4px;
+  padding: 5px;
   margin: 10px auto;
-}
-
-pre,
-code {
-  background: #000000;
-  color: #ffffff;
+  border: 2px solid rgba(150, 150, 150, 0.4);
   border-radius: 5px;
   line-height: 1.5;
   white-space: pre-wrap;
 }
 
+code {
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
 blockquote {
-  border-left: 3px solid rgba(100, 100, 125, 50%);
+  border-left: 2px solid rgba(150, 150, 150, 0.4);
   padding-left: 10px;
 }
 
@@ -171,7 +173,7 @@ input[type="checkbox"] {
 }
 
 .note:after {
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, .2)
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2)
 }
 
 .note .bottom-content {
@@ -197,10 +199,6 @@ input[type="checkbox"] {
   margin: 0 10px;
 }
 
-.note a {
-  text-decoration: underline;
-}
-
 .note a:hover {
   text-decoration: none;
 }
@@ -214,7 +212,7 @@ input[type="checkbox"] {
 }
 
 .bottom-content i:hover {
-  background: rgba(100, 100, 125, 20%);
+  background: rgba(150, 150, 150, 0.4)
 }
 
 .bold {

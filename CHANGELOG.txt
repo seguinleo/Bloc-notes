@@ -1,3 +1,13 @@
+#----v24.3.2----#
+-Add spellcheck toggle
+-Add back/forward/clear button
+-Add search options
+-Better self-hosting
+-Improve code structure
+-Improve UI/UX
+-Refractor SCSS to SASS
+-Bug fixes
+
 #----v24.3.1----#
 -Improve code structure
 -Replace Showdown by Marked

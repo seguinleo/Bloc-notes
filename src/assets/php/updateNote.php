@@ -21,16 +21,16 @@ $dateNote = $_POST['date'];
 $hidden = $_POST['hidden'];
 $category = $_POST['category'];
 $allColors = [
-    'Noir',
-    'Rouge',
-    'Orange',
-    'Jaune',
-    'Vert',
-    'Cyan',
-    'BleuCiel',
-    'Bleu',
-    'Violet',
-    'Rose'
+    'bg-default',
+    'bg-red',
+    'bg-orange',
+    'bg-yellow',
+    'bg-green',
+    'bg-cyan',
+    'bg-light-blue',
+    'bg-blue',
+    'bg-purple',
+    'bg-pink'
 ];
 $allCategories = ['0','1','2','3','4','5','6'];
 

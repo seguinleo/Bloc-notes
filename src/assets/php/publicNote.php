@@ -65,7 +65,7 @@ try {
             <body>
                 <main data-link="%s"></main>
                 <footer>
-                    <a href="/seguinleo-notes/" rel="noreferrer">
+                    <a href="../../" rel="noreferrer">
                         Bloc-notes &#8211; Léo SEGUIN
                     </a>
                 </footer>

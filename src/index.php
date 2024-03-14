@@ -1,7 +1,6 @@
 <?php
 session_name('__Secure-notes');
 $cookieParams = [
-    'path'     => '/seguinleo-notes/',
     'lifetime' => 604800,
     'secure'   => true,
     'httponly' => true,
@@ -22,9 +21,9 @@ $_SESSION['csrf_token'] = $csrf_token;
     <meta name="description" content="Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?= $csrf_token ?>">
-    <meta name="theme-color" content="#171717" class="themecolor">
+    <meta name="theme-color" content="#171717" class="theme-color">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="themecolor">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="theme-color">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
@@ -32,7 +31,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
-<body class="accentBlue">
+<body class="accent1">
     <header>
         <noscript>
             <p id="noscript">You must enable JavaScript to use Bloc-notes.</p>
@@ -40,43 +39,48 @@ $_SESSION['csrf_token'] = $csrf_token;
         <div id="welcome">
             <h1>Bloc-notes</h1>
             <?php if (isset($name) === true) { ?>
-                <span class="manage-account linkp" tabindex="0" role="button" aria-label="Manage account">
+                <span id="manage-account" class="link" tabindex="0" role="button" aria-label="Manage account">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
                 <span id="dot-connected"></span>
             <?php } else { ?>
-                <span class="log-in linkp" tabindex="0" role="button" aria-label="Log in">
+                <span id="log-in" class="link" tabindex="0" role="button" aria-label="Log in">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
             <?php } ?>
         </div>
-        <div id="divSearch" role="search">
+        <div id="div-search" role="search">
             <i class="fa-solid fa-magnifying-glass" role="none"></i>
             <input type="search" id="search-input" maxlength="30" aria-label="Search">
             <kbd>CTRL</kbd><kbd>K</kbd>
+            <select id="search-option" aria-label="Search option">
+                <option value="0">Title</option>
+                <option value="1">Content</option>
+                <option value="2">All</option>
+            </select>
         </div>
         <div id="last-sync">
             <i class="fa-solid fa-sync"></i>
             <span></span>
         </div>
         <div>
-            <button type="button" id="btnTheme" aria-label="Theme">
-                <i id="iconTheme" class="fa-solid fa-moon"></i>
+            <button type="button" id="btn-theme" aria-label="Theme">
+                <i id="icon-theme" class="fa-solid fa-moon"></i>
             </button>
         </div>
     </header>
-    <div id="sideBar">
+    <div id="sidebar">
         <nav>
             <div class="row">
-                <button id="iconAdd" type="button"></button>
+                <button id="icon-add" type="button"></button>
             </div>
-            <div id="listNotes"></div>
-            <div id="newVersion">
+            <div id="list-notes"></div>
+            <div id="new-version">
                 <div class="close">
-                    <i class="fa-solid fa-xmark" role="button" tabindex="0" aria-label="Hide"></i>
+                    <i class="fa-solid fa-xmark"></i>
                 </div>
-                <h2>v24.3.1🎉</h2>
-                <p id="newVersionInfos"></p>
+                <h2>v24.3.2🎉</h2>
+                <p id="new-version-infos"></p>
                 <p>
                     <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noopener noreferrer">Changelog</a>
                 </p>
@@ -84,7 +88,7 @@ $_SESSION['csrf_token'] = $csrf_token;
         </nav>
         <footer>
             <div class="row">
-                <span id="settings" class="linkp" tabindex="0" role="button" aria-label="Settings">
+                <span id="settings" class="link" tabindex="0" role="button" aria-label="Settings">
                     <i class="fa-solid fa-gear"></i>
                 </span>
                 <select id="language" aria-label="Language">
@@ -103,14 +107,16 @@ $_SESSION['csrf_token'] = $csrf_token;
         </footer>
     </div>
     <main>
-        <button id="iconFloatAdd" type="button" aria-label="Add a note"><i class="fa-solid fa-plus"></i></button>
-        <div id="successNotification"></div>
-        <div id="errorNotification"></div>
+        <button id="icon-float-add" type="button" aria-label="Add a note">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+        <div id="success-notification"></div>
+        <div id="error-notification"></div>
         <div id="sidebar-indicator"></div>
-        <button type="button" id="btnSort" aria-label="Sort notes">
+        <button type="button" id="btn-sort" aria-label="Sort notes">
             <i class="fa-solid fa-arrow-up-wide-short"></i>
         </button>
-        <button type="button" id="btnFilter" aria-label="Filter notes">
+        <button type="button" id="btn-filter" aria-label="Filter notes">
             <i class="fa-solid fa-filter"></i>
         </button>
         <dialog id="sort-popup-box">
@@ -122,27 +128,27 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <fieldset>
                         <legend></legend>
                         <div class="row">
-                            <label for="sortNotes1">
-                                <input type="radio" name="sortNotes" value="1" id="sortNotes1">
-                                <span id="sortNotes1Span"></span>
+                            <label for="sort-notes1">
+                                <input type="radio" name="sort-notes" value="1" id="sort-notes1">
+                                <span id="sort-notes1-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sortNotes2">
-                                <input type="radio" name="sortNotes" value="2" id="sortNotes2">
-                                <span id="sortNotes2Span"></span>
+                            <label for="sort-notes2">
+                                <input type="radio" name="sort-notes" value="2" id="sort-notes2">
+                                <span id="sort-notes2-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sortNotes3">
-                                <input type="radio" name="sortNotes" value="3" id="sortNotes3" checked>
-                                <span id="sortNotes3Span"></span>
+                            <label for="sort-notes3">
+                                <input type="radio" name="sort-notes" value="3" id="sort-notes3" checked>
+                                <span id="sort-notes3-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sortNotes4">
-                                <input type="radio" name="sortNotes" value="4" id="sortNotes4">
-                                <span id="sortNotes4Span"></span>
+                            <label for="sort-notes4">
+                                <input type="radio" name="sort-notes" value="4" id="sort-notes4">
+                                <span id="sort-notes4-span"></span>
                             </label>
                         </div>
                     </fieldset>
@@ -158,45 +164,45 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <fieldset>
                         <legend></legend>
                         <div class="row">
-                            <label for="noCatFilter">
-                                <input type="checkbox" name="filterNotes" value="0" id="noCatFilter" checked>
-                                <span class="noCatFilterSpan"></span>
+                            <label for="no-cat-filter">
+                                <input type="checkbox" name="filter-notes" value="0" id="no-cat-filter" checked>
+                                <span class="no-cat-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catPersoFilter">
-                                <input type="checkbox" name="filterNotes" value="1" id="catPersoFilter" checked>
-                                <span class="catPersoFilterSpan"></span>
+                            <label for="cat-perso-filter">
+                                <input type="checkbox" name="filter-notes" value="1" id="cat-perso-filter" checked>
+                                <span class="cat-perso-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catProFilter">
-                                <input type="checkbox" name="filterNotes" value="2" id="catProFilter" checked>
-                                <span class="catProFilterSpan"></span>
+                            <label for="cat-pro-filter">
+                                <input type="checkbox" name="filter-notes" value="2" id="cat-pro-filter" checked>
+                                <span class="cat-pro-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catVoyageFilter">
-                                <input type="checkbox" name="filterNotes" value="3" id="catVoyageFilter" checked>
-                                <span class="catVoyageFilterSpan"></span>
+                            <label for="cat-voyage-filter">
+                                <input type="checkbox" name="filter-notes" value="3" id="cat-voyage-filter" checked>
+                                <span class="cat-voyage-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catTaskFilter">
-                                <input type="checkbox" name="filterNotes" value="4" id="catTaskFilter" checked>
-                                <span class="catTaskFilterSpan"></span>
+                            <label for="cat-task-filter">
+                                <input type="checkbox" name="filter-notes" value="4" id="cat-task-filter" checked>
+                                <span class="cat-task-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catRappelFilter">
-                                <input type="checkbox" name="filterNotes" value="5" id="catRappelFilter" checked>
-                                <span class="catRappelFilterSpan"></span>
+                            <label for="cat-rappel-filter">
+                                <input type="checkbox" name="filter-notes" value="5" id="cat-rappel-filter" checked>
+                                <span class="cat-rappel-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="catIdeesFilter">
-                                <input type="checkbox" name="filterNotes" value="6" id="catIdeesFilter" checked>
-                                <span class="catIdeesFilterSpan"></span>
+                            <label for="cat-idees-filter">
+                                <input type="checkbox" name="filter-notes" value="6" id="cat-idees-filter" checked>
+                                <span class="cat-idees-filter-span"></span>
                             </label>
                         </div>
                     </fieldset>
@@ -209,63 +215,76 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <div class="close">
                         <i class="fa-solid fa-xmark"></i>
                     </div>
-                    <form id="addNote" method="post" enctype="application/x-www-form-urlencoded">
-                        <input id="idNote" type="hidden">
+                    <form id="add-note" method="post" enctype="application/x-www-form-urlencoded">
+                        <input id="id-note" type="hidden">
                         <div class="row">
                             <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
                         </div>
+                        <div class="row editor-control">
+                            <i class="fa-solid fa-arrow-left" id="control-back" tabindex="0" role="button" aria-label="Back"></i>
+                            <i class="fa-solid fa-arrow-right" id="control-forward" tabindex="0" role="button" aria-label="Formward"></i>
+                            <i class="fa-solid fa-broom" id="control-clear" tabindex="0" role="button" aria-label="Clear content"></i>
+                        </div>
                         <div class="row">
-                            <textarea id="content" maxlength="5000" aria-label="Content"></textarea>
-                            <span id="textareaLength">0/5000</span>
+                            <textarea
+                                id="content"
+                                maxlength="5000"
+                                spellcheck="true"
+                                aria-label="Content"
+                            ></textarea>
+                            <span id="textarea-length">0/5000</span>
                         </div>
                         <div class="row">
                             <div id="colors">
-                                <span class="Noir" role="button" tabindex="0" aria-label="Default"></span>
-                                <span class="Rouge" role="button" tabindex="0" aria-label="Red"></span>
-                                <span class="Orange" role="button" tabindex="0" aria-label="Orange"></span>
-                                <span class="Jaune" role="button" tabindex="0" aria-label="Yellow"></span>
-                                <span class="Vert" role="button" tabindex="0" aria-label="Green"></span>
-                                <span class="Cyan" role="button" tabindex="0" aria-label="Cyan"></span>
-                                <span class="BleuCiel" role="button" tabindex="0" aria-label="Light blue"></span>
-                                <span class="Bleu" role="button" tabindex="0" aria-label="Blue"></span>
-                                <span class="Violet" role="button" tabindex="0" aria-label="Purple"></span>
-                                <span class="Rose" role="button" tabindex="0" aria-label="Pink"></span>
+                                <span class="bg-default" tabindex="0" role="button" aria-label="Default"></span>
+                                <span class="bg-red" tabindex="0" role="button" aria-label="Red"></span>
+                                <span class="bg-orange" tabindex="0" role="button" aria-label="Orange"></span>
+                                <span class="bg-yellow" tabindex="0" role="button" aria-label="Yellow"></span>
+                                <span class="bg-green" tabindex="0" role="button" aria-label="Green"></span>
+                                <span class="bg-cyan" tabindex="0" role="button" aria-label="Cyan"></span>
+                                <span class="bg-light-blue" tabindex="0" role="button" aria-label="Light blue"></span>
+                                <span class="bg-blue" tabindex="0" role="button" aria-label="Blue"></span>
+                                <span class="bg-purple" tabindex="0" role="button" aria-label="Purple"></span>
+                                <span class="bg-pink" tabindex="0" role="button" aria-label="Pink"></span>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="category" for="noCat">
-                                <input type="radio" name="category" id="noCat" value="0" checked>
-                                <span class="noCatFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="no-cat">
+                                <input type="radio" name="category" id="no-cat" value="0" checked>
+                                <span class="no-cat-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catPerso">
-                                <input type="radio" name="category" id="catPerso" value="1">
-                                <span class="catPersoFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-perso">
+                                <input type="radio" name="category" id="cat-perso" value="1">
+                                <span class="cat-perso-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catPro">
-                                <input type="radio" name="category" id="catPro" value="2">
-                                <span class="catProFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-pro">
+                                <input type="radio" name="category" id="cat-pro" value="2">
+                                <span class="cat-pro-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catVoyage">
-                                <input type="radio" name="category" id="catVoyage" value="3">
-                                <span class="catVoyageFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-voyage">
+                                <input type="radio" name="category" id="cat-voyage" value="3">
+                                <span class="cat-voyage-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catTask">
-                                <input type="radio" name="category" id="catTask" value="4">
-                                <span class="catTaskFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-task">
+                                <input type="radio" name="category" id="cat-task" value="4">
+                                <span class="cat-task-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catRappel">
-                                <input type="radio" name="category" id="catRappel" value="5">
-                                <span class="catRappelFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-rappel">
+                                <input type="radio" name="category" id="cat-rappel" value="5">
+                                <span class="cat-rappel-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="catIdees">
-                                <input type="radio" name="category" id="catIdees" value="6">
-                                <span class="catIdeesFilterSpan" tabindex="0" role="button"></span>
+                            <label class="category" for="cat-idees">
+                                <input type="radio" name="category" id="cat-idees" value="6">
+                                <span class="cat-idees-filter-span" tabindex="0" role="button"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <span class="txt"><i class="fa-solid fa-eye-slash"></i></span>
-                            <label for="checkHidden" class="switch" aria-label="Hide">
-                                <input type="checkbox" id="checkHidden" aria-hidden="true" tabindex="-1">
+                            <span id="hide-infos"></span>
+                            <span class="switch-icon">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </span>
+                            <label for="check-hidden" class="switch" aria-label="Hide note content">
+                                <input type="checkbox" id="check-hidden" aria-hidden="true" tabindex="-1">
                                 <span class="slider"></span>
                             </label>
                         </div>
@@ -281,45 +300,62 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <i class="fa-solid fa-xmark"></i>
                     </div>
                     <div class="row">
-                        <span id="export-all-notes" class=" linkp" tabindex="0"></span>
+                        <span id="export-all-notes" class="link" tabindex="0" role="button"></span>
                     </div>
                     <div class="row">
-                        <span class="linkp">
-                            <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="linkMarkdown" rel="noopener noreferrer"></a>
+                        <span class="link">
+                            <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="link-markdown" rel="noopener noreferrer"></a>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </span>
                     </div>
                     <div class="row">
-                        <span class="linkp">
-                            <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="linkHelp" rel="noopener noreferrer"></a>
+                        <span class="link">
+                            <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="link-help" rel="noopener noreferrer"></a>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </span>
                     </div>
                     <div class="row">
                         <div id="accent-colors">
-                            <span class="accentBlueSpan" role="button" tabindex="0" aria-label="Blue"></span>
-                            <span class="accentGreenSpan" role="button" tabindex="0" aria-label="Green"></span>
-                            <span class="accentYellowSpan" role="button" tabindex="0" aria-label="Yellow"></span>
-                            <span class="accentPinkSpan" role="button" tabindex="0" aria-label="Pink"></span>
+                            <span class="accent1-span" tabindex="0" role="button" aria-label="Blue"></span>
+                            <span class="accent2-span" tabindex="0" role="button" aria-label="Green"></span>
+                            <span class="accent3-span" tabindex="0" role="button" aria-label="Yellow"></span>
+                            <span class="accent4-span" tabindex="0" role="button" aria-label="Pink"></span>
+                            <span class="accent5-span" tabindex="0" role="button" aria-label="Red"></span>
                         </div>
                     </div>
+                    <div class="row">
+                        <span class="switch-icon">
+                            Spellcheck
+                            <i class="fa-solid fa-spell-check"></i>
+                        </span>
+                        <label for="spellcheck" class="switch" aria-label="Compact mode">
+                            <input type="checkbox" id="spellcheck" aria-hidden="true" tabindex="-1" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                     <div id="compact-mode" class="row">
-                        <span class="txt"><i class="fa-solid fa-grip-vertical"></i></span>
-                        <label for="checkCompact" class="switch" aria-label="Compact mode">
-                            <input type="checkbox" id="checkCompact" aria-hidden="true" tabindex="-1">
+                        <span class="switch-icon">
+                            Compact mode
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </span>
+                        <label for="check-compact" class="switch" aria-label="Compact mode">
+                            <input type="checkbox" id="check-compact" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
                     </div>
                     <div class="row">
-                        <span class="txt"><i class="fa-solid fa-fingerprint"></i></span>
-                        <label for="checkFingerprint" class="switch" aria-label="Lock app">
-                            <input type="checkbox" id="checkFingerprint" aria-hidden="true" tabindex="-1">
+                        <span class="switch-icon">
+                            Lock app
+                            <i class="fa-solid fa-fingerprint"></i>
+                        </span>
+                        <label for="check-fingerprint" class="switch" aria-label="Lock app (Fingerprint, Windows Hello, etc.)">
+                            <input type="checkbox" id="check-fingerprint" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.2</a>
                         </p>
                     </div>
                 </div>
@@ -336,39 +372,39 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <?= htmlspecialchars($name) ?>
                         </div>
                         <div class="row">
-                            <span id="log-out" class="linkp" tabindex="0" role="button"></span>
+                            <span id="log-out" class="link" tabindex="0" role="button"></span>
                         </div>
-                        <details id="genPsswd">
+                        <details id="gen-psswd">
                             <summary></summary>
-                            <form id="changePsswd" method="post" enctype="application/x-www-form-urlencoded">
+                            <form id="change-psswd" method="post" enctype="application/x-www-form-urlencoded">
                                 <div class="row">
-                                    <input id="oldPsswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
+                                    <input id="old-psswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="newPsswd" type="password" minlength="8" maxlength="64" aria-label="New password" required>
+                                    <input id="new-psswd" type="password" minlength="8" maxlength="64" aria-label="New password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="newPsswdValid" type="password" minlength="8" maxlength="64" aria-label="Confirm new password" required>
+                                    <input id="new-psswd-valid" type="password" minlength="8" maxlength="64" aria-label="Confirm new password" required>
                                 </div>
                                 <div class="row">
-                                    <p id="psswdGen"></p>
-                                    <button type="button" id="copyPasswordBtn" aria-label="Copy password">
+                                    <p id="psswd-gen"></p>
+                                    <button type="button" id="copy-password-btn" aria-label="Copy password">
                                         <i class="fa-solid fa-clipboard"></i>
                                     </button>
-                                    <button type="button" id="submitGenPsswd" aria-label="Generate password">
+                                    <button type="button" id="submit-gen-psswd" aria-label="Generate password">
                                         <i class="fa-solid fa-arrow-rotate-right"></i>
                                     </button>
                                 </div>
                                 <button type="submit"></button>
                             </form>
                         </details>
-                        <details id="deleteUser">
+                        <details id="delete-user">
                             <summary></summary>
-                            <form id="deleteAccount" method="post" enctype="application/x-www-form-urlencoded">
+                            <form id="delete-account" method="post" enctype="application/x-www-form-urlencoded">
                                 <div class="row">
-                                    <input id="deletePsswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                    <input id="delete-psswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                                 </div>
-                                <button type="submit" class="btnWarning"></button>
+                                <button type="submit" class="btn-warning"></button>
                             </form>
                         </details>
                     </div>
@@ -380,11 +416,11 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <form id="publicNote" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="public-note" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 <span></span>
                             </div>
-                            <input id="idNotePublic" type="hidden">
+                            <input id="id-note-public" type="hidden">
                             <div class="row">
                                 <button type="submit"></button>
                             </div>
@@ -398,16 +434,16 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <p id="copyNoteLink"></p>
-                        <button type="button" id="copyNoteLinkBtn" aria-label="Copy link">
+                        <p id="copy-note-link"></p>
+                        <button type="button" id="copy-note-link-btn" aria-label="Copy link">
                             <i class="fa-solid fa-clipboard"></i>
                         </button>
-                        <form id="privateNote" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="private-note" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 <span></span>
                             </div>
-                            <input id="idNotePrivate" type="hidden">
-                            <input id="linkNotePrivate" type="hidden">
+                            <input id="id-note-private" type="hidden">
+                            <input id="link-note-private" type="hidden">
                             <div class="row">
                                 <button type="submit"></button>
                             </div>
@@ -423,12 +459,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row">
-                            <span id="create-account" class="linkp" tabindex="0" role="button"></span>
+                            <span id="create-account" class="link" tabindex="0" role="button"></span>
                         </div>
-                        <form id="connectForm" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="connect-form" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 <input
-                                    id="nameConnect"
+                                    id="name-connect"
                                     type="text"
                                     minlength="4"
                                     maxlength="25"
@@ -440,7 +476,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 >
                             </div>
                             <div class="row">
-                                <input id="psswdConnect" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                <input id="psswd-connect" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                             </div>
                             <button type="submit"></button>
                         </form>
@@ -453,10 +489,10 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <form id="createForm" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="create-form" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
                                 <input
-                                    id="nameCreate"
+                                    id="name-create"
                                     type="text"
                                     minlength="4"
                                     maxlength="25"
@@ -468,23 +504,23 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 >
                             </div>
                             <div class="row">
-                                <input id="psswdCreate" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                <input id="psswd-create" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                             </div>
                             <div class="row">
-                                <input id="psswdCreateValid" type="password" minlength="8" maxlength="64" aria-label="Confirm password" required>
+                                <input id="psswd-create-valid" type="password" minlength="8" maxlength="64" aria-label="Confirm password" required>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
-                                <span id="createInfos"></span>
+                                <span id="create-infos"></span>
                             </div>
-                            <details id="genPsswd">
+                            <details id="gen-psswd">
                                 <summary></summary>
                                 <div class="row">
-                                    <p id="psswdGen"></p>
-                                    <button type="button" id="copyPasswordBtn" aria-label="Copy password">
+                                    <p id="psswd-gen"></p>
+                                    <button type="button" id="copy-password-btn" aria-label="Copy password">
                                         <i class="fa-solid fa-clipboard"></i>
                                     </button>
-                                    <button type="button" id="submitGenPsswd" aria-label="Generate password">
+                                    <button type="button" id="submit-gen-psswd" aria-label="Generate password">
                                         <i class="fa-solid fa-arrow-rotate-right"></i>
                                     </button>
                                 </div>
