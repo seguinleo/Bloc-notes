@@ -31,10 +31,6 @@ try {
             ':CurrentUser'  => $name
         ]
     );
-    if ($query->rowCount() === 0) {
-        throw new Exception('Note modification failed');
-        return;
-    }
     $query->closeCursor();
     $PDO = null;
 } catch (Exception $e) {

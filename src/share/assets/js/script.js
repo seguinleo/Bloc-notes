@@ -1,12 +1,20 @@
-import '../assets/js/marked.min.js';
+import '../../../assets/js/marked.min.js';
 
 const notesContainer = document.querySelector('main');
-const link = notesContainer.getAttribute('data-link');
+const urlParams = new URLSearchParams(window.location.search);
+const link = urlParams.get('link');
 
 const showSharedNote = async () => {
-  if (!link || !/^[a-zA-Z0-9]+$/.test(link)) return;
+  if (!link || !/^[a-zA-Z0-9]+$/.test(link)) {
+    const notFoundElement = document.createElement('h1');
+    notFoundElement.classList.add('align-center');
+    notFoundElement.textContent = 'Note not found or expired.';
+    notesContainer.textContent = '';
+    notesContainer.appendChild(notFoundElement);
+    return;
+  }
 
-  const response = await fetch('../../assets/php/getSharedNote.php', {
+  const response = await fetch('../assets/php/getSharedNote.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -18,6 +26,7 @@ const showSharedNote = async () => {
     const notFoundElement = document.createElement('h1');
     notFoundElement.classList.add('align-center');
     notFoundElement.textContent = 'Note not found or expired.';
+    notesContainer.textContent = '';
     notesContainer.appendChild(notFoundElement);
     return;
   }
@@ -81,6 +90,7 @@ const showSharedNote = async () => {
   bottomContentElement.appendChild(downloadIconElement);
   noteElement.appendChild(detailsElement);
   noteElement.appendChild(bottomContentElement);
+  notesContainer.textContent = '';
   notesContainer.appendChild(noteElement);
 };
 
@@ -115,4 +125,7 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await showSharedNote();
+  setInterval(async () => {
+    await showSharedNote();
+  }, 5000);
 });

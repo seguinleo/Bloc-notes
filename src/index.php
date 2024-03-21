@@ -26,7 +26,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="theme-color">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
@@ -72,19 +72,9 @@ $_SESSION['csrf_token'] = $csrf_token;
     <div id="sidebar">
         <nav>
             <div class="row">
-                <button id="icon-add" type="button"></button>
+                <button id="icon-add" type="button">Add a note</button>
             </div>
             <div id="list-notes"></div>
-            <div id="new-version">
-                <div class="close">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-                <h2>v24.3.2🎉</h2>
-                <p id="new-version-infos"></p>
-                <p>
-                    <a href="https://github.com/seguinleo/Bloc-notes/blob/main/CHANGELOG.txt" rel="noopener noreferrer">Changelog</a>
-                </p>
-            </div>
         </nav>
         <footer>
             <div class="row">
@@ -220,11 +210,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="row">
                             <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
                         </div>
-                        <div class="row editor-control">
-                            <i class="fa-solid fa-arrow-left" id="control-back" tabindex="0" role="button" aria-label="Back"></i>
-                            <i class="fa-solid fa-arrow-right" id="control-forward" tabindex="0" role="button" aria-label="Formward"></i>
-                            <i class="fa-solid fa-broom" id="control-clear" tabindex="0" role="button" aria-label="Clear content"></i>
-                        </div>
                         <div class="row">
                             <textarea
                                 id="content"
@@ -233,6 +218,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 aria-label="Content"
                             ></textarea>
                             <span id="textarea-length">0/5000</span>
+                            <span class="editor-control">
+                                <i class="fa-solid fa-broom" id="control-clear" tabindex="0" role="button" aria-label="Clear content"></i>
+                            </span>
                         </div>
                         <div class="row">
                             <div id="colors">
@@ -355,7 +343,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.2</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.3</a>
                         </p>
                     </div>
                 </div>

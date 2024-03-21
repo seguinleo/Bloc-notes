@@ -51,7 +51,6 @@ if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent1';
   document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-if (localStorage.getItem('version') === 'hide') document.querySelector('#new-version').style.display = 'none';
 if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
@@ -66,7 +65,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'fr-FR');
     document.querySelector('#language').value = 'fr';
     document.querySelector('#icon-add').textContent = 'Ajouter une note';
-    document.querySelector('#new-version-infos').textContent = 'Bloc-notes à été mis à jour !';
     document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
     document.querySelector('#search-option').options[0].textContent = 'Titre';
     document.querySelector('#search-option').options[1].textContent = 'Contenu';
@@ -122,7 +120,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'de');
     document.querySelector('#language').value = 'de';
     document.querySelector('#icon-add').textContent = 'Notiz hinzufügen';
-    document.querySelector('#new-version-infos').textContent = 'Bloc-notes wurde aktualisiert!';
     document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
     document.querySelector('#search-option').options[0].textContent = 'Titel';
     document.querySelector('#search-option').options[1].textContent = 'Inhalt';
@@ -178,7 +175,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'es');
     document.querySelector('#language').value = 'es';
     document.querySelector('#icon-add').textContent = 'Agregar una nota';
-    document.querySelector('#new-version-infos').textContent = '¡Bloc-notes ha sido actualizado!';
     document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
     document.querySelector('#search-option').options[0].textContent = 'Título';
     document.querySelector('#search-option').options[1].textContent = 'Contenido';
@@ -234,7 +230,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'en');
     document.querySelector('#language').value = 'en';
     document.querySelector('#icon-add').textContent = 'Add a note';
-    document.querySelector('#new-version-infos').textContent = 'Bloc-notes has been updated!';
     document.querySelector('#legal a').textContent = 'Legal notice / privacy';
     document.querySelector('#search-option').options[0].textContent = 'Title';
     document.querySelector('#search-option').options[1].textContent = 'Content';
@@ -517,10 +512,14 @@ const showNotes = async () => {
         trashIconElement.setAttribute('role', 'button');
         trashIconElement.setAttribute('aria-label', 'Supprimer la note');
         bottomContentElement.appendChild(trashIconElement);
-
+      } else {
+        noteElement.setAttribute('data-note-link', link);
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
         const iconLink = document.createElement('i');
         iconLink.classList.add('fa-solid', 'fa-link');
-        titleSpan.appendChild(iconLink);
+        categoryElement.appendChild(iconLink);
+        paragraph.appendChild(categoryElement);
       }
 
       if (hidden === 0 && content !== '') {
@@ -559,11 +558,6 @@ const showNotes = async () => {
       paragraph.setAttribute('role', 'button');
       titleSpan.classList.add('title-list');
       titleSpan.textContent = title;
-      if (link !== null) {
-        noteElement.setAttribute('data-note-link', link);
-        titleSpan.appendChild(document.createElement('i'));
-        titleSpan.querySelector('i').classList.add('fa-solid', 'fa-link');
-      }
       dateSpan.classList.add('date-list');
       dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
         weekday: 'short',
@@ -688,16 +682,6 @@ document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
   });
 });
 
-document.querySelector('#control-back').addEventListener('click', () => document.execCommand('undo'));
-document.querySelector('#control-back').addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') e.click();
-});
-
-document.querySelector('#control-forward').addEventListener('click', () => document.execCommand('redo'));
-document.querySelector('#control-forward').addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') e.click();
-});
-
 document.querySelector('#control-clear').addEventListener('click', () => {
   contentNote.value = '';
 });
@@ -807,11 +791,6 @@ document.querySelector('#btn-theme').addEventListener('click', () => {
   }
 });
 
-document.querySelector('#new-version .fa-xmark').addEventListener('click', () => {
-  document.querySelector('#new-version').style.display = 'none';
-  localStorage.setItem('version', 'hide');
-});
-
 document.querySelector('#export-all-notes').addEventListener('click', () => {
   if (document.querySelector('.note') === null) return;
   const notes = [];
@@ -898,7 +877,7 @@ accentColors.forEach((span) => {
 
 document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
   const link = document.querySelector('#copy-note-link').textContent;
-  navigator.clipboard.writeText(link);
+  navigator.clipboard.writeText(`localhost/share/?link=${link}`);
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -1078,7 +1057,7 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
 document.querySelector('#public-note').addEventListener('submit', async () => {
   const id = document.querySelector('#id-note-public').value;
   if (!id || Number.isNaN(id)) return;
-  const link = window.crypto.getRandomValues(new Uint8Array(10)).reduce((p, i) => p + (i % 36).toString(36), '');
+  const link = window.crypto.getRandomValues(new Uint8Array(12)).reduce((p, i) => p + (i % 36).toString(36), '');
   try {
     const response = await fetch('./assets/php/publicNote.php', {
       method: 'POST',

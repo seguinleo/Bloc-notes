@@ -1,3 +1,12 @@
+#----v24.3.3----#
+-Better self-hosting
+    -Better Docker configuration
+-Change shared notes system
+    -Shared notes now use a URL parameter
+    -From 10 to 12 characters
+-Shared notes now refresh automatically
+-Improve UI/UX
+
 #----v24.3.2----#
 -Add spellcheck toggle
 -Add back/forward/clear button

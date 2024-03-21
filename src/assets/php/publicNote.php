@@ -33,57 +33,6 @@ try {
     );
     $query->closeCursor();
     $PDO = null;
-    if ($query->rowCount() === 0) {
-        throw new Exception('Note modification failed');
-        return;
-    }
-    $directoryPath = realpath(__DIR__ . '/../../share/') . '/' . $noteLink;
-    if (is_dir($directoryPath) === false) {
-        if (mkdir($directoryPath, 0700, true)) {
-            $index = fopen($directoryPath . '/index.html', 'w');
-            if ($index === false) {
-                throw new Exception('Note modification failed');
-                return;
-            }
-            $indexContent =
-            <<<EOT
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta name="robots" content="noindex, nofollow">
-                <title>Bloc-notes &#8211; Léo SEGUIN</title>
-                <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <meta name="theme-color" content="#171717">
-                <meta name="apple-mobile-web-app-capable" content="yes">
-                <meta name="apple-mobile-web-app-status-bar-style" content="#171717">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
-                <link rel="stylesheet" href="../stylePublic.css">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-            </head>
-            <body>
-                <main data-link="%s"></main>
-                <footer>
-                    <a href="../../" rel="noreferrer">
-                        Bloc-notes &#8211; Léo SEGUIN
-                    </a>
-                </footer>
-                <script type="module" src="../scriptPublic.js"></script>
-            </body>
-            </html>
-            EOT;
-            $indexContent = sprintf($indexContent, $noteLink);
-            fwrite($index, $indexContent);
-            fclose($index);
-        } else {
-            throw new Exception('Note modification failed');
-            return;
-        }
-    } else {
-        throw new Exception('Note modification failed');
-        return;
-    }
 } catch (Exception $e) {
     throw new Exception('Note modification failed');
     return;

@@ -15,22 +15,19 @@
 </p>
 
 ## Table of contents
-*   [Why?](#why)
 *   [Features](#features)
 *   [Design](#design)
-*   [Security/Privacy](#security-and-privacy)
+*   [Security and Privacy](#security-and-privacy)
 *   [Languages](#languages)
 *   [Todo](#todo)
 *   [Community](#community)
 *   [For developers](#for-developers)
-
-## Why?
-When I was looking for a note-taking application, I faced several difficulties: Google Keep and OneNote do not respect users' privacy, Standard Notes and Obsidian can be lightweight without having to pay (no Markdown or Sync). So I decided to create my own notebook, respectful of users' privacy and easy to use.
+*   [Self-hosting](#self-hosting)
 
 ## Features
-All notes are encrypted with ``AES-256-GCM``.
+All notes, local or cloud, are encrypted with ``AES-256-GCM``.
 
-The user can save and edit notes, change color, copy, export and use Markdown/HTML5. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes by title or add categories. Read my [Markdown guide](https://github.com/seguinleo/Bloc-notes/wiki/Markdown).
+The user can save and edit notes, change color, copy, export and use [Markdown/HTML](https://github.com/seguinleo/Bloc-notes/wiki/Markdown). The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes or filter by categories.
 
 The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
@@ -44,42 +41,38 @@ The user's connection for online sync is maintained by a secure cookie. The webs
 
 Passwords are hashed with the latest algorithms before being sent to the database.
 
-Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF, SSRF and SQL injections.
+Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF, SSRF, SQL injections, etc.
 
 Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes. The website editor disclaims any responsibility for the content of user notes.
 
-The user can use its fingerprint to unlock the notes. The fingerprint is stored in the browser's local storage and is never sent to the server.
+The user can use biometrics to unlock notes. Biometric data is stored in the browser's local storage and is never sent to the server.
 
 > [!WARNING]
 > Never store passwords or too personal data in your notes regardless of the service, even if it is encrypted.
 
 ## Languages
-🇫🇷French, 🇬🇧English, 🇩🇪German, 🇪🇸Spanish
+FR, EN, DE, ES
 
 ## Todo
 *   Pin notes
-*   2FA
+*   2FA login
 *   Password recovery
 *   Password protected notes
-*   Node.js/MongoDB ?
-*   ...
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
 
 ## For developers
-Documentation: [W3C](https://www.w3.org/), [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
+Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
-Technologies: JavaScript, PHP8+ and MySQL
+Technologies: JavaScript, PHP, MySQL, SASS, Docker, ESLint
 
-Website analyzers: [Mozilla Observatory](https://observatory.mozilla.org/), [Google Lighthouse](https://github.com/GoogleChrome/lighthouse), [W3C Markup Validation Service](https://validator.w3.org/)
-
-Dependencies: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes for accessibility, and crossorigin images)
+Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes and crossorigin images)
 
 ``npm i`` to install all dependencies
 
-``npm run sass`` to auto compile SASS to CSS
+## Self-hosting
 
-``docker-compose up --build`` to build the Docker container
+``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)

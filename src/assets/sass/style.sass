@@ -12,6 +12,12 @@
   100%
     transform: translateX(0)
 
+@keyframes rotate
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
 @font-face
   font-family: OpenSans
   font-style: normal
@@ -77,7 +83,6 @@ a
 kbd
   border-radius: 5px
   margin: 0 2px
-  font-size: .8rem
   font-weight: 700
   padding: 2px 4px
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
@@ -92,8 +97,9 @@ fieldset
     font-weight: 700
 
 blockquote
-  border-left: 2px solid rgba(150, 150, 150, 0.4)
-  padding-left: 10px
+  border-left: 3px solid rgba(150, 150, 150, 0.4)
+  margin: 10px auto
+  padding-left: 1rem
 
 details
   margin: 10px auto
@@ -102,19 +108,29 @@ details
     margin: 5px
 
 pre
-  padding: 5px
+  padding: 4px 8px
   margin: 10px auto
-  border: 2px solid rgba(150, 150, 150, 0.4)
+  background: rgba(150, 150, 150, 0.2)
   border-radius: 5px
   line-height: 1.5
-  white-space: pre-wrap
+  overflow-x: auto
+
+  code
+    padding: 0
+    background: none
 
 code
-  line-height: 1.5
-  white-space: pre-wrap
+  padding: 4px 8px
+  background: rgba(150, 150, 150, 0.2)
+  border-radius: 5px
+  overflow-x: auto
 
 li
-  margin-left: -1rem
+  margin-left: -1.4rem
+
+  &:has(input[type=checkbox])
+    list-style: none
+    margin-left: -2rem
 
   input[type=checkbox]:checked + label
     text-decoration: line-through
@@ -154,9 +170,6 @@ header
     border-radius: 50%
     transition: .1s
 
-    &:hover
-      background: rgba(150, 150, 150, 0.4)
-
   #div-search
     flex-grow: 1
     max-width: 750px
@@ -168,7 +181,6 @@ header
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
 
     i
-      font-size: 1rem
       margin: 0 5px
 
     input
@@ -191,8 +203,9 @@ header
     margin-left: -8px
 
   #last-sync
-    font-size: .8rem
-
+    span
+      font-size: .9rem
+    
     i
       cursor: pointer
       display: inline-flex
@@ -205,7 +218,7 @@ header
       transition: .1s
 
       &:hover
-        background: rgba(150, 150, 150, 0.4)
+        animation: rotate 1s
 
 main
   display: flex
@@ -220,6 +233,7 @@ select, option, textarea, button, input
   font-family: OpenSans,sans-serif
 
 select
+  font-size: .9rem
   padding: 0 5px
   border-radius: 5px
   border: none
@@ -312,10 +326,14 @@ input
       margin: 4px 0
       padding: 4px
       border-radius: 0 1rem 1rem 0
-      font-size: .8rem
+      font-size: .9rem
       font-weight: 700
       overflow: hidden
       transition: .1s
+      min-height: 2rem
+
+      *
+        vertical-align: middle
 
       &:hover, &:focus
         outline: none
@@ -331,7 +349,6 @@ input
         padding: 4px 8px
         margin: 0 8px 0 0
         border-radius: 24px
-        font-size: .8rem
 
       .title-list
         display: inline-flex
@@ -352,7 +369,12 @@ input
   transform: translate(-50%, -50%)
 
 #noscript
-  padding: 4px
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  text-align: center
+  padding: 5px
 
 .note
   position: relative
@@ -593,24 +615,8 @@ dialog
 
 .version
   text-align: right
-  font-size: .8rem
-  margin: 0 5px
-
-#new-version
-  -webkit-user-select: none
-  user-select: none
-  border: 2px solid rgba(150, 150, 150, 0.4)
-  text-align: center
-  border-radius: 10px
-  margin-top: 10px
-  padding-bottom: 1rem
   font-size: .9rem
-
-  p
-    margin: .5rem
-
-  .close
-    padding: 10px
+  margin: 0 5px
 
 #language
   width: 50px
@@ -619,7 +625,7 @@ dialog
   vertical-align: middle
 
 #textarea-length
-  font-size: .8rem
+  font-size: .9rem
 
 .delete-account
   cursor: pointer
@@ -627,13 +633,12 @@ dialog
 
 .switch-icon
   display: inline-block
-  font-size: .9rem
 
 #settings
   display: inline-flex
   align-items: center
   justify-content: center
-  font-size: 1.2rem
+  font-size: 1.4rem
   text-align: center
   vertical-align: middle
   margin-right: 1rem
@@ -642,11 +647,12 @@ dialog
   border-radius: 50%
   transition: .1s
 
-  &:hover
-    background: rgba(150, 150, 150, 0.4)
+  i
+    &:hover
+      animation: rotate 1s
 
 #legal, #license
-  font-size: .8rem
+  font-size: .9rem
 
 #success-notification, #error-notification
   position: fixed
@@ -714,15 +720,6 @@ dialog
 @media (min-width: 901px)
   #icon-float-add, #sidebar-indicator, #compact-mode
     display: none
-
-  .fullscreen
-    margin: 10px
-    width: auto
-    min-height: auto
-
-    .details
-      min-height: calc(100svh - 79px)
-      max-height: calc(100svh - 79px)
 
 @media (max-width: 900px)
   header
@@ -997,6 +994,9 @@ html
         &:before
           background: #c6c6c6
 
+      input:checked + .slider:before
+        background: #000
+
     #btn-theme
       background: #000
       color: #c6c6c6
@@ -1071,6 +1071,9 @@ html
 
         &:before
           background: #cecbe3
+
+      input:checked + .slider:before
+        background: #1c1936
 
     #btn-theme
       background: #272342
@@ -1228,10 +1231,6 @@ html
 
     dialog
       background: rgba(150, 150, 150, 0.4)
-
-    #noscript
-      background: #a93b3b
-      color: #fff
 
     .warning, .link.warning
       color: #a93b3b
