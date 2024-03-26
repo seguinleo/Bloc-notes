@@ -128,7 +128,7 @@ code
 li
   margin-left: -1.4rem
 
-  &:has(input[type=checkbox])
+  &:has(> input[type=checkbox])
     list-style: none
     margin-left: -2rem
 
@@ -186,8 +186,6 @@ header
     input
       flex-grow: 1
       border: none
-      border-radius: 24px
-      padding: 0 10px
 
     select
       height: 40px
@@ -323,17 +321,13 @@ input
 
     p
       cursor: pointer
-      margin: 4px 0
-      padding: 4px
+      padding: 5px 0
       border-radius: 0 1rem 1rem 0
       font-size: .9rem
       font-weight: 700
       overflow: hidden
       transition: .1s
       min-height: 2rem
-
-      *
-        vertical-align: middle
 
       &:hover, &:focus
         outline: none
@@ -377,36 +371,20 @@ input
   padding: 5px
 
 .note
-  position: relative
   display: flex
   flex-direction: column
   border-radius: 1rem
-  clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem)
-  transition: clip-path .4s
   max-width: 50vw
   line-height: 2
   padding: 10px 1rem
 
   &:hover
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)
-
     .bottom-content
       visibility: visible
       opacity: 1
 
-  &:after
-    content: ""
-    position: absolute
-    top: 0
-    left: 0
-    width: 1rem
-    height: 1rem
-    border-radius: 0 0 1rem
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2)
-    transition: transform .4s
-
-  &:hover:after
-    transform: translate(-100%, -100%)
+  &.pinned
+    outline: 2px dashed rgba(150, 150, 150, 0.4)
 
   .title
     text-align: right
@@ -414,6 +392,7 @@ input
     margin: 0 10px
 
   .details
+    min-height: 100px
     max-height: 420px
     overflow-x: hidden
     overflow-y: auto
@@ -425,7 +404,6 @@ input
   .bottom-content
     -webkit-user-select: none
     user-select: none
-    margin-top: 5px
     text-align: center
     opacity: 0
     visibility: hidden
@@ -436,7 +414,7 @@ input
       display: inline-flex
       align-items: center
       justify-content: center
-      margin: 0 5px
+      margin: 0 4px
       width: 30px
       height: 30px
       border-radius: 50%
@@ -476,17 +454,16 @@ input
   width: 100vw
   max-width: 100vw
   min-height: 100svh
-  margin: auto
-  inset: 0
   border-radius: 5px
+  inset: 0
 
   .title
     text-align: center
     margin-bottom: 1rem
 
   .details
-    min-height: calc(100svh - 57px)
-    max-height: calc(100svh - 57px)
+    min-height: calc(100svh - 52px)
+    max-height: calc(100svh - 52px)
     width: fit-content
     margin: auto
 
@@ -670,11 +647,12 @@ dialog
   display: inline-flex
   align-items: center
   vertical-align: middle
-  height: 36px
-  width: 70%
+  width: 75%
+  height: 42px
   margin: auto
   border-radius: 20px
   justify-content: center
+  text-align: center
   font-weight: 700
   word-break: break-all
 
@@ -701,7 +679,7 @@ dialog
   display: flex
   justify-content: center
   align-items: center
-  right: 1.5rem
+  right: 1rem
   font-size: 1.2rem
   width: 36px
   height: 36px
@@ -731,15 +709,15 @@ dialog
 
   main
     padding: 0 0 5rem
-    gap: 10px
+    gap: 5px
 
   #icon-float-add
     position: fixed
     display: flex
     justify-content: center
     align-items: center
-    bottom: 1.5rem
-    right: 1.5rem
+    bottom: 1rem
+    right: 1rem
     width: 60px
     height: 60px
     font-size: 1.4rem
@@ -758,10 +736,10 @@ dialog
     animation: slide-right .3s ease-in-out
 
     nav
-      margin: 10px
+      margin: 5px
 
     footer
-      margin: 10px
+      margin: 5px
       margin-top: 0
 
     button
@@ -776,12 +754,13 @@ dialog
       animation: slide-left .3s ease-in-out
 
   .note
-    max-width: 100vw
-    max-height: 300px
-    margin: 0 10px
-    padding: 5px 10px
+    min-width: 98vw
+    max-width: 98vw
+    max-height: 350px
 
     .bottom-content
+      display: flex
+      justify-content: space-evenly
       visibility: visible
       opacity: 1
 
@@ -790,15 +769,18 @@ dialog
 
   .compact
     .note
-      width: 48vw
-      margin: 0
+      min-width: 48vw
+      max-width: 48vw
+      max-height: 280px
 
       &:not(.fullscreen)
-        .fa-clipboard, .fa-download, .fa-link
+        padding: 5px 10px
+
+        .fa-clipboard, .fa-download, .fa-link, .fa-thumbtack
           display: none
 
     .fullscreen
-      width: 100vw
+      min-width: 100vw
 
   .fullscreen
     min-height: 100vh
@@ -819,9 +801,6 @@ dialog
 
   #colors span, #accent-colors span
     margin-right: 5px
-
-  .bottom-content i
-    margin: 0 2px
 
 html
   &.dark .accent1, &.dusk .accent1

@@ -51,7 +51,7 @@ if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent1';
   document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
+if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '1');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
 function generateRandomBytes(length) {
@@ -70,10 +70,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Contenu';
     document.querySelector('#search-option').options[2].textContent = 'Tout';
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Date de création';
-    document.querySelector('#sort-notes2-span').textContent = 'Date de création (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Date de modification';
-    document.querySelector('#sort-notes4-span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
+    document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Aucune catégorie';
@@ -100,7 +98,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
-    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes';
+    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     document.querySelector('#log-out').textContent = 'Déconnexion';
@@ -125,10 +123,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Inhalt';
     document.querySelector('#search-option').options[2].textContent = 'Alles';
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
-    document.querySelector('#sort-notes1-span').textContent = 'Erstellungsdatum';
-    document.querySelector('#sort-notes2-span').textContent = 'Erstellungsdatum (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Änderungsdatum';
-    document.querySelector('#sort-notes4-span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
+    document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Keine Kategorie';
@@ -155,7 +151,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Speichern';
-    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren';
+    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     document.querySelector('#log-out').textContent = 'Abmelden';
@@ -180,10 +176,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Contenido';
     document.querySelector('#search-option').options[2].textContent = 'Todo';
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
-    document.querySelector('#sort-notes1-span').textContent = 'Fecha de creación';
-    document.querySelector('#sort-notes2-span').textContent = 'Fecha de creación (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Fecha de modificación';
-    document.querySelector('#sort-notes4-span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
+    document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Sin categoría';
@@ -210,7 +204,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Guardar';
-    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas';
+    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     document.querySelector('#log-out').textContent = 'Cerrar sesión';
@@ -235,10 +229,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Content';
     document.querySelector('#search-option').options[2].textContent = 'All';
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Creation date';
-    document.querySelector('#sort-notes2-span').textContent = 'Creation date (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Modification date';
-    document.querySelector('#sort-notes4-span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Modification date';
+    document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'No category';
@@ -265,7 +257,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Save';
-    document.querySelector('#export-all-notes').textContent = 'Export all notes';
+    document.querySelector('#export-all-notes').textContent = 'Export all notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     document.querySelector('#log-out').textContent = 'Log out';
@@ -318,10 +310,10 @@ const verifyFingerprint = async () => {
         ],
         authenticatorSelection: {
           authenticatorAttachment: 'platform',
-          userVerification: 'required',
+          userVerification: 'preferred',
         },
         timeout: 60000,
-        attestation: 'direct',
+        attestation: 'none',
       },
     });
     if (localStorage.getItem('fingerprint') === 'true') await showNotes();
@@ -336,11 +328,6 @@ const verifyFingerprint = async () => {
 if (localStorage.getItem('spellcheck') === 'false') {
   document.querySelector('#spellcheck').checked = false;
   contentNote.setAttribute('spellcheck', 'false');
-}
-
-if (localStorage.getItem('fingerprint') === 'true') {
-  verifyFingerprint();
-  document.querySelector('#check-fingerprint').checked = true;
 }
 
 if (localStorage.getItem('compact') === 'true') {
@@ -416,6 +403,7 @@ const noteActions = () => {
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
       const noteLink = target.closest('.note').getAttribute('data-note-link') || null;
       if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteLink);
+      else if (target.classList.contains('fa-thumbtack')) pin(noteId);
       else if (target.classList.contains('fa-clipboard')) copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
       else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
@@ -436,7 +424,6 @@ const noteActions = () => {
 
 const showNotes = async () => {
   const sortOption = localStorage.getItem('sort_notes');
-  if (Number.isNaN(sortOption)) return;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
@@ -464,7 +451,7 @@ const showNotes = async () => {
 
     notesJSON.forEach((row) => {
       const {
-        id, title, content, color, date, hidden, category, link,
+        id, title, content, color, date, hidden, category, pinned, link,
       } = row;
 
       if (!id || !title || !color || !date) return;
@@ -480,7 +467,6 @@ const showNotes = async () => {
       const titleSpan = document.createElement('span');
       const dateSpan = document.createElement('span');
 
-      noteElement.id = `note${id}`;
       noteElement.classList.add('note', color);
       noteElement.setAttribute('data-note-id', id);
       noteElement.setAttribute('data-note-title', title);
@@ -502,15 +488,25 @@ const showNotes = async () => {
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
       editIconElement.setAttribute('role', 'button');
-      editIconElement.setAttribute('aria-label', 'Modifier la note');
+      editIconElement.setAttribute('aria-label', 'Edit note');
       bottomContentElement.appendChild(editIconElement);
+
+      if (pinned === 1) {
+        noteElement.classList.add('pinned');
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        const iconPin = document.createElement('i');
+        iconPin.classList.add('fa-solid', 'fa-thumbtack');
+        categoryElement.appendChild(iconPin);
+        paragraph.appendChild(categoryElement);
+      }
 
       if (link === null) {
         const trashIconElement = document.createElement('i');
         trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
         trashIconElement.tabIndex = 0;
         trashIconElement.setAttribute('role', 'button');
-        trashIconElement.setAttribute('aria-label', 'Supprimer la note');
+        trashIconElement.setAttribute('aria-label', 'Delete note');
         bottomContentElement.appendChild(trashIconElement);
       } else {
         noteElement.setAttribute('data-note-link', link);
@@ -523,32 +519,39 @@ const showNotes = async () => {
       }
 
       if (hidden === 0 && content !== '') {
+        const pinElement = document.createElement('i');
+        pinElement.classList.add('fa-solid', 'fa-thumbtack', 'note-action');
+        pinElement.tabIndex = 0;
+        pinElement.setAttribute('role', 'button');
+        pinElement.setAttribute('aria-label', 'Pin note');
+        bottomContentElement.appendChild(pinElement);
+
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('role', 'button');
-        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
+        clipboardIconElement.setAttribute('aria-label', 'Copy note content');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
         downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
         downloadIconElement.tabIndex = 0;
         downloadIconElement.setAttribute('role', 'button');
-        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
+        downloadIconElement.setAttribute('aria-label', 'Download note');
         bottomContentElement.appendChild(downloadIconElement);
 
         const expandIconElement = document.createElement('i');
         expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
+        expandIconElement.setAttribute('aria-label', 'Fullscreen note');
         bottomContentElement.appendChild(expandIconElement);
 
         const linkIconElement = document.createElement('i');
         linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
         linkIconElement.tabIndex = 0;
         linkIconElement.setAttribute('role', 'button');
-        linkIconElement.setAttribute('aria-label', 'Statut de la note');
+        linkIconElement.setAttribute('aria-label', 'Share note');
         bottomContentElement.appendChild(linkIconElement);
       }
 
@@ -591,7 +594,7 @@ const showNotes = async () => {
 };
 
 const toggleFullscreen = (id) => {
-  const note = document.querySelector(`#note${id}`);
+  const note = document.querySelector(`.note[data-note-id="${id}"]`);
   note.classList.toggle('fullscreen');
   document.body.classList.toggle('body-fullscreen');
 };
@@ -662,8 +665,23 @@ const copy = (content) => {
   navigator.clipboard.writeText(content);
 };
 
+const pin = async (id) => {
+  try {
+    const response = await fetch('./assets/php/pinNote.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `noteId=${id}&csrf_token=${csrfToken}`,
+    });
+    if (response.ok) await showNotes();
+    else showError('An error occurred...');
+  } catch (error) {
+    showError('An error occurred...');
+  }
+};
+
 const deleteNote = (e) => {
-  if (Number.isNaN(e)) return;
   document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
   let message = '';
@@ -795,17 +813,13 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   if (document.querySelector('.note') === null) return;
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {
-    const title = e.querySelector('.title').textContent;
-    const content = e.querySelector('.details-content').textContent;
-    const noteObject = {
-      title,
-      content,
-    };
-    notes.push(noteObject);
+    const title = e.getAttribute('data-note-title');
+    const content = e.getAttribute('data-note-content');
+    notes.push(`${title}\n\n${content}`);
   });
   const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(JSON.stringify(notes))}`);
-  a.setAttribute('download', 'notes.json');
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(notes.join('\n\n------------------------------------\n\n'))}`);
+  a.setAttribute('download', 'notes.txt');
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -817,20 +831,17 @@ document.querySelector('#language').addEventListener('change', async () => {
   if (e === 'fr') {
     localStorage.setItem('language', 'fr');
     changeLanguage('fr');
-    await showNotes();
   } else if (e === 'de') {
     localStorage.setItem('language', 'de');
     changeLanguage('de');
-    await showNotes();
   } else if (e === 'es') {
     localStorage.setItem('language', 'es');
     changeLanguage('es');
-    await showNotes();
   } else {
     localStorage.setItem('language', 'en');
     changeLanguage('en');
-    await showNotes();
   }
+  await showNotes();
 });
 
 contentNote.addEventListener('input', () => {
@@ -906,7 +917,7 @@ document.querySelectorAll('input[name="sort-notes"]').forEach((e) => {
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
-    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
+    if (e.value === '1' || e.value === '2') {
       localStorage.setItem('sort_notes', e.value);
       await showNotes();
     }
@@ -938,20 +949,18 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const title = titleNote.value.trim();
     const content = contentNote.value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
-    const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#check-hidden').checked ? '1' : '0';
     const category = document.querySelector('input[name="category"]:checked').value;
 
     if (!title || title.length > 30 || content.length > 5000 || !color) return;
     if (isUpdate && !idNote) return;
-    if (idNote && Number.isNaN(idNote)) return;
     if (!/^[0-9]+$/.test(category)) return;
 
     const cleanContent = DOMPurify.sanitize(content, {
       SANITIZE_NAMED_PROPS: true,
     });
 
-    const data = isUpdate ? `noteId=${idNote}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}` : `title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&date=${date}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}`;
+    const data = isUpdate ? `noteId=${idNote}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}` : `title=${encodeURIComponent(title)}&content=${encodeURIComponent(cleanContent)}&color=${color}&hidden=${hidden}&category=${category}&csrf_token=${csrfToken}`;
     const url = isUpdate ? './assets/php/updateNote.php' : './assets/php/addNote.php';
     const response = await fetch(url, {
       method: 'POST',
@@ -974,7 +983,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
   const a = document.querySelector('#old-psswd').value;
   const e = document.querySelector('#new-psswd').value;
   const t = document.querySelector('#new-psswd-valid').value;
-  if (!a || !e || !t || e.length < 8 || e.length > 50) return;
+  if (!a || !e || !t || e.length < 8 || e.length > 64) return;
   if (/^[0-9]+$/.test(e)) {
     showError('Password too weak (only numbers)...');
     return;
@@ -1013,7 +1022,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
 
 document.querySelector('#delete-account').addEventListener('submit', async () => {
   const psswd = document.querySelector('#delete-psswd').value;
-  if (!psswd || psswd.length < 8) return;
+  if (!psswd || psswd.length < 8 || psswd.length > 64) return;
   try {
     const response = await fetch('./assets/php/deleteAccount.php', {
       method: 'POST',
@@ -1036,7 +1045,7 @@ document.querySelector('#delete-account').addEventListener('submit', async () =>
 document.querySelector('#private-note').addEventListener('submit', async () => {
   const id = document.querySelector('#id-note-private').value;
   const link = document.querySelector('#link-note-private').value;
-  if (!id || !link || Number.isNaN(id) || !/^[a-zA-Z0-9]+$/.test(link)) return;
+  if (!id || !link || !/^[a-zA-Z0-9]+$/.test(link)) return;
   try {
     const response = await fetch('./assets/php/privateNote.php', {
       method: 'POST',
@@ -1056,15 +1065,14 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
 
 document.querySelector('#public-note').addEventListener('submit', async () => {
   const id = document.querySelector('#id-note-public').value;
-  if (!id || Number.isNaN(id)) return;
-  const link = window.crypto.getRandomValues(new Uint8Array(12)).reduce((p, i) => p + (i % 36).toString(36), '');
+  if (!id) return;
   try {
     const response = await fetch('./assets/php/publicNote.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `noteId=${id}&noteLink=${link}&csrf_token=${csrfToken}`,
+      body: `noteId=${id}&csrf_token=${csrfToken}`,
     });
     if (response.ok) {
       privateNote.close();
@@ -1080,4 +1088,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
   changeLanguage(localStorage.getItem('language'));
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
+  else {
+    verifyFingerprint();
+    document.querySelector('#check-fingerprint').checked = true;
+  }
 });

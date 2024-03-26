@@ -1,5 +1,5 @@
 <?php
-if (isset($_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
+if (isset($_POST['title'], $_POST['content'], $_POST['color'], $_POST['hidden']) === false) {
     throw new Exception('Insert failed');
     return;
 }
@@ -9,12 +9,13 @@ require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
+$id = bin2hex(random_bytes(12));
 $title = $_POST['title'];
 $content = $_POST['content'];
 $color = $_POST['color'];
-$dateNote = $_POST['date'];
-$hidden = $_POST['hidden'];
-$category = $_POST['category'];
+$dateNote = date('Y-m-d H:i:s');
+$hidden = filter_input(INPUT_POST, 'hidden', FILTER_SANITIZE_NUMBER_INT);
+$category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_NUMBER_INT);
 $allColors = [
     'bg-default',
     'bg-red',
@@ -29,13 +30,14 @@ $allColors = [
 ];
 $allCategories = ['0','1','2','3','4','5','6'];
 
-if (in_array($color, $allColors) === false) $color = 'Noir';
+if (in_array($color, $allColors) === false) $color = 'bg-default';
 if (in_array($category, $allCategories) === false) $category = '0';
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (title,content,dateNote,color,hiddenNote,category,user) VALUES (:Title,:Content,:DateNote,:Color,:HiddenNote,:Category,:User)");
+    $query = $PDO->prepare("INSERT INTO notes (id,title,content,dateNote,color,hiddenNote,category,user) VALUES (:Id,:Title,:Content,:DateNote,:Color,:HiddenNote,:Category,:User)");
     $query->execute(
         [
+            ':Id'         => $id,
             ':Title'      => $encryption->encryptData($title, $key),
             ':Content'    => $encryption->encryptData($content, $key),
             ':Color'      => $color,

@@ -3,11 +3,11 @@ session_name('__Secure-notes');
 session_start();
 
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Note deletion failed');
+    throw new Exception('Pin note failed');
     return;
 }
 if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId']) === false) {
-    throw new Exception('Note deletion failed');
+    throw new Exception('Pin note failed');
     return;
 }
 
@@ -18,7 +18,7 @@ $name = $_SESSION['name'];
 $noteId = $_POST['noteId'];
 
 try {
-    $query = $PDO->prepare("DELETE FROM notes WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
+    $query = $PDO->prepare("UPDATE notes SET pinnedNote = CASE WHEN pinnedNote = '0' THEN '1' ELSE '0' END WHERE id = :NoteId AND user = :CurrentUser");
     $query->execute(
         [
             ':NoteId'      => $noteId,
@@ -26,7 +26,7 @@ try {
         ]
     );
 } catch (Exception $e) {
-    throw new Exception('Note deletion failed');
+    throw new Exception('Pin note failed');
     return;
 }
 

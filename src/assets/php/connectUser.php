@@ -1,5 +1,15 @@
 <?php
-if (isset($_POST['nameConnect'], $_POST['psswdConnect']) === false) {
+$nameConnect = $_POST['nameConnect'];
+$psswdConnect = $_POST['psswdConnect'];
+if (isset($nameConnect, $psswdConnect) === false) {
+    throw new Exception('Connection failed');
+    return;
+}
+if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $nameConnect) === false) {
+    throw new Exception('Connection failed');
+    return;
+}
+if (strlen($nameConnect) > 25 || strlen($psswdConnect) > 64) {
     throw new Exception('Connection failed');
     return;
 }
@@ -19,8 +29,6 @@ if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
 global $PDO;
 require_once __DIR__ . '/config/config.php';
 
-$nameConnect = $_POST['nameConnect'];
-
 try {
     $query = $PDO->prepare("SELECT id,name,psswd FROM users WHERE name=:NameConnect LIMIT 1");
     $query->execute([':NameConnect' => $nameConnect]);
@@ -36,7 +44,6 @@ try {
 
 $query->closeCursor();
 $PDO = null;
-$psswdConnect = $_POST['psswdConnect'];
 
 if (!password_verify($psswdConnect, $row['psswd'])) {
     throw new Exception('Connection failed');

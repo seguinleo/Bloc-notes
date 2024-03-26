@@ -2,15 +2,17 @@
 session_name('__Secure-notes');
 session_start();
 
+$psswdNew = $_POST['psswdNew'];
+
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     throw new Exception('Password update failed');
     return;
 }
-if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdOld'], $_POST['psswdNew']) === false) {
+if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdOld'], $psswdNew) === false) {
     throw new Exception('Password update failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
+if (strlen($psswdNew) < 8 || strlen($psswdNew) > 64) {
     throw new Exception('Password update failed');
     return;
 }
@@ -46,14 +48,13 @@ if (!password_verify($psswdOld, $row['psswd'])) {
 }
 
 $query->closeCursor();
-$psswdNew = $_POST['psswdNew'];
-$psswdNewSecure = password_hash($psswdNew, PASSWORD_DEFAULT);
+$psswdNewHash = password_hash($psswdNew, PASSWORD_DEFAULT);
 
 try {
     $query = $PDO->prepare("UPDATE users SET psswd=:PsswdHash WHERE name=:CurrentUser AND id=:UserId");
     $query->execute(
         [
-            ':PsswdHash'   => $psswdNewSecure,
+            ':PsswdHash'   => $psswdNewHash,
             ':CurrentUser' => $name,
             ':UserId'      => $userId
         ]

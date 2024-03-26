@@ -1,3 +1,12 @@
+#----v24.4.1----# DATABASE CHANGED
+-Add pinned notes
+-Improve security
+    -UserId and NoteId are now randomly generated
+    -Better input sanitization
+-Improve code structure
+-Improve system for all notes export
+-Bug fixes
+
 #----v24.3.3----#
 -Better self-hosting
     -Better Docker configuration

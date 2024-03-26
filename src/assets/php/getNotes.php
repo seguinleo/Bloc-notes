@@ -1,22 +1,13 @@
 <?php
-if (isset($_POST['sort']) === false) {
-    throw new Exception('Note retrieval failed');
-    return;
-}
-
 global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
 
-$sort = $_POST['sort'];
+$sort = filter_input(INPUT_POST, 'sort', FILTER_SANITIZE_NUMBER_INT);
 
 if ($sort === '1') {
-    $orderBy = 'ORDER BY id DESC';
-} elseif ($sort === '2') {
-    $orderBy = 'ORDER BY id';
-} elseif ($sort === '3') {
-    $orderBy = 'ORDER BY dateNote DESC, id DESC';
+    $orderBy = 'ORDER BY pinnedNote DESC, dateNote DESC';
 } else {
-    $orderBy = 'ORDER BY dateNote, id DESC';
+    $orderBy = 'ORDER BY pinnedNote DESC, dateNote';
 }
 
 require_once __DIR__ . '/class/Encryption.php';
@@ -24,7 +15,7 @@ require_once __DIR__ . '/class/Encryption.php';
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,link FROM notes WHERE user=:CurrentUser $orderBy");
+    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,pinnedNote,link FROM notes WHERE user=:CurrentUser $orderBy");
     $query->execute([':CurrentUser' => $name]);
     $items = [];
 
@@ -35,8 +26,9 @@ try {
             'content'   => $encryption->decryptData($row['content'], $key),
             'color'     => $row['color'],
             'date'      => $row['dateNote'],
-            'hidden'    => $row['hiddenNote'],
-            'category'  => $row['category'],
+            'hidden'    => filter_var($row['hiddenNote'], FILTER_VALIDATE_INT),
+            'category'  => filter_var($row['category'], FILTER_VALIDATE_INT),
+            'pinned'    => filter_var($row['pinnedNote'], FILTER_VALIDATE_INT),
             'link'      => $row['link'] ?? null
         ];
     }

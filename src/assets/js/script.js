@@ -51,7 +51,7 @@ if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent1';
   document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '3');
+if (localStorage.getItem('sort_notes') === null) localStorage.setItem('sort_notes', '1');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
 function generateRandomBytes(length) {
@@ -70,10 +70,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Contenu';
     document.querySelector('#search-option').options[2].textContent = 'Tout';
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Date de création';
-    document.querySelector('#sort-notes2-span').textContent = 'Date de création (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Date de modification';
-    document.querySelector('#sort-notes4-span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
+    document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Aucune catégorie';
@@ -100,7 +98,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
-    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes';
+    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     document.querySelector('#create-account').textContent = 'Pas encore de compte ?';
@@ -122,10 +120,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Inhalt';
     document.querySelector('#search-option').options[2].textContent = 'Alles';
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
-    document.querySelector('#sort-notes1-span').textContent = 'Erstellungsdatum';
-    document.querySelector('#sort-notes2-span').textContent = 'Erstellungsdatum (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Änderungsdatum';
-    document.querySelector('#sort-notes4-span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
+    document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Keine Kategorie';
@@ -152,7 +148,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Speichern';
-    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren';
+    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     document.querySelector('#create-account').textContent = 'Noch kein Konto?';
@@ -174,10 +170,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Contenido';
     document.querySelector('#search-option').options[2].textContent = 'Todo';
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
-    document.querySelector('#sort-notes1-span').textContent = 'Fecha de creación';
-    document.querySelector('#sort-notes2-span').textContent = 'Fecha de creación (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Fecha de modificación';
-    document.querySelector('#sort-notes4-span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
+    document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Sin categoría';
@@ -204,7 +198,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Guardar';
-    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas';
+    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     document.querySelector('#create-account').textContent = '¿Aún no tienes una cuenta?';
@@ -226,10 +220,8 @@ function changeLanguage(language) {
     document.querySelector('#search-option').options[1].textContent = 'Content';
     document.querySelector('#search-option').options[2].textContent = 'All';
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Creation date';
-    document.querySelector('#sort-notes2-span').textContent = 'Creation date (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Modification date';
-    document.querySelector('#sort-notes4-span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#sort-notes1-span').textContent = 'Modification date';
+    document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'No category';
@@ -256,7 +248,7 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Save';
-    document.querySelector('#export-all-notes').textContent = 'Export all notes';
+    document.querySelector('#export-all-notes').textContent = 'Export all notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     document.querySelector('#create-account').textContent = 'No account yet?';
@@ -295,9 +287,10 @@ const verifyFingerprint = async () => {
         ],
         authenticatorSelection: {
           authenticatorAttachment: 'platform',
+          userVerification: 'preferred',
         },
         timeout: 60000,
-        attestation: 'direct',
+        attestation: 'none',
       },
     });
     if (localStorage.getItem('fingerprint') === 'true') await showNotes();
@@ -312,11 +305,6 @@ const verifyFingerprint = async () => {
 if (localStorage.getItem('spellcheck') === 'false') {
   document.querySelector('#spellcheck').checked = false;
   contentNote.setAttribute('spellcheck', 'false');
-}
-
-if (localStorage.getItem('fingerprint') === 'true') {
-  verifyFingerprint();
-  document.querySelector('#check-fingerprint').checked = true;
 }
 
 if (localStorage.getItem('compact') === 'true') {
@@ -377,6 +365,7 @@ const noteActions = () => {
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
       if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory);
+      else if (target.classList.contains('fa-thumbtack')) pin(noteId);
       else if (target.classList.contains('fa-clipboard')) copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
       else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
@@ -465,24 +454,26 @@ const showNotes = async () => {
     const key = await getKeyFromDB(db, objectStoreName);
 
     if (localStorage.getItem('sort_notes') === '1') {
-      notesJSON.sort((a, b) => b.id - a.id);
+      notesJSON.sort((a, b) => {
+        if (a.pinned === '1' && b.pinned === '0') return -1;
+        if (a.pinned === '0' && b.pinned === '1') return 1;
+        return b.id - a.id;
+      });
       document.querySelector('input[name="sort-notes"][value="1"]').checked = true;
-    } else if (localStorage.getItem('sort_notes') === '2') {
-      notesJSON.sort((a, b) => a.id - b.id);
-      document.querySelector('input[name="sort-notes"][value="2"]').checked = true;
-    } else if (localStorage.getItem('sort_notes') === '4') {
-      notesJSON.sort((a, b) => new Date(a.date) - new Date(b.date));
-      document.querySelector('input[name="sort-notes"][value="4"]').checked = true;
     } else {
-      notesJSON.sort((a, b) => new Date(b.date) - new Date(a.date));
-      document.querySelector('input[name="sort-notes"][value="3"]').checked = true;
+      notesJSON.sort((a, b) => {
+        if (a.pinned === '1' && b.pinned === '0') return -1;
+        if (a.pinned === '0' && b.pinned === '1') return 1;
+        return a.id - b.id;
+      });
+      document.querySelector('input[name="sort-notes"][value="2"]').checked = true;
     }
 
     const fragment = document.createDocumentFragment();
 
     const promises = notesJSON.map(async (row, id) => {
       const {
-        title, content, color, date, hidden, category,
+        title, content, color, date, hidden, pinned, category,
       } = row;
 
       if (!title || !color || !date) return;
@@ -512,7 +503,6 @@ const showNotes = async () => {
       const titleSpan = document.createElement('span');
       const dateSpan = document.createElement('span');
 
-      noteElement.id = `note${id}`;
       noteElement.classList.add('note', color);
       noteElement.setAttribute('data-note-id', id);
       noteElement.setAttribute('data-note-title', deTitleString);
@@ -534,37 +524,61 @@ const showNotes = async () => {
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
       editIconElement.setAttribute('role', 'button');
-      editIconElement.setAttribute('aria-label', 'Modifier la note');
+      editIconElement.setAttribute('aria-label', 'Edit note');
       bottomContentElement.appendChild(editIconElement);
 
       const trashIconElement = document.createElement('i');
       trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
       trashIconElement.tabIndex = 0;
       trashIconElement.setAttribute('role', 'button');
-      trashIconElement.setAttribute('aria-label', 'Supprimer la note');
+      trashIconElement.setAttribute('aria-label', 'Delete note');
       bottomContentElement.appendChild(trashIconElement);
 
+      if (pinned === '1') {
+        noteElement.classList.add('pinned');
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        const iconPin = document.createElement('i');
+        iconPin.classList.add('fa-solid', 'fa-thumbtack');
+        categoryElement.appendChild(iconPin);
+        paragraph.appendChild(categoryElement);
+      }
+
       if (hidden === '0' && deContentString !== '') {
+        const pinElement = document.createElement('i');
+        pinElement.classList.add('fa-solid', 'fa-thumbtack', 'note-action');
+        pinElement.tabIndex = 0;
+        pinElement.setAttribute('role', 'button');
+        pinElement.setAttribute('aria-label', 'Pin note');
+        bottomContentElement.appendChild(pinElement);
+
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('role', 'button');
-        clipboardIconElement.setAttribute('aria-label', 'Copier la note');
+        clipboardIconElement.setAttribute('aria-label', 'Copy note content');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
         downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
         downloadIconElement.tabIndex = 0;
         downloadIconElement.setAttribute('role', 'button');
-        downloadIconElement.setAttribute('aria-label', 'Télécharger la note');
+        downloadIconElement.setAttribute('aria-label', 'Download note');
         bottomContentElement.appendChild(downloadIconElement);
 
         const expandIconElement = document.createElement('i');
         expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Agrandir la note');
+        expandIconElement.setAttribute('aria-label', 'Fullscreen note');
         bottomContentElement.appendChild(expandIconElement);
+
+        const linkIconElement = document.createElement('i');
+        linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
+        linkIconElement.tabIndex = 0;
+        linkIconElement.setAttribute('role', 'button');
+        linkIconElement.setAttribute('aria-label', 'Share note');
+        bottomContentElement.appendChild(linkIconElement);
       }
 
       noteElement.appendChild(detailsElement);
@@ -607,7 +621,7 @@ const showNotes = async () => {
 };
 
 const toggleFullscreen = (id) => {
-  const note = document.querySelector(`#note${id}`);
+  const note = document.querySelector(`.note[data-note-id="${id}"]`);
   note.classList.toggle('fullscreen');
   document.body.classList.toggle('body-fullscreen');
 };
@@ -642,6 +656,16 @@ const downloadNote = (title, content) => {
 
 const copy = (content) => {
   navigator.clipboard.writeText(content);
+};
+
+const pin = async (id) => {
+  const note = document.querySelector(`.note[data-note-id="${id}"]`);
+  const pinned = note.classList.contains('pinned');
+  if (pinned) note.classList.remove('pinned');
+  else note.classList.add('pinned');
+  notesJSON[id].pinned = pinned ? '0' : '1';
+  localStorage.setItem('local_notes', JSON.stringify(notesJSON));
+  await showNotes();
 };
 
 const deleteNote = async (e) => {
@@ -702,6 +726,7 @@ document.querySelector('#check-compact').addEventListener('change', () => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
+    else if (document.activeElement.classList.contains('fa-thumbtack')) document.activeElement.click();
     else if (document.activeElement.classList.contains('fa-trash-can')) document.activeElement.click();
     else if (document.activeElement.classList.contains('fa-pen')) document.activeElement.click();
     else if (document.activeElement.classList.contains('fa-expand')) document.activeElement.click();
@@ -791,17 +816,13 @@ document.querySelector('#export-all-notes').addEventListener('click', () => {
   if (document.querySelector('.note') === null) return;
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {
-    const title = e.querySelector('.title').textContent;
-    const content = e.querySelector('.details-content').textContent;
-    const noteObject = {
-      title,
-      content,
-    };
-    notes.push(noteObject);
+    const title = e.getAttribute('data-note-title');
+    const content = e.getAttribute('data-note-content');
+    notes.push(`${title}\n\n${content}`);
   });
   const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(JSON.stringify(notes))}`);
-  a.setAttribute('download', 'notes.json');
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(notes.join('\n\n------------------------------------\n\n'))}`);
+  a.setAttribute('download', 'notes.txt');
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -867,20 +888,17 @@ document.querySelector('#language').addEventListener('change', async () => {
   if (e === 'fr') {
     localStorage.setItem('language', 'fr');
     changeLanguage('fr');
-    await showNotes();
   } else if (e === 'de') {
     localStorage.setItem('language', 'de');
     changeLanguage('de');
-    await showNotes();
   } else if (e === 'es') {
     localStorage.setItem('language', 'es');
     changeLanguage('es');
-    await showNotes();
   } else {
     localStorage.setItem('language', 'en');
     changeLanguage('en');
-    await showNotes();
   }
+  await showNotes();
 });
 
 document.addEventListener('touchstart', (event) => {
@@ -899,7 +917,7 @@ forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefaul
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
-    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
+    if (e.value === '1' || e.value === '2') {
       localStorage.setItem('sort_notes', e.value);
       await showNotes();
     }
@@ -929,9 +947,9 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
   const e = document.querySelector('#name-create').value.trim();
   const t = document.querySelector('#psswd-create').value;
   const o = document.querySelector('#psswd-create-valid').value;
-  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 8 || t.length > 50) return;
+  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 8 || t.length > 64) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
-    showError('Name can only contain letters...');
+    showError('Name can only contain letters, spaces and accents...');
     return;
   }
   if (/^[0-9]+$/.test(t)) {
@@ -982,7 +1000,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
 document.querySelector('#connect-form').addEventListener('submit', async () => {
   const e = document.querySelector('#name-connect').value.trim();
   const t = document.querySelector('#psswd-connect').value;
-  if (!e || !t || e.length > 25 || t.length > 50 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
+  if (!e || !t || e.length > 25 || t.length > 64 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
   const nameConnect = encodeURIComponent(e);
   const psswdConnect = encodeURIComponent(t);
   try {
@@ -1068,6 +1086,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       date,
       hidden,
       category,
+      pinned: '0',
     };
 
     if (isUpdate) {
@@ -1088,4 +1107,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
   changeLanguage(localStorage.getItem('language'));
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
+  else {
+    verifyFingerprint();
+    document.querySelector('#check-fingerprint').checked = true;
+  }
 });

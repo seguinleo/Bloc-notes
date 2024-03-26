@@ -1,16 +1,18 @@
 import '../../../assets/js/marked.min.js';
 
+let stop = false;
 const notesContainer = document.querySelector('main');
 const urlParams = new URLSearchParams(window.location.search);
 const link = urlParams.get('link');
 
 const showSharedNote = async () => {
-  if (!link || !/^[a-zA-Z0-9]+$/.test(link)) {
+  if (!link) {
     const notFoundElement = document.createElement('h1');
     notFoundElement.classList.add('align-center');
     notFoundElement.textContent = 'Note not found or expired.';
     notesContainer.textContent = '';
     notesContainer.appendChild(notFoundElement);
+    stop = true;
     return;
   }
 
@@ -28,6 +30,7 @@ const showSharedNote = async () => {
     notFoundElement.textContent = 'Note not found or expired.';
     notesContainer.textContent = '';
     notesContainer.appendChild(notFoundElement);
+    stop = true;
     return;
   }
 
@@ -126,6 +129,6 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   await showSharedNote();
   setInterval(async () => {
-    await showSharedNote();
+    if (!stop) await showSharedNote();
   }, 5000);
 });

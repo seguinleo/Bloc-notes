@@ -54,7 +54,6 @@ The user can use biometrics to unlock notes. Biometric data is stored in the bro
 FR, EN, DE, ES
 
 ## Todo
-*   Pin notes
 *   2FA login
 *   Password recovery
 *   Password protected notes

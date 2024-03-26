@@ -24,7 +24,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <meta name="theme-color" content="#171717" class="theme-color">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="theme-color">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; script-src-elem 'self'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; style-src-elem 'self' https://cdnjs.cloudflare.com/; worker-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; worker-src 'self'">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -82,10 +82,10 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <i class="fa-solid fa-gear"></i>
                 </span>
                 <select id="language" aria-label="Language">
-                    <option value="fr">🇫🇷</option>
-                    <option value="en" selected>🇬🇧</option>
-                    <option value="de">🇩🇪</option>
-                    <option value="es">🇪🇸</option>
+                    <option value="fr">FR</option>
+                    <option value="en" selected>EN</option>
+                    <option value="de">DE</option>
+                    <option value="es">ES</option>
                 </select>
             </div>
             <div id="legal" class="row">
@@ -127,18 +127,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <label for="sort-notes2">
                                 <input type="radio" name="sort-notes" value="2" id="sort-notes2">
                                 <span id="sort-notes2-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label for="sort-notes3">
-                                <input type="radio" name="sort-notes" value="3" id="sort-notes3" checked>
-                                <span id="sort-notes3-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label for="sort-notes4">
-                                <input type="radio" name="sort-notes" value="4" id="sort-notes4">
-                                <span id="sort-notes4-span"></span>
                             </label>
                         </div>
                     </fieldset>
@@ -343,7 +331,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.3.3</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.1</a>
                         </p>
                     </div>
                 </div>
@@ -357,7 +345,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row bold">
-                            <?= htmlspecialchars($name) ?>
+                            <?= $name ?>
                         </div>
                         <div class="row">
                             <span id="log-out" class="link" tabindex="0" role="button"></span>

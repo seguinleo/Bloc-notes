@@ -1,9 +1,4 @@
 <?php
-if (empty($_POST['noteLink']) || !ctype_alnum($_POST['noteLink'])) {
-    throw new Exception('Note retrieval failed');
-    return;
-}
-
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/class/Encryption.php';
 

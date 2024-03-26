@@ -2,6 +2,8 @@
 session_name('__Secure-notes');
 session_start();
 
+$psswd = $_POST['psswd'];
+
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     throw new Exception('Account deletion failed');
     return;
@@ -10,7 +12,7 @@ if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswd']) === false) {
     throw new Exception('Account deletion failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
+if (strlen($psswd) < 8 || strlen($psswd) > 64) {
     throw new Exception('Account deletion failed');
     return;
 }
@@ -20,7 +22,6 @@ require_once __DIR__ . '/config/config.php';
 
 $name = $_SESSION['name'];
 $userId = $_SESSION['userId'];
-$psswd = $_POST['psswd'];
 
 try {
     $query = $PDO->prepare("SELECT psswd FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");

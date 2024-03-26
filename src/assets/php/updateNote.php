@@ -1,9 +1,5 @@
 <?php
-if (isset($_POST['noteId'], $_POST['title'], $_POST['content'], $_POST['date'], $_POST['color'], $_POST['hidden']) === false) {
-    throw new Exception('Update failed');
-    return;
-}
-if (is_numeric($_POST['noteId']) === false) {
+if (isset($_POST['noteId'], $_POST['title'], $_POST['content'], $_POST['color'], $_POST['hidden']) === false) {
     throw new Exception('Update failed');
     return;
 }
@@ -17,9 +13,9 @@ $noteId = $_POST['noteId'];
 $title = $_POST['title'];
 $content = $_POST['content'];
 $color = $_POST['color'];
-$dateNote = $_POST['date'];
-$hidden = $_POST['hidden'];
-$category = $_POST['category'];
+$dateNote = date('Y-m-d H:i:s');
+$hidden = filter_input(INPUT_POST, 'hidden', FILTER_SANITIZE_NUMBER_INT);
+$category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_NUMBER_INT);
 $allColors = [
     'bg-default',
     'bg-red',
@@ -34,7 +30,7 @@ $allColors = [
 ];
 $allCategories = ['0','1','2','3','4','5','6'];
 
-if (in_array($color, $allColors) === false) $color = 'Noir';
+if (in_array($color, $allColors) === false) $color = 'bg-default';
 if (in_array($category, $allCategories) === false) $category = '0';
 
 try {

@@ -10,10 +10,6 @@ if (isset($_SESSION['name'], $_SESSION['userId']) === false) {
     throw new Exception('Key retrieval failed');
     return;
 }
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false) {
-    throw new Exception('Key retrieval failed');
-    return;
-}
 
 global $PDO;
 require_once __DIR__ . '/config/config.php';

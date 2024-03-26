@@ -6,11 +6,7 @@ if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     throw new Exception('Note modification failed');
     return;
 }
-if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId'], $_POST['noteLink']) === false) {
-    throw new Exception('Note modification failed');
-    return;
-}
-if (is_string($_SESSION['name']) === false || is_int($_SESSION['userId']) === false || ctype_alnum($_POST['noteLink']) === false || is_numeric($_POST['noteId']) === false) {
+if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['noteId']) === false) {
     throw new Exception('Note modification failed');
     return;
 }
@@ -20,7 +16,7 @@ require_once __DIR__ . '/config/config.php';
 
 $name = $_SESSION['name'];
 $noteId = $_POST['noteId'];
-$noteLink = basename($_POST['noteLink']);
+$noteLink = bin2hex(random_bytes(12));
 
 try {
     $query = $PDO->prepare("UPDATE notes SET link=:NoteLink WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
@@ -28,7 +24,7 @@ try {
         [
             ':NoteLink'     => $noteLink,
             ':NoteId'       => $noteId,
-            ':CurrentUser'  => $name,
+            ':CurrentUser'  => $name
         ]
     );
     $query->closeCursor();
