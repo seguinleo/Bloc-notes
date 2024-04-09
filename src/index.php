@@ -28,7 +28,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accent1">
@@ -101,7 +101,6 @@ $_SESSION['csrf_token'] = $csrf_token;
             <i class="fa-solid fa-plus"></i>
         </button>
         <div id="success-notification"></div>
-        <div id="error-notification"></div>
         <div id="sidebar-indicator"></div>
         <button type="button" id="btn-sort" aria-label="Sort notes">
             <i class="fa-solid fa-arrow-up-wide-short"></i>
@@ -195,6 +194,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <form id="add-note" method="post" enctype="application/x-www-form-urlencoded">
                         <input id="id-note" type="hidden">
+                        <div class="row">
+                            <div class="error-notification"></div>
+                        </div>
                         <div class="row">
                             <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
                         </div>
@@ -331,7 +333,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.2</a>
                         </p>
                     </div>
                 </div>
@@ -353,6 +355,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <details id="gen-psswd">
                             <summary></summary>
                             <form id="change-psswd" method="post" enctype="application/x-www-form-urlencoded">
+                                <div class="row">
+                                    <div class="error-notification"></div>
+                                </div>
                                 <div class="row">
                                     <input id="old-psswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
                                 </div>
@@ -378,6 +383,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <summary></summary>
                             <form id="delete-account" method="post" enctype="application/x-www-form-urlencoded">
                                 <div class="row">
+                                    <div class="error-notification"></div>
+                                </div>
+                                <div class="row">
                                     <input id="delete-psswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
                                 </div>
                                 <button type="submit" class="btn-warning"></button>
@@ -393,6 +401,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <form id="public-note" method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                <div class="error-notification"></div>
+                            </div>
                             <div class="row">
                                 <span></span>
                             </div>
@@ -416,6 +427,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                         </button>
                         <form id="private-note" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="row">
+                                <div class="error-notification"></div>
+                            </div>
+                            <div class="row">
                                 <span></span>
                             </div>
                             <input id="id-note-private" type="hidden">
@@ -438,6 +452,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <span id="create-account" class="link" tabindex="0" role="button"></span>
                         </div>
                         <form id="connect-form" method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                <div class="error-notification"></div>
+                            </div>
                             <div class="row">
                                 <input
                                     id="name-connect"
@@ -466,6 +483,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <form id="create-form" method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                <div class="error-notification"></div>
+                            </div>
                             <div class="row">
                                 <input
                                     id="name-create"
@@ -509,9 +529,9 @@ $_SESSION['csrf_token'] = $csrf_token;
         <?php } ?>
     </main>
     <?php if (isset($name) === true) { ?>
-        <script type="module" src="./assets/js/scriptConnect.js"></script>
+        <script type="module" src="./assets/js/cloud/script.js"></script>
     <?php } else { ?>
-        <script type="module" src="./assets/js/script.js"></script>
+        <script type="module" src="./assets/js/local/script.js"></script>
     <?php } ?>
 </body>
 </html>

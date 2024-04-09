@@ -3,10 +3,10 @@ import '../../../assets/js/marked.min.js';
 let stop = false;
 const notesContainer = document.querySelector('main');
 const urlParams = new URLSearchParams(window.location.search);
-const link = urlParams.get('link');
+const noteLink = urlParams.get('link');
 
 const showSharedNote = async () => {
-  if (!link) {
+  if (!noteLink) {
     const notFoundElement = document.createElement('h1');
     notFoundElement.classList.add('align-center');
     notFoundElement.textContent = 'Note not found or expired.';
@@ -16,15 +16,16 @@ const showSharedNote = async () => {
     return;
   }
 
-  const response = await fetch('../assets/php/getSharedNote.php', {
+  const data = new URLSearchParams({ noteLink });
+  const res = await fetch('../assets/php/getSharedNote.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `noteLink=${link}`,
+    body: data,
   });
 
-  if (!response.ok) {
+  if (!res.ok) {
     const notFoundElement = document.createElement('h1');
     notFoundElement.classList.add('align-center');
     notFoundElement.textContent = 'Note not found or expired.';
@@ -34,11 +35,11 @@ const showSharedNote = async () => {
     return;
   }
 
-  const data = await response.json();
+  const note = await res.json();
 
   const {
     title, content, date,
-  } = data;
+  } = note;
 
   if (!title || !content || content.length > 5000 || !date) return;
 

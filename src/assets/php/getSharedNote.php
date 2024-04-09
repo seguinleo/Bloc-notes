@@ -30,6 +30,9 @@ try {
     return;
 }
 
-echo json_encode($note);
 $query->closeCursor();
 $PDO = null;
+
+header('Content-Type: application/json');
+echo json_encode($note);
+exit();

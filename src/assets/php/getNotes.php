@@ -17,10 +17,10 @@ $encryption = new Encryption\Encryption();
 try {
     $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,pinnedNote,link FROM notes WHERE user=:CurrentUser $orderBy");
     $query->execute([':CurrentUser' => $name]);
-    $items = [];
+    $notes = [];
 
     while ($row = $query->fetch()) {
-        $items[] = [
+        $notes[] = [
             'id'        => $row['id'],
             'title'     => $encryption->decryptData($row['title'], $key),
             'content'   => $encryption->decryptData($row['content'], $key),
@@ -37,6 +37,9 @@ try {
     return;
 }
 
-echo json_encode($items);
 $query->closeCursor();
 $PDO = null;
+
+header('Content-Type: application/json');
+echo json_encode($notes);
+exit();

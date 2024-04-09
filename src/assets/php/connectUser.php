@@ -33,7 +33,7 @@ try {
     $query = $PDO->prepare("SELECT id,name,psswd FROM users WHERE name=:NameConnect LIMIT 1");
     $query->execute([':NameConnect' => $nameConnect]);
     $row = $query->fetch();
-    if (!$row) {
+    if (!$row || $query->rowCount() !== 1) {
         throw new Exception('Connection failed');
         return;
     }
