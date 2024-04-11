@@ -347,6 +347,7 @@ input
       .title-list
         display: inline-flex
         align-items: baseline
+        white-space: nowrap
 
       .date-list
         display: none
@@ -745,9 +746,6 @@ dialog
     button
       display: none
 
-    .title-list
-      max-width: 140px
-
     &.show
       display: flex
       z-index: 2
@@ -776,7 +774,7 @@ dialog
       &:not(.fullscreen)
         padding: 5px 10px
 
-        .fa-clipboard, .fa-download, .fa-link, .fa-thumbtack
+        .fa-clipboard, .fa-download, .fa-link
           display: none
 
     .fullscreen

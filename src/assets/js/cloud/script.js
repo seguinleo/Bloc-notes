@@ -362,17 +362,12 @@ const showNotes = async () => {
 
       if (!id || !title || !color || !date) return;
 
-      const contentHtml = marked.parse(content);
-      const noteElement = document.createElement('div');
-      const detailsElement = document.createElement('div');
-      const titleElement = document.createElement('h2');
-      const contentElement = document.createElement('div');
       const bottomContentElement = document.createElement('div');
-      const editIconElement = document.createElement('i');
-      const paragraph = document.createElement('p');
-      const titleSpan = document.createElement('span');
-      const dateSpan = document.createElement('span');
+      bottomContentElement.classList.add('bottom-content');
 
+      const paragraph = document.createElement('p');
+
+      const noteElement = document.createElement('div');
       noteElement.classList.add('note', color);
       noteElement.setAttribute('data-note-id', id);
       noteElement.setAttribute('data-note-title', title);
@@ -380,32 +375,34 @@ const showNotes = async () => {
       noteElement.setAttribute('data-note-color', color);
       noteElement.setAttribute('data-note-hidden', hidden);
       noteElement.setAttribute('data-note-category', category);
-      detailsElement.classList.add('details');
+
+      const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
       titleElement.textContent = title;
-      contentElement.classList.add('details-content');
 
-      if (hidden === 0) contentElement.innerHTML = contentHtml;
+      const contentElement = document.createElement('div');
+      contentElement.classList.add('details-content');
+      if (hidden === 0) contentElement.innerHTML = marked.parse(content);
       else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
+      const detailsElement = document.createElement('div');
+      detailsElement.classList.add('details');
       detailsElement.appendChild(titleElement);
       detailsElement.appendChild(contentElement);
-      bottomContentElement.classList.add('bottom-content');
+
+      const editIconElement = document.createElement('i');
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
       editIconElement.tabIndex = 0;
       editIconElement.setAttribute('role', 'button');
       editIconElement.setAttribute('aria-label', 'Edit note');
       bottomContentElement.appendChild(editIconElement);
 
-      if (pinned === 1) {
-        noteElement.classList.add('pinned');
-        const categoryElement = document.createElement('span');
-        categoryElement.classList.add('category');
-        const iconPin = document.createElement('i');
-        iconPin.classList.add('fa-solid', 'fa-thumbtack');
-        categoryElement.appendChild(iconPin);
-        paragraph.appendChild(categoryElement);
-      }
+      const pinElement = document.createElement('i');
+      pinElement.classList.add('fa-solid', 'fa-thumbtack', 'note-action');
+      pinElement.tabIndex = 0;
+      pinElement.setAttribute('role', 'button');
+      pinElement.setAttribute('aria-label', 'Pin note');
+      bottomContentElement.appendChild(pinElement);
 
       if (link === null) {
         const trashIconElement = document.createElement('i');
@@ -425,13 +422,6 @@ const showNotes = async () => {
       }
 
       if (hidden === 0 && content !== '') {
-        const pinElement = document.createElement('i');
-        pinElement.classList.add('fa-solid', 'fa-thumbtack', 'note-action');
-        pinElement.tabIndex = 0;
-        pinElement.setAttribute('role', 'button');
-        pinElement.setAttribute('aria-label', 'Pin note');
-        bottomContentElement.appendChild(pinElement);
-
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
@@ -446,27 +436,31 @@ const showNotes = async () => {
         downloadIconElement.setAttribute('aria-label', 'Download note');
         bottomContentElement.appendChild(downloadIconElement);
 
-        const expandIconElement = document.createElement('i');
-        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
-        expandIconElement.tabIndex = 0;
-        expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Fullscreen note');
-        bottomContentElement.appendChild(expandIconElement);
-
         const linkIconElement = document.createElement('i');
         linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
         linkIconElement.tabIndex = 0;
         linkIconElement.setAttribute('role', 'button');
         linkIconElement.setAttribute('aria-label', 'Share note');
         bottomContentElement.appendChild(linkIconElement);
+
+        const expandIconElement = document.createElement('i');
+        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+        expandIconElement.tabIndex = 0;
+        expandIconElement.setAttribute('role', 'button');
+        expandIconElement.setAttribute('aria-label', 'Fullscreen note');
+        bottomContentElement.appendChild(expandIconElement);
       }
 
       noteElement.appendChild(detailsElement);
       noteElement.appendChild(bottomContentElement);
       paragraph.setAttribute('tabindex', '0');
       paragraph.setAttribute('role', 'button');
+
+      const titleSpan = document.createElement('span');
       titleSpan.classList.add('title-list');
       titleSpan.textContent = title;
+
+      const dateSpan = document.createElement('span');
       dateSpan.classList.add('date-list');
       dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
         weekday: 'short',
@@ -476,6 +470,16 @@ const showNotes = async () => {
         hour: '2-digit',
         minute: '2-digit',
       });
+
+      if (pinned === 1) {
+        noteElement.classList.add('pinned');
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        const iconPin = document.createElement('i');
+        iconPin.classList.add('fa-solid', 'fa-thumbtack');
+        categoryElement.appendChild(iconPin);
+        paragraph.appendChild(categoryElement);
+      }
 
       if (category !== 0) {
         const categoryElement = document.createElement('span');
@@ -616,9 +620,6 @@ document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
 
 document.querySelector('#control-clear').addEventListener('click', () => {
   contentNote.value = '';
-});
-document.querySelector('#control-clear').addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') e.click();
 });
 
 document.querySelector('#spellcheck').addEventListener('change', () => {

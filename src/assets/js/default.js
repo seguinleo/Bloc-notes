@@ -16,7 +16,7 @@ export function getPassword(length) {
   let password = '';
   const array = new Uint32Array(length);
   window.crypto.getRandomValues(array);
-  for (let i = 0; i < length; i += 1) password += chars[array[i] % chars.length];
+  for (let i = 0; i < length; i += 1) password += chars[parseInt(array[i] % chars.length, 10)];
   document.querySelector('#psswd-gen').textContent = password;
 }
 
