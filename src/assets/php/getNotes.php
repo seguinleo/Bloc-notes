@@ -1,21 +1,12 @@
 <?php
 global $PDO, $name, $key;
 require_once __DIR__ . '/getKey.php';
-
-$sort = filter_input(INPUT_POST, 'sort', FILTER_SANITIZE_NUMBER_INT);
-
-if ($sort === '1') {
-    $orderBy = 'ORDER BY pinnedNote DESC, dateNote DESC';
-} else {
-    $orderBy = 'ORDER BY pinnedNote DESC, dateNote';
-}
-
 require_once __DIR__ . '/class/Encryption.php';
 
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,pinnedNote,link FROM notes WHERE user=:CurrentUser $orderBy");
+    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,pinnedNote,link FROM notes WHERE user=:CurrentUser");
     $query->execute([':CurrentUser' => $name]);
     $notes = [];
 
