@@ -27,6 +27,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
     document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
     document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Titre';
+    document.querySelector('#sort-notes4-span').textContent = 'Titre (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Aucune catégorie';
@@ -80,6 +82,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
     document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
     document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Titel';
+    document.querySelector('#sort-notes4-span').textContent = 'Titel (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Keine Kategorie';
@@ -133,6 +137,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
     document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
     document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Título';
+    document.querySelector('#sort-notes4-span').textContent = 'Título (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Sin categoría';
@@ -186,6 +192,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
     document.querySelector('#sort-notes1-span').textContent = 'Modification date';
     document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Title';
+    document.querySelector('#sort-notes4-span').textContent = 'Title (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'No category';
@@ -332,7 +340,7 @@ const showNotes = async () => {
   forms.forEach((form) => form.reset());
 
   try {
-    const data = new URLSearchParams({ sort, csrf_token: csrfToken });
+    const data = new URLSearchParams({ csrf_token: csrfToken });
     const res = await fetch('./assets/php/getNotes.php', {
       method: 'POST',
       headers: {
@@ -345,7 +353,40 @@ const showNotes = async () => {
 
     const notesJSON = await res.json();
 
-    if (notesJSON.length === 0) return;
+    if (notesJSON.length === 0) {
+      const numberOfNotesElement = document.createElement('h2');
+      if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = 'Notizen (0)';
+      else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = 'Notas (0)';
+      else numberOfNotesElement.textContent = 'Notes (0)';
+      document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
+      return;
+    }
+
+    if (sort === '1') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return b.date.localeCompare(a.date);
+      });
+    } else if (sort === '2') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return a.date.localeCompare(b.date);
+      });
+    } else if (sort === '3') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sort === '4') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return b.title.localeCompare(a.title);
+      });
+    }
 
     const numberOfNotesElement = document.createElement('h2');
     if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
@@ -488,6 +529,15 @@ const showNotes = async () => {
         paragraph.appendChild(categoryElement);
       }
 
+      if (hidden !== 0) {
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        const iconEye = document.createElement('i');
+        iconEye.classList.add('fa-solid', 'fa-eye-slash');
+        categoryElement.appendChild(iconEye);
+        paragraph.appendChild(categoryElement);
+      }
+
       fragment.appendChild(noteElement);
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
@@ -559,7 +609,7 @@ const updateNote = (noteId, title, content, color, hidden, category, link) => {
   document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
   if (link === null) {
     document.querySelector('#check-hidden').disabled = false;
-    if (hidden === '1') document.querySelector('#check-hidden').checked = true;
+    if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
   } else document.querySelector('#check-hidden').disabled = true;
   document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
@@ -695,7 +745,7 @@ document.querySelector('#copy-password-btn').addEventListener('click', () => {
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
-    if (e.value === '1' || e.value === '2') {
+    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
       localStorage.setItem('sort_notes', e.value);
       await showNotes();
     }
@@ -708,7 +758,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const title = titleNote.value.trim();
     const content = contentNote.value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
-    const hidden = document.querySelector('#check-hidden').checked ? '1' : '0';
+    const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
 
     if (!title || title.length > 30 || content.length > 5000 || !color) return;

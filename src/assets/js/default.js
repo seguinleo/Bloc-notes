@@ -103,7 +103,12 @@ if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent1';
   document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-if (localStorage.getItem('sort_notes') !== '1' || localStorage.getItem('sort_notes') !== '2') localStorage.setItem('sort_notes', '1');
+if (
+  localStorage.getItem('sort_notes') !== '1' &&
+  localStorage.getItem('sort_notes') !== '2' &&
+  localStorage.getItem('sort_notes') !== '3' &&
+  localStorage.getItem('sort_notes') !== '4'
+) localStorage.setItem('sort_notes', '1');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
 document.addEventListener('touchstart', (event) => {

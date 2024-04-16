@@ -14,6 +14,6 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
     "globals": "^15.0.0",
-    "sass": "^1.74.1"
+    "sass": "^1.75.0"
   }
 }

@@ -74,6 +74,6 @@ Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Mark
 
 ## Self-hosting
 
-``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin
+``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin. Docker configuration is set for local use, hardening is required for production.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)

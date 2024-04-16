@@ -128,6 +128,18 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 <span id="sort-notes2-span"></span>
                             </label>
                         </div>
+                        <div class="row">
+                            <label for="sort-notes3">
+                                <input type="radio" name="sort-notes" value="3" id="sort-notes3">
+                                <span id="sort-notes3-span"></span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label for="sort-notes4">
+                                <input type="radio" name="sort-notes" value="4" id="sort-notes4">
+                                <span id="sort-notes4-span"></span>
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
             </div>

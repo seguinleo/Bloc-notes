@@ -27,6 +27,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
     document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
     document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Titre';
+    document.querySelector('#sort-notes4-span').textContent = 'Titre (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Aucune catégorie';
@@ -77,6 +79,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
     document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
     document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Titel';
+    document.querySelector('#sort-notes4-span').textContent = 'Titel (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Keine Kategorie';
@@ -127,6 +131,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
     document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
     document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Título';
+    document.querySelector('#sort-notes4-span').textContent = 'Título (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'Sin categoría';
@@ -177,6 +183,8 @@ function changeLanguage(language) {
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
     document.querySelector('#sort-notes1-span').textContent = 'Modification date';
     document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
+    document.querySelector('#sort-notes3-span').textContent = 'Title';
+    document.querySelector('#sort-notes4-span').textContent = 'Title (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
       e.textContent = 'No category';
@@ -337,11 +345,20 @@ async function storeKeyInDB(db, objectStoreName, key) {
 }
 
 const showNotes = async () => {
+  const sort = localStorage.getItem('sort_notes');
+  document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   forms.forEach((form) => form.reset());
 
-  if (notesJSON.length === 0) return;
+  if (notesJSON.length === 0) {
+    const numberOfNotesElement = document.createElement('h2');
+    if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = 'Notizen (0)';
+    else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = 'Notas (0)';
+    else numberOfNotesElement.textContent = 'Notes (0)';
+    document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
+    return;
+  }
 
   try {
     const numberOfNotesElement = document.createElement('h2');
@@ -355,20 +372,30 @@ const showNotes = async () => {
     const db = await openIndexedDB(dbName, objectStoreName);
     const key = await getKeyFromDB(db, objectStoreName);
 
-    if (localStorage.getItem('sort_notes') === '1') {
+    if (sort === '1') {
       notesJSON.sort((a, b) => {
-        if (a.pinned === '1' && b.pinned === '0') return -1;
-        if (a.pinned === '0' && b.pinned === '1') return 1;
-        return b.id - a.id;
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return b.date.localeCompare(a.date);
       });
-      document.querySelector('input[name="sort-notes"][value="1"]').checked = true;
-    } else {
+    } else if (sort === '2') {
       notesJSON.sort((a, b) => {
-        if (a.pinned === '1' && b.pinned === '0') return -1;
-        if (a.pinned === '0' && b.pinned === '1') return 1;
-        return a.id - b.id;
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return a.date.localeCompare(b.date);
       });
-      document.querySelector('input[name="sort-notes"][value="2"]').checked = true;
+    } else if (sort === '3') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sort === '4') {
+      notesJSON.sort((a, b) => {
+        if (a.pinned === 1 && b.pinned === 0) return -1;
+        if (a.pinned === 0 && b.pinned === 1) return 1;
+        return b.title.localeCompare(a.title);
+      });
     }
 
     const fragment = document.createDocumentFragment();
@@ -414,7 +441,7 @@ const showNotes = async () => {
 
       const contentElement = document.createElement('div');
       contentElement.classList.add('details-content');
-      if (hidden === '0') contentElement.innerHTML = marked.parse(deContentString);
+      if (hidden === 0) contentElement.innerHTML = marked.parse(deContentString);
       else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
       const detailsElement = document.createElement('div');
@@ -443,7 +470,7 @@ const showNotes = async () => {
       trashIconElement.setAttribute('aria-label', 'Delete note');
       bottomContentElement.appendChild(trashIconElement);
 
-      if (hidden === '0' && deContentString !== '') {
+      if (hidden === 0 && deContentString !== '') {
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
         clipboardIconElement.tabIndex = 0;
@@ -486,7 +513,7 @@ const showNotes = async () => {
         minute: '2-digit',
       });
 
-      if (pinned === '1') {
+      if (pinned === 1) {
         noteElement.classList.add('pinned');
         const categoryElement = document.createElement('span');
         categoryElement.classList.add('category');
@@ -496,10 +523,19 @@ const showNotes = async () => {
         paragraph.appendChild(categoryElement);
       }
 
-      if (category !== '0') {
+      if (category !== 0) {
         const categoryElement = document.createElement('span');
         categoryElement.classList.add('category');
         categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
+        paragraph.appendChild(categoryElement);
+      }
+
+      if (hidden !== 0) {
+        const categoryElement = document.createElement('span');
+        categoryElement.classList.add('category');
+        const iconEye = document.createElement('i');
+        iconEye.classList.add('fa-solid', 'fa-eye-slash');
+        categoryElement.appendChild(iconEye);
         paragraph.appendChild(categoryElement);
       }
 
@@ -538,7 +574,7 @@ const updateNote = (noteId, title, content, color, hidden, category) => {
     else e.classList.remove('selected');
   });
   document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
-  if (hidden === '1') document.querySelector('#check-hidden').checked = true;
+  if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
   document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/5000`;
   contentNote.focus();
 };
@@ -560,9 +596,9 @@ const copy = (content) => {
 const pin = async (noteId) => {
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   const pinned = note.classList.contains('pinned');
-  if (pinned) note.classList.remove('pinned');
-  else note.classList.add('pinned');
-  notesJSON[parseInt(noteId, 10)].pinned = pinned ? '0' : '1';
+  if (pinned) note.classList.add('pinned'); 
+  else note.classList.remove('pinned');
+  notesJSON[parseInt(noteId, 10)].pinned = pinned ? 0 : 1;
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
   await showNotes();
 };
@@ -680,7 +716,7 @@ forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefaul
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
-    if (e.value === '1' || e.value === '2') {
+    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
       localStorage.setItem('sort_notes', e.value);
       await showNotes();
     }
@@ -789,8 +825,8 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const content = contentNote.value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const hidden = document.querySelector('#check-hidden').checked ? '1' : '0';
-    const category = document.querySelector('input[name="category"]:checked').value;
+    const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
+    const category = parseInt(document.querySelector('input[name="category"]:checked').value, 10);
 
     if (!title || title.length > 30 || content.length > 5000 || !color || !/^[0-9]+$/.test(category)) return;
 
@@ -832,7 +868,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       date,
       hidden,
       category,
-      pinned: '0',
+      pinned: 0,
     };
 
     if (isUpdate) {
