@@ -1,10 +1,11 @@
 <?php
-session_name('__Secure-notes');
+session_name('secureNotes');
 $cookieParams = [
+    'path'     => '/',
     'lifetime' => 604800,
-    'secure'   => true,
+    'secure'   => false,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'Strict',
 ];
 session_set_cookie_params($cookieParams);
 session_start();
@@ -92,7 +93,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                 <a href="https://leoseguin.fr/mentionslegales/"></a>
             </div>
             <div id="license" class="row">
-                GPL-3.0 &copy;<?= date('Y') ?>
+                GPL-3.0 &copy;
             </div>
         </footer>
     </div>

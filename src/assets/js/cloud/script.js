@@ -272,7 +272,7 @@ const verifyFingerprint = async () => {
     else localStorage.setItem('fingerprint', 'true');
   } catch (error) {
     if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.href = '/error/403/';
+      window.location.reload();
     } else document.querySelector('#check-fingerprint').checked = false;
   }
 };
@@ -349,7 +349,7 @@ const showNotes = async () => {
       body: data,
     });
 
-    if (!res.ok) throw new Error('An error occurred...');
+    if (!res.ok) throw new Error('An error occurred - ' + res.status);
 
     const notesJSON = await res.json();
 
@@ -397,9 +397,7 @@ const showNotes = async () => {
     const fragment = document.createDocumentFragment();
 
     notesJSON.forEach((row) => {
-      const {
-        id, title, content, color, date, hidden, category, pinned, link,
-      } = row;
+      const { id, title, content, color, date, hidden, category, pinned, link } = row;
 
       if (!id || !title || !color || !date) return;
 
@@ -549,7 +547,7 @@ const showNotes = async () => {
     noteActions();
     document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 };
 
@@ -570,12 +568,12 @@ const fetchDelete = async (noteId) => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 };
 
@@ -585,12 +583,12 @@ const fetchLogout = async () => {
       method: 'POST',
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 };
 
@@ -640,12 +638,12 @@ const pin = async (noteId) => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 };
 
@@ -795,14 +793,14 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     isUpdate = false;
     noteBox.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 });
 
@@ -835,7 +833,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       forms.forEach((form) => form.reset());
       return;
     }
@@ -843,7 +841,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
     defaultScript.showSuccess('Successfully changed password!');
     forms.forEach((form) => form.reset());
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
     forms.forEach((form) => form.reset());
   }
 });
@@ -861,13 +859,14 @@ document.querySelector('#delete-account').addEventListener('submit', async () =>
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      console.log(res)
+      defaultScript.showError('An error occurred - ' + res.status);
       forms.forEach((form) => form.reset());
       return;
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
     forms.forEach((form) => form.reset());
   }
 });
@@ -886,13 +885,13 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     publicNote.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 });
 
@@ -909,13 +908,13 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred...');
+      defaultScript.showError('An error occurred - ' + res.status);
       return;
     }
     privateNote.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 });
 

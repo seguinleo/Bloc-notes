@@ -1,9 +1,9 @@
 <?php
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Key retrieval failed');
+    throw new Exception('Connection timeout, please reload the page and try again');
     return;
 }
 if (isset($_SESSION['name'], $_SESSION['userId']) === false) {

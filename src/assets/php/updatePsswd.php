@@ -1,11 +1,11 @@
 <?php
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 
 $psswdNew = $_POST['psswdNew'];
 
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Password update failed');
+    throw new Exception('Connection timeout, please reload the page and try again');
     return;
 }
 if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdOld'], $psswdNew) === false) {

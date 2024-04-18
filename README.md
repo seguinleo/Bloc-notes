@@ -74,6 +74,9 @@ Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Mark
 
 ## Self-hosting
 
-``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin. Docker configuration is set for local use, hardening is required for production.
+``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin
+
+> [!IMPORTANT]
+> The website is available at localhost:80, but if you want to deploy it on a server with a domain name or an IP address, you need to install a SSL certificate to use note encryption (Web Crypto API requires HTTPs). Docker configuration is set for local use, hardening is required for production.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)

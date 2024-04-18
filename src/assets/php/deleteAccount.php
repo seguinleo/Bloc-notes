@@ -1,11 +1,11 @@
 <?php
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 
 $psswd = $_POST['psswd'];
 
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Account deletion failed');
+    throw new Exception('Connection timeout, please reload the page and try again');
     return;
 }
 if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswd']) === false) {

@@ -1,5 +1,5 @@
 <?php
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 if (isset($_SESSION['name']) === false) {
     throw new Exception('Logout failed');

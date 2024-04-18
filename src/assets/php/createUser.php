@@ -14,7 +14,7 @@ if (strlen($nameCreate) < 4 || strlen($nameCreate) > 25 || strlen($psswdCreate) 
     return;
 }
 
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 
 if (isset($_SESSION['name']) === true) {
@@ -22,7 +22,7 @@ if (isset($_SESSION['name']) === true) {
     return;
 }
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Account creation failed');
+    throw new Exception('Connection timeout, please reload the page and try again');
     return;
 }
 

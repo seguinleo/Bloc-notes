@@ -14,7 +14,7 @@ if (strlen($nameConnect) > 25 || strlen($psswdConnect) > 64) {
     return;
 }
 
-session_name('__Secure-notes');
+session_name('secureNotes');
 session_start();
 
 if (isset($_SESSION['name']) === true) {
@@ -22,7 +22,7 @@ if (isset($_SESSION['name']) === true) {
     return;
 }
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection failed');
+    throw new Exception('Connection timeout, please reload the page and try again');
     return;
 }
 
@@ -52,12 +52,13 @@ if (!password_verify($psswdConnect, $row['psswd'])) {
 
 session_unset();
 session_destroy();
-session_name('__Secure-notes');
+session_name('secureNotes');
 $cookieParams = [
+    'path'     => '/',
     'lifetime' => 604800,
-    'secure'   => true,
+    'secure'   => false,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'Strict',
 ];
 session_set_cookie_params($cookieParams);
 session_start();

@@ -260,7 +260,7 @@ const verifyFingerprint = async () => {
     else localStorage.setItem('fingerprint', 'true');
   } catch (error) {
     if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.href = '/error/403/';
+      window.location.reload();
     } else document.querySelector('#check-fingerprint').checked = false;
   }
 };
@@ -401,9 +401,7 @@ const showNotes = async () => {
     const fragment = document.createDocumentFragment();
 
     const promises = notesJSON.map(async (row, id) => {
-      const {
-        title, content, color, date, hidden, pinned, category,
-      } = row;
+      const { title, content, color, date, hidden, pinned, category } = row;
 
       if (!title || !color || !date) return;
 
@@ -551,7 +549,7 @@ const showNotes = async () => {
     noteActions();
     document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 };
 
@@ -773,7 +771,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     else message = 'Account successfully created! You can now log in.';
     defaultScript.showSuccess(message);
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
     forms.forEach((form) => form.reset());
   }
 });
@@ -813,7 +811,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
     forms.forEach((form) => form.reset());
   }
 });
@@ -880,7 +878,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     noteBox.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred...');
+    defaultScript.showError('An error occurred - ' + error);
   }
 });
 
