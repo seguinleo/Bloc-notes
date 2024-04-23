@@ -28,7 +28,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; worker-src 'self'">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
