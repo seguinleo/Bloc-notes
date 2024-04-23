@@ -79,15 +79,18 @@ $_SESSION['csrf_token'] = $csrf_token;
         </nav>
         <footer>
             <div class="row">
-                <span id="settings" class="link" tabindex="0" role="button" aria-label="Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </span>
                 <select id="language" aria-label="Language">
                     <option value="fr">FR</option>
                     <option value="en" selected>EN</option>
                     <option value="de">DE</option>
                     <option value="es">ES</option>
                 </select>
+                <span id="plugins" class="link" tabindex="0" role="button" aria-label="Plugins">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                </span>
+                <span id="settings" class="link" tabindex="0" role="button" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </span>
             </div>
             <div id="legal" class="row">
                 <a href="https://leoseguin.fr/mentionslegales/"></a>
@@ -118,25 +121,25 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <fieldset>
                         <legend></legend>
                         <div class="row">
-                            <label for="sort-notes1">
+                            <label>
                                 <input type="radio" name="sort-notes" value="1" id="sort-notes1">
                                 <span id="sort-notes1-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sort-notes2">
+                            <label>
                                 <input type="radio" name="sort-notes" value="2" id="sort-notes2">
                                 <span id="sort-notes2-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sort-notes3">
+                            <label>
                                 <input type="radio" name="sort-notes" value="3" id="sort-notes3">
                                 <span id="sort-notes3-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="sort-notes4">
+                            <label>
                                 <input type="radio" name="sort-notes" value="4" id="sort-notes4">
                                 <span id="sort-notes4-span"></span>
                             </label>
@@ -154,43 +157,43 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <fieldset>
                         <legend></legend>
                         <div class="row">
-                            <label for="no-cat-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="0" id="no-cat-filter" checked>
                                 <span class="no-cat-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-perso-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="1" id="cat-perso-filter" checked>
                                 <span class="cat-perso-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-pro-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="2" id="cat-pro-filter" checked>
                                 <span class="cat-pro-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-voyage-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="3" id="cat-voyage-filter" checked>
                                 <span class="cat-voyage-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-task-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="4" id="cat-task-filter" checked>
                                 <span class="cat-task-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-rappel-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="5" id="cat-rappel-filter" checked>
                                 <span class="cat-rappel-filter-span"></span>
                             </label>
                         </div>
                         <div class="row">
-                            <label for="cat-idees-filter">
+                            <label>
                                 <input type="checkbox" name="filter-notes" value="6" id="cat-idees-filter" checked>
                                 <span class="cat-idees-filter-span"></span>
                             </label>
@@ -205,7 +208,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <div class="close">
                         <i class="fa-solid fa-xmark"></i>
                     </div>
-                    <form id="add-note" method="post" enctype="application/x-www-form-urlencoded">
+                    <form id="add-note">
                         <input id="id-note" type="hidden">
                         <div class="row">
                             <div class="error-notification"></div>
@@ -240,31 +243,31 @@ $_SESSION['csrf_token'] = $csrf_token;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="category" for="no-cat">
+                            <label class="category">
                                 <input type="radio" name="category" id="no-cat" value="0" checked>
                                 <span class="no-cat-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-perso">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-perso" value="1">
                                 <span class="cat-perso-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-pro">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-pro" value="2">
                                 <span class="cat-pro-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-voyage">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-voyage" value="3">
                                 <span class="cat-voyage-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-task">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-task" value="4">
                                 <span class="cat-task-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-rappel">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-rappel" value="5">
                                 <span class="cat-rappel-filter-span" tabindex="0" role="button"></span>
                             </label>
-                            <label class="category" for="cat-idees">
+                            <label class="category">
                                 <input type="radio" name="category" id="cat-idees" value="6">
                                 <span class="cat-idees-filter-span" tabindex="0" role="button"></span>
                             </label>
@@ -274,7 +277,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <span class="switch-icon">
                                 <i class="fa-solid fa-eye-slash"></i>
                             </span>
-                            <label for="check-hidden" class="switch" aria-label="Hide note content">
+                            <label class="switch">
                                 <input type="checkbox" id="check-hidden" aria-hidden="true" tabindex="-1">
                                 <span class="slider"></span>
                             </label>
@@ -319,7 +322,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             Spellcheck
                             <i class="fa-solid fa-spell-check"></i>
                         </span>
-                        <label for="spellcheck" class="switch" aria-label="Compact mode">
+                        <label class="switch">
                             <input type="checkbox" id="spellcheck" aria-hidden="true" tabindex="-1" checked>
                             <span class="slider"></span>
                         </label>
@@ -329,7 +332,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             Compact mode
                             <i class="fa-solid fa-grip-vertical"></i>
                         </span>
-                        <label for="check-compact" class="switch" aria-label="Compact mode">
+                        <label class="switch">
                             <input type="checkbox" id="check-compact" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
@@ -339,15 +342,35 @@ $_SESSION['csrf_token'] = $csrf_token;
                             Lock app
                             <i class="fa-solid fa-fingerprint"></i>
                         </span>
-                        <label for="check-fingerprint" class="switch" aria-label="Lock app (Fingerprint, Windows Hello, etc.)">
+                        <label class="switch">
                             <input type="checkbox" id="check-fingerprint" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.2</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.3</a>
                         </p>
+                    </div>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="plugins-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <div class="row bold">
+                        Plugins (coming soon)
+                    </div>
+                    <div id="plugin-math" class="plugin">
+                        <span class="bold">Math</span>
+                        <span>Write math formulas with Markdown</span>
+                    </div>
+                    <div id="plugin-highlight" class="plugin">
+                        <span class="bold">Highlight</span>
+                        <span>Write code with syntax highlighting</span>
                     </div>
                 </div>
             </div>
@@ -360,14 +383,14 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="row bold">
-                            <?= $name ?>
+                            <?= htmlspecialchars($name) ?>
                         </div>
                         <div class="row">
                             <span id="log-out" class="link" tabindex="0" role="button"></span>
                         </div>
                         <details id="gen-psswd">
                             <summary></summary>
-                            <form id="change-psswd" method="post" enctype="application/x-www-form-urlencoded">
+                            <form id="change-psswd">
                                 <div class="row">
                                     <div class="error-notification"></div>
                                 </div>
@@ -394,7 +417,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         </details>
                         <details id="delete-user">
                             <summary></summary>
-                            <form id="delete-account" method="post" enctype="application/x-www-form-urlencoded">
+                            <form id="delete-account">
                                 <div class="row">
                                     <div class="error-notification"></div>
                                 </div>
@@ -413,7 +436,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <form id="public-note" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="public-note">
                             <div class="row">
                                 <div class="error-notification"></div>
                             </div>
@@ -438,7 +461,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <button type="button" id="copy-note-link-btn" aria-label="Copy link">
                             <i class="fa-solid fa-clipboard"></i>
                         </button>
-                        <form id="private-note" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="private-note">
                             <div class="row">
                                 <div class="error-notification"></div>
                             </div>
@@ -464,7 +487,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="row">
                             <span id="create-account" class="link" tabindex="0" role="button"></span>
                         </div>
-                        <form id="connect-form" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="connect-form">
                             <div class="row">
                                 <div class="error-notification"></div>
                             </div>
@@ -495,7 +518,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <form id="create-form" method="post" enctype="application/x-www-form-urlencoded">
+                        <form id="create-form">
                             <div class="row">
                                 <div class="error-notification"></div>
                             </div>

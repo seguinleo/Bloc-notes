@@ -2,13 +2,16 @@
 session_name('secureNotes');
 session_start();
 
-$psswdNew = $_POST['psswdNew'];
+$name = $_SESSION['name'];
+$userId = $_SESSION['userId'];
+$psswdOld = filter_input(INPUT_POST, 'psswdOld', FILTER_DEFAULT);
+$psswdNew = filter_input(INPUT_POST, 'psswdNew', FILTER_DEFAULT);
 
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page and try again');
+if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection timeout, please reload the page');
     return;
 }
-if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswdOld'], $psswdNew) === false) {
+if (isset($name, $userId, $psswdOld) === false) {
     throw new Exception('Password update failed');
     return;
 }
@@ -19,10 +22,6 @@ if (strlen($psswdNew) < 8 || strlen($psswdNew) > 64) {
 
 global $PDO;
 require_once __DIR__ . '/config/config.php';
-
-$name = $_SESSION['name'];
-$userId = $_SESSION['userId'];
-$psswdOld = $_POST['psswdOld'];
 
 try {
     $query = $PDO->prepare("SELECT psswd FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");

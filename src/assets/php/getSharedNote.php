@@ -3,7 +3,7 @@ require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/class/Encryption.php';
 
 global $PDO;
-$link = $_POST['noteLink'];
+$noteLink = filter_input(INPUT_POST, 'noteLink', FILTER_DEFAULT);
 $encryption = new Encryption\Encryption();
 
 try {
@@ -14,7 +14,7 @@ try {
         WHERE notes.link = :NoteLink
         LIMIT 1
     ");
-    $query->execute([':NoteLink' => $link]);
+    $query->execute([':NoteLink' => $noteLink]);
     $row = $query->fetch();
     if ($row === false) {
         http_response_code(404);
@@ -34,4 +34,4 @@ $query->closeCursor();
 $PDO = null;
 
 header('Content-Type: application/json');
-echo json_encode($note);
+print_r(json_encode($note));

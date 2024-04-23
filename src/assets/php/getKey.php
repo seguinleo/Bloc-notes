@@ -2,11 +2,14 @@
 session_name('secureNotes');
 session_start();
 
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page and try again');
+$name = $_SESSION['name'];
+$userId = $_SESSION['userId'];
+
+if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection timeout, please reload the page');
     return;
 }
-if (isset($_SESSION['name'], $_SESSION['userId']) === false) {
+if (isset($name, $userId) === false) {
     throw new Exception('Key retrieval failed');
     return;
 }
@@ -18,9 +21,6 @@ if ($PDO === null) {
     throw new Exception('Key retrieval failed');
     return;
 }
-
-$name = $_SESSION['name'];
-$userId = $_SESSION['userId'];
 
 try {
     $query = $PDO->prepare("SELECT oneKey FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");

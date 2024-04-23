@@ -1,3 +1,5 @@
+/* global marked */
+
 import '../../../assets/js/marked.min.js';
 
 let stop = false;

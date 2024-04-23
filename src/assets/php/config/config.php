@@ -1,10 +1,9 @@
 <?php
 
 /**
- * 
- * THIS IS NOT THE REAL CONFIG FILE, THIS IS JUST AN EXAMPLE FOR SELF-HOSTING WITH DOCKER
- * phpMyAdmin is also included in the docker-compose file, http://localhost:8080
- * 
+ * !!!!!!!!!!!!!!!
+ * EDIT HOST, DATABASE, USER AND PASSWORD FOR PRODUCTION
+ * !!!!!!!!!!!!!!!
  */
 
 $host = 'db-seguinleo-notes';

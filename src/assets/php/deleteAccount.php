@@ -2,13 +2,15 @@
 session_name('secureNotes');
 session_start();
 
-$psswd = $_POST['psswd'];
+$name = $_SESSION['name'];
+$userId = $_SESSION['userId'];
+$psswd = filter_input(INPUT_POST, 'psswd', FILTER_DEFAULT);
 
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page and try again');
+if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection timeout, please reload the page');
     return;
 }
-if (isset($_SESSION['name'], $_SESSION['userId'], $_POST['psswd']) === false) {
+if (isset($name, $userId) === false) {
     throw new Exception('Account deletion failed');
     return;
 }
@@ -19,9 +21,6 @@ if (strlen($psswd) < 8 || strlen($psswd) > 64) {
 
 global $PDO;
 require_once __DIR__ . '/config/config.php';
-
-$name = $_SESSION['name'];
-$userId = $_SESSION['userId'];
 
 try {
     $query = $PDO->prepare("SELECT psswd FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");

@@ -1,16 +1,13 @@
 <?php
-$nameConnect = $_POST['nameConnect'];
-$psswdConnect = $_POST['psswdConnect'];
-if (isset($nameConnect, $psswdConnect) === false) {
-    throw new Exception('Connection failed');
-    return;
-}
+$nameConnect = filter_input(INPUT_POST, 'nameConnect', FILTER_DEFAULT);
+$psswdConnect = filter_input(INPUT_POST, 'psswdConnect', FILTER_DEFAULT);
+
 if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $nameConnect) === false) {
     throw new Exception('Connection failed');
     return;
 }
-if (strlen($nameConnect) > 25 || strlen($psswdConnect) > 64) {
-    throw new Exception('Connection failed');
+if (strlen($nameConnect) < 4 || strlen($nameConnect) > 25 || strlen($psswdConnect) < 8 || strlen($psswdConnect) > 64) {
+    throw new Exception('Account creation failed');
     return;
 }
 
@@ -21,8 +18,8 @@ if (isset($_SESSION['name']) === true) {
     throw new Exception('Connection failed');
     return;
 }
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page and try again');
+if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection timeout, please reload the page');
     return;
 }
 

@@ -1,13 +1,12 @@
+/* global DOMPurify, marked */
+
 import * as defaultScript from '../default.js';
 import '../marked.min.js';
 import '../purify.min.js';
 
 let isUpdate = false;
 const noteBox = document.querySelector('#note-popup-box');
-const sortBox = document.querySelector('#sort-popup-box');
-const filterBox = document.querySelector('#filter-popup-box');
 const manageBox = document.querySelector('#manage-popup-box');
-const settingsBox = document.querySelector('#settings-popup-box');
 const privateNote = document.querySelector('#private-note-popup-box');
 const publicNote = document.querySelector('#public-note-popup-box');
 const titleNote = noteBox.querySelector('#title');
@@ -277,16 +276,6 @@ const verifyFingerprint = async () => {
   }
 };
 
-if (localStorage.getItem('spellcheck') === 'false') {
-  document.querySelector('#spellcheck').checked = false;
-  contentNote.setAttribute('spellcheck', 'false');
-}
-
-if (localStorage.getItem('compact') === 'true') {
-  document.querySelector('#check-compact').checked = true;
-  document.querySelector('main').classList.add('compact');
-}
-
 const noteAccess = (noteId, link) => {
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
@@ -314,10 +303,10 @@ const noteActions = () => {
       const noteLink = target.closest('.note').getAttribute('data-note-link') || null;
       if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteLink);
       else if (target.classList.contains('fa-thumbtack')) pin(noteId);
-      else if (target.classList.contains('fa-clipboard')) copy(noteContent);
+      else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
       else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
-      else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
+      else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteTitle, noteContent);
       else if (target.classList.contains('fa-link')) noteAccess(noteId, noteLink, noteTitle, noteContent);
     });
     e.addEventListener('keydown', (event) => {
@@ -343,13 +332,14 @@ const showNotes = async () => {
     const data = new URLSearchParams({ csrf_token: csrfToken });
     const res = await fetch('./assets/php/getNotes.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
 
-    if (!res.ok) throw new Error('An error occurred - ' + res.status);
+    if (!res.ok) throw new Error(`An error occurred - ${res.status}`);
 
     const notesJSON = await res.json();
 
@@ -397,7 +387,9 @@ const showNotes = async () => {
     const fragment = document.createDocumentFragment();
 
     notesJSON.forEach((row) => {
-      const { id, title, content, color, date, hidden, category, pinned, link } = row;
+      const {
+        id, title, content, color, date, hidden, category, pinned, link,
+      } = row;
 
       if (!id || !title || !color || !date) return;
 
@@ -547,7 +539,7 @@ const showNotes = async () => {
     noteActions();
     document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
@@ -562,18 +554,19 @@ const fetchDelete = async (noteId) => {
     const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
     const res = await fetch('./assets/php/deleteNote.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
@@ -581,14 +574,15 @@ const fetchLogout = async () => {
   try {
     const res = await fetch('./assets/php/logout.php', {
       method: 'POST',
+      mode: 'same-origin',
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
@@ -613,37 +607,24 @@ const updateNote = (noteId, title, content, color, hidden, category, link) => {
   contentNote.focus();
 };
 
-const downloadNote = (title, content) => {
-  const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
-  a.setAttribute('download', `${title}.txt`);
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-};
-
-const copy = (content) => {
-  navigator.clipboard.writeText(content);
-};
-
 const pin = async (noteId) => {
   try {
     const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
     const res = await fetch('./assets/php/pinNote.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
@@ -658,28 +639,6 @@ const deleteNote = (noteId) => {
   if (window.confirm(message)) fetchDelete(noteId);
 };
 
-document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
-  e.addEventListener('click', () => {
-    noteBox.showModal();
-    document.querySelector('#textarea-length').textContent = '0/5000';
-    document.querySelector('#check-hidden').disabled = false;
-  });
-});
-
-document.querySelector('#control-clear').addEventListener('click', () => {
-  contentNote.value = '';
-});
-
-document.querySelector('#spellcheck').addEventListener('change', () => {
-  if (!document.querySelector('#spellcheck').checked) {
-    localStorage.setItem('spellcheck', 'false');
-    contentNote.setAttribute('spellcheck', 'false');
-  } else {
-    localStorage.removeItem('spellcheck');
-    contentNote.setAttribute('spellcheck', 'true');
-  }
-});
-
 document.querySelector('#check-fingerprint').addEventListener('change', () => {
   if (document.querySelector('#check-fingerprint').checked) verifyFingerprint();
   else localStorage.removeItem('fingerprint');
@@ -687,11 +646,6 @@ document.querySelector('#check-fingerprint').addEventListener('change', () => {
 
 document.querySelector('#manage-account').addEventListener('click', () => {
   manageBox.showModal();
-});
-
-document.querySelector('#settings').addEventListener('click', () => {
-  settingsBox.showModal();
-  document.querySelector('#sidebar').classList.remove('show');
 });
 
 document.querySelectorAll('.fa-xmark').forEach((e) => {
@@ -702,44 +656,14 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
   });
 });
 
-document.querySelector('#language').addEventListener('change', async () => {
-  const e = document.querySelector('#language').value;
-  if (e === 'fr') {
-    localStorage.setItem('language', 'fr');
-    changeLanguage('fr');
-  } else if (e === 'de') {
-    localStorage.setItem('language', 'de');
-    changeLanguage('de');
-  } else if (e === 'es') {
-    localStorage.setItem('language', 'es');
-    changeLanguage('es');
-  } else {
-    localStorage.setItem('language', 'en');
-    changeLanguage('en');
-  }
-  await showNotes();
-});
-
-contentNote.addEventListener('input', () => {
-  const e = contentNote.value.length;
-  document.querySelector('#textarea-length').textContent = `${e}/5000`;
-});
-
 document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
   const link = document.querySelector('#copy-note-link').textContent;
-  navigator.clipboard.writeText(`localhost/share/?link=${link}`);
+  navigator.clipboard.writeText(`${window.location}/share/?link=${link}`);
 });
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#btn-sort').addEventListener('click', () => sortBox.showModal());
-document.querySelector('#btn-filter').addEventListener('click', () => filterBox.showModal());
 document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
-
-document.querySelector('#copy-password-btn').addEventListener('click', () => {
-  const psswd = document.querySelector('#psswd-gen').textContent;
-  navigator.clipboard.writeText(psswd);
-});
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
@@ -787,20 +711,21 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const url = isUpdate ? './assets/php/updateNote.php' : './assets/php/addNote.php';
     const res = await fetch(url, {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     isUpdate = false;
     noteBox.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 });
 
@@ -827,13 +752,14 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
     const data = new URLSearchParams({ psswdOld, psswdNew, csrf_token: csrfToken });
     const res = await fetch('./assets/php/updatePsswd.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       forms.forEach((form) => form.reset());
       return;
     }
@@ -841,7 +767,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
     defaultScript.showSuccess('Successfully changed password!');
     forms.forEach((form) => form.reset());
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
     forms.forEach((form) => form.reset());
   }
 });
@@ -853,20 +779,20 @@ document.querySelector('#delete-account').addEventListener('submit', async () =>
     const data = new URLSearchParams({ psswd, csrf_token: csrfToken });
     const res = await fetch('./assets/php/deleteAccount.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      console.log(res)
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       forms.forEach((form) => form.reset());
       return;
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
     forms.forEach((form) => form.reset());
   }
 });
@@ -879,19 +805,20 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
     const data = new URLSearchParams({ noteId, noteLink: link, csrf_token: csrfToken });
     const res = await fetch('./assets/php/privateNote.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     publicNote.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 });
 
@@ -902,19 +829,20 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
     const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
     const res = await fetch('./assets/php/publicNote.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: data,
     });
     if (!res.ok) {
-      defaultScript.showError('An error occurred - ' + res.status);
+      defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
     privateNote.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 });
 

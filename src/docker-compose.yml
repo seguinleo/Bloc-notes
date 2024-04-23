@@ -1,3 +1,7 @@
+# !!!!!!!!!!!!!!!
+# EDIT ALL USERS AND PASSWORDS FOR PRODUCTION
+# !!!!!!!!!!!!!!!
+
 services:
   db:
     image: mysql:latest
@@ -12,19 +16,10 @@ services:
     ports:
       - "3306:3306"
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin-seguinleo-notes
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: db-seguinleo-notes
-      MYSQL_ROOT_PASSWORD: root
-
   web:
     container_name: web-seguinleo-notes
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8787:80"

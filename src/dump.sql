@@ -1,8 +1,6 @@
--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--- THIS IS JUST A TEST FILE.
--- IT IS NOT THE REAL DATABASE FILE AND NOT THE REAL TABLE/COLUMN NAMES.
--- FOR LOCAL USE ONLY.
--- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!
+-- EDIT ALL TABLES NAMES FOR PRODUCTION
+-- !!!!!!!!!!!!!!!
 
 --
 -- Database: `seguinleo-notes`

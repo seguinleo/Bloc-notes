@@ -1,14 +1,13 @@
+/* global DOMPurify, marked */
+
 import * as defaultScript from '../default.js';
 import '../marked.min.js';
 import '../purify.min.js';
 
 let isUpdate = false;
 const noteBox = document.querySelector('#note-popup-box');
-const sortBox = document.querySelector('#sort-popup-box');
-const filterBox = document.querySelector('#filter-popup-box');
 const connectBox = document.querySelector('#connect-box');
 const createBox = document.querySelector('#create-box');
-const settingsBox = document.querySelector('#settings-popup-box');
 const titleNote = noteBox.querySelector('#title');
 const contentNote = noteBox.querySelector('#content');
 const forms = document.querySelectorAll('form');
@@ -260,20 +259,10 @@ const verifyFingerprint = async () => {
     else localStorage.setItem('fingerprint', 'true');
   } catch (error) {
     if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.reload();
+      window.location.href = '/error/403/';
     } else document.querySelector('#check-fingerprint').checked = false;
   }
 };
-
-if (localStorage.getItem('spellcheck') === 'false') {
-  document.querySelector('#spellcheck').checked = false;
-  contentNote.setAttribute('spellcheck', 'false');
-}
-
-if (localStorage.getItem('compact') === 'true') {
-  document.querySelector('#check-compact').checked = true;
-  document.querySelector('main').classList.add('compact');
-}
 
 const noteActions = () => {
   document.querySelectorAll('.bottom-content i').forEach((e) => {
@@ -287,10 +276,10 @@ const noteActions = () => {
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
       if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory);
       else if (target.classList.contains('fa-thumbtack')) pin(noteId);
-      else if (target.classList.contains('fa-clipboard')) copy(noteContent);
+      else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
       else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
-      else if (target.classList.contains('fa-download')) downloadNote(noteTitle, noteContent);
+      else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteTitle, noteContent);
     });
     e.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') e.click();
@@ -401,7 +390,9 @@ const showNotes = async () => {
     const fragment = document.createDocumentFragment();
 
     const promises = notesJSON.map(async (row, id) => {
-      const { title, content, color, date, hidden, pinned, category } = row;
+      const {
+        title, content, color, date, hidden, pinned, category,
+      } = row;
 
       if (!title || !color || !date) return;
 
@@ -549,7 +540,7 @@ const showNotes = async () => {
     noteActions();
     document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
@@ -577,24 +568,10 @@ const updateNote = (noteId, title, content, color, hidden, category) => {
   contentNote.focus();
 };
 
-const downloadNote = (title, content) => {
-  const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
-  a.setAttribute('download', `${title}.txt`);
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-};
-
-const copy = (content) => {
-  navigator.clipboard.writeText(content);
-};
-
 const pin = async (noteId) => {
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   const pinned = note.classList.contains('pinned');
-  if (pinned) note.classList.add('pinned'); 
+  if (pinned) note.classList.add('pinned');
   else note.classList.remove('pinned');
   notesJSON[parseInt(noteId, 10)].pinned = pinned ? 0 : 1;
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
@@ -616,28 +593,6 @@ const deleteNote = async (e) => {
   }
 };
 
-document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
-  e.addEventListener('click', () => {
-    noteBox.showModal();
-    document.querySelector('#textarea-length').textContent = '0/5000';
-    document.querySelector('#check-hidden').disabled = false;
-  });
-});
-
-document.querySelector('#control-clear').addEventListener('click', () => {
-  contentNote.value = '';
-});
-
-document.querySelector('#spellcheck').addEventListener('change', () => {
-  if (!document.querySelector('#spellcheck').checked) {
-    localStorage.setItem('spellcheck', 'false');
-    contentNote.setAttribute('spellcheck', 'false');
-  } else {
-    localStorage.removeItem('spellcheck');
-    contentNote.setAttribute('spellcheck', 'true');
-  }
-});
-
 document.querySelector('#check-fingerprint').addEventListener('change', () => {
   if (document.querySelector('#check-fingerprint').checked) verifyFingerprint();
   else localStorage.removeItem('fingerprint');
@@ -657,11 +612,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-document.querySelector('#copy-password-btn').addEventListener('click', () => {
-  const psswd = document.querySelector('#psswd-gen').textContent;
-  navigator.clipboard.writeText(psswd);
-});
-
 document.querySelector('#log-in').addEventListener('click', () => {
   connectBox.showModal();
 });
@@ -669,16 +619,6 @@ document.querySelector('#log-in').addEventListener('click', () => {
 document.querySelector('#create-account').addEventListener('click', () => {
   connectBox.close();
   createBox.showModal();
-});
-
-document.querySelector('#settings').addEventListener('click', () => {
-  settingsBox.showModal();
-  document.querySelector('#sidebar').classList.remove('show');
-});
-
-contentNote.addEventListener('input', () => {
-  const e = contentNote.value.length;
-  document.querySelector('#textarea-length').textContent = `${e}/5000`;
 });
 
 document.querySelectorAll('.fa-xmark').forEach((e) => {
@@ -689,26 +629,6 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
   });
 });
 
-document.querySelector('#language').addEventListener('change', async () => {
-  const e = document.querySelector('#language').value;
-  if (e === 'fr') {
-    localStorage.setItem('language', 'fr');
-    changeLanguage('fr');
-  } else if (e === 'de') {
-    localStorage.setItem('language', 'de');
-    changeLanguage('de');
-  } else if (e === 'es') {
-    localStorage.setItem('language', 'es');
-    changeLanguage('es');
-  } else {
-    localStorage.setItem('language', 'en');
-    changeLanguage('en');
-  }
-  await showNotes();
-});
-
-document.querySelector('#btn-filter').addEventListener('click', () => filterBox.showModal());
-document.querySelector('#btn-sort').addEventListener('click', () => sortBox.showModal());
 document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(16));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
@@ -752,6 +672,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     const data = new URLSearchParams({ nameCreate, psswdCreate, csrf_token: csrfToken });
     const res = await fetch('./assets/php/createUser.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -771,7 +692,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     else message = 'Account successfully created! You can now log in.';
     defaultScript.showSuccess(message);
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
     forms.forEach((form) => form.reset());
   }
 });
@@ -786,6 +707,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
     const data = new URLSearchParams({ nameConnect, psswdConnect, csrf_token: csrfToken });
     const res = await fetch('./assets/php/connectUser.php', {
       method: 'POST',
+      mode: 'same-origin',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -811,7 +733,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
     }
     window.location.reload();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
     forms.forEach((form) => form.reset());
   }
 });
@@ -878,7 +800,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     noteBox.close();
     await showNotes();
   } catch (error) {
-    defaultScript.showError('An error occurred - ' + error);
+    defaultScript.showError(`An error occurred - ${error}`);
   }
 });
 

@@ -1,10 +1,7 @@
 <?php
-$nameCreate = $_POST['nameCreate'];
-$psswdCreate = $_POST['psswdCreate'];
-if (isset($nameCreate, $psswdCreate) === false) {
-    throw new Exception('Account creation failed');
-    return;
-}
+$nameCreate = filter_input(INPUT_POST, 'nameCreate', FILTER_DEFAULT);
+$psswdCreate = filter_input(INPUT_POST, 'psswdCreate', FILTER_DEFAULT);
+
 if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $nameCreate) === false) {
     throw new Exception('Account creation failed');
     return;
@@ -21,8 +18,8 @@ if (isset($_SESSION['name']) === true) {
     throw new Exception('Account creation failed');
     return;
 }
-if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page and try again');
+if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
+    throw new Exception('Connection timeout, please reload the page');
     return;
 }
 

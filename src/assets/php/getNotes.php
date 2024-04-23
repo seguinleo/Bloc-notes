@@ -17,8 +17,8 @@ try {
             'content'   => $encryption->decryptData($row['content'], $key),
             'color'     => $row['color'],
             'date'      => $row['dateNote'],
-            'hidden'    => filter_var($row['hiddenNote'], FILTER_VALIDATE_INT),
             'category'  => filter_var($row['category'], FILTER_VALIDATE_INT),
+            'hidden'    => filter_var($row['hiddenNote'], FILTER_VALIDATE_INT),
             'pinned'    => filter_var($row['pinnedNote'], FILTER_VALIDATE_INT),
             'link'      => $row['link'] ?? null
         ];
@@ -32,4 +32,4 @@ $query->closeCursor();
 $PDO = null;
 
 header('Content-Type: application/json');
-echo json_encode($notes);
+print_r(json_encode($notes));

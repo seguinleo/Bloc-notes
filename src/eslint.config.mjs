@@ -13,4 +13,14 @@ const compat = new FlatCompat({baseDirectory: __dirname, recommendedConfig: plug
 export default [
   {languageOptions: { globals: globals.browser }},
   ...compat.extends("airbnb-base"),
+  {
+    ignores: ["**/*.min.js", "**/*.mjs"],
+  },
+  {
+    rules: {
+      "import/extensions": "off",
+      "no-alert": "off",
+      "no-use-before-define": "off",
+    },
+  }
 ];

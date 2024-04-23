@@ -203,7 +203,7 @@ header
   #last-sync
     span
       font-size: .9rem
-    
+
     i
       cursor: pointer
       display: inline-flex
@@ -353,11 +353,11 @@ input
 
 #sidebar-indicator
   position: fixed
-  height: 10svh
-  width: 4px
+  height: 8svh
+  width: 5px
   border-radius: 5px
   background: rgba(150, 150, 150, 0.4)
-  left: 4px
+  left: 5px
   top: 50svh
   z-index: 1
   transform: translate(-50%, -50%)
@@ -590,6 +590,20 @@ dialog
       left: 4px
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
 
+.plugin
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin: 10px auto
+  min-height: 50px
+  border-radius: 5px
+  background: rgba(150, 150, 150, 0.2)
+  cursor: pointer
+
+  span
+    font-size: .9rem
+    margin: 0 10px
+
 .version
   text-align: right
   font-size: .9rem
@@ -611,22 +625,17 @@ dialog
 .switch-icon
   display: inline-block
 
-#settings
+#settings, #plugins
   display: inline-flex
   align-items: center
   justify-content: center
   font-size: 1.4rem
   text-align: center
   vertical-align: middle
-  margin-right: 1rem
+  margin-left: 1rem
   width: 30px
   height: 30px
   border-radius: 50%
-  transition: .1s
-
-  i
-    &:hover
-      animation: rotate 1s
 
 #legal, #license
   font-size: .9rem
@@ -708,7 +717,7 @@ dialog
       display: none
 
   main
-    margin: 86px 0 6rem 0
+    margin: 86px 0 6rem
     gap: 5px
 
   #icon-float-add
@@ -814,6 +823,9 @@ html
     button, .category input[type=radio]:checked + span, .switch input:checked + .slider
       background: #8ab4f8
 
+    .plugin.active
+      outline: 2px solid #8ab4f8
+
   &.dark .accent2, &.dusk .accent2
     accent-color: #b7fe9d
 
@@ -826,6 +838,9 @@ html
 
     button, .category input[type=radio]:checked + span, .switch input:checked + .slider
       background: #b7fe9d
+
+    .plugin.active
+      outline: 2px solid #b7fe9d
 
   &.dark .accent3, &.dusk .accent3
     accent-color: #f2e76c
@@ -840,6 +855,9 @@ html
     button, .category input[type=radio]:checked + span, .switch input:checked + .slider
       background: #f2e76c
 
+    .plugin.active
+      outline: 2px solid #f2e76c
+
   &.dark .accent4, &.dusk .accent4
     accent-color: #e59afb
 
@@ -853,6 +871,9 @@ html
     button, .category input[type=radio]:checked + span, .switch input:checked + .slider
       background: #e59afb
 
+    .plugin.active
+      outline: 2px solid #e59afb
+
   &.dark .accent5, &.dusk .accent5
     accent-color: #ff7070
 
@@ -865,6 +886,9 @@ html
 
     button, .category input[type=radio]:checked + span, .switch input:checked + .slider
       background: #ff7070
+
+    .plugin.active
+      outline: 2px solid #ff7070
 
   &.dark, &.dusk
     .accent1-span
@@ -1077,6 +1101,9 @@ html
         background: #2b5790
         color: #fff
 
+      .plugin.active
+        border: 2px solid #2b5790
+
     .accent2
       accent-color: #087422
 
@@ -1090,6 +1117,9 @@ html
       button, .category input[type=radio]:checked + span, .switch input:checked + .slider
         background: #087422
         color: #fff
+
+      .plugin.active
+        border: 2px solid #087422
 
     .accent3
       accent-color: #ab6100
@@ -1105,6 +1135,9 @@ html
         background: #ab6100
         color: #fff
 
+      .plugin.active
+        border: 2px solid #ab6100
+
     .accent4
       accent-color: #942796
 
@@ -1119,6 +1152,9 @@ html
         background: #942796
         color: #fff
 
+      .plugin.active
+        border: 2px solid #942796
+
     .accent5
       accent-color: #a93b3b
 
@@ -1132,6 +1168,9 @@ html
       button, .category input[type=radio]:checked + span, .switch input:checked + .slider
         background: #a93b3b
         color: #fff
+
+      .plugin.active
+        border: 2px solid #a93b3b
 
     .accent1-span
       background: #2b5790

@@ -42,6 +42,20 @@ export function showError(message) {
   });
 }
 
+export function downloadNote(title, content) {
+  const a = document.createElement('a');
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
+  a.setAttribute('download', `${title}.txt`);
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+export function copy(content) {
+  navigator.clipboard.writeText(content);
+}
+
 export function searchSidebar() {
   sidebar.querySelectorAll('#list-notes p').forEach((e) => {
     e.addEventListener('click', () => {
@@ -83,6 +97,20 @@ if (localStorage.getItem('theme') === 'light') {
   });
   buttonTheme.className = 'fa-solid fa-star';
 }
+if (localStorage.getItem('compact') === 'true') {
+  document.querySelector('#check-compact').checked = true;
+  document.querySelector('main').classList.add('compact');
+}
+if (localStorage.getItem('spellcheck') === 'false') {
+  document.querySelector('#spellcheck').checked = false;
+  document.querySelector('#content').setAttribute('spellcheck', 'false');
+}
+if (localStorage.getItem('plugin-math') === 'true') {
+  document.querySelector('#plugin-math').classList.add('active');
+}
+if (localStorage.getItem('plugin-highlight') === 'true') {
+  document.querySelector('#plugin-highlight').classList.add('active');
+}
 if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent5';
   document.querySelector('#accent-colors .accent5-span').classList.add('selected');
@@ -104,10 +132,10 @@ if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
 if (
-  localStorage.getItem('sort_notes') !== '1' &&
-  localStorage.getItem('sort_notes') !== '2' &&
-  localStorage.getItem('sort_notes') !== '3' &&
-  localStorage.getItem('sort_notes') !== '4'
+  localStorage.getItem('sort_notes') !== '1'
+  && localStorage.getItem('sort_notes') !== '2'
+  && localStorage.getItem('sort_notes') !== '3'
+  && localStorage.getItem('sort_notes') !== '4'
 ) localStorage.setItem('sort_notes', '1');
 if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
 
@@ -119,6 +147,61 @@ document.addEventListener('touchend', (event) => {
   touchendX = event.changedTouches[0].screenX;
   handleGesture();
 }, false);
+
+document.querySelector('#language').addEventListener('change', async () => {
+  const e = document.querySelector('#language').value;
+  if (e === 'fr') localStorage.setItem('language', 'fr');
+  else if (e === 'de') localStorage.setItem('language', 'de');
+  else if (e === 'es') localStorage.setItem('language', 'es');
+  else localStorage.setItem('language', 'en');
+  window.location.reload();
+});
+
+document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
+  e.addEventListener('click', () => {
+    document.querySelector('#note-popup-box').showModal();
+    document.querySelector('#textarea-length').textContent = '0/5000';
+    document.querySelector('#check-hidden').disabled = false;
+  });
+});
+
+document.querySelector('#control-clear').addEventListener('click', () => {
+  document.querySelector('#note-popup-box #content').value = '';
+});
+
+document.querySelector('#spellcheck').addEventListener('change', () => {
+  if (!document.querySelector('#spellcheck').checked) {
+    localStorage.setItem('spellcheck', 'false');
+    document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'false');
+  } else {
+    localStorage.removeItem('spellcheck');
+    document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'true');
+  }
+});
+
+document.querySelector('#note-popup-box #content').addEventListener('input', () => {
+  const e = document.querySelector('#note-popup-box #content').value.length;
+  document.querySelector('#textarea-length').textContent = `${e}/5000`;
+});
+
+document.querySelector('#settings').addEventListener('click', () => {
+  document.querySelector('#settings-popup-box').showModal();
+  document.querySelector('#sidebar').classList.remove('show');
+});
+
+document.querySelector('#plugins').addEventListener('click', () => {
+  document.querySelector('#plugins-popup-box').showModal();
+  document.querySelector('#sidebar').classList.remove('show');
+});
+
+document.querySelector('#copy-password-btn').addEventListener('click', () => {
+  const psswd = document.querySelector('#psswd-gen').textContent;
+  navigator.clipboard.writeText(psswd);
+});
+
+document.querySelector('#sidebar-indicator').addEventListener('click', () => {
+  openSidebar();
+});
 
 document.querySelector('#check-compact').addEventListener('change', () => {
   if (document.querySelector('#check-compact').checked) {
@@ -163,6 +246,10 @@ document.querySelector('#btn-theme').addEventListener('click', () => {
     localStorage.setItem('theme', 'dusk');
   }
 });
+
+document.querySelector('#btn-sort').addEventListener('click', () => document.querySelector('#sort-popup-box').showModal());
+
+document.querySelector('#btn-filter').addEventListener('click', () => document.querySelector('#filter-popup-box').showModal());
 
 document.querySelectorAll('#colors span').forEach((span, index) => {
   span.addEventListener('click', (event) => {
@@ -248,6 +335,18 @@ document.querySelectorAll('.category').forEach((e) => {
   e.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') e.click();
   });
+});
+
+document.querySelector('#plugin-math').addEventListener('click', () => {
+  document.querySelector('#plugin-math').classList.toggle('active');
+  if (document.querySelector('#plugin-math').classList.contains('active')) localStorage.setItem('plugin-math', 'true');
+  else localStorage.removeItem('plugin-math');
+});
+
+document.querySelector('#plugin-highlight').addEventListener('click', () => {
+  document.querySelector('#plugin-highlight').classList.toggle('active');
+  if (document.querySelector('#plugin-highlight').classList.contains('active')) localStorage.setItem('plugin-highlight', 'true');
+  else localStorage.removeItem('plugin-highlight');
 });
 
 document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {

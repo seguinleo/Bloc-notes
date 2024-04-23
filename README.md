@@ -18,7 +18,6 @@
 *   [Features](#features)
 *   [Design](#design)
 *   [Security and Privacy](#security-and-privacy)
-*   [Languages](#languages)
 *   [Todo](#todo)
 *   [Community](#community)
 *   [For developers](#for-developers)
@@ -37,9 +36,7 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
 ## Security and Privacy
-The user's connection for online sync is maintained by a secure cookie. The website is hosted in France by OVHcloud. The server is always up to date with the latest security patches and protected by 2FA. The online login is also protected by Cloudflare's captcha.
-
-Passwords are hashed with the latest algorithms before being sent to the database.
+The user's connection for online sync is maintained by a secure cookie. Passwords are hashed with the latest algorithms before being sent to the database.
 
 Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF, SSRF, SQL injections, etc.
 
@@ -50,13 +47,10 @@ The user can use biometrics to unlock notes. Biometric data is stored in the bro
 > [!WARNING]
 > Never store passwords or too personal data in your notes regardless of the service, even if it is encrypted.
 
-## Languages
-FR, EN, DE, ES
-
 ## Todo
 *   2FA login
-*   Password recovery
 *   Password protected notes
+*   Markdown plugins
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
@@ -66,17 +60,13 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 
 Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
-Technologies: JavaScript, PHP, MySQL, SASS, Docker, ESLint
-
 Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes and crossorigin images)
-
-``npm i`` to install all dependencies
 
 ## Self-hosting
 
-``docker-compose up --build`` to build the Docker container, MySQL database is included with phpMyadmin
+``docker-compose up --build -d`` to build the Docker container
 
 > [!IMPORTANT]
-> The website is available at localhost:80, but if you want to deploy it on a server with a domain name or an IP address, you need to install a SSL certificate to use note encryption (Web Crypto API requires HTTPs). Docker configuration is set for local use, hardening is required for production.
+> The website is available at localhost:8787, but if you want to deploy it on a server with a domain name or an IP address, you need to install a SSL certificate to use note encryption (Web Crypto API requires HTTPs). Edit all users, passwords and Docker configurations for production.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
