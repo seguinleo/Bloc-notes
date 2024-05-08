@@ -5,10 +5,6 @@ session_start();
 $name = $_SESSION['name'];
 $userId = $_SESSION['userId'];
 
-if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page');
-    return;
-}
 if (isset($name, $userId) === false) {
     throw new Exception('Key retrieval failed');
     return;

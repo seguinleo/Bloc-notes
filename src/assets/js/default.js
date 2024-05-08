@@ -186,12 +186,10 @@ document.querySelector('#note-popup-box #content').addEventListener('input', () 
 
 document.querySelector('#settings').addEventListener('click', () => {
   document.querySelector('#settings-popup-box').showModal();
-  document.querySelector('#sidebar').classList.remove('show');
 });
 
 document.querySelector('#plugins').addEventListener('click', () => {
   document.querySelector('#plugins-popup-box').showModal();
-  document.querySelector('#sidebar').classList.remove('show');
 });
 
 document.querySelector('#copy-password-btn').addEventListener('click', () => {

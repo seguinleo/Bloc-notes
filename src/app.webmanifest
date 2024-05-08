@@ -12,13 +12,13 @@
 		{
 			"src": "./assets/img/desktop.png",
 			"type": "image/png",
-			"sizes": "1423x923",
+			"sizes": "1361x899",
 			"form_factor": "wide"
 		},
 		{
 			"src": "./assets/img/mobile.png",
 			"type": "image/png",
-			"sizes": "388x838"
+			"sizes": "398x796"
 		}
 	],
 	"description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",

@@ -270,6 +270,7 @@ const verifyFingerprint = async () => {
     if (localStorage.getItem('fingerprint') === 'true') await showNotes();
     else localStorage.setItem('fingerprint', 'true');
   } catch (error) {
+    defaultScript.showError(`An error occurred - ${error}`);
     if (localStorage.getItem('fingerprint') === 'true') {
       window.location.reload();
     } else document.querySelector('#check-fingerprint').checked = false;
@@ -537,7 +538,6 @@ const showNotes = async () => {
     document.querySelector('main').appendChild(fragment);
     defaultScript.searchSidebar();
     noteActions();
-    document.querySelector('#last-sync span').textContent = new Date().toLocaleTimeString();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
   }
@@ -848,8 +848,7 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  document.querySelector('#last-sync').addEventListener('click', () => window.location.reload());
-  changeLanguage(localStorage.getItem('language'));
+  changeLanguage(localStorage.getItem('language') || 'en');
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
   else {
     verifyFingerprint();

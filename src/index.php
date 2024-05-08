@@ -60,10 +60,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                 <option value="2">All</option>
             </select>
         </div>
-        <div id="last-sync">
-            <i class="fa-solid fa-sync"></i>
-            <span></span>
-        </div>
         <div>
             <button type="button" id="btn-theme" aria-label="Theme">
                 <i id="icon-theme" class="fa-solid fa-moon"></i>
@@ -74,6 +70,14 @@ $_SESSION['csrf_token'] = $csrf_token;
         <nav>
             <div class="row">
                 <button id="icon-add" type="button">Add a note</button>
+            </div>
+            <div class="row">
+                <button type="button" id="btn-sort" aria-label="Sort notes">
+                    <i class="fa-solid fa-arrow-up-wide-short"></i>
+                </button>
+                <button type="button" id="btn-filter" aria-label="Filter notes">
+                    <i class="fa-solid fa-filter"></i>
+                </button>
             </div>
             <div id="list-notes"></div>
         </nav>
@@ -106,12 +110,6 @@ $_SESSION['csrf_token'] = $csrf_token;
         </button>
         <div id="success-notification"></div>
         <div id="sidebar-indicator"></div>
-        <button type="button" id="btn-sort" aria-label="Sort notes">
-            <i class="fa-solid fa-arrow-up-wide-short"></i>
-        </button>
-        <button type="button" id="btn-filter" aria-label="Filter notes">
-            <i class="fa-solid fa-filter"></i>
-        </button>
         <dialog id="sort-popup-box">
             <div class="popup">
                 <div class="content">
@@ -349,7 +347,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.4.3</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.5.1</a>
                         </p>
                     </div>
                 </div>

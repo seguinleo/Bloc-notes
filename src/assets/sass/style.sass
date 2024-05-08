@@ -12,12 +12,6 @@
   100%
     transform: translateX(0)
 
-@keyframes rotate
-  from
-    transform: rotate(0deg)
-  to
-    transform: rotate(360deg)
-
 @font-face
   font-family: OpenSans
   font-style: normal
@@ -185,6 +179,7 @@ header
 
     input
       flex-grow: 1
+      padding: 0 5px
       border: none
 
     select
@@ -199,24 +194,6 @@ header
     background: #2adc2d
     margin-top: -20px
     margin-left: -8px
-
-  #last-sync
-    span
-      font-size: .9rem
-
-    i
-      cursor: pointer
-      display: inline-flex
-      align-items: center
-      justify-content: center
-      margin: 0 5px
-      width: 30px
-      height: 30px
-      border-radius: 50%
-      transition: .1s
-
-      &:hover
-        animation: rotate 1s
 
 main
   display: flex
@@ -243,7 +220,6 @@ textarea
   max-height: 1000px
   resize: vertical
   padding: 10px
-  border: none
 
 button
   cursor: pointer
@@ -353,14 +329,9 @@ input
 
 #sidebar-indicator
   position: fixed
-  height: 8svh
-  width: 5px
-  border-radius: 5px
+  bottom: 1rem
+  left: 1rem
   background: rgba(150, 150, 150, 0.4)
-  left: 5px
-  top: 50svh
-  z-index: 1
-  transform: translate(-50%, -50%)
 
 #noscript
   position: fixed
@@ -384,7 +355,7 @@ input
       opacity: 1
 
   &.pinned
-    outline: 3px dashed rgba(150, 150, 150, 0.4)
+    border-radius: 5px 1rem 1rem 1rem
 
   .title
     text-align: right
@@ -521,8 +492,14 @@ dialog
     width: 90vw
     max-width: 1500px
 
+    input,
+    textarea
+      padding: 0
+      border: none
+
     textarea
       height: 45svh
+      overscroll-behavior: none
 
 .row
   margin-bottom: 10px
@@ -683,26 +660,19 @@ dialog
   height: 36px
   border-radius: 48px
 
-#btn-sort, #btn-filter
-  position: fixed
-  display: flex
+#btn-sort, #btn-filter, #sidebar-indicator
+  display: inline-flex
   justify-content: center
   align-items: center
-  right: 1rem
+  margin-top: 10px
+  margin-right: 10px
   font-size: 1.2rem
   width: 36px
   height: 36px
   border-radius: 48px
-  z-index: 1
 
 #btn-sort:focus, #btn-filter:focus
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
-
-#btn-sort
-  top: 135px
-
-#btn-filter
-  top: 195px
 
 @media (min-width: 901px)
   #icon-float-add, #sidebar-indicator, #compact-mode
@@ -713,7 +683,7 @@ dialog
     padding: 10px 1rem
     gap: 1rem
 
-    #div-search kbd, #last-sync
+    #div-search kbd
       display: none
 
   main
@@ -751,7 +721,7 @@ dialog
       margin: 5px
       margin-top: 0
 
-    button
+    #icon-add
       display: none
 
     &.show
@@ -803,15 +773,16 @@ dialog
     width: 100vw
 
     textarea
-      height: 40svh
+      height: calc( 100svh - 400px )
       resize: none
 
-  #colors span, #accent-colors span
-    margin-right: 5px
+  #colors
+    justify-content: space-between
 
 html
   &.dark .accent1, &.dusk .accent1
     accent-color: #8ab4f8
+    color: #afbbcc
 
     \::selection
       background: #8ab4f8
@@ -828,6 +799,7 @@ html
 
   &.dark .accent2, &.dusk .accent2
     accent-color: #b7fe9d
+    color: #b7ccaf
 
     \::selection
       background: #b7fe9d
@@ -844,6 +816,7 @@ html
 
   &.dark .accent3, &.dusk .accent3
     accent-color: #f2e76c
+    color: #ccccaf
 
     \::selection
       background: #f2e76c
@@ -860,6 +833,7 @@ html
 
   &.dark .accent4, &.dusk .accent4
     accent-color: #e59afb
+    color: #c7afcc
 
     \::selection
       background: #e59afb
@@ -876,6 +850,7 @@ html
 
   &.dark .accent5, &.dusk .accent5
     accent-color: #ff7070
+    color: #ccafaf
 
     \::selection
       background: #ff7070
