@@ -20,9 +20,6 @@ function changeLanguage(language) {
     document.querySelector('#language').value = 'fr';
     document.querySelector('#icon-add').textContent = 'Ajouter une note';
     document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
-    document.querySelector('#search-option').options[0].textContent = 'Titre';
-    document.querySelector('#search-option').options[1].textContent = 'Contenu';
-    document.querySelector('#search-option').options[2].textContent = 'Tout';
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
     document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
     document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
@@ -50,6 +47,10 @@ function changeLanguage(language) {
     document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
       e.textContent = 'Idées';
     });
+    document.querySelector('#spellcheck-slider span').textContent = 'Vérif. ortho.';
+    document.querySelector('#compact-slider span').textContent = 'Mode compact';
+    document.querySelector('#hide-sidebar-slider span').textContent = 'Masquer bouton sidebar';
+    document.querySelector('#lock-app-slider span').textContent = 'Vérouiller app';
     document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
@@ -72,9 +73,6 @@ function changeLanguage(language) {
     document.querySelector('#language').value = 'de';
     document.querySelector('#icon-add').textContent = 'Notiz hinzufügen';
     document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
-    document.querySelector('#search-option').options[0].textContent = 'Titel';
-    document.querySelector('#search-option').options[1].textContent = 'Inhalt';
-    document.querySelector('#search-option').options[2].textContent = 'Alles';
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
     document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
     document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
@@ -102,6 +100,10 @@ function changeLanguage(language) {
     document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
       e.textContent = 'Ideen';
     });
+    document.querySelector('#spellcheck-slider span').textContent = 'Rechtschreibprüfung';
+    document.querySelector('#compact-slider span').textContent = 'Kompaktmodus';
+    document.querySelector('#hide-sidebar-slider span').textContent = 'Seitenleiste ausblenden';
+    document.querySelector('#lock-app-slider span').textContent = 'App sperren';
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
@@ -124,9 +126,6 @@ function changeLanguage(language) {
     document.querySelector('#language').value = 'es';
     document.querySelector('#icon-add').textContent = 'Agregar una nota';
     document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
-    document.querySelector('#search-option').options[0].textContent = 'Título';
-    document.querySelector('#search-option').options[1].textContent = 'Contenido';
-    document.querySelector('#search-option').options[2].textContent = 'Todo';
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
     document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
     document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
@@ -154,6 +153,10 @@ function changeLanguage(language) {
     document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
       e.textContent = 'Ideas';
     });
+    document.querySelector('#spellcheck-slider span').textContent = 'Corrector ortográfico';
+    document.querySelector('#compact-slider span').textContent = 'Modo compacto';
+    document.querySelector('#hide-sidebar-slider span').textContent = 'Ocultar barra lateral';
+    document.querySelector('#lock-app-slider span').textContent = 'Bloquear aplicación';
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
@@ -176,9 +179,6 @@ function changeLanguage(language) {
     document.querySelector('#language').value = 'en';
     document.querySelector('#icon-add').textContent = 'Add a note';
     document.querySelector('#legal a').textContent = 'Legal notice / privacy';
-    document.querySelector('#search-option').options[0].textContent = 'Title';
-    document.querySelector('#search-option').options[1].textContent = 'Content';
-    document.querySelector('#search-option').options[2].textContent = 'All';
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
     document.querySelector('#sort-notes1-span').textContent = 'Modification date';
     document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
@@ -206,6 +206,10 @@ function changeLanguage(language) {
     document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
       e.textContent = 'Ideas';
     });
+    document.querySelector('#spellcheck-slider span').textContent = 'Spell check';
+    document.querySelector('#compact-slider span').textContent = 'Compact mode';
+    document.querySelector('#hide-sidebar-slider span').textContent = 'Hide sidebar button';
+    document.querySelector('#lock-app-slider span').textContent = 'Lock app';
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
@@ -260,8 +264,8 @@ const verifyFingerprint = async () => {
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
     if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.reload();
-    } else document.querySelector('#check-fingerprint').checked = false;
+      window.location.href = '/error/403/';
+    } else document.querySelector('#check-lock-app').checked = false;
   }
 };
 
@@ -506,7 +510,7 @@ const showNotes = async () => {
       if (pinned === 1) {
         noteElement.classList.add('pinned');
         const categoryElement = document.createElement('span');
-        categoryElement.classList.add('category');
+        categoryElement.classList.add('custom-check');
         const iconPin = document.createElement('i');
         iconPin.classList.add('fa-solid', 'fa-thumbtack');
         categoryElement.appendChild(iconPin);
@@ -515,14 +519,14 @@ const showNotes = async () => {
 
       if (category !== 0) {
         const categoryElement = document.createElement('span');
-        categoryElement.classList.add('category');
+        categoryElement.classList.add('custom-check');
         categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
         paragraph.appendChild(categoryElement);
       }
 
       if (hidden !== 0) {
         const categoryElement = document.createElement('span');
-        categoryElement.classList.add('category');
+        categoryElement.classList.add('custom-check');
         const iconEye = document.createElement('i');
         iconEye.classList.add('fa-solid', 'fa-eye-slash');
         categoryElement.appendChild(iconEye);
@@ -593,8 +597,8 @@ const deleteNote = async (e) => {
   }
 };
 
-document.querySelector('#check-fingerprint').addEventListener('change', () => {
-  if (document.querySelector('#check-fingerprint').checked) verifyFingerprint();
+document.querySelector('#check-lock-app').addEventListener('change', () => {
+  if (document.querySelector('#check-lock-app').checked) verifyFingerprint();
   else localStorage.removeItem('fingerprint');
 });
 
@@ -810,6 +814,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
   else {
     verifyFingerprint();
-    document.querySelector('#check-fingerprint').checked = true;
+    document.querySelector('#check-lock-app').checked = true;
   }
 });

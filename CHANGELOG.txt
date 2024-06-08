@@ -1,3 +1,9 @@
+#----v24.6.1----#
+-Add a new theme "leaf"
+-Add used storage info
+-Update dependencies
+-Improve UI/UX
+
 #----v24.5.1----#
 -Improve UI/UX
 -Bug fixes
