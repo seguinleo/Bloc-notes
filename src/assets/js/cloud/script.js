@@ -20,7 +20,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'fr-FR');
     document.querySelector('#language').value = 'fr';
     document.querySelector('#icon-add').textContent = 'Ajouter une note';
-    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
     document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
     document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
@@ -76,7 +75,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'de');
     document.querySelector('#language').value = 'de';
     document.querySelector('#icon-add').textContent = 'Notiz hinzufügen';
-    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
     document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
     document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
@@ -132,7 +130,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'es');
     document.querySelector('#language').value = 'es';
     document.querySelector('#icon-add').textContent = 'Agregar una nota';
-    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
     document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
     document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
@@ -188,7 +185,6 @@ function changeLanguage(language) {
     document.documentElement.setAttribute('lang', 'en');
     document.querySelector('#language').value = 'en';
     document.querySelector('#icon-add').textContent = 'Add a note';
-    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
     document.querySelector('#sort-notes1-span').textContent = 'Modification date';
     document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
@@ -672,7 +668,7 @@ document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
 });
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(16));
+document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(20));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
