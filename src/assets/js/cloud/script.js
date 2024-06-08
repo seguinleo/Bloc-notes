@@ -344,6 +344,7 @@ const showNotes = async () => {
     if (!res.ok) throw new Error(`An error occurred - ${res.status}`);
 
     dataByteSize = 0;
+    document.querySelector('#storage-usage').textContent = '0 kB / 1 MB';
     const notesJSON = await res.json();
 
     if (notesJSON.length === 0) {
@@ -543,7 +544,7 @@ const showNotes = async () => {
     defaultScript.searchSidebar();
     noteActions();
     document.querySelector('#storage').value = dataByteSize;
-    document.querySelector('#storage-usage').textContent = dataByteSize * 0.001 + ' kB / 1 MB';
+    document.querySelector('#storage-usage').textContent = `${(dataByteSize * 0.001).toFixed(2)} kB / 1 MB`;
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
   }
