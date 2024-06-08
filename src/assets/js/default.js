@@ -99,7 +99,7 @@ if (localStorage.getItem('theme') === 'light') {
 } else if (localStorage.getItem('theme') === 'leaf') {
   document.querySelector('html').className = 'leaf';
   metaTheme.forEach((e) => {
-    e.content = '#1c1936';
+    e.content = '#001b1e';
   });
   buttonTheme.className = 'fa-solid fa-leaf';
 } else {
@@ -258,7 +258,7 @@ document.querySelector('#btn-theme').addEventListener('click', () => {
   } else {
     document.querySelector('html').className = 'leaf';
     metaTheme.forEach((e) => {
-      e.content = '#1c1936';
+      e.content = '#001b1e';
     });
     buttonTheme.className = 'fa-solid fa-leaf';
     localStorage.setItem('theme', 'leaf');
