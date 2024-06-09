@@ -44,7 +44,7 @@ html
   height: 5px
 
 \::placeholder
-  opacity: 1
+  opacity: .5
 
 h1
   font-size: 1.2rem
@@ -233,7 +233,6 @@ button
   font-size: 1rem
   width: 100%
   height: 50px
-  padding: 0 1rem
   border-radius: 10px
   border: none
 
@@ -279,7 +278,7 @@ input
 
   &:disabled
     cursor: not-allowed
-    opacity: .6
+    opacity: .5
 
 #sidebar
   position: fixed
@@ -295,12 +294,14 @@ input
   nav
     display: flex
     flex-direction: column
-    height: 100%
     padding: 1rem
     border-radius: 1rem
     margin: 1rem
+    height: calc(100% - 162px)
 
   footer
+    display: flex
+    flex-direction: column
     padding: 1rem
     border-radius: 1rem
     margin: 1rem
@@ -311,7 +312,7 @@ input
     overflow-y: auto
 
     h2
-      margin: 10px 0
+      margin-bottom: 10px
 
     p
       cursor: pointer
@@ -555,6 +556,9 @@ dialog
   input[type=checkbox]
     display: none
 
+.div-slider span
+  vertical-align: middle
+
 .switch
   position: relative
   display: inline-flex
@@ -664,9 +668,8 @@ dialog
 #psswd-gen
   display: inline-flex
   align-items: center
-  vertical-align: middle
-  width: 75%
-  height: 42px
+  flex: 1
+  height: 36px
   margin: auto
   border-radius: 20px
   justify-content: center
@@ -678,7 +681,6 @@ dialog
 #copy-password-btn,
 #submit-gen-psswd
   display: inline-flex
-  vertical-align: middle
   width: 36px
   height: 36px
   border-radius: 48px
@@ -694,25 +696,25 @@ dialog
   height: 36px
   border-radius: 48px
 
+#btn-add-note,
 #btn-sort,
 #btn-filter,
+#btn-download-all,
 #sidebar-indicator
   display: inline-flex
   justify-content: center
   align-items: center
-  margin-top: 10px
-  margin-right: 10px
+  margin-right: 1rem
   font-size: 1.2rem
   width: 36px
   height: 36px
   border-radius: 48px
 
-#btn-sort:focus,
-#btn-filter:focus
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
+  &:focus
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
 
 @media (min-width: 901px)
-  #icon-float-add,
+  #btn-add-note-float,
   #sidebar-indicator,
   #compact-slider,
   #hide-sidebar-slider
@@ -727,10 +729,10 @@ dialog
       display: none
 
   main
-    margin: 86px 0 6rem
+    margin: 86px 0 92px
     gap: 5px
 
-  #icon-float-add
+  #btn-add-note-float
     position: fixed
     display: flex
     justify-content: center
@@ -755,13 +757,13 @@ dialog
     animation: slide-right .3s ease-in-out
 
     nav
-      margin: 5px
+      margin: 1rem 5px
 
     footer
-      margin: 5px
+      margin: 1rem 5px
       margin-top: 0
 
-    #icon-add
+    #btn-add-note
       display: none
 
     &.show
@@ -836,7 +838,9 @@ html
       background: #8ab4f8
 
     input,
+    textarea,
     select,
+    .popup .content,
     #btn-theme
       color: #afbbcc
     a,
@@ -845,6 +849,14 @@ html
 
     .plugin.active
       outline: 2px solid #8ab4f8
+
+    .switch
+      input:disabled + .slider
+        background: #afbbcc
+
+      .slider
+        &:before
+          background: #afbbcc
 
   &.dark .accent2,
   &.dusk .accent2,
@@ -860,7 +872,9 @@ html
       background: #b7fe9d
 
     input,
+    textarea,
     select,
+    .popup .content,
     #btn-theme
       color: #b7ccaf
 
@@ -870,6 +884,14 @@ html
 
     .plugin.active
       outline: 2px solid #b7fe9d
+    
+    .switch
+      input:disabled + .slider
+        background: #b7ccaf
+
+      .slider
+        &:before
+          background: #b7ccaf
 
   &.dark .accent3,
   &.dusk .accent3,
@@ -885,7 +907,9 @@ html
       background: #f2e76c
 
     input,
+    textarea,
     select,
+    .popup .content,
     #btn-theme
       color: #ccccaf
 
@@ -895,6 +919,14 @@ html
 
     .plugin.active
       outline: 2px solid #f2e76c
+
+    .switch
+      input:disabled + .slider
+        background: #ccccaf
+
+      .slider
+        &:before
+          background: #ccccaf
 
   &.dark .accent4,
   &.dusk .accent4,
@@ -910,7 +942,9 @@ html
       background: #e59afb
 
     input,
+    textarea,
     select,
+    .popup .content,
     #btn-theme
       color: #c7afcc
 
@@ -920,6 +954,14 @@ html
 
     .plugin.active
       outline: 2px solid #e59afb
+
+    .switch
+      input:disabled + .slider
+        background: #c7afcc
+
+      .slider
+        &:before
+          background: #c7afcc
 
   &.dark .accent5,
   &.dusk .accent5,
@@ -935,7 +977,9 @@ html
       background: #ff7070
 
     input,
+    textarea,
     select,
+    .popup .content,
     #btn-theme
       color: #ccafaf
 
@@ -946,7 +990,18 @@ html
     .plugin.active
       outline: 2px solid #ff7070
 
+    .switch
+      input:disabled + .slider
+        background: #ccafaf
+
+      .slider
+        &:before
+          background: #ccafaf
+
   &.dark, &.dusk, &.leaf
+    \::selection
+      color: #171717
+
     .accent1-span
       background: #8ab4f8
 
@@ -980,9 +1035,6 @@ html
   &.dark
     background: #000
 
-    \::placeholder
-      color: #c6c6c6
-
     kbd,
     header,
     nav,
@@ -1005,7 +1057,6 @@ html
     textarea,
     select
       background: #171717
-      color: #c6c6c6
 
     #colors span,
     #accent-colors span
@@ -1032,14 +1083,8 @@ html
         color: #171717
 
     .switch
-      input:disabled + .slider
-        background: #c6c6c6
-
       .slider
         background: #000
-
-        &:before
-          background: #c6c6c6
 
       input:checked + .slider:before
         background: #000
@@ -1049,9 +1094,6 @@ html
 
   &.dusk
     background: #272342
-
-    \::placeholder
-      color: #cecbe3
 
     kbd,
     header,
@@ -1075,7 +1117,6 @@ html
     textarea,
     select
       background: #1c1936
-      color: #cecbe3
 
     #colors span,
     #accent-colors span
@@ -1102,14 +1143,8 @@ html
         color: #171717
 
     .switch
-      input:disabled + .slider
-        background: #cecbe3
-
       .slider
         background: #272342
-
-        &:before
-          background: #cecbe3
 
       input:checked + .slider:before
         background: #1c1936
@@ -1119,9 +1154,6 @@ html
 
   &.leaf
     background: #01262a
-
-    \::placeholder
-      color: #cbe0e3
 
     kbd,
     header,
@@ -1145,7 +1177,6 @@ html
     textarea,
     select
       background: #001b1e
-      color: #cbe0e3
 
     #colors span,
     #accent-colors span
@@ -1172,14 +1203,8 @@ html
         color: #171717
 
     .switch
-      input:disabled + .slider
-        background: #cbe0e3
-
       .slider
         background: #01262a
-
-        &:before
-          background: #cbe0e3
 
       input:checked + .slider:before
         background: #001b1e
@@ -1466,6 +1491,24 @@ html
 
 .d-inline-block
   display: inline-block
+
+.d-flex
+  display: flex
+
+.d-inline-flex
+  display: inline-flex
+
+.justify-content-center
+  justify-content: center
+
+.align-items-center
+  align-items: center
+
+.d-grid
+  display: grid
+
+.d-table
+  display: table
 
 .d-none
   display: none

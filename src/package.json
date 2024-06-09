@@ -1,6 +1,6 @@
 {
   "name": "bloc-notes",
-  "version": "24.5.1",
+  "version": "24.6.2",
   "author": "seguinleo",
   "license": "GPL-3.0",
   "description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",

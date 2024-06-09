@@ -64,14 +64,17 @@ $_SESSION['csrf_token'] = $csrf_token;
     <div id="sidebar">
         <nav>
             <div class="row">
-                <button id="icon-add" type="button">Add a note</button>
-            </div>
-            <div class="row">
+                <button type="button" id="btn-add-note" aria-label="Add a note">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
                 <button type="button" id="btn-sort" aria-label="Sort notes">
                     <i class="fa-solid fa-arrow-up-wide-short"></i>
                 </button>
                 <button type="button" id="btn-filter" aria-label="Filter notes">
                     <i class="fa-solid fa-filter"></i>
+                </button>
+                <button type="button" id="btn-download-all" aria-label="Download all notes">
+                    <i class="fa-solid fa-download"></i>
                 </button>
             </div>
             <div id="list-notes"></div>
@@ -91,13 +94,16 @@ $_SESSION['csrf_token'] = $csrf_token;
                     <i class="fa-solid fa-gear"></i>
                 </span>
             </div>
+            <div id="legal" class="row">
+                <a href="https://leoseguin.fr/mentionslegales/"></a>
+            </div>
             <div id="license" class="row">
                 GPL-3.0 &copy;
             </div>
         </footer>
     </div>
     <main>
-        <button id="icon-float-add" type="button" aria-label="Add a note">
+        <button id="btn-add-note-float" type="button" aria-label="Add a note">
             <i class="fa-solid fa-plus"></i>
         </button>
         <div id="success-notification"></div>
@@ -211,11 +217,11 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="row">
                             <textarea
                                 id="content"
-                                maxlength="5000"
+                                maxlength="20000"
                                 spellcheck="true"
                                 aria-label="Content"
                             ></textarea>
-                            <span id="textarea-length">0/5000</span>
+                            <span id="textarea-length"></span>
                             <span class="editor-control">
                                 <i class="fa-solid fa-broom" id="control-clear" tabindex="0" role="button" aria-label="Clear content"></i>
                             </span>
@@ -264,7 +270,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 <span class="cat-idees-filter-span" tabindex="0" role="button"></span>
                             </label>
                         </div>
-                        <div class="row">
+                        <div class="row div-slider">
                             <span id="hide-infos"></span>
                             <label class="switch">
                                 <input type="checkbox" id="check-hidden" aria-hidden="true" tabindex="-1">
@@ -281,9 +287,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                 <div class="content">
                     <div class="close">
                         <i class="fa-solid fa-xmark"></i>
-                    </div>
-                    <div class="row">
-                        <span id="export-all-notes" class="link" tabindex="0" role="button"></span>
                     </div>
                     <div class="row">
                         <span class="link">
@@ -306,28 +309,28 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <span class="accent5-span" tabindex="0" role="button" aria-label="Red"></span>
                         </div>
                     </div>
-                    <div id="spellcheck-slider" class="row">
+                    <div id="spellcheck-slider" class="row div-slider">
                         <span></span>
                         <label class="switch">
                             <input type="checkbox" id="check-spellcheck" aria-hidden="true" tabindex="-1" checked>
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="compact-slider" class="row">
+                    <div id="compact-slider" class="row div-slider">
                         <span></span>
                         <label class="switch">
                             <input type="checkbox" id="check-compact" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="hide-sidebar-slider" class="row">
+                    <div id="hide-sidebar-slider" class="row div-slider">
                         <span></span>
                         <label class="switch">
                             <input type="checkbox" id="check-hide-sidebar" aria-hidden="true" tabindex="-1">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="lock-app-slider" class="row">
+                    <div id="lock-app-slider" class="row div-slider">
                         <span></span>
                         <label class="switch">
                             <input type="checkbox" id="check-lock-app" aria-hidden="true" tabindex="-1">
@@ -336,7 +339,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.6.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.6.2</a>
                         </p>
                     </div>
                 </div>
@@ -395,8 +398,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                             <span id="storage-usage"></span>
                             <progress id="storage" max="1000000" value="0"></progress>
                         </div>
-                        <div class="row">
-                            <span id="log-out" class="link" tabindex="0" role="button"></span>
+                        <div class="row div-slider">
+                            <span>2FA</span>
+                            <label class="switch">
+                                <input type="checkbox" id="check-2fa" aria-hidden="true" tabindex="-1" disabled>
+                                <span class="slider"></span>
+                            </label>
                         </div>
                         <details id="gen-psswd">
                             <summary></summary>
@@ -413,7 +420,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 <div class="row">
                                     <input id="new-psswd-valid" type="password" minlength="8" maxlength="64" aria-label="Confirm new password" required>
                                 </div>
-                                <div class="row">
+                                <div class="row d-flex">
                                     <p id="psswd-gen"></p>
                                     <button type="button" id="copy-password-btn" aria-label="Copy password">
                                         <i class="fa-solid fa-clipboard"></i>
@@ -437,6 +444,9 @@ $_SESSION['csrf_token'] = $csrf_token;
                                 <button type="submit"></button>
                             </form>
                         </details>
+                        <div class="row">
+                            <span id="log-out" class="link" tabindex="0" role="button"></span>
+                        </div>
                     </div>
                 </div>
             </dialog>
@@ -467,10 +477,12 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <p id="copy-note-link"></p>
-                        <button type="button" id="copy-note-link-btn" aria-label="Copy link">
-                            <i class="fa-solid fa-clipboard"></i>
-                        </button>
+                        <div class="d-flex">
+                            <p id="copy-note-link"></p>
+                            <button type="button" id="copy-note-link-btn" aria-label="Copy link">
+                                <i class="fa-solid fa-clipboard"></i>
+                            </button>
+                        </div>
                         <form id="private-note">
                             <div class="row">
                                 <div class="error-notification"></div>
@@ -557,7 +569,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                             </div>
                             <details id="gen-psswd">
                                 <summary></summary>
-                                <div class="row">
+                                <div class="row d-flex">
                                     <p id="psswd-gen"></p>
                                     <button type="button" id="copy-password-btn" aria-label="Copy password">
                                         <i class="fa-solid fa-clipboard"></i>

@@ -19,7 +19,7 @@ function changeLanguage(language) {
   if (language === 'fr') {
     document.documentElement.setAttribute('lang', 'fr-FR');
     document.querySelector('#language').value = 'fr';
-    document.querySelector('#icon-add').textContent = 'Ajouter une note';
+    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
     document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
     document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
     document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
@@ -55,7 +55,6 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
-    document.querySelector('#export-all-notes').textContent = 'Exporter toutes les notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     document.querySelector('#log-out').textContent = 'Déconnexion';
@@ -74,7 +73,7 @@ function changeLanguage(language) {
   } else if (language === 'de') {
     document.documentElement.setAttribute('lang', 'de');
     document.querySelector('#language').value = 'de';
-    document.querySelector('#icon-add').textContent = 'Notiz hinzufügen';
+    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
     document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
     document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
     document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
@@ -110,7 +109,6 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Speichern';
-    document.querySelector('#export-all-notes').textContent = 'Alle Notizen exportieren (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     document.querySelector('#log-out').textContent = 'Abmelden';
@@ -129,7 +127,7 @@ function changeLanguage(language) {
   } else if (language === 'es') {
     document.documentElement.setAttribute('lang', 'es');
     document.querySelector('#language').value = 'es';
-    document.querySelector('#icon-add').textContent = 'Agregar una nota';
+    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
     document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
     document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
     document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
@@ -165,7 +163,6 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Guardar';
-    document.querySelector('#export-all-notes').textContent = 'Exportar todas las notas (.txt)';
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     document.querySelector('#log-out').textContent = 'Cerrar sesión';
@@ -184,7 +181,7 @@ function changeLanguage(language) {
   } else {
     document.documentElement.setAttribute('lang', 'en');
     document.querySelector('#language').value = 'en';
-    document.querySelector('#icon-add').textContent = 'Add a note';
+    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
     document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
     document.querySelector('#sort-notes1-span').textContent = 'Modification date';
     document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
@@ -220,7 +217,6 @@ function changeLanguage(language) {
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
     document.querySelector('#note-popup-box button').textContent = 'Save';
-    document.querySelector('#export-all-notes').textContent = 'Export all notes (.txt)';
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     document.querySelector('#log-out').textContent = 'Log out';
@@ -597,7 +593,7 @@ const updateNote = (noteId, title, content, color, hidden, category, link) => {
   isUpdate = true;
   document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
   document.body.classList.remove('body-fullscreen');
-  document.querySelector('#icon-add').click();
+  document.querySelector('#btn-add-note').click();
   document.querySelector('#id-note').value = noteId;
   titleNote.value = title;
   contentNote.value = content;
@@ -610,7 +606,7 @@ const updateNote = (noteId, title, content, color, hidden, category, link) => {
     document.querySelector('#check-hidden').disabled = false;
     if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
   } else document.querySelector('#check-hidden').disabled = true;
-  document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/5000`;
+  document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/20000`;
   contentNote.focus();
 };
 
@@ -694,7 +690,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
 
-    if (!title || title.length > 30 || content.length > 5000 || !color) return;
+    if (!title || title.length > 30 || content.length > 20000 || !color) return;
     if (isUpdate && !noteId) return;
     if (!/^[0-9]+$/.test(category)) return;
 

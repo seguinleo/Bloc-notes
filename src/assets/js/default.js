@@ -167,10 +167,10 @@ document.querySelector('#language').addEventListener('change', async () => {
   window.location.reload();
 });
 
-document.querySelectorAll('#icon-add, #icon-float-add').forEach((e) => {
+document.querySelectorAll('#btn-add-note, #btn-add-note-float').forEach((e) => {
   e.addEventListener('click', () => {
     document.querySelector('#note-popup-box').showModal();
-    document.querySelector('#textarea-length').textContent = '0/5000';
+    document.querySelector('#textarea-length').textContent = '0/20000';
     document.querySelector('#check-hidden').disabled = false;
   });
 });
@@ -191,7 +191,7 @@ document.querySelector('#check-spellcheck').addEventListener('change', () => {
 
 document.querySelector('#note-popup-box #content').addEventListener('input', () => {
   const e = document.querySelector('#note-popup-box #content').value.length;
-  document.querySelector('#textarea-length').textContent = `${e}/5000`;
+  document.querySelector('#textarea-length').textContent = `${e}/20000`;
 });
 
 document.querySelector('#settings').addEventListener('click', () => {
@@ -322,7 +322,7 @@ document.querySelector('#search-input').addEventListener('input', () => {
   });
 });
 
-document.querySelector('#export-all-notes').addEventListener('click', () => {
+document.querySelector('#btn-download-all').addEventListener('click', () => {
   if (document.querySelector('.note') === null) return;
   const notes = [];
   document.querySelectorAll('.note').forEach((e) => {

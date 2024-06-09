@@ -49,15 +49,13 @@ The user can use biometrics to unlock notes. Biometric data is stored in the bro
 
 ## Todo
 *   2FA login
-*   Password protected notes
 *   Markdown plugins
+*   Refractor project with Node.js or Laravel?
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
 
 ## For developers
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/46922caf959d46f0afd3ce49e956d0d4)](https://app.codacy.com/gh/seguinleo/Bloc-notes/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-
 Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
 
 Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes and crossorigin images)

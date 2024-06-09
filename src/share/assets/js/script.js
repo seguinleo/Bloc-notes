@@ -43,8 +43,6 @@ const showSharedNote = async () => {
     title, content, date,
   } = note;
 
-  if (!title || !content || content.length > 5000 || !date) return;
-
   document.title = title;
 
   const contentHtml = marked.parse(content);
