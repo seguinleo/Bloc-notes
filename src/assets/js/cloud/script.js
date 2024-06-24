@@ -6,14 +6,7 @@ import '../purify.min.js';
 
 let isUpdate = false;
 let dataByteSize = 0;
-const noteBox = document.querySelector('#note-popup-box');
-const manageBox = document.querySelector('#manage-popup-box');
-const privateNote = document.querySelector('#private-note-popup-box');
-const publicNote = document.querySelector('#public-note-popup-box');
-const titleNote = noteBox.querySelector('#title');
-const contentNote = noteBox.querySelector('#content');
-const forms = document.querySelectorAll('form');
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const maxDataByteSize = 1000000;
 
 function changeLanguage(language) {
   if (language === 'fr') {
@@ -235,53 +228,12 @@ function changeLanguage(language) {
   }
 }
 
-const verifyFingerprint = async () => {
-  try {
-    const challenge = defaultScript.generateRandomBytes(16);
-    const userId = defaultScript.generateRandomBytes(8);
-    await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-          userVerification: 'preferred',
-        },
-        timeout: 60000,
-        attestation: 'none',
-      },
-    });
-    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
-    else localStorage.setItem('fingerprint', 'true');
-  } catch (error) {
-    defaultScript.showError(`An error occurred - ${error}`);
-    if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.href = '/error/403/';
-    } else document.querySelector('#check-lock-app').checked = false;
-  }
-};
-
-const noteAccess = (noteId, link) => {
-  document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
-  document.body.classList.remove('body-fullscreen');
+const shareNote = (noteId, link) => {
   if (link === null) {
-    privateNote.showModal();
+    document.querySelector('#private-note-popup-box').showModal();
     document.querySelector('#id-note-public').value = noteId;
   } else {
-    publicNote.showModal();
+    document.querySelector('#public-note-popup-box').showModal();
     document.querySelector('#id-note-private').value = noteId;
     document.querySelector('#link-note-private').value = link;
     document.querySelector('#copy-note-link').textContent = link;
@@ -303,31 +255,26 @@ const noteActions = () => {
       else if (target.classList.contains('fa-thumbtack')) pin(noteId);
       else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
-      else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
+      else if (target.classList.contains('fa-expand')) defaultScript.toggleFullscreen(noteId);
       else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteTitle, noteContent);
-      else if (target.classList.contains('fa-link')) noteAccess(noteId, noteLink, noteTitle, noteContent);
+      else if (target.classList.contains('fa-link')) shareNote(noteId, noteLink, noteTitle, noteContent);
     });
     e.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') e.click();
     });
   });
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'k') {
-      e.preventDefault();
-      document.querySelector('#search-input').focus();
-    }
-  });
 };
 
 const showNotes = async () => {
+  if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
   const sort = localStorage.getItem('sort_notes');
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
-  forms.forEach((form) => form.reset());
+  defaultScript.forms.forEach((form) => form.reset());
 
   try {
-    const data = new URLSearchParams({ csrf_token: csrfToken });
+    const data = new URLSearchParams({ csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/getNotes.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -340,7 +287,7 @@ const showNotes = async () => {
     if (!res.ok) throw new Error(`An error occurred - ${res.status}`);
 
     dataByteSize = 0;
-    document.querySelector('#storage-usage').textContent = '0 kB / 1 MB';
+    document.querySelector('#storage-usage').textContent = `0 kB / ${maxDataByteSize / 1000000} MB`;
     const notesJSON = await res.json();
 
     if (notesJSON.length === 0) {
@@ -540,21 +487,15 @@ const showNotes = async () => {
     defaultScript.searchSidebar();
     noteActions();
     document.querySelector('#storage').value = dataByteSize;
-    document.querySelector('#storage-usage').textContent = `${(dataByteSize * 0.001).toFixed(2)} kB / 1 MB`;
+    document.querySelector('#storage-usage').textContent = `${(dataByteSize * 0.001).toFixed(2)} kB / ${maxDataByteSize / 1000000} MB`;
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
-const toggleFullscreen = (noteId) => {
-  const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
-  note.classList.toggle('fullscreen');
-  document.body.classList.toggle('body-fullscreen');
-};
-
 const fetchDelete = async (noteId) => {
   try {
-    const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
+    const data = new URLSearchParams({ noteId, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/deleteNote.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -591,12 +532,10 @@ const fetchLogout = async () => {
 
 const updateNote = (noteId, title, content, color, hidden, category, link) => {
   isUpdate = true;
-  document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
-  document.body.classList.remove('body-fullscreen');
-  document.querySelector('#btn-add-note').click();
+  document.querySelector('.btn-add-note').click();
   document.querySelector('#id-note').value = noteId;
-  titleNote.value = title;
-  contentNote.value = content;
+  document.querySelector('#note-popup-box #title').value = title;
+  document.querySelector('#note-popup-box #content').value = content;
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
@@ -606,13 +545,14 @@ const updateNote = (noteId, title, content, color, hidden, category, link) => {
     document.querySelector('#check-hidden').disabled = false;
     if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
   } else document.querySelector('#check-hidden').disabled = true;
-  document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/20000`;
-  contentNote.focus();
+  const noteLength = document.querySelector('#note-popup-box #content').value.length;
+  document.querySelector('#textarea-length').textContent = `${noteLength}/${defaultScript.maxNoteContent}`;
+  document.querySelector('#note-popup-box #content').focus();
 };
 
 const pin = async (noteId) => {
   try {
-    const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
+    const data = new URLSearchParams({ noteId, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/pinNote.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -632,8 +572,6 @@ const pin = async (noteId) => {
 };
 
 const deleteNote = (noteId) => {
-  document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
-  document.body.classList.remove('body-fullscreen');
   let message = '';
   if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
   else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
@@ -642,31 +580,17 @@ const deleteNote = (noteId) => {
   if (window.confirm(message)) fetchDelete(noteId);
 };
 
-document.querySelector('#check-lock-app').addEventListener('change', () => {
-  if (document.querySelector('#check-lock-app').checked) verifyFingerprint();
-  else localStorage.removeItem('fingerprint');
-});
-
 document.querySelector('#manage-account').addEventListener('click', () => {
-  manageBox.showModal();
-});
-
-document.querySelectorAll('.fa-xmark').forEach((e) => {
-  e.addEventListener('click', () => {
-    isUpdate = false;
-    forms.forEach((form) => form.reset());
-    document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
-  });
+  document.querySelector('#manage-popup-box').showModal();
 });
 
 document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
   const link = document.querySelector('#copy-note-link').textContent;
-  navigator.clipboard.writeText(`${window.location}/share/?link=${link}`);
+  const url = new URL(`./share?link=${link}`, window.location.href);
+  navigator.clipboard.writeText(url.href);
 });
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
-document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(20));
-forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
@@ -677,20 +601,29 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   });
 });
 
+document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
+  await defaultScript.verifyFingerprint();
+  await showNotes();
+});
+
 document.querySelector('#add-note').addEventListener('submit', async () => {
   try {
-    if (dataByteSize >= 1000000) {
+    if (dataByteSize > maxDataByteSize) {
       defaultScript.showError('You have reached the maximum storage capacity (1 MB)');
       return;
     }
+    if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
     const noteId = document.querySelector('#id-note').value;
-    const title = titleNote.value.trim();
-    const content = contentNote.value.trim();
+    const title = document.querySelector('#note-popup-box #title').value.trim();
+    const content = document.querySelector('#note-popup-box #content').value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
+    const link = document.querySelector(`.note[data-note-id="${noteId}"]`).getAttribute('data-note-link') || null;
 
-    if (!title || title.length > 30 || content.length > 20000 || !color) return;
+    if (hidden === 1 && link !== null) return;
+
+    if (!title || title.length > 30 || content.length > defaultScript.maxNoteContent || !color) return;
     if (isUpdate && !noteId) return;
     if (!/^[0-9]+$/.test(category)) return;
 
@@ -698,22 +631,16 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       SANITIZE_NAMED_PROPS: true,
     });
 
-    const data = isUpdate ? new URLSearchParams({
-      noteId,
+    const data = new URLSearchParams({
       title,
       content: cleanContent,
       color,
       hidden,
       category,
-      csrf_token: csrfToken,
-    }) : new URLSearchParams({
-      title,
-      content: cleanContent,
-      color,
-      hidden,
-      category,
-      csrf_token: csrfToken,
+      csrf_token: defaultScript.csrfToken,
     });
+    
+    if (isUpdate) data.set('noteId', noteId);
 
     const url = isUpdate ? './assets/php/updateNote.php' : './assets/php/addNote.php';
     const res = await fetch(url, {
@@ -728,8 +655,8 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
+    document.querySelector('#note-popup-box').close();
     isUpdate = false;
-    noteBox.close();
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
@@ -756,7 +683,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
   const psswdOld = a;
   const psswdNew = e;
   try {
-    const data = new URLSearchParams({ psswdOld, psswdNew, csrf_token: csrfToken });
+    const data = new URLSearchParams({ psswdOld, psswdNew, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/updatePsswd.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -767,15 +694,14 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
     });
     if (!res.ok) {
       defaultScript.showError(`An error occurred - ${res.status}`);
-      forms.forEach((form) => form.reset());
+      defaultScript.forms.forEach((form) => form.reset());
       return;
     }
-    manageBox.close();
     defaultScript.showSuccess('Successfully changed password!');
-    forms.forEach((form) => form.reset());
+    defaultScript.forms.forEach((form) => form.reset());
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
-    forms.forEach((form) => form.reset());
+    defaultScript.forms.forEach((form) => form.reset());
   }
 });
 
@@ -783,7 +709,7 @@ document.querySelector('#delete-account').addEventListener('submit', async () =>
   const psswd = document.querySelector('#delete-psswd').value;
   if (!psswd || psswd.length < 8 || psswd.length > 64) return;
   try {
-    const data = new URLSearchParams({ psswd, csrf_token: csrfToken });
+    const data = new URLSearchParams({ psswd, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/deleteAccount.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -794,13 +720,13 @@ document.querySelector('#delete-account').addEventListener('submit', async () =>
     });
     if (!res.ok) {
       defaultScript.showError(`An error occurred - ${res.status}`);
-      forms.forEach((form) => form.reset());
+      defaultScript.forms.forEach((form) => form.reset());
       return;
     }
     window.location.reload();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
-    forms.forEach((form) => form.reset());
+    defaultScript.forms.forEach((form) => form.reset());
   }
 });
 
@@ -809,7 +735,7 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
   const link = document.querySelector('#link-note-private').value;
   if (!noteId || !link || !/^[a-zA-Z0-9]+$/.test(link)) return;
   try {
-    const data = new URLSearchParams({ noteId, noteLink: link, csrf_token: csrfToken });
+    const data = new URLSearchParams({ noteId, noteLink: link, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/privateNote.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -822,7 +748,7 @@ document.querySelector('#private-note').addEventListener('submit', async () => {
       defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
-    publicNote.close();
+    document.querySelector('#public-note-popup-box').close();
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
@@ -833,7 +759,7 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
   const noteId = document.querySelector('#id-note-public').value;
   if (!noteId) return;
   try {
-    const data = new URLSearchParams({ noteId, csrf_token: csrfToken });
+    const data = new URLSearchParams({ noteId, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/publicNote.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -846,7 +772,7 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
       defaultScript.showError(`An error occurred - ${res.status}`);
       return;
     }
-    privateNote.close();
+    document.querySelector('#private-note-popup-box').close();
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
@@ -857,8 +783,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   changeLanguage(localStorage.getItem('language') || 'en');
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
-  else {
-    verifyFingerprint();
-    document.querySelector('#check-lock-app').checked = true;
-  }
 });

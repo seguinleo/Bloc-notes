@@ -55,10 +55,11 @@ $cookieParams = [
     'lifetime' => 604800,
     'secure'   => false,
     'httponly' => true,
-    'samesite' => 'Strict',
+    'samesite' => 'Lax',
 ];
 session_set_cookie_params($cookieParams);
 session_start();
 session_regenerate_id();
 $_SESSION['name'] = $row['name'];
 $_SESSION['userId'] = $row['id'];
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));

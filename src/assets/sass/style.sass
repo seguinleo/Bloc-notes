@@ -126,14 +126,11 @@ code
   overflow-x: auto
 
 li
-  margin-left: -1.4rem
+  margin-left: -1.5rem
 
   &:has(> input[type=checkbox])
     list-style: none
     margin-left: -2rem
-
-  input[type=checkbox]:checked + label
-    text-decoration: line-through
 
 img
   max-width: 100%
@@ -162,12 +159,10 @@ header
 
   #log-in,
   #manage-account
-    font-size: 2rem
+    font-size: 36px
     display: inline-flex
     align-items: center
     justify-content: center
-    width: 40px
-    height: 40px
     border-radius: 50%
     transition: .1s
 
@@ -189,14 +184,6 @@ header
       padding: 0 5px
       border: none
       outline: none
-
-  #dot-connected
-    width: 10px
-    height: 10px
-    border-radius: 50%
-    background: #2adc2d
-    margin-top: -20px
-    margin-left: -8px
 
 main
   display: flex
@@ -368,7 +355,7 @@ input
   display: flex
   flex-direction: column
   border-radius: 1rem
-  max-width: 50vw
+  max-width: 50%
   line-height: 2
   padding: 10px 1rem
 
@@ -378,7 +365,7 @@ input
       opacity: 1
 
   &.pinned
-    border-radius: 5px 1rem 1rem 1rem
+    border-radius: 5px
 
   .title
     text-align: right
@@ -438,9 +425,6 @@ input
 .link
   cursor: pointer
   font-weight: 700
-
-.body-fullscreen
-  overflow: hidden
 
 .fullscreen
   position: fixed
@@ -639,7 +623,7 @@ dialog
   display: inline-flex
   align-items: center
   justify-content: center
-  font-size: 1.4rem
+  font-size: 1.5rem
   text-align: center
   vertical-align: middle
   margin-left: 1rem
@@ -696,7 +680,7 @@ dialog
   height: 36px
   border-radius: 48px
 
-#btn-add-note,
+.btn-add-note,
 #btn-sort,
 #btn-filter,
 #btn-download-all,
@@ -713,8 +697,18 @@ dialog
   &:focus
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
 
+#btn-unlock-float
+  position: fixed
+  display: flex
+  justify-content: center
+  align-items: center
+  top: 50svh
+  font-size: 1.5rem
+  width: 75px
+  height: 75px
+
 @media (min-width: 901px)
-  #btn-add-note-float,
+  .btn-add-note-float,
   #sidebar-indicator,
   #compact-slider,
   #hide-sidebar-slider
@@ -729,21 +723,8 @@ dialog
       display: none
 
   main
-    margin: 86px 0 92px
+    margin: 76px 0 92px
     gap: 5px
-
-  #btn-add-note-float
-    position: fixed
-    display: flex
-    justify-content: center
-    align-items: center
-    bottom: 1rem
-    right: 1rem
-    width: 60px
-    height: 60px
-    font-size: 1.4rem
-    border-radius: 48px
-    z-index: 1
 
   #sidebar
     display: none
@@ -763,13 +744,27 @@ dialog
       margin: 1rem 5px
       margin-top: 0
 
-    #btn-add-note
-      display: none
-
     &.show
       display: flex
       z-index: 2
       animation: slide-left .3s ease-in-out
+
+    .btn-add-note
+      display: none
+
+  .btn-add-note-float
+    position: fixed
+    display: flex
+    justify-content: center
+    align-items: center
+    bottom: 1rem
+    right: 1rem
+    width: 60px
+    height: 60px
+    margin: 0
+    font-size: 1.5rem
+    border-radius: 48px
+    z-index: 1
 
   .note
     min-width: 98vw
@@ -1484,31 +1479,31 @@ html
   float: right
 
 .d-block
-  display: block
+  display: block !important
 
 .d-inline
-  display: inline
+  display: inline !important
 
 .d-inline-block
-  display: inline-block
+  display: inline-block !important
 
 .d-flex
-  display: flex
+  display: flex !important
 
 .d-inline-flex
-  display: inline-flex
+  display: inline-flex !important
 
 .justify-content-center
-  justify-content: center
+  justify-content: center !important
 
 .align-items-center
-  align-items: center
+  align-items: center !important
 
 .d-grid
-  display: grid
+  display: grid !important
 
 .d-table
-  display: table
+  display: table !important
 
 .d-none
-  display: none
+  display: none !important

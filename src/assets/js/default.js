@@ -4,6 +4,10 @@ let timeoutNotification = null;
 const sidebar = document.querySelector('#sidebar');
 const metaTheme = document.querySelectorAll('.theme-color');
 const buttonTheme = document.querySelector('#icon-theme');
+export let unlocked = false;
+export const maxNoteContent = 20000;
+export const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+export const forms = document.querySelectorAll('form');
 
 export function generateRandomBytes(length) {
   const array = new Uint8Array(length);
@@ -24,9 +28,9 @@ export function showSuccess(message) {
   if (timeoutNotification) clearTimeout(timeoutNotification);
   const notification = document.querySelector('#success-notification');
   notification.textContent = message;
-  notification.style.display = 'block';
+  notification.classList.remove('d-none');
   timeoutNotification = setTimeout(() => {
-    notification.style.display = 'none';
+    notification.classList.add('d-none');
   }, 5000);
 }
 
@@ -35,9 +39,9 @@ export function showError(message) {
   const notification = document.querySelectorAll('.error-notification');
   notification.forEach((e) => {
     e.textContent = message;
-    e.style.display = 'block';
+    e.classList.remove('d-none');
     timeoutNotification = setTimeout(() => {
-      e.style.display = 'none';
+      e.classList.add('d-none');
     }, 5000);
   });
 }
@@ -56,6 +60,11 @@ export function copy(content) {
   navigator.clipboard.writeText(content);
 }
 
+export function toggleFullscreen (noteId) {
+  const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
+  note.classList.toggle('fullscreen');
+}
+
 export function searchSidebar() {
   sidebar.querySelectorAll('#list-notes p').forEach((e) => {
     e.addEventListener('click', () => {
@@ -70,6 +79,48 @@ export function searchSidebar() {
     });
   });
 }
+
+export const verifyFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(16);
+    const userId = generateRandomBytes(8);
+    await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: {
+          name: 'Bloc-notes',
+        },
+        user: {
+          id: userId,
+          name: 'Bloc-notes',
+          displayName: 'Bloc-notes',
+        },
+        pubKeyCredParams: [
+          {
+            type: 'public-key',
+            alg: -7,
+          },
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+          userVerification: 'preferred',
+        },
+        timeout: 60000,
+        attestation: 'none',
+      },
+    });
+    unlocked = true;
+    if (localStorage.getItem('fingerprint') === 'true') {
+      document.querySelector('#btn-unlock-float').classList.add('d-none');
+      document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.remove('d-none'));
+      document.querySelector('#lock-app-slider').classList.remove('d-none');
+    }
+    else localStorage.setItem('fingerprint', 'true');
+  } catch (error) {
+    showError(`An error occurred - ${error}`);
+    if (localStorage.getItem('fingerprint') !== 'true') document.querySelector('#check-lock-app').checked = false;
+  }
+};
 
 export function openSidebar() {
   sidebar.classList.add('show');
@@ -115,11 +166,17 @@ if (localStorage.getItem('compact') === 'true') {
 }
 if (localStorage.getItem('hide-sidebar') === 'true') {
   document.querySelector('#check-hide-sidebar').checked = true;
-  document.querySelector('#sidebar-indicator').style.display = 'none';
+  document.querySelector('#sidebar-indicator').classList.add('d-none');
 }
 if (localStorage.getItem('spellcheck') === 'false') {
   document.querySelector('#spellcheck').checked = false;
   document.querySelector('#content').setAttribute('spellcheck', 'false');
+}
+if (localStorage.getItem('fingerprint') === 'true') {
+  document.querySelector('#btn-unlock-float').classList.remove('d-none');
+  document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.add('d-none'));
+  document.querySelector('#lock-app-slider').classList.add('d-none');
+  document.querySelector('#check-lock-app').checked = true;
 }
 if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent5';
@@ -167,10 +224,14 @@ document.querySelector('#language').addEventListener('change', async () => {
   window.location.reload();
 });
 
-document.querySelectorAll('#btn-add-note, #btn-add-note-float').forEach((e) => {
+document.querySelectorAll('.btn-add-note').forEach((e) => {
   e.addEventListener('click', () => {
     document.querySelector('#note-popup-box').showModal();
-    document.querySelector('#textarea-length').textContent = '0/20000';
+    document.querySelectorAll('#colors span').forEach((e) => {
+      e.classList.remove('selected');
+    });
+    document.querySelector('#colors span').classList.add('selected');
+    document.querySelector('#textarea-length').textContent = `0/${maxNoteContent}`;
     document.querySelector('#check-hidden').disabled = false;
   });
 });
@@ -180,18 +241,18 @@ document.querySelector('#control-clear').addEventListener('click', () => {
 });
 
 document.querySelector('#check-spellcheck').addEventListener('change', () => {
-  if (!document.querySelector('#check-spellcheck').checked) {
-    localStorage.setItem('spellcheck', 'false');
-    document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'false');
-  } else {
+  if (document.querySelector('#check-spellcheck').checked) {
     localStorage.removeItem('spellcheck');
     document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'true');
+  } else {
+    localStorage.setItem('spellcheck', 'false');
+    document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'false');
   }
 });
 
 document.querySelector('#note-popup-box #content').addEventListener('input', () => {
   const e = document.querySelector('#note-popup-box #content').value.length;
-  document.querySelector('#textarea-length').textContent = `${e}/20000`;
+  document.querySelector('#textarea-length').textContent = `${e}/${maxNoteContent}`;
 });
 
 document.querySelector('#settings').addEventListener('click', () => {
@@ -226,10 +287,10 @@ document.querySelector('#check-compact').addEventListener('change', () => {
 document.querySelector('#check-hide-sidebar').addEventListener('change', () => {
   if (document.querySelector('#check-hide-sidebar').checked) {
     localStorage.setItem('hide-sidebar', 'true');
-    document.querySelector('#sidebar-indicator').style.display = 'none';
+    document.querySelector('#sidebar-indicator').classList.add('d-none');
   } else {
     localStorage.removeItem('hide-sidebar');
-    document.querySelector('#sidebar-indicator').style.display = 'inline-flex';
+    document.querySelector('#sidebar-indicator').classList.remove('d-none');
   }
 });
 
@@ -312,13 +373,30 @@ document.querySelectorAll('#accent-colors span').forEach((span) => {
   });
 });
 
+document.querySelectorAll('.fa-xmark').forEach((e) => {
+  e.addEventListener('click', () => {
+    forms.forEach((form) => form.reset());
+    document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    document.querySelector('#search-input').focus();
+  }
+});
+
+document.querySelector('#submit-gen-psswd').addEventListener('click', () => getPassword(20));
+forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
+
 document.querySelector('#search-input').addEventListener('input', () => {
   const searchValue = document.querySelector('#search-input').value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((e) => {
     const title = e.querySelector('.note h2').textContent.toLowerCase();
     const content = e.querySelector('.details-content').textContent.toLowerCase();
-    if (title.includes(searchValue) || content.includes(searchValue)) e.style.display = 'flex';
-    else e.style.display = 'none';
+    if (title.includes(searchValue) || content.includes(searchValue)) e.classList.remove('d-none');
+    else e.classList.add('d-none');
   });
 });
 
@@ -328,10 +406,10 @@ document.querySelector('#btn-download-all').addEventListener('click', () => {
   document.querySelectorAll('.note').forEach((e) => {
     const title = e.getAttribute('data-note-title');
     const content = e.getAttribute('data-note-content');
-    notes.push(`${title}\n\n${content}`);
+    notes.push(`# ${title}\n${content}`);
   });
   const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(notes.join('\n\n--------------------\n\n'))}`);
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(notes.join('\n\n'))}`);
   a.setAttribute('download', 'notes.txt');
   a.style.display = 'none';
   document.body.appendChild(a);
@@ -351,6 +429,15 @@ document.querySelectorAll('.custom-check').forEach((e) => {
   });
 });
 
+document.querySelector('#check-lock-app').addEventListener('change', async () => {
+  if (localStorage.getItem('fingerprint') === 'true' && !unlocked) return;
+  if (document.querySelector('#check-lock-app').checked && !unlocked) await verifyFingerprint();
+  else if (localStorage.getItem('fingerprint') === 'true' && unlocked) {
+    localStorage.removeItem('fingerprint');
+    unlocked = false;
+  }
+});
+
 document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
   e.addEventListener('change', () => {
     const categories = [];
@@ -358,8 +445,8 @@ document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
     document.querySelectorAll('.note').forEach((n) => {
       const note = n;
       const category = note.getAttribute('data-note-category');
-      if (categories.includes(category)) note.style.display = 'flex';
-      else note.style.display = 'none';
+      if (categories.includes(category)) note.classList.remove('d-none');
+      else note.classList.add('d-none');
     });
   });
 });

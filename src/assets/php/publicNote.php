@@ -20,7 +20,7 @@ require_once __DIR__ . '/config/config.php';
 $noteLink = bin2hex(random_bytes(12));
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL");
+    $query = $PDO->prepare("UPDATE notes SET link=:NoteLink WHERE id=:NoteId AND user=:CurrentUser AND link IS NULL AND hiddenNote=0");
     $query->execute(
         [
             ':NoteLink'     => $noteLink,

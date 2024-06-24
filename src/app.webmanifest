@@ -21,7 +21,7 @@
 			"sizes": "398x796"
 		}
 	],
-	"description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",
+	"description": "A fast, private and secure notebook with Markdown support.",
 	"icons": [
 		{
 			"src": "./assets/icons/icon48.png",

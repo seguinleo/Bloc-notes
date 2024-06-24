@@ -1,3 +1,10 @@
+#----v24.6.3----#
+-Improve biometrics
+-Improve security
+-Improve UI/UX
+-Improve code structure
+-Bug fixes
+
 #----v24.6.2----#
 -Prepare 2FA for a future update
 -Maximum note content from 5000 to 20000

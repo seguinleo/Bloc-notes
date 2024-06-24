@@ -4,7 +4,7 @@
 <h1 align="center">Bloc-notes</h1>
 
 <p align="center">
-<b>Bloc-notes</b> is an encrypted, private and secure notebook.
+<b>Bloc-notes</b> is a fast, private and secure notebook.
 </p>
 
 <p align="center">
@@ -16,36 +16,28 @@
 
 ## Table of contents
 *   [Features](#features)
-*   [Design](#design)
-*   [Security and Privacy](#security-and-privacy)
+*   [Security](#security)
 *   [Todo](#todo)
 *   [Community](#community)
-*   [For developers](#for-developers)
 *   [Self-hosting](#self-hosting)
 
 ## Features
-All notes, local or cloud, are encrypted with ``AES-256-GCM``.
+The user can use Markdown and HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes, sort them or filter them by category.
 
-The user can save and edit notes, change color, copy, export and use [Markdown/HTML](https://github.com/seguinleo/Bloc-notes/wiki/Markdown). The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes or filter by categories.
-
-The user can also sign in to sync all notes between their devices or browsers in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
+The user can also sign in to sync all notes between their devices in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 
 This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
 
-## Design
-The website is fully responsible for mobile devices. The icons come from [Fontawesome](https://github.com/FortAwesome/Font-Awesome). The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
+The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
-## Security and Privacy
-The user's connection for online sync is maintained by a secure cookie. Passwords are hashed with the latest algorithms before being sent to the database.
+## Security
+The website follows the OWASP security recommendations.
 
-Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account according to the GDPR. Security measures are in place against XSS, CSRF, SSRF, SQL injections, etc.
+The user's connection is maintained by a secure cookie. Passwords are hashed and all notes, local or cloud, are encrypted with ``AES-256-GCM``.
 
-Bloc-notes stores the username, hashed password, and encrypted notes in a secure database until the user deletes this data themselves. Only the user has access to the content of their encrypted notes. The website editor disclaims any responsibility for the content of user notes.
+Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account.
 
-The user can use biometrics to unlock notes. Biometric data is stored in the browser's local storage and is never sent to the server.
-
-> [!WARNING]
-> Never store passwords or too personal data in your notes regardless of the service, even if it is encrypted.
+The user can use biometrics (fingerprint, Windows Hello, etc) to unlock app. Biometrics are never sent to the server.
 
 ## Todo
 *   2FA login
@@ -55,13 +47,7 @@ The user can use biometrics to unlock notes. Biometric data is stored in the bro
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
 
-## For developers
-Documentation: [MDN Web Docs](https://developer.mozilla.org/en-US/), [OWASP](https://cheatsheetseries.owasp.org/), [PHP Delusions](https://phpdelusions.net/)
-
-Javascript libraries: [DOMPurify](https://github.com/cure53/DOMPurify) and [Marked](https://github.com/markedjs/marked) (modified checkboxes and crossorigin images)
-
 ## Self-hosting
-
 ``docker-compose up --build -d`` to build the Docker container
 
 > [!IMPORTANT]

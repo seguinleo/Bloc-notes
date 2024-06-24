@@ -1,17 +1,17 @@
 {
   "name": "bloc-notes",
-  "version": "24.6.2",
+  "version": "24.6.3",
   "author": "seguinleo",
   "license": "GPL-3.0",
-  "description": "Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.",
+  "description": "A fast, private and secure notebook with Markdown support.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass": "sass --watch assets/sass/style.sass assets/css/style.min.css --style compressed"
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "eslint": "^9.4.0",
-    "globals": "^15.4.0",
-    "sass": "^1.77.4"
+    "@eslint/js": "^9.5.0",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
+    "sass": "^1.77.6"
   }
 }

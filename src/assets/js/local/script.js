@@ -5,13 +5,6 @@ import '../marked.min.js';
 import '../purify.min.js';
 
 let isUpdate = false;
-const noteBox = document.querySelector('#note-popup-box');
-const connectBox = document.querySelector('#connect-box');
-const createBox = document.querySelector('#create-box');
-const titleNote = noteBox.querySelector('#title');
-const contentNote = noteBox.querySelector('#content');
-const forms = document.querySelectorAll('form');
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
 
 function changeLanguage(language) {
@@ -222,45 +215,6 @@ function changeLanguage(language) {
   }
 }
 
-const verifyFingerprint = async () => {
-  try {
-    const challenge = defaultScript.generateRandomBytes(16);
-    const userId = defaultScript.generateRandomBytes(8);
-    await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: {
-          name: 'Bloc-notes',
-        },
-        user: {
-          id: userId,
-          name: 'Bloc-notes',
-          displayName: 'Bloc-notes',
-        },
-        pubKeyCredParams: [
-          {
-            type: 'public-key',
-            alg: -7,
-          },
-        ],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-          userVerification: 'preferred',
-        },
-        timeout: 60000,
-        attestation: 'none',
-      },
-    });
-    if (localStorage.getItem('fingerprint') === 'true') await showNotes();
-    else localStorage.setItem('fingerprint', 'true');
-  } catch (error) {
-    defaultScript.showError(`An error occurred - ${error}`);
-    if (localStorage.getItem('fingerprint') === 'true') {
-      window.location.href = '/error/403/';
-    } else document.querySelector('#check-lock-app').checked = false;
-  }
-};
-
 const noteActions = () => {
   document.querySelectorAll('.bottom-content i').forEach((e) => {
     e.addEventListener('click', (event) => {
@@ -275,7 +229,7 @@ const noteActions = () => {
       else if (target.classList.contains('fa-thumbtack')) pin(noteId);
       else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
-      else if (target.classList.contains('fa-expand')) toggleFullscreen(noteId);
+      else if (target.classList.contains('fa-expand')) defaultScript.toggleFullscreen(noteId);
       else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteTitle, noteContent);
     });
     e.addEventListener('keydown', (event) => {
@@ -331,11 +285,12 @@ async function storeKeyInDB(db, objectStoreName, key) {
 }
 
 const showNotes = async () => {
+  if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
   const sort = localStorage.getItem('sort_notes');
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
-  forms.forEach((form) => form.reset());
+  defaultScript.forms.forEach((form) => form.reset());
 
   if (notesJSON.length === 0) {
     const numberOfNotesElement = document.createElement('h2');
@@ -540,28 +495,21 @@ const showNotes = async () => {
   }
 };
 
-const toggleFullscreen = (noteId) => {
-  const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
-  note.classList.toggle('fullscreen');
-  document.body.classList.toggle('body-fullscreen');
-};
-
 const updateNote = (noteId, title, content, color, hidden, category) => {
   isUpdate = true;
-  document.querySelectorAll('.note').forEach((e) => e.classList.remove('fullscreen'));
-  document.body.classList.remove('body-fullscreen');
-  document.querySelector('#btn-add-note').click();
+  document.querySelector('.btn-add-note').click();
   document.querySelector('#id-note').value = noteId;
-  titleNote.value = title;
-  contentNote.value = content;
+  document.querySelector('#note-popup-box #title').value = title;
+  document.querySelector('#note-popup-box #content').value = content;
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
   });
   document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
   if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
-  document.querySelector('#textarea-length').textContent = `${contentNote.value.length}/20000`;
-  contentNote.focus();
+  const noteLength = document.querySelector('#note-popup-box #content').value.length;
+  document.querySelector('#textarea-length').textContent = `${noteLength}/${defaultScript.maxNoteContent}`;
+  document.querySelector('#note-popup-box #content').focus();
 };
 
 const pin = async (noteId) => {
@@ -575,8 +523,6 @@ const pin = async (noteId) => {
 };
 
 const deleteNote = async (e) => {
-  document.querySelectorAll('.note').forEach((note) => note.classList.remove('fullscreen'));
-  document.body.classList.remove('body-fullscreen');
   let message = '';
   if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
   else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
@@ -589,44 +535,14 @@ const deleteNote = async (e) => {
   }
 };
 
-document.querySelector('#check-lock-app').addEventListener('change', () => {
-  if (document.querySelector('#check-lock-app').checked) verifyFingerprint();
-  else localStorage.removeItem('fingerprint');
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-thumbtack')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-trash-can')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-pen')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-expand')) document.activeElement.click();
-    else if (document.activeElement.classList.contains('fa-download')) document.activeElement.click();
-  } else if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    document.querySelector('#search-input').focus();
-  }
-});
-
 document.querySelector('#log-in').addEventListener('click', () => {
-  connectBox.showModal();
+  document.querySelector('#connect-box').showModal();
 });
 
 document.querySelector('#create-account').addEventListener('click', () => {
-  connectBox.close();
-  createBox.showModal();
+  document.querySelector('#connect-box').close();
+  document.querySelector('#create-box').showModal();
 });
-
-document.querySelectorAll('.fa-xmark').forEach((e) => {
-  e.addEventListener('click', () => {
-    isUpdate = false;
-    forms.forEach((form) => form.reset());
-    document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
-  });
-});
-
-document.querySelector('#submit-gen-psswd').addEventListener('click', () => defaultScript.getPassword(20));
-forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
@@ -635,6 +551,11 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
       await showNotes();
     }
   });
+});
+
+document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
+  await defaultScript.verifyFingerprint();
+  await showNotes();
 });
 
 document.querySelector('#create-form').addEventListener('submit', async () => {
@@ -665,7 +586,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
   const nameCreate = e;
   const psswdCreate = t;
   try {
-    const data = new URLSearchParams({ nameCreate, psswdCreate, csrf_token: csrfToken });
+    const data = new URLSearchParams({ nameCreate, psswdCreate, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/createUser.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -676,11 +597,11 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     });
     if (!res.ok) {
       defaultScript.showError('Username already taken...');
-      forms.forEach((form) => form.reset());
+      defaultScript.forms.forEach((form) => form.reset());
       return;
     }
-    createBox.close();
-    forms.forEach((form) => form.reset());
+    document.querySelector('#create-box').close();
+    defaultScript.forms.forEach((form) => form.reset());
     let message = '';
     if (localStorage.getItem('language') === 'fr') message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
     else if (localStorage.getItem('language') === 'de') message = 'Konto erfolgreich erstellt! Sie können sich jetzt anmelden.';
@@ -689,7 +610,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     defaultScript.showSuccess(message);
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
-    forms.forEach((form) => form.reset());
+    defaultScript.forms.forEach((form) => form.reset());
   }
 });
 
@@ -700,7 +621,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
   const nameConnect = e;
   const psswdConnect = t;
   try {
-    const data = new URLSearchParams({ nameConnect, psswdConnect, csrf_token: csrfToken });
+    const data = new URLSearchParams({ nameConnect, psswdConnect, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/connectUser.php', {
       method: 'POST',
       mode: 'same-origin',
@@ -710,7 +631,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
       body: data,
     });
     if (!res.ok) {
-      forms.forEach((form) => form.reset());
+      defaultScript.forms.forEach((form) => form.reset());
       let time = 10;
       const btn = document.querySelector('#connect-form button[type="submit"]');
       const btnText = btn.textContent;
@@ -730,21 +651,22 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
     window.location.reload();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
-    forms.forEach((form) => form.reset());
+    defaultScript.forms.forEach((form) => form.reset());
   }
 });
 
 document.querySelector('#add-note').addEventListener('submit', async () => {
   try {
+    if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
     const noteId = notesJSON.length;
-    const title = titleNote.value.trim();
-    const content = contentNote.value.trim();
+    const title = document.querySelector('#note-popup-box #title').value.trim();
+    const content = document.querySelector('#note-popup-box #content').value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = parseInt(document.querySelector('input[name="category"]:checked').value, 10);
 
-    if (!title || title.length > 30 || content.length > 20000 || !color || !/^[0-9]+$/.test(category)) return;
+    if (!title || title.length > 30 || content.length > defaultScript.maxNoteContent || !color || !/^[0-9]+$/.test(category)) return;
 
     const mdContent = DOMPurify.sanitize(content, {
       SANITIZE_NAMED_PROPS: true,
@@ -787,13 +709,12 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       pinned: 0,
     };
 
-    if (isUpdate) {
-      isUpdate = false;
-      notesJSON[document.querySelector('#id-note').value] = note;
-    } else notesJSON.push(note);
+    if (isUpdate) notesJSON[document.querySelector('#id-note').value] = note;
+    else notesJSON.push(note);
 
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-    noteBox.close();
+    document.querySelector('#note-popup-box').close();
+    isUpdate = false;
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
@@ -804,8 +725,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   changeLanguage(localStorage.getItem('language') || 'en');
   if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
-  else {
-    verifyFingerprint();
-    document.querySelector('#check-lock-app').checked = true;
-  }
 });

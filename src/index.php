@@ -1,25 +1,10 @@
-<?php
-session_name('secureNotes');
-$cookieParams = [
-    'path'     => '/',
-    'lifetime' => 604800,
-    'secure'   => false,
-    'httponly' => true,
-    'samesite' => 'Strict',
-];
-session_set_cookie_params($cookieParams);
-session_start();
-session_regenerate_id();
-$name = $_SESSION['name'] ?? null;
-$csrf_token = bin2hex(random_bytes(32));
-$_SESSION['csrf_token'] = $csrf_token;
-?>
+<?php require_once __DIR__ . '/assets/php/cookies.php'; ?>
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
     <meta charset="utf-8">
     <title>Bloc-notes &#8211; Léo SEGUIN</title>
-    <meta name="description" content="Encrypted, private and secure notebook. Local or cloud. Supports Markdown, HTML5 and export in text file.">
+    <meta name="description" content="A fast, private and secure notebook with Markdown support.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?= $csrf_token ?>">
     <meta name="theme-color" content="#171717" class="theme-color">
@@ -43,7 +28,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                 <span id="manage-account" class="link" tabindex="0" role="button" aria-label="Manage account">
                     <i class="fa-solid fa-circle-user"></i>
                 </span>
-                <span id="dot-connected"></span>
             <?php } else { ?>
                 <span id="log-in" class="link" tabindex="0" role="button" aria-label="Log in">
                     <i class="fa-solid fa-circle-user"></i>
@@ -64,7 +48,7 @@ $_SESSION['csrf_token'] = $csrf_token;
     <div id="sidebar">
         <nav>
             <div class="row">
-                <button type="button" id="btn-add-note" aria-label="Add a note">
+                <button type="button" class="btn-add-note" aria-label="Add a note">
                     <i class="fa-solid fa-plus"></i>
                 </button>
                 <button type="button" id="btn-sort" aria-label="Sort notes">
@@ -103,8 +87,11 @@ $_SESSION['csrf_token'] = $csrf_token;
         </footer>
     </div>
     <main>
-        <button id="btn-add-note-float" type="button" aria-label="Add a note">
+        <button type="button" class="btn-add-note btn-add-note-float" aria-label="Add a note">
             <i class="fa-solid fa-plus"></i>
+        </button>
+        <button id="btn-unlock-float" class="d-none" type="button" aria-label="Unlock app">
+            <i class="fa-solid fa-fingerprint"></i>
         </button>
         <div id="success-notification"></div>
         <div id="sidebar-indicator">
@@ -339,7 +326,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.6.2</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.6.3</a>
                         </p>
                     </div>
                 </div>
@@ -352,7 +339,7 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <i class="fa-solid fa-xmark"></i>
                     </div>
                     <div class="row bold">
-                        Plugins
+                        Plugins (coming soon)
                     </div>
                     <div id="plugin-markdown" class="plugin installed">
                         <div>
@@ -397,13 +384,6 @@ $_SESSION['csrf_token'] = $csrf_token;
                         <div class="row">
                             <span id="storage-usage"></span>
                             <progress id="storage" max="1000000" value="0"></progress>
-                        </div>
-                        <div class="row div-slider">
-                            <span>2FA</span>
-                            <label class="switch">
-                                <input type="checkbox" id="check-2fa" aria-hidden="true" tabindex="-1" disabled>
-                                <span class="slider"></span>
-                            </label>
                         </div>
                         <details id="gen-psswd">
                             <summary></summary>
