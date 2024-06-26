@@ -224,18 +224,6 @@ document.querySelector('#language').addEventListener('change', async () => {
   window.location.reload();
 });
 
-document.querySelectorAll('.btn-add-note').forEach((e) => {
-  e.addEventListener('click', () => {
-    document.querySelector('#note-popup-box').showModal();
-    document.querySelectorAll('#colors span').forEach((e) => {
-      e.classList.remove('selected');
-    });
-    document.querySelector('#colors span').classList.add('selected');
-    document.querySelector('#textarea-length').textContent = `0/${maxNoteContent}`;
-    document.querySelector('#check-hidden').disabled = false;
-  });
-});
-
 document.querySelector('#control-clear').addEventListener('click', () => {
   document.querySelector('#note-popup-box #content').value = '';
 });
@@ -376,7 +364,15 @@ document.querySelectorAll('#accent-colors span').forEach((span) => {
 document.querySelectorAll('.fa-xmark').forEach((e) => {
   e.addEventListener('click', () => {
     forms.forEach((form) => form.reset());
+    document.querySelectorAll('input[type="hidden"]').forEach((input) => input.value = '');
     document.querySelectorAll('dialog').forEach((dialog) => dialog.close());
+  });
+});
+
+document.querySelectorAll('dialog').forEach((dialog) => {
+  dialog.addEventListener('close', () => {
+    forms.forEach((form) => form.reset());
+    document.querySelectorAll('input[type="hidden"]').forEach((input) => input.value = '');
   });
 });
 

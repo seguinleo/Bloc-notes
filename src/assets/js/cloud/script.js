@@ -271,7 +271,6 @@ const showNotes = async () => {
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
-  defaultScript.forms.forEach((form) => form.reset());
 
   try {
     const data = new URLSearchParams({ csrf_token: defaultScript.csrfToken });
@@ -532,7 +531,7 @@ const fetchLogout = async () => {
 
 const updateNote = (noteId, title, content, color, hidden, category, link) => {
   isUpdate = true;
-  document.querySelector('.btn-add-note').click();
+  document.querySelector('#note-popup-box').showModal();
   document.querySelector('#id-note').value = noteId;
   document.querySelector('#note-popup-box #title').value = title;
   document.querySelector('#note-popup-box #content').value = content;
@@ -601,6 +600,19 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   });
 });
 
+document.querySelectorAll('.btn-add-note').forEach((e) => {
+  e.addEventListener('click', () => {
+    isUpdate = false;
+    document.querySelector('#note-popup-box').showModal();
+    document.querySelectorAll('#colors span').forEach((e) => {
+      e.classList.remove('selected');
+    });
+    document.querySelector('#colors span').classList.add('selected');
+    document.querySelector('#textarea-length').textContent = `0/${defaultScript.maxNoteContent}`;
+    document.querySelector('#check-hidden').disabled = false;
+  });
+});
+
 document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
   await defaultScript.verifyFingerprint();
   await showNotes();
@@ -619,7 +631,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const color = document.querySelector('#colors .selected').classList[0];
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
-    const link = document.querySelector(`.note[data-note-id="${noteId}"]`).getAttribute('data-note-link') || null;
+    const link = noteId ? document.querySelector(`.note[data-note-id="${noteId}"]`).getAttribute('data-note-link') : null;
 
     if (hidden === 1 && link !== null) return;
 
@@ -656,7 +668,6 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       return;
     }
     document.querySelector('#note-popup-box').close();
-    isUpdate = false;
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);

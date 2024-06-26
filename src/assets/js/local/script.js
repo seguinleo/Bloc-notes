@@ -290,7 +290,6 @@ const showNotes = async () => {
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
-  defaultScript.forms.forEach((form) => form.reset());
 
   if (notesJSON.length === 0) {
     const numberOfNotesElement = document.createElement('h2');
@@ -497,7 +496,7 @@ const showNotes = async () => {
 
 const updateNote = (noteId, title, content, color, hidden, category) => {
   isUpdate = true;
-  document.querySelector('.btn-add-note').click();
+  document.querySelector('#note-popup-box').showModal();
   document.querySelector('#id-note').value = noteId;
   document.querySelector('#note-popup-box #title').value = title;
   document.querySelector('#note-popup-box #content').value = content;
@@ -550,6 +549,19 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
       localStorage.setItem('sort_notes', e.value);
       await showNotes();
     }
+  });
+});
+
+document.querySelectorAll('.btn-add-note').forEach((e) => {
+  e.addEventListener('click', () => {
+    isUpdate = false;
+    document.querySelector('#note-popup-box').showModal();
+    document.querySelectorAll('#colors span').forEach((e) => {
+      e.classList.remove('selected');
+    });
+    document.querySelector('#colors span').classList.add('selected');
+    document.querySelector('#textarea-length').textContent = `0/${defaultScript.maxNoteContent}`;
+    document.querySelector('#check-hidden').disabled = false;
   });
 });
 
@@ -714,7 +726,6 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
 
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     document.querySelector('#note-popup-box').close();
-    isUpdate = false;
     await showNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
