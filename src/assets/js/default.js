@@ -4,7 +4,7 @@ let timeoutNotification = null;
 const sidebar = document.querySelector('#sidebar');
 const metaTheme = document.querySelectorAll('.theme-color');
 const buttonTheme = document.querySelector('#icon-theme');
-export let unlocked = false;
+export let isLocked = true;
 export const maxNoteContent = 20000;
 export const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 export const forms = document.querySelectorAll('form');
@@ -46,14 +46,12 @@ export function showError(message) {
   });
 }
 
-export function downloadNote(title, content) {
-  const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`);
-  a.setAttribute('download', `${title}.txt`);
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+export function downloadNote(noteId) {
+  document.querySelector('#id-note-download').value = noteId;
+  document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
+    e.checked = false;
+  });
+  document.querySelector('#download-popup-box').showModal();
 }
 
 export function copy(content) {
@@ -78,6 +76,33 @@ export function searchSidebar() {
       if (event.key === 'Enter') e.click();
     });
   });
+}
+
+export const getLockApp = async () => {
+  try {
+    const data = new URLSearchParams({ csrf_token: csrfToken });
+    const res = await fetch('./assets/php/getLockApp.php', {
+      method: 'POST',
+      mode: 'same-origin',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: data,
+    });
+    if (!res.ok) {
+      showError(`An error occurred - ${res.status}`);
+      return;
+    }
+    const serverLocked = await res.json();
+    if (serverLocked.lockApp) {
+      document.querySelector('#btn-unlock-float').classList.remove('d-none');
+      document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.add('d-none'));
+      document.querySelector('#lock-app-slider').classList.add('d-none');
+      document.querySelector('#check-lock-app').checked = true;
+    } else isLocked = false;
+  } catch (error) {
+    showError(`An error occurred - ${error}`);
+  }
 }
 
 export const verifyFingerprint = async () => {
@@ -109,16 +134,13 @@ export const verifyFingerprint = async () => {
         attestation: 'none',
       },
     });
-    unlocked = true;
-    if (localStorage.getItem('fingerprint') === 'true') {
-      document.querySelector('#btn-unlock-float').classList.add('d-none');
-      document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.remove('d-none'));
-      document.querySelector('#lock-app-slider').classList.remove('d-none');
-    }
-    else localStorage.setItem('fingerprint', 'true');
+    isLocked = false;
+    document.querySelector('#btn-unlock-float').classList.add('d-none');
+    document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.remove('d-none'));
+    document.querySelector('#lock-app-slider').classList.remove('d-none');
   } catch (error) {
     showError(`An error occurred - ${error}`);
-    if (localStorage.getItem('fingerprint') !== 'true') document.querySelector('#check-lock-app').checked = false;
+    document.querySelector('#check-lock-app').checked = !document.querySelector('#check-lock-app').checked;
   }
 };
 
@@ -138,7 +160,7 @@ export function handleGesture() {
 if (localStorage.getItem('theme') === 'light') {
   document.querySelector('html').className = 'light';
   metaTheme.forEach((e) => {
-    e.content = '#eeeeee';
+    e.content = '#f3f3f3';
   });
   buttonTheme.className = 'fa-solid fa-lightbulb';
 } else if (localStorage.getItem('theme') === 'dusk') {
@@ -153,10 +175,16 @@ if (localStorage.getItem('theme') === 'light') {
     e.content = '#001b1e';
   });
   buttonTheme.className = 'fa-solid fa-leaf';
+} else if (localStorage.getItem('theme') === 'carrot') {
+  document.querySelector('html').className = 'carrot';
+  metaTheme.forEach((e) => {
+    e.content = '#001b1e';
+  });
+  buttonTheme.className = 'fa-solid fa-carrot';
 } else {
   document.querySelector('html').className = 'dark';
   metaTheme.forEach((e) => {
-    e.content = '#171717';
+    e.content = '#121212';
   });
   buttonTheme.className = 'fa-solid fa-moon';
 }
@@ -171,12 +199,6 @@ if (localStorage.getItem('hide-sidebar') === 'true') {
 if (localStorage.getItem('spellcheck') === 'false') {
   document.querySelector('#spellcheck').checked = false;
   document.querySelector('#content').setAttribute('spellcheck', 'false');
-}
-if (localStorage.getItem('fingerprint') === 'true') {
-  document.querySelector('#btn-unlock-float').classList.remove('d-none');
-  document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.add('d-none'));
-  document.querySelector('#lock-app-slider').classList.add('d-none');
-  document.querySelector('#check-lock-app').checked = true;
 }
 if (localStorage.getItem('accent_color') === '5') {
   document.querySelector('body').classList = 'accent5';
@@ -204,23 +226,23 @@ if (
   && localStorage.getItem('sort_notes') !== '3'
   && localStorage.getItem('sort_notes') !== '4'
 ) localStorage.setItem('sort_notes', '1');
-if (localStorage.getItem('language') === null) localStorage.setItem('language', 'en');
+if (localStorage.getItem('lang') === null) localStorage.setItem('lang', 'en');
 
-document.addEventListener('touchstart', (event) => {
-  touchstartX = event.changedTouches[0].screenX;
+document.addEventListener('touchstart', (e) => {
+  touchstartX = e.changedTouches[0].screenX;
 }, false);
 
-document.addEventListener('touchend', (event) => {
-  touchendX = event.changedTouches[0].screenX;
+document.addEventListener('touchend', (e) => {
+  touchendX = e.changedTouches[0].screenX;
   handleGesture();
 }, false);
 
-document.querySelector('#language').addEventListener('change', async () => {
-  const e = document.querySelector('#language').value;
-  if (e === 'fr') localStorage.setItem('language', 'fr');
-  else if (e === 'de') localStorage.setItem('language', 'de');
-  else if (e === 'es') localStorage.setItem('language', 'es');
-  else localStorage.setItem('language', 'en');
+document.querySelector('#language').addEventListener('change', async (e) => {
+  const lang = e.target.value;
+  if (lang === 'fr') localStorage.setItem('lang', 'fr');
+  else if (lang === 'de') localStorage.setItem('lang', 'de');
+  else if (lang === 'es') localStorage.setItem('lang', 'es');
+  else localStorage.setItem('lang', 'en');
   window.location.reload();
 });
 
@@ -228,8 +250,8 @@ document.querySelector('#control-clear').addEventListener('click', () => {
   document.querySelector('#note-popup-box #content').value = '';
 });
 
-document.querySelector('#check-spellcheck').addEventListener('change', () => {
-  if (document.querySelector('#check-spellcheck').checked) {
+document.querySelector('#check-spellcheck').addEventListener('change', (e) => {
+  if (e.target.checked) {
     localStorage.removeItem('spellcheck');
     document.querySelector('#note-popup-box #content').setAttribute('spellcheck', 'true');
   } else {
@@ -238,9 +260,9 @@ document.querySelector('#check-spellcheck').addEventListener('change', () => {
   }
 });
 
-document.querySelector('#note-popup-box #content').addEventListener('input', () => {
-  const e = document.querySelector('#note-popup-box #content').value.length;
-  document.querySelector('#textarea-length').textContent = `${e}/${maxNoteContent}`;
+document.querySelector('#note-popup-box #content').addEventListener('input', (e) => {
+  const length = e.target.value.length;
+  document.querySelector('#textarea-length').textContent = `${length}/${maxNoteContent}`;
 });
 
 document.querySelector('#settings').addEventListener('click', () => {
@@ -262,8 +284,8 @@ document.querySelector('#sidebar-indicator').addEventListener('click', () => {
   openSidebar();
 });
 
-document.querySelector('#check-compact').addEventListener('change', () => {
-  if (document.querySelector('#check-compact').checked) {
+document.querySelector('#check-compact').addEventListener('change', (e) => {
+  if (e.target.checked) {
     localStorage.setItem('compact', 'true');
     document.querySelector('main').classList.add('compact');
   } else {
@@ -272,8 +294,8 @@ document.querySelector('#check-compact').addEventListener('change', () => {
   }
 });
 
-document.querySelector('#check-hide-sidebar').addEventListener('change', () => {
-  if (document.querySelector('#check-hide-sidebar').checked) {
+document.querySelector('#check-hide-sidebar').addEventListener('change', (e) => {
+  if (e.target.checked) {
     localStorage.setItem('hide-sidebar', 'true');
     document.querySelector('#sidebar-indicator').classList.add('d-none');
   } else {
@@ -283,34 +305,41 @@ document.querySelector('#check-hide-sidebar').addEventListener('change', () => {
 });
 
 document.querySelector('#btn-theme').addEventListener('click', () => {
-  if (localStorage.getItem('theme') === 'dark' || localStorage.getItem('theme') === null) {
-    document.querySelector('html').className = 'light';
-    metaTheme.forEach((e) => {
-      e.content = '#eeeeee';
-    });
-    buttonTheme.className = 'fa-solid fa-lightbulb';
-    localStorage.setItem('theme', 'light');
-  } else if (localStorage.getItem('theme') === 'dusk') {
-    document.querySelector('html').className = 'dark';
-    metaTheme.forEach((e) => {
-      e.content = '#171717';
-    });
-    buttonTheme.className = 'fa-solid fa-moon';
-    localStorage.setItem('theme', 'dark');
-  } else if (localStorage.getItem('theme') === 'leaf') {
+  if (localStorage.getItem('theme') === 'light') {
     document.querySelector('html').className = 'dusk';
     metaTheme.forEach((e) => {
       e.content = '#1c1936';
     });
     buttonTheme.className = 'fa-solid fa-star';
     localStorage.setItem('theme', 'dusk');
-  } else {
+  } else if (localStorage.getItem('theme') === 'dusk') {
     document.querySelector('html').className = 'leaf';
     metaTheme.forEach((e) => {
       e.content = '#001b1e';
     });
     buttonTheme.className = 'fa-solid fa-leaf';
     localStorage.setItem('theme', 'leaf');
+  } else if (localStorage.getItem('theme') === 'leaf') {
+    document.querySelector('html').className = 'carrot';
+    metaTheme.forEach((e) => {
+      e.content = '#331500';
+    });
+    buttonTheme.className = 'fa-solid fa-carrot';
+    localStorage.setItem('theme', 'carrot');
+  } else if (localStorage.getItem('theme') === 'carrot') {
+    document.querySelector('html').className = 'dark';
+    metaTheme.forEach((e) => {
+      e.content = '#121212';
+    });
+    buttonTheme.className = 'fa-solid fa-moon';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.querySelector('html').className = 'light';
+    metaTheme.forEach((e) => {
+      e.content = '#f3f3f3';
+    });
+    buttonTheme.className = 'fa-solid fa-lightbulb';
+    localStorage.setItem('theme', 'light');
   }
 });
 
@@ -386,31 +415,73 @@ document.addEventListener('keydown', (e) => {
 document.querySelector('#submit-gen-psswd').addEventListener('click', () => getPassword(20));
 forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()));
 
-document.querySelector('#search-input').addEventListener('input', () => {
-  const searchValue = document.querySelector('#search-input').value.trim().toLowerCase();
-  document.querySelectorAll('.note').forEach((e) => {
-    const title = e.querySelector('.note h2').textContent.toLowerCase();
-    const content = e.querySelector('.details-content').textContent.toLowerCase();
-    if (title.includes(searchValue) || content.includes(searchValue)) e.classList.remove('d-none');
-    else e.classList.add('d-none');
+document.querySelector('#search-input').addEventListener('input', (e) => {
+  const searchValue = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.note').forEach((note) => {
+    const title = note.querySelector('.title').textContent.toLowerCase();
+    const content = note.querySelector('.details-content').textContent.toLowerCase();
+    if (title.includes(searchValue) || content.includes(searchValue)) note.classList.remove('d-none');
+    else note.classList.add('d-none');
   });
 });
 
 document.querySelector('#btn-download-all').addEventListener('click', () => {
-  if (document.querySelector('.note') === null) return;
-  const notes = [];
-  document.querySelectorAll('.note').forEach((e) => {
-    const title = e.getAttribute('data-note-title');
-    const content = e.getAttribute('data-note-content');
-    notes.push(`# ${title}\n${content}`);
+  document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
+    e.checked = false;
   });
-  const a = document.createElement('a');
-  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(notes.join('\n\n'))}`);
-  a.setAttribute('download', 'notes.txt');
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.querySelector('#download-popup-box').showModal();
+});
+
+document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
+  e.addEventListener('change', (event) => {
+    const allNotes = document.querySelectorAll('.note');
+    if (allNotes.length === 0) return;
+    const a = document.createElement('a');
+    let blob, url, filename;
+    if (event.target.value === '3') {
+      let allNotesHTML = [];
+      if (document.querySelector('#id-note-download').value === '') {
+        allNotesHTML = Array.from(allNotes).map((note) => {
+          const title = note.querySelector('.title').textContent;
+          const content = note.querySelector('.details-content').innerHTML;
+          return `<h2>${title}</h2>${content}`;
+        });
+        filename = 'all-notes.html';
+      } else {
+        const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
+        const title = note.querySelector('.title').textContent;
+        const content = note.querySelector('.details-content').innerHTML;
+        allNotesHTML = [`<h2>${title}</h2>${content}`];
+        filename = `${title}.html`;
+      }
+      blob = new Blob([allNotesHTML.join('')], { type: 'text/html;charset=utf-8' });
+    } else {
+      let allNotesContent = [];
+      if (document.querySelector('#id-note-download').value === '') {
+        allNotesContent = Array.from(allNotes).map((note) => {
+          const title = note.getAttribute('data-note-title');
+          const content = note.getAttribute('data-note-content');
+          return `# ${title}\n${content}`;
+        });
+        filename = event.target.value === '1' ? 'all-notes.txt' : 'all-notes.md';
+      } else {
+        const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
+        const title = note.getAttribute('data-note-title');
+        const content = note.getAttribute('data-note-content');
+        allNotesContent = [`# ${title}\n${content}`];
+        filename = event.target.value === '1' ? `${title}.txt` : `${title}.md`;
+      }
+      blob = new Blob([allNotesContent.join('\n\n')], { type: 'text/plain;charset=utf-8' });
+    }
+    url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
 });
 
 document.querySelectorAll('.link').forEach((e) => {
@@ -425,12 +496,22 @@ document.querySelectorAll('.custom-check').forEach((e) => {
   });
 });
 
-document.querySelector('#check-lock-app').addEventListener('change', async () => {
-  if (localStorage.getItem('fingerprint') === 'true' && !unlocked) return;
-  if (document.querySelector('#check-lock-app').checked && !unlocked) await verifyFingerprint();
-  else if (localStorage.getItem('fingerprint') === 'true' && unlocked) {
-    localStorage.removeItem('fingerprint');
-    unlocked = false;
+document.querySelector('#check-lock-app').addEventListener('change', async (e) => {
+  if (isLocked) return;
+  if (e.target.checked) await verifyFingerprint();
+  try {
+    const data = new URLSearchParams({ csrf_token: csrfToken, lock_app: e.target.checked });
+    const res = await fetch('./assets/php/lockApp.php', {
+      method: 'POST',
+      mode: 'same-origin',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: data,
+    });
+    if (!res.ok) showError(`An error occurred - ${res.status}`);
+  } catch (error) {
+    showError(`An error occurred - ${error}`);
   }
 });
 
@@ -438,8 +519,7 @@ document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
   e.addEventListener('change', () => {
     const categories = [];
     document.querySelectorAll('input[name="filter-notes"]:checked').forEach((t) => categories.push(t.value));
-    document.querySelectorAll('.note').forEach((n) => {
-      const note = n;
+    document.querySelectorAll('.note').forEach((note) => {
       const category = note.getAttribute('data-note-category');
       if (categories.includes(category)) note.classList.remove('d-none');
       else note.classList.add('d-none');

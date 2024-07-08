@@ -230,7 +230,7 @@ const noteActions = () => {
       else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
       else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
       else if (target.classList.contains('fa-expand')) defaultScript.toggleFullscreen(noteId);
-      else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteTitle, noteContent);
+      else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteId);
     });
     e.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') e.click();
@@ -284,8 +284,8 @@ async function storeKeyInDB(db, objectStoreName, key) {
   });
 }
 
-const showNotes = async () => {
-  if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
+const getNotes = async () => {
+  if (defaultScript.isLocked) return;
   const sort = localStorage.getItem('sort_notes');
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
@@ -293,8 +293,8 @@ const showNotes = async () => {
 
   if (notesJSON.length === 0) {
     const numberOfNotesElement = document.createElement('h2');
-    if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = 'Notizen (0)';
-    else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = 'Notas (0)';
+    if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = 'Notizen (0)';
+    else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = 'Notas (0)';
     else numberOfNotesElement.textContent = 'Notes (0)';
     document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
     return;
@@ -302,8 +302,8 @@ const showNotes = async () => {
 
   try {
     const numberOfNotesElement = document.createElement('h2');
-    if (localStorage.getItem('language') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
-    else if (localStorage.getItem('language') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
+    if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
+    else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
     else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
     document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
 
@@ -518,19 +518,19 @@ const pin = async (noteId) => {
   else note.classList.remove('pinned');
   notesJSON[parseInt(noteId, 10)].pinned = pinned ? 0 : 1;
   localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-  await showNotes();
+  await getNotes();
 };
 
 const deleteNote = async (e) => {
   let message = '';
-  if (localStorage.getItem('language') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
-  else if (localStorage.getItem('language') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
-  else if (localStorage.getItem('language') === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
+  if (localStorage.getItem('lang') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  else if (localStorage.getItem('lang') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
+  else if (localStorage.getItem('lang') === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
   else message = 'Do you really want to delete this note?';
   if (window.confirm(message)) {
     notesJSON.splice(e, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-    await showNotes();
+    await getNotes();
   }
 };
 
@@ -547,7 +547,7 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
     if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
       localStorage.setItem('sort_notes', e.value);
-      await showNotes();
+      await getNotes();
     }
   });
 });
@@ -567,10 +567,11 @@ document.querySelectorAll('.btn-add-note').forEach((e) => {
 
 document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
   await defaultScript.verifyFingerprint();
-  await showNotes();
+  await getNotes();
 });
 
 document.querySelector('#create-form').addEventListener('submit', async () => {
+  if (defaultScript.isLocked) return;
   const e = document.querySelector('#name-create').value.trim();
   const t = document.querySelector('#psswd-create').value;
   const o = document.querySelector('#psswd-create-valid').value;
@@ -615,9 +616,9 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     document.querySelector('#create-box').close();
     defaultScript.forms.forEach((form) => form.reset());
     let message = '';
-    if (localStorage.getItem('language') === 'fr') message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
-    else if (localStorage.getItem('language') === 'de') message = 'Konto erfolgreich erstellt! Sie können sich jetzt anmelden.';
-    else if (localStorage.getItem('language') === 'es') message = '¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.';
+    if (localStorage.getItem('lang') === 'fr') message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
+    else if (localStorage.getItem('lang') === 'de') message = 'Konto erfolgreich erstellt! Sie können sich jetzt anmelden.';
+    else if (localStorage.getItem('lang') === 'es') message = '¡Cuenta creada exitosamente! Puedes iniciar sesión ahora.';
     else message = 'Account successfully created! You can now log in.';
     defaultScript.showSuccess(message);
   } catch (error) {
@@ -627,6 +628,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
 });
 
 document.querySelector('#connect-form').addEventListener('submit', async () => {
+  if (defaultScript.isLocked) return;
   const e = document.querySelector('#name-connect').value.trim();
   const t = document.querySelector('#psswd-connect').value;
   if (!e || !t || e.length > 25 || t.length > 64 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
@@ -669,7 +671,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
 
 document.querySelector('#add-note').addEventListener('submit', async () => {
   try {
-    if (localStorage.getItem('fingerprint') === 'true' && !defaultScript.unlocked) return;
+    if (defaultScript.isLocked) return;
     const noteId = notesJSON.length;
     const title = document.querySelector('#note-popup-box #title').value.trim();
     const content = document.querySelector('#note-popup-box #content').value.trim();
@@ -726,14 +728,15 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
 
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
     document.querySelector('#note-popup-box').close();
-    await showNotes();
+    await getNotes();
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
   }
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await defaultScript.getLockApp();
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  changeLanguage(localStorage.getItem('language') || 'en');
-  if (localStorage.getItem('fingerprint') !== 'true') await showNotes();
+  changeLanguage(localStorage.getItem('lang') || 'en');
+  await getNotes();
 });

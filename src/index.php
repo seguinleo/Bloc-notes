@@ -7,9 +7,9 @@
     <meta name="description" content="A fast, private and secure notebook with Markdown support.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?= $csrf_token ?>">
-    <meta name="theme-color" content="#171717" class="theme-color">
+    <meta name="theme-color" content="#121212" class="theme-color">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#171717" class="theme-color">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#121212" class="theme-color">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; worker-src 'self'">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
@@ -81,7 +81,7 @@
             <div id="legal" class="row">
                 <a href="https://leoseguin.fr/mentionslegales/"></a>
             </div>
-            <div id="license" class="row">
+            <div id="license">
                 GPL-3.0 &copy;
             </div>
         </footer>
@@ -91,9 +91,9 @@
             <i class="fa-solid fa-plus"></i>
         </button>
         <button id="btn-unlock-float" class="d-none" type="button" aria-label="Unlock app">
-            <i class="fa-solid fa-fingerprint"></i>
+            <i class="fa-solid fa-lock"></i>
         </button>
-        <div id="success-notification"></div>
+        <div id="success-notification" class="d-none"></div>
         <div id="sidebar-indicator">
             <i class="fa-solid fa-bars"></i>
         </div>
@@ -187,6 +187,30 @@
                 </div>
             </div>
         </dialog>
+        <dialog id="download-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <input id="id-note-download" type="hidden">
+                    <div class="row">
+                        <label class="custom-check">
+                            <input type="radio" name="download-notes" value="1" id="txt-download">
+                            <span>.TXT</span>
+                        </label>
+                        <label class="custom-check">
+                            <input type="radio" name="download-notes" value="2" id="md-download">
+                            <span>.MD</span>
+                        </label>
+                        <label class="custom-check">
+                            <input type="radio" name="download-notes" value="3" id="html-download">
+                            <span>.HTML</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </dialog>
         <dialog id="note-popup-box">
             <div class="popup">
                 <div class="content">
@@ -196,7 +220,7 @@
                     <form id="add-note">
                         <input id="id-note" type="hidden">
                         <div class="row">
-                            <div class="error-notification"></div>
+                            <div class="error-notification d-none"></div>
                         </div>
                         <div class="row">
                             <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
@@ -276,6 +300,9 @@
                         <i class="fa-solid fa-xmark"></i>
                     </div>
                     <div class="row">
+                        <div class="error-notification d-none"></div>
+                    </div>
+                    <div class="row">
                         <span class="link">
                             <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="link-markdown" rel="noopener noreferrer"></a>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -326,7 +353,7 @@
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.6.3</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.7.1</a>
                         </p>
                     </div>
                 </div>
@@ -346,9 +373,6 @@
                             <p class="bold">Marked</p>
                             <p>Write with basic Markdown</p>
                         </div>
-                        <button type="button" aria-label="Math" disabled>
-                            Installed
-                        </button>
                     </div>
                     <div id="plugin-math" class="plugin">
                         <div>
@@ -389,7 +413,7 @@
                             <summary></summary>
                             <form id="change-psswd">
                                 <div class="row">
-                                    <div class="error-notification"></div>
+                                    <div class="error-notification d-none"></div>
                                 </div>
                                 <div class="row">
                                     <input id="old-psswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
@@ -416,7 +440,7 @@
                             <summary></summary>
                             <form id="delete-account">
                                 <div class="row">
-                                    <div class="error-notification"></div>
+                                    <div class="error-notification d-none"></div>
                                 </div>
                                 <div class="row">
                                     <input id="delete-psswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
@@ -438,7 +462,7 @@
                         </div>
                         <form id="public-note">
                             <div class="row">
-                                <div class="error-notification"></div>
+                                <div class="error-notification d-none"></div>
                             </div>
                             <div class="row">
                                 <span></span>
@@ -465,7 +489,7 @@
                         </div>
                         <form id="private-note">
                             <div class="row">
-                                <div class="error-notification"></div>
+                                <div class="error-notification d-none"></div>
                             </div>
                             <div class="row">
                                 <span></span>
@@ -491,7 +515,7 @@
                         </div>
                         <form id="connect-form">
                             <div class="row">
-                                <div class="error-notification"></div>
+                                <div class="error-notification d-none"></div>
                             </div>
                             <div class="row">
                                 <input
@@ -522,7 +546,7 @@
                         </div>
                         <form id="create-form">
                             <div class="row">
-                                <div class="error-notification"></div>
+                                <div class="error-notification d-none"></div>
                             </div>
                             <div class="row">
                                 <input

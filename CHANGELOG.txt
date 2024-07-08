@@ -1,3 +1,15 @@
+#----v24.7.1----#
+-Add a new theme "carrot"
+-Improve system for all notes export
+    -Add .txt
+    -Add .md
+    -Add .html
+-Improve biometrics
+-Improve security
+-Improve UI/UX
+-Improve code structure
+-Bug fixes
+
 #----v24.6.3----#
 -Improve biometrics
 -Improve security

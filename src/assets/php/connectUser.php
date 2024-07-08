@@ -63,3 +63,4 @@ session_regenerate_id();
 $_SESSION['name'] = $row['name'];
 $_SESSION['userId'] = $row['id'];
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+$_SESSION['lockApp'] = false;
