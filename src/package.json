@@ -1,6 +1,6 @@
 {
   "name": "bloc-notes",
-  "version": "24.7.1",
+  "version": "24.8.1",
   "author": "seguinleo",
   "license": "GPL-3.0",
   "description": "A fast, private and secure notebook with Markdown support.",
@@ -9,9 +9,9 @@
     "sass": "sass --watch assets/sass/style.sass assets/css/style.min.css --style compressed"
   },
   "devDependencies": {
-    "@eslint/js": "^9.6.0",
-    "eslint": "^9.6.0",
-    "globals": "^15.8.0",
-    "sass": "^1.77.6"
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0",
+    "sass": "^1.77.8"
   }
 }

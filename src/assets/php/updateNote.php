@@ -11,6 +11,7 @@ $color = filter_input(INPUT_POST, 'color', FILTER_DEFAULT);
 $dateNote = date('Y-m-d H:i:s');
 $hidden = filter_input(INPUT_POST, 'hidden', FILTER_SANITIZE_NUMBER_INT);
 $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_NUMBER_INT);
+$folder = filter_input(INPUT_POST, 'folder', FILTER_DEFAULT) ?? null;
 $allColors = [
     'bg-default',
     'bg-red',
@@ -29,7 +30,7 @@ if (in_array($color, $allColors) === false) $color = 'bg-default';
 if (in_array($category, $allCategories) === false) $category = '0';
 
 try {
-    $query = $PDO->prepare("UPDATE notes SET title=:Title,content=:Content,dateNote=:DateNote,color=:Color,hiddenNote=:HiddenNote,category=:Category WHERE id=:NoteId AND user=:User");
+    $query = $PDO->prepare("UPDATE notes SET title=:Title,content=:Content,dateNote=:DateNote,color=:Color,hiddenNote=:HiddenNote,category=:Category,folder=:Folder WHERE id=:NoteId AND user=:User");
     $query->execute(
         [
             ':NoteId'       => $noteId,
@@ -39,6 +40,7 @@ try {
             ':DateNote'     => $dateNote,
             ':HiddenNote'   => $hidden,
             ':Category'     => $category,
+            ':Folder'       => $folder,
             ':User'         => $name
         ]
     );

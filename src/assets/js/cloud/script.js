@@ -47,7 +47,10 @@ function changeLanguage(language) {
     document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Enregistrer';
+    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choisir un dossier';
+    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Enregistrer';
+    document.querySelector('#folder-popup-box button').textContent = 'Créer';
+    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nom du dossier');
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     document.querySelector('#log-out').textContent = 'Déconnexion';
@@ -101,7 +104,10 @@ function changeLanguage(language) {
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Speichern';
+    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Ordner auswählen';
+    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Speichern';
+    document.querySelector('#folder-popup-box button').textContent = 'Erstellen';
+    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Ordnername');
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     document.querySelector('#log-out').textContent = 'Abmelden';
@@ -155,7 +161,10 @@ function changeLanguage(language) {
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Guardar';
+    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Elegir una carpeta';
+    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Guardar';
+    document.querySelector('#folder-popup-box button').textContent = 'Crear';
+    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nombre de la carpeta');
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     document.querySelector('#log-out').textContent = 'Cerrar sesión';
@@ -209,7 +218,10 @@ function changeLanguage(language) {
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
-    document.querySelector('#note-popup-box button').textContent = 'Save';
+    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choose a folder';
+    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Save';
+    document.querySelector('#folder-popup-box button').textContent = 'Create';
+    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Folder name');
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     document.querySelector('#log-out').textContent = 'Log out';
@@ -250,14 +262,15 @@ const noteActions = () => {
       const noteColor = target.closest('.note').getAttribute('data-note-color');
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
+      const noteFolder = target.closest('.note').getAttribute('data-note-folder');
       const noteLink = target.closest('.note').getAttribute('data-note-link') || null;
-      if (target.classList.contains('fa-pen')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteLink);
-      else if (target.classList.contains('fa-thumbtack')) pin(noteId);
-      else if (target.classList.contains('fa-clipboard')) defaultScript.copy(noteContent);
-      else if (target.classList.contains('fa-trash-can')) deleteNote(noteId);
-      else if (target.classList.contains('fa-expand')) defaultScript.toggleFullscreen(noteId);
-      else if (target.classList.contains('fa-download')) defaultScript.downloadNote(noteId);
-      else if (target.classList.contains('fa-link')) shareNote(noteId, noteLink, noteTitle, noteContent);
+      if (target.classList.contains('edit-note')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteFolder, noteLink);
+      else if (target.classList.contains('pin-note')) pin(noteId);
+      else if (target.classList.contains('copy-note')) defaultScript.copy(noteContent);
+      else if (target.classList.contains('delete-note')) deleteNote(noteId);
+      else if (target.classList.contains('expand-note')) defaultScript.toggleFullscreen(noteId);
+      else if (target.classList.contains('download-note')) defaultScript.downloadNote(noteId);
+      else if (target.classList.contains('share-note')) shareNote(noteId, noteLink, noteTitle, noteContent);
     });
     e.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') e.click();
@@ -271,6 +284,10 @@ const getNotes = async () => {
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
+  const folders = document.querySelector('#folders');
+  for (let i = folders.options.length - 1; i >= 0; i -= 1) {
+    if (folders.options[i].value !== '') folders.remove(i);
+  }
 
   try {
     const data = new URLSearchParams({ csrf_token: defaultScript.csrfToken });
@@ -331,20 +348,26 @@ const getNotes = async () => {
     document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
 
     const fragment = document.createDocumentFragment();
+    const allFolders = new Set();
 
     notesJSON.forEach((row) => {
       const {
-        id, title, content, color, date, hidden, category, pinned, link,
+        id, title, content, color, date, hidden, category, pinned, link, folder,
       } = row;
 
       if (!id || !title || !color || !date) return;
 
-      dataByteSize += new Blob([title, content, color, date, hidden, category, pinned, link]).size;
+      dataByteSize += new Blob([title, content]).size;
 
       const bottomContentElement = document.createElement('div');
       bottomContentElement.classList.add('bottom-content');
 
       const paragraph = document.createElement('p');
+
+      if (folder) {
+        allFolders.add(folder);
+        paragraph.setAttribute('data-folder', folder);
+      }
 
       const noteElement = document.createElement('div');
       noteElement.classList.add('note', color);
@@ -354,6 +377,7 @@ const getNotes = async () => {
       noteElement.setAttribute('data-note-color', color);
       noteElement.setAttribute('data-note-hidden', hidden);
       noteElement.setAttribute('data-note-category', category);
+      noteElement.setAttribute('data-note-folder', folder || '');
 
       const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
@@ -370,14 +394,16 @@ const getNotes = async () => {
       detailsElement.appendChild(contentElement);
 
       const editIconElement = document.createElement('i');
-      editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action');
+      editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action', 'edit-note');
       editIconElement.tabIndex = 0;
       editIconElement.setAttribute('role', 'button');
       editIconElement.setAttribute('aria-label', 'Edit note');
       bottomContentElement.appendChild(editIconElement);
 
       const pinElement = document.createElement('i');
-      pinElement.classList.add('fa-solid', 'fa-thumbtack', 'note-action');
+      pinElement.classList.add('fa-solid', 'note-action', 'pin-note');
+      if (pinned) pinElement.classList.add('fa-thumbtack-slash');
+      else pinElement.classList.add('fa-thumbtack');
       pinElement.tabIndex = 0;
       pinElement.setAttribute('role', 'button');
       pinElement.setAttribute('aria-label', 'Pin note');
@@ -385,7 +411,7 @@ const getNotes = async () => {
 
       if (link === null) {
         const trashIconElement = document.createElement('i');
-        trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action');
+        trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action', 'delete-note');
         trashIconElement.tabIndex = 0;
         trashIconElement.setAttribute('role', 'button');
         trashIconElement.setAttribute('aria-label', 'Delete note');
@@ -402,28 +428,28 @@ const getNotes = async () => {
 
       if (hidden === 0 && content !== '') {
         const clipboardIconElement = document.createElement('i');
-        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
+        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action', 'copy-note');
         clipboardIconElement.tabIndex = 0;
         clipboardIconElement.setAttribute('role', 'button');
         clipboardIconElement.setAttribute('aria-label', 'Copy note content');
         bottomContentElement.appendChild(clipboardIconElement);
 
         const downloadIconElement = document.createElement('i');
-        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action');
+        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action', 'download-note');
         downloadIconElement.tabIndex = 0;
         downloadIconElement.setAttribute('role', 'button');
         downloadIconElement.setAttribute('aria-label', 'Download note');
         bottomContentElement.appendChild(downloadIconElement);
 
         const linkIconElement = document.createElement('i');
-        linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action');
+        linkIconElement.classList.add('fa-solid', 'fa-link', 'note-action', 'share-note');
         linkIconElement.tabIndex = 0;
         linkIconElement.setAttribute('role', 'button');
         linkIconElement.setAttribute('aria-label', 'Share note');
         bottomContentElement.appendChild(linkIconElement);
 
         const expandIconElement = document.createElement('i');
-        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action');
+        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action', 'expand-note');
         expandIconElement.tabIndex = 0;
         expandIconElement.setAttribute('role', 'button');
         expandIconElement.setAttribute('aria-label', 'Fullscreen note');
@@ -482,6 +508,25 @@ const getNotes = async () => {
       document.querySelector('#sidebar #list-notes').appendChild(paragraph);
     });
 
+    for (const folder of allFolders) {
+      const folderDetails = document.createElement('details');
+      folderDetails.setAttribute('open', 'open');
+      const summary = document.createElement('summary');
+      summary.textContent = folder;
+      folderDetails.appendChild(summary);
+      const notesForFolder = document.querySelectorAll('#sidebar #list-notes p');
+      notesForFolder.forEach((note) => {
+        if (note.getAttribute('data-folder') === folder) {
+          folderDetails.appendChild(note);
+        }
+      });
+      document.querySelector('#sidebar #list-notes').appendChild(folderDetails);
+      const option = document.createElement('option');
+      option.value = folder;
+      option.textContent = folder;
+      document.querySelector('#folders').appendChild(option);
+    }
+
     document.querySelector('main').appendChild(fragment);
     defaultScript.searchSidebar();
     noteActions();
@@ -529,12 +574,13 @@ const fetchLogout = async () => {
   }
 };
 
-const updateNote = (noteId, title, content, color, hidden, category, link) => {
+const updateNote = (noteId, title, content, color, hidden, category, folder, link) => {
   isUpdate = true;
   document.querySelector('#note-popup-box').showModal();
   document.querySelector('#id-note').value = noteId;
   document.querySelector('#note-popup-box #title').value = title;
   document.querySelector('#note-popup-box #content').value = content;
+  document.querySelector('#note-popup-box #folders').value = folder;
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
@@ -631,11 +677,12 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const color = document.querySelector('#colors .selected').classList[0];
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
+    const folder = document.querySelector('#note-popup-box #folders').value;
     const link = noteId ? document.querySelector(`.note[data-note-id="${noteId}"]`).getAttribute('data-note-link') : null;
 
     if (hidden === 1 && link !== null) return;
 
-    if (!title || title.length > 30 || content.length > defaultScript.maxNoteContent || !color) return;
+    if (!title || title.length > 30 || folder.length > 30 || content.length > defaultScript.maxNoteContent || !color) return;
     if (isUpdate && !noteId) return;
     if (!/^[0-9]+$/.test(category)) return;
 
@@ -649,6 +696,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       color,
       hidden,
       category,
+      folder,
       csrf_token: defaultScript.csrfToken,
     });
     

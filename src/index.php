@@ -18,12 +18,12 @@
     <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accent1">
+    <h1>Bloc-notes</h1>
     <header>
         <noscript>
             <p id="noscript">You must enable JavaScript to use Bloc-notes.</p>
         </noscript>
         <div id="welcome">
-            <h1>Bloc-notes</h1>
             <?php if (isset($name) === true) { ?>
                 <span id="manage-account" class="link" tabindex="0" role="button" aria-label="Manage account">
                     <i class="fa-solid fa-circle-user"></i>
@@ -211,19 +211,37 @@
                 </div>
             </div>
         </dialog>
+        <dialog id="folder-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <form id="add-folder" autocomplete="off">
+                        <div class="row">
+                            <div class="error-notification d-none"></div>
+                        </div>
+                        <div class="row">
+                            <input type="text" id="name-folder" maxlength="30" aria-label="Name" required>
+                        </div>
+                        <button type="submit"></button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
         <dialog id="note-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
                         <i class="fa-solid fa-xmark"></i>
                     </div>
-                    <form id="add-note">
+                    <form id="add-note" autocomplete="off">
                         <input id="id-note" type="hidden">
                         <div class="row">
                             <div class="error-notification d-none"></div>
                         </div>
                         <div class="row">
-                            <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
+                            <input type="text" id="title" maxlength="30" aria-label="Title" required>
                         </div>
                         <div class="row">
                             <textarea
@@ -280,6 +298,14 @@
                                 <input type="radio" name="category" id="cat-idees" value="6">
                                 <span class="cat-idees-filter-span" tabindex="0" role="button"></span>
                             </label>
+                        </div>
+                        <div class="row div-folder">
+                            <select id="folders" aria-label="Folders">
+                                <option value="" selected>Choose a folder</option>
+                            </select>
+                            <button type="button" id="btn-add-folder" aria-label="Add a folder">
+                                <i class="fa-solid fa-folder-plus"></i>
+                            </button>
                         </div>
                         <div class="row div-slider">
                             <span id="hide-infos"></span>
@@ -353,7 +379,7 @@
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.7.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.8.1</a>
                         </p>
                     </div>
                 </div>
@@ -513,7 +539,7 @@
                         <div class="row">
                             <span id="create-account" class="link" tabindex="0" role="button"></span>
                         </div>
-                        <form id="connect-form">
+                        <form id="connect-form" autocomplete="off">
                             <div class="row">
                                 <div class="error-notification d-none"></div>
                             </div>
@@ -524,7 +550,6 @@
                                     minlength="4"
                                     maxlength="25"
                                     spellcheck="false"
-                                    autocomplete="off"
                                     autocapitalize="off"
                                     aria-label="Name"
                                     required
@@ -544,7 +569,7 @@
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <form id="create-form">
+                        <form id="create-form" autocomplete="off">
                             <div class="row">
                                 <div class="error-notification d-none"></div>
                             </div>
@@ -555,7 +580,6 @@
                                     minlength="4"
                                     maxlength="25"
                                     spellcheck="false"
-                                    autocomplete="off"
                                     autocapitalize="off"
                                     aria-label="Name"
                                     required

@@ -8,10 +8,7 @@
 </p>
 
 <p align="center">
-<img alt="Status" src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&up_color=8ab4f8&up_message=online&url=https://leoseguin.fr?color=8ab4f8&style=for-the-badge">
 <img alt="License" src="https://img.shields.io/github/license/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
-<img alt="Issues" src="https://img.shields.io/github/issues/seguinleo/Bloc-notes?color=8ab4f8&style=for-the-badge">
-<img alt="MozillaObservatory" src="https://img.shields.io/mozilla-observatory/grade/leoseguin.fr.svg?color=8ab4f8&style=for-the-badge">
 </p>
 
 ## Table of contents
@@ -22,7 +19,7 @@
 *   [Self-hosting](#self-hosting)
 
 ## Features
-The user can use Markdown and HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes, sort them or filter them by category.
+The user can use Markdown and HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes, sort them or filter them by category and create folders to organize them.
 
 The user can also sign in to sync all notes between their devices in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
 

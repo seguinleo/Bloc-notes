@@ -18,10 +18,6 @@ if (isset($_SESSION['name']) === true) {
     throw new Exception('Account creation failed');
     return;
 }
-if (filter_input(INPUT_POST, 'csrf_token', FILTER_DEFAULT) !== $_SESSION['csrf_token']) {
-    throw new Exception('Connection timeout, please reload the page');
-    return;
-}
 
 global $PDO;
 require_once __DIR__ . '/config/config.php';
