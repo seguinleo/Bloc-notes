@@ -16,11 +16,18 @@ export function generateRandomBytes(length) {
 }
 
 export function getPassword(length) {
-  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&~"#\'(-_)=^$€*!?,.;:/|\\@%+{}[]<>`';
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const digits = '0123456789';
+  const specialChars = '&~"#\'(-_)=^$€*!?,.;:/|\\@%+{}[]<>`';
+  const allChars = lowercase + uppercase + digits + specialChars;
   let password = '';
   const array = new Uint32Array(length);
   window.crypto.getRandomValues(array);
-  for (let i = 0; i < length; i += 1) password += chars[parseInt(array[i] % chars.length, 10)];
+  for (let i = 0; i < length; i += 1) {
+    const randomIndex = parseInt(array[i] % allChars.length, 10);
+    password += allChars[randomIndex];
+  }
   document.querySelector('#psswd-gen').textContent = password;
 }
 
@@ -365,7 +372,7 @@ document.querySelector('#btn-filter').addEventListener('click', () => {
 document.querySelector('#folder-popup-box button').addEventListener('click', async () => {
   const folderName = document.querySelector('#name-folder').value.trim();
   const select = document.querySelector('#folders');
-  if (folderName === '') return;
+  if (folderName === '' || folderName.length > 18) return;
   const option = document.createElement('option');
   option.value = folderName;
   option.textContent = folderName;

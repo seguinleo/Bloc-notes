@@ -15,7 +15,7 @@ if (isset($name, $userId, $psswdOld) === false) {
     throw new Exception('Password update failed');
     return;
 }
-if (strlen($psswdNew) < 8 || strlen($psswdNew) > 64) {
+if (strlen($psswdNew) < 10 || strlen($psswdNew) > 64) {
     throw new Exception('Password update failed');
     return;
 }

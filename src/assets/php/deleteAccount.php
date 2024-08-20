@@ -14,7 +14,7 @@ if (isset($name, $userId) === false) {
     throw new Exception('Account deletion failed');
     return;
 }
-if (strlen($psswd) < 8 || strlen($psswd) > 64) {
+if (strlen($psswd) < 10 || strlen($psswd) > 64) {
     throw new Exception('Account deletion failed');
     return;
 }

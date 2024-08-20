@@ -682,7 +682,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
 
     if (hidden === 1 && link !== null) return;
 
-    if (!title || title.length > 30 || folder.length > 30 || content.length > defaultScript.maxNoteContent || !color) return;
+    if (!title || title.length > 30 || folder.length > 18 || content.length > defaultScript.maxNoteContent || !color) return;
     if (isUpdate && !noteId) return;
     if (!/^[0-9]+$/.test(category)) return;
 
@@ -727,13 +727,25 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
   const a = document.querySelector('#old-psswd').value;
   const e = document.querySelector('#new-psswd').value;
   const t = document.querySelector('#new-psswd-valid').value;
-  if (!a || !e || !t || e.length < 8 || e.length > 64) return;
-  if (/^[0-9]+$/.test(e)) {
+  if (!a || !e || !t || e.length < 10 || e.length > 64) return;
+  if (/^[0-9]+$/.test(t)) {
     defaultScript.showError('Password too weak (only numbers)...');
     return;
   }
-  if (/^[a-zA-Z]+$/.test(e)) {
+  if (/^[a-z]+$/.test(t)) {
+    defaultScript.showError('Password too weak (only lowercase letters)...');
+    return;
+  }
+  if (/^[A-Z]+$/.test(t)) {
+    defaultScript.showError('Password too weak (only uppercase letters)...');
+    return;
+  }
+  if (/^[a-zA-Z]+$/.test(t)) {
     defaultScript.showError('Password too weak (only letters)...');
+    return;
+  }
+  if (/^[a-zA-Z0-9]+$/.test(t)) {
+    defaultScript.showError('Password should contain one special character...');
     return;
   }
   if (e !== t) {

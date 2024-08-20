@@ -60,7 +60,6 @@ function changeLanguage(language) {
     document.querySelector('#psswd-create').setAttribute('placeholder', 'Mot de passe');
     document.querySelector('#psswd-create-valid').setAttribute('placeholder', 'Confirmer le mot de passe');
     document.querySelector('#create-infos').textContent = 'Votre mot de passe est stocké en toute sécurité et vos notes chiffrées. Il vous sera impossible de récupérer votre mot de passe si vous l\'oubliez.';
-    document.querySelector('#gen-psswd summary').textContent = 'Générer un mot de passe';
     document.querySelector('#create-form button[type="submit"]').textContent = 'Créer mon compte';
   } else if (language === 'de') {
     document.documentElement.setAttribute('lang', 'de');
@@ -114,7 +113,6 @@ function changeLanguage(language) {
     document.querySelector('#psswd-create').setAttribute('placeholder', 'Passwort');
     document.querySelector('#psswd-create-valid').setAttribute('placeholder', 'Passwort bestätigen');
     document.querySelector('#create-infos').textContent = 'Ihr Passwort wird sicher gespeichert und Ihre Notizen verschlüsselt. Sie können Ihr Passwort nicht wiederherstellen, wenn Sie es vergessen.';
-    document.querySelector('#gen-psswd summary').textContent = 'Passwort generieren';
     document.querySelector('#create-form button[type="submit"]').textContent = 'Mein Konto erstellen';
   } else if (language === 'es') {
     document.documentElement.setAttribute('lang', 'es');
@@ -168,7 +166,6 @@ function changeLanguage(language) {
     document.querySelector('#psswd-create').setAttribute('placeholder', 'Contraseña');
     document.querySelector('#psswd-create-valid').setAttribute('placeholder', 'Confirmar contraseña');
     document.querySelector('#create-infos').textContent = 'Su contraseña se almacena de forma segura y sus notas cifradas. No podrá recuperar su contraseña si la olvida.';
-    document.querySelector('#gen-psswd summary').textContent = 'Generar una contraseña';
     document.querySelector('#create-form button[type="submit"]').textContent = 'Crear mi cuenta';
   } else {
     document.documentElement.setAttribute('lang', 'en');
@@ -222,7 +219,6 @@ function changeLanguage(language) {
     document.querySelector('#psswd-create').setAttribute('placeholder', 'Password');
     document.querySelector('#psswd-create-valid').setAttribute('placeholder', 'Confirm password');
     document.querySelector('#create-infos').textContent = 'Your password is stored securely and your notes encrypted. You will not be able to recover your password if you forget it.';
-    document.querySelector('#gen-psswd summary').textContent = 'Generate a password';
     document.querySelector('#create-form button[type="submit"]').textContent = 'Create my account';
   }
 }
@@ -622,7 +618,7 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
   const e = document.querySelector('#name-create').value.trim();
   const t = document.querySelector('#psswd-create').value;
   const o = document.querySelector('#psswd-create-valid').value;
-  if (!e || !t || !o || e.length < 4 || e.length > 25 || t.length < 8 || t.length > 64) return;
+  if (!e || !t || !o || e.length < 3 || e.length > 30 || t.length < 10 || t.length > 64) return;
   if (!/^[a-zA-ZÀ-ÿ -]+$/.test(e)) {
     defaultScript.showError('Name can only contain letters, spaces and accents...');
     return;
@@ -631,8 +627,20 @@ document.querySelector('#create-form').addEventListener('submit', async () => {
     defaultScript.showError('Password too weak (only numbers)...');
     return;
   }
+  if (/^[a-z]+$/.test(t)) {
+    defaultScript.showError('Password too weak (only lowercase letters)...');
+    return;
+  }
+  if (/^[A-Z]+$/.test(t)) {
+    defaultScript.showError('Password too weak (only uppercase letters)...');
+    return;
+  }
   if (/^[a-zA-Z]+$/.test(t)) {
     defaultScript.showError('Password too weak (only letters)...');
+    return;
+  }
+  if (/^[a-zA-Z0-9]+$/.test(t)) {
+    defaultScript.showError('Password should contain one special character...');
     return;
   }
   if (t !== o) {
@@ -678,7 +686,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
   if (defaultScript.isLocked) return;
   const e = document.querySelector('#name-connect').value.trim();
   const t = document.querySelector('#psswd-connect').value;
-  if (!e || !t || e.length > 25 || t.length > 64 || !/^[a-zA-ZÀ-ÿ -]+$/.test(e)) return;
+  if (!e || !t || e.length > 30 || t.length > 64) return;
   const nameConnect = e;
   const psswdConnect = t;
   try {
@@ -728,7 +736,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const category = parseInt(document.querySelector('input[name="category"]:checked').value, 10);
     const folder = document.querySelector('#note-popup-box #folders').value;
 
-    if (!title || title.length > 30 || folder.length > 30 || content.length > defaultScript.maxNoteContent || !color || !/^[0-9]+$/.test(category)) return;
+    if (!title || title.length > 30 || folder.length > 18 || content.length > defaultScript.maxNoteContent || !color || !/^[0-9]+$/.test(category)) return;
 
     const mdContent = DOMPurify.sanitize(content, {
       SANITIZE_NAMED_PROPS: true,

@@ -6,7 +6,7 @@ if (preg_match('/^[a-zA-ZÀ-ÿ -]+$/', $nameConnect) === false) {
     throw new Exception('Connection failed');
     return;
 }
-if (strlen($nameConnect) < 4 || strlen($nameConnect) > 25 || strlen($psswdConnect) < 8 || strlen($psswdConnect) > 64) {
+if (strlen($nameConnect) < 3 || strlen($nameConnect) > 30 || strlen($psswdConnect) < 10 || strlen($psswdConnect) > 64) {
     throw new Exception('Account creation failed');
     return;
 }

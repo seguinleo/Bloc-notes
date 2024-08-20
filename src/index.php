@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accent1">
@@ -222,7 +222,7 @@
                             <div class="error-notification d-none"></div>
                         </div>
                         <div class="row">
-                            <input type="text" id="name-folder" maxlength="30" aria-label="Name" required>
+                            <input type="text" id="name-folder" maxlength="18" aria-label="Name" required>
                         </div>
                         <button type="submit"></button>
                     </form>
@@ -442,13 +442,13 @@
                                     <div class="error-notification d-none"></div>
                                 </div>
                                 <div class="row">
-                                    <input id="old-psswd" type="password" minlength="8" maxlength="64" aria-label="Old password" required>
+                                    <input id="old-psswd" type="password" minlength="10" maxlength="64" aria-label="Old password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="new-psswd" type="password" minlength="8" maxlength="64" aria-label="New password" required>
+                                    <input id="new-psswd" type="password" minlength="10" maxlength="64" aria-label="New password" required>
                                 </div>
                                 <div class="row">
-                                    <input id="new-psswd-valid" type="password" minlength="8" maxlength="64" aria-label="Confirm new password" required>
+                                    <input id="new-psswd-valid" type="password" minlength="10" maxlength="64" aria-label="Confirm new password" required>
                                 </div>
                                 <div class="row d-flex">
                                     <p id="psswd-gen"></p>
@@ -469,7 +469,7 @@
                                     <div class="error-notification d-none"></div>
                                 </div>
                                 <div class="row">
-                                    <input id="delete-psswd" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                    <input id="delete-psswd" type="password" minlength="10" maxlength="64" aria-label="Password" required>
                                 </div>
                                 <button type="submit"></button>
                             </form>
@@ -547,8 +547,8 @@
                                 <input
                                     id="name-connect"
                                     type="text"
-                                    minlength="4"
-                                    maxlength="25"
+                                    minlength="3"
+                                    maxlength="30"
                                     spellcheck="false"
                                     autocapitalize="off"
                                     aria-label="Name"
@@ -556,7 +556,7 @@
                                 >
                             </div>
                             <div class="row">
-                                <input id="psswd-connect" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                <input id="psswd-connect" type="password" minlength="10" maxlength="64" aria-label="Password" required>
                             </div>
                             <button type="submit"></button>
                         </form>
@@ -577,8 +577,8 @@
                                 <input
                                     id="name-create"
                                     type="text"
-                                    minlength="4"
-                                    maxlength="25"
+                                    minlength="3"
+                                    maxlength="30"
                                     spellcheck="false"
                                     autocapitalize="off"
                                     aria-label="Name"
@@ -586,27 +586,24 @@
                                 >
                             </div>
                             <div class="row">
-                                <input id="psswd-create" type="password" minlength="8" maxlength="64" aria-label="Password" required>
+                                <input id="psswd-create" type="password" minlength="10" maxlength="64" aria-label="Password" required>
                             </div>
                             <div class="row">
-                                <input id="psswd-create-valid" type="password" minlength="8" maxlength="64" aria-label="Confirm password" required>
+                                <input id="psswd-create-valid" type="password" minlength="10" maxlength="64" aria-label="Confirm password" required>
+                            </div>
+                            <div class="row d-flex">
+                                <p id="psswd-gen"></p>
+                                <button type="button" id="copy-password-btn" aria-label="Copy password">
+                                    <i class="fa-solid fa-clipboard"></i>
+                                </button>
+                                <button type="button" id="submit-gen-psswd" aria-label="Generate password">
+                                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                                </button>
                             </div>
                             <div class="row">
                                 <i class="fa-solid fa-circle-info" role="none"></i>
                                 <span id="create-infos"></span>
                             </div>
-                            <details id="gen-psswd">
-                                <summary></summary>
-                                <div class="row d-flex">
-                                    <p id="psswd-gen"></p>
-                                    <button type="button" id="copy-password-btn" aria-label="Copy password">
-                                        <i class="fa-solid fa-clipboard"></i>
-                                    </button>
-                                    <button type="button" id="submit-gen-psswd" aria-label="Generate password">
-                                        <i class="fa-solid fa-arrow-rotate-right"></i>
-                                    </button>
-                                </div>
-                            </details>
                             <button type="submit"></button>
                         </form>
                     </div>
