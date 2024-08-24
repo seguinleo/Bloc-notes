@@ -1,6 +1,7 @@
 /* global marked */
 
 import '../../../assets/js/marked.min.js';
+import '../../../assets/js/purify.min.js';
 
 let stop = false;
 const notesContainer = document.querySelector('#main');
@@ -54,7 +55,13 @@ const showSharedNote = async () => {
 
   document.title = title;
 
-  const contentHtml = marked.parse(content);
+  const cleanContent = DOMPurify.sanitize(content, {
+    SANITIZE_NAMED_PROPS: true,
+    ALLOW_DATA_ATTR: false,
+    FORBID_TAGS: ['footer', 'form', 'header', 'main', 'nav', 'style'],
+  });
+
+  const contentHtml = marked.parse(cleanContent);
   const noteElement = document.createElement('div');
   noteElement.classList.add('shared-note', 'bg-default');
   noteElement.tabIndex = 0;
@@ -88,7 +95,7 @@ const showSharedNote = async () => {
   const clipboardIconElement = document.createElement('i');
   clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
   clipboardIconElement.tabIndex = 0;
-  clipboardIconElement.setAttribute('data-note-content', content);
+  clipboardIconElement.setAttribute('data-note-content', cleanContent);
   clipboardIconElement.setAttribute('role', 'button');
   clipboardIconElement.setAttribute('aria-label', 'Copy note to clipboard');
   bottomContentElement.appendChild(clipboardIconElement);

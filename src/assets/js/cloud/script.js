@@ -26,6 +26,7 @@ const noteActions = () => {
     e.addEventListener('click', (event) => {
       const { target } = event;
       const noteId = target.closest('.note').getAttribute('data-note-id');
+      if (!noteId) return;
       const noteTitle = target.closest('.note').getAttribute('data-note-title');
       const noteContent = target.closest('.note').getAttribute('data-note-content');
       const noteColor = target.closest('.note').getAttribute('data-note-color');
@@ -447,6 +448,8 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
 
     const cleanContent = DOMPurify.sanitize(content, {
       SANITIZE_NAMED_PROPS: true,
+      ALLOW_DATA_ATTR: false,
+      FORBID_TAGS: ['footer', 'form', 'header', 'main', 'nav', 'style'],
     });
 
     const data = new URLSearchParams({
