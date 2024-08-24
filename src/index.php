@@ -48,16 +48,16 @@
     <div id="sidebar">
         <nav>
             <div class="row">
-                <button type="button" class="btn-add-note" aria-label="Add a note">
+                <button type="button" class="btn-add-note d-none" aria-label="Add a note">
                     <i class="fa-solid fa-plus"></i>
                 </button>
-                <button type="button" id="btn-sort" aria-label="Sort notes">
+                <button type="button" id="btn-sort" class="d-none" aria-label="Sort notes">
                     <i class="fa-solid fa-arrow-up-wide-short"></i>
                 </button>
-                <button type="button" id="btn-filter" aria-label="Filter notes">
+                <button type="button" id="btn-filter" class="d-none" aria-label="Filter notes">
                     <i class="fa-solid fa-filter"></i>
                 </button>
-                <button type="button" id="btn-download-all" aria-label="Download all notes">
+                <button type="button" id="btn-download-all" class="d-none" aria-label="Download all notes">
                     <i class="fa-solid fa-download"></i>
                 </button>
             </div>
@@ -87,7 +87,7 @@
         </footer>
     </div>
     <main>
-        <button type="button" class="btn-add-note btn-add-note-float" aria-label="Add a note">
+        <button type="button" class="btn-add-note btn-add-note-float d-none" aria-label="Add a note">
             <i class="fa-solid fa-plus"></i>
         </button>
         <button id="btn-unlock-float" class="d-none" type="button" aria-label="Unlock app">
@@ -370,10 +370,10 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="lock-app-slider" class="row div-slider">
+                    <div id="lock-app-slider" class="row div-slider d-none">
                         <span></span>
                         <label class="switch">
-                            <input type="checkbox" id="check-lock-app" aria-hidden="true" tabindex="-1">
+                            <input type="checkbox" id="check-lock-app" aria-hidden="true" tabindex="-1" checked>
                             <span class="slider"></span>
                         </label>
                     </div>

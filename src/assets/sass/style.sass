@@ -133,7 +133,7 @@ code
   overflow-x: auto
 
 li
-  margin-left: -1.4rem
+  margin-left: -1rem
 
   &:has(> input[type=checkbox])
     list-style: none
@@ -187,6 +187,7 @@ header
       flex-grow: 1
       padding: 0 4px
       border: none
+      border-radius: 0
       outline: none
 
 main
@@ -205,12 +206,13 @@ input
   font-family: OpenSans,sans-serif
 
 select
+  font-size: .9rem
+  padding: 0
   border: none
 
 textarea
   font-size: .9rem
   width: 100%
-  border-radius: 10px
   min-height: 50px
   max-height: 1000px
   resize: vertical
@@ -220,8 +222,8 @@ button
   cursor: pointer
   font-size: 1rem
   width: 100%
-  height: 50px
-  border-radius: 10px
+  height: 36px
+  border-radius: 20px
   border: none
 
   &:hover
@@ -246,14 +248,14 @@ form
   margin: 10px 0
 
 input
-  border-radius: 10px
+  border-radius: 20px
 
   &[type=text],
   &[type=password],
   &[type=search],
   &[type=number],
   &[type=date]
-    height: 50px
+    height: 36px
     width: 100%
     font-size: 1rem
     padding: 0 1rem
@@ -325,7 +327,7 @@ input
 
       .custom-check
         padding: 4px 8px
-        margin: 0 8px 0 0
+        margin-right: 4px
         border-radius: 24px
 
       .title-list
@@ -350,31 +352,15 @@ input
   text-align: center
   padding: 4px
 
-.note
-  display: flex
-  flex-direction: column
-  border-radius: 1rem
-  line-height: 2
-  padding: 10px 1rem
-
-  &:not(.fullscreen)
-    max-width: 50%
-
-  &:hover
-    .bottom-content
-      visibility: visible
-      opacity: 1
-
+.note,
+.shared-note
   .title
     text-align: right
     font-weight: 700
     margin: 0 10px
 
   .details
-    min-height: 100px
-    max-height: 420px
     overflow-x: hidden
-    overflow-y: auto
     overflow-wrap: break-word
     word-break: break-word
     font-size: .9rem
@@ -384,10 +370,7 @@ input
     -webkit-user-select: none
     user-select: none
     text-align: center
-    opacity: 0
-    visibility: hidden
     margin-top: 10px
-    transition: opacity .1s
 
     i
       cursor: pointer
@@ -402,6 +385,72 @@ input
 
       &:hover
         background: rgba(150, 150, 150, 0.4)
+
+.note
+  display: flex
+  flex-direction: column
+  border-radius: 1rem
+  line-height: 2
+  padding: 10px 1rem
+
+  .details
+    min-height: 100px
+    max-height: 420px
+    overflow-y: auto
+
+  .bottom-content
+    opacity: 0
+    visibility: hidden
+    transition: opacity .1s
+
+  &:not(.fullscreen)
+    max-width: 50%
+
+  &:hover
+    .bottom-content
+      visibility: visible
+      opacity: 1
+
+.shared-note
+  position: relative
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  background: #121212
+  border-radius: 1rem
+  width: fit-content
+  max-width: 100%
+  margin: 1rem auto
+  line-height: 2
+  padding: 10px 1rem
+
+  .title
+    text-align: center
+    font-weight: 700
+    margin: 0 10px
+
+  .bottom-content
+    -webkit-user-select: none
+    user-select: none
+    margin-top: 4px
+    text-align: center
+
+    i
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      margin: 0 10px
+      width: 30px
+      height: 30px
+      border-radius: 50%
+
+      &:hover
+        background: rgba(150, 150, 150, 0.4)
+
+    span
+      font-size: .8rem
+      margin: 0 10px
 
 .close
   display: flex
@@ -503,10 +552,11 @@ dialog
     textarea
       padding: 0
       border: none
+      border-radius: 0
       outline: none
 
     textarea
-      height: 35svh
+      height: 38svh
       overscroll-behavior: none
 
 .row
@@ -528,7 +578,6 @@ dialog
 
 .custom-check
   display: inline-flex
-  margin: 2px 1px
   font-size: .9rem
 
   span
@@ -612,7 +661,7 @@ dialog
   vertical-align: middle
 
 #textarea-length
-  font-size: .9rem
+  font-size: .8rem
 
 .delete-account
   cursor: pointer
@@ -705,6 +754,7 @@ dialog
   align-items: center
   top: 50svh
   font-size: 1.5rem
+  border-radius: 48px
   width: 75px
   height: 75px
 
@@ -795,7 +845,6 @@ dialog
     width: 100vw
 
     textarea
-      height: 30svh
       resize: none
 
   #colors

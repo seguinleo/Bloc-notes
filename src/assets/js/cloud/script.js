@@ -8,247 +8,16 @@ let isUpdate = false;
 let dataByteSize = 0;
 const maxDataByteSize = 1000000;
 
-function changeLanguage(language) {
-  if (language === 'fr') {
-    document.documentElement.setAttribute('lang', 'fr-FR');
-    document.querySelector('#language').value = 'fr';
-    document.querySelector('#legal a').textContent = 'Mentions légales / confidentialité';
-    document.querySelector('#sort-popup-box legend').textContent = 'Trier les notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Date de modification';
-    document.querySelector('#sort-notes2-span').textContent = 'Date de modification (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Titre';
-    document.querySelector('#sort-notes4-span').textContent = 'Titre (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Aucune catégorie';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Perso';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Travail';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Voyage';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tâches';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Rappel';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Idées';
-    });
-    document.querySelector('#spellcheck-slider span').textContent = 'Vérif. ortho.';
-    document.querySelector('#compact-slider span').textContent = 'Mode compact';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Masquer bouton sidebar';
-    document.querySelector('#lock-app-slider span').textContent = 'Vérouiller app';
-    document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choisir un dossier';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Enregistrer';
-    document.querySelector('#folder-popup-box button').textContent = 'Créer';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nom du dossier');
-    document.querySelector('#link-markdown').textContent = 'Guide Markdown';
-    document.querySelector('#link-help').textContent = 'Aide et discussions';
-    document.querySelector('#log-out').textContent = 'Déconnexion';
-    document.querySelector('#old-psswd').setAttribute('placeholder', 'Ancien mot de passe');
-    document.querySelector('#new-psswd').setAttribute('placeholder', 'Nouveau mot de passe');
-    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmer le mot de passe');
-    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Changer le mot de passe';
-    document.querySelector('#gen-psswd summary').textContent = 'Changer le mot de passe';
-    document.querySelector('#delete-user summary').textContent = 'Supprimer le compte';
-    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Mot de passe');
-    document.querySelector('#delete-user button').textContent = 'Supprimer le compte';
-    document.querySelector('#private-note span').textContent = 'Voulez-vous rendre votre note privée ? Le lien ne sera plus disponible.';
-    document.querySelector('#private-note button').textContent = 'Rendre privée';
-    document.querySelector('#public-note span').textContent = 'Voulez-vous rendre votre note publique ? Un lien sera disponible pour la partager.';
-    document.querySelector('#public-note button').textContent = 'Rendre publique';
-  } else if (language === 'de') {
-    document.documentElement.setAttribute('lang', 'de');
-    document.querySelector('#language').value = 'de';
-    document.querySelector('#legal a').textContent = 'Impressum / Datenschutz';
-    document.querySelector('#sort-popup-box legend').textContent = 'Notizen sortieren';
-    document.querySelector('#sort-notes1-span').textContent = 'Änderungsdatum';
-    document.querySelector('#sort-notes2-span').textContent = 'Änderungsdatum (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Titel';
-    document.querySelector('#sort-notes4-span').textContent = 'Titel (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Keine Kategorie';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Persönlich';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Arbeit';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Reise';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Aufgaben';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Erinnerung';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideen';
-    });
-    document.querySelector('#spellcheck-slider span').textContent = 'Rechtschreibprüfung';
-    document.querySelector('#compact-slider span').textContent = 'Kompaktmodus';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Seitenleiste ausblenden';
-    document.querySelector('#lock-app-slider span').textContent = 'App sperren';
-    document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Ordner auswählen';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Speichern';
-    document.querySelector('#folder-popup-box button').textContent = 'Erstellen';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Ordnername');
-    document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
-    document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
-    document.querySelector('#log-out').textContent = 'Abmelden';
-    document.querySelector('#old-psswd').setAttribute('placeholder', 'Altes Passwort');
-    document.querySelector('#new-psswd').setAttribute('placeholder', 'Neues Passwort');
-    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Passwort bestätigen');
-    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Passwort ändern';
-    document.querySelector('#gen-psswd summary').textContent = 'Passwort ändern';
-    document.querySelector('#delete-user summary').textContent = 'Konto löschen';
-    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Passwort');
-    document.querySelector('#delete-user button').textContent = 'Konto löschen';
-    document.querySelector('#private-note span').textContent = 'Möchten Sie Ihre Notiz privat machen? Der Link wird nicht mehr verfügbar sein.';
-    document.querySelector('#private-note button').textContent = 'Privat machen';
-    document.querySelector('#public-note span').textContent = 'Möchten Sie Ihre Notiz öffentlich machen? Ein Link wird verfügbar sein, um es zu teilen.';
-    document.querySelector('#public-note button').textContent = 'Öffentlich machen';
-  } else if (language === 'es') {
-    document.documentElement.setAttribute('lang', 'es');
-    document.querySelector('#language').value = 'es';
-    document.querySelector('#legal a').textContent = 'Aviso legal / privacidad';
-    document.querySelector('#sort-popup-box legend').textContent = 'Ordenar notas';
-    document.querySelector('#sort-notes1-span').textContent = 'Fecha de modificación';
-    document.querySelector('#sort-notes2-span').textContent = 'Fecha de modificación (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Título';
-    document.querySelector('#sort-notes4-span').textContent = 'Título (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Sin categoría';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Personal';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Trabajo';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Viaje';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tareas';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Recordatorio';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideas';
-    });
-    document.querySelector('#spellcheck-slider span').textContent = 'Corrector ortográfico';
-    document.querySelector('#compact-slider span').textContent = 'Modo compacto';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Ocultar barra lateral';
-    document.querySelector('#lock-app-slider span').textContent = 'Bloquear aplicación';
-    document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Elegir una carpeta';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Guardar';
-    document.querySelector('#folder-popup-box button').textContent = 'Crear';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nombre de la carpeta');
-    document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
-    document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
-    document.querySelector('#log-out').textContent = 'Cerrar sesión';
-    document.querySelector('#old-psswd').setAttribute('placeholder', 'Contraseña antigua');
-    document.querySelector('#new-psswd').setAttribute('placeholder', 'Nueva contraseña');
-    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmar contraseña');
-    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Cambiar contraseña';
-    document.querySelector('#gen-psswd summary').textContent = 'Cambiar contraseña';
-    document.querySelector('#delete-user summary').textContent = 'Eliminar cuenta';
-    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Contraseña');
-    document.querySelector('#delete-user button').textContent = 'Eliminar cuenta';
-    document.querySelector('#private-note span').textContent = '¿Quieres hacer tu nota privada? El enlace ya no estará disponible.';
-    document.querySelector('#private-note button').textContent = 'Hacer privado';
-    document.querySelector('#public-note span').textContent = '¿Quieres hacer tu nota pública? Un enlace estará disponible para compartirlo.';
-    document.querySelector('#public-note button').textContent = 'Hacer público';
-  } else {
-    document.documentElement.setAttribute('lang', 'en');
-    document.querySelector('#language').value = 'en';
-    document.querySelector('#legal a').textContent = 'Legal notice / privacy';
-    document.querySelector('#sort-popup-box legend').textContent = 'Sort notes';
-    document.querySelector('#sort-notes1-span').textContent = 'Modification date';
-    document.querySelector('#sort-notes2-span').textContent = 'Modification date (Z-A)';
-    document.querySelector('#sort-notes3-span').textContent = 'Title';
-    document.querySelector('#sort-notes4-span').textContent = 'Title (Z-A)';
-    document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'No category';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Personal';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Work';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Travel';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tasks';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Reminder';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideas';
-    });
-    document.querySelector('#spellcheck-slider span').textContent = 'Spell check';
-    document.querySelector('#compact-slider span').textContent = 'Compact mode';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Hide sidebar button';
-    document.querySelector('#lock-app-slider span').textContent = 'Lock app';
-    document.querySelector('#hide-infos').textContent = 'Hide content';
-    document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
-    document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choose a folder';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Save';
-    document.querySelector('#folder-popup-box button').textContent = 'Create';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Folder name');
-    document.querySelector('#link-markdown').textContent = 'Markdown guide';
-    document.querySelector('#link-help').textContent = 'Help and discussions';
-    document.querySelector('#log-out').textContent = 'Log out';
-    document.querySelector('#old-psswd').setAttribute('placeholder', 'Old password');
-    document.querySelector('#new-psswd').setAttribute('placeholder', 'New password');
-    document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirm password');
-    document.querySelector('#change-psswd button[type="submit"]').textContent = 'Change password';
-    document.querySelector('#gen-psswd summary').textContent = 'Change password';
-    document.querySelector('#delete-user summary').textContent = 'Delete account';
-    document.querySelector('#delete-psswd').setAttribute('placeholder', 'Password');
-    document.querySelector('#delete-user button').textContent = 'Delete account';
-    document.querySelector('#private-note span').textContent = 'Do you want to make your note private? The link will no longer be available.';
-    document.querySelector('#private-note button').textContent = 'Make private';
-    document.querySelector('#public-note span').textContent = 'Do you want to make your note public? A link will be available to share it.';
-    document.querySelector('#public-note button').textContent = 'Make public';
-  }
-}
-
 const shareNote = (noteId, link) => {
-  if (link === null) {
-    document.querySelector('#private-note-popup-box').showModal();
-    document.querySelector('#id-note-public').value = noteId;
-  } else {
+  if (!noteId) return;
+  if (link) {
     document.querySelector('#public-note-popup-box').showModal();
     document.querySelector('#id-note-private').value = noteId;
     document.querySelector('#link-note-private').value = link;
     document.querySelector('#copy-note-link').textContent = link;
+  } else {
+    document.querySelector('#private-note-popup-box').showModal();
+    document.querySelector('#id-note-public').value = noteId;
   }
 };
 
@@ -263,7 +32,7 @@ const noteActions = () => {
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
       const noteCategory = target.closest('.note').getAttribute('data-note-category');
       const noteFolder = target.closest('.note').getAttribute('data-note-folder');
-      const noteLink = target.closest('.note').getAttribute('data-note-link') || null;
+      const noteLink = target.closest('.note').getAttribute('data-note-link');
       if (target.classList.contains('edit-note')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteCategory, noteFolder, noteLink);
       else if (target.classList.contains('pin-note')) pin(noteId);
       else if (target.classList.contains('copy-note')) defaultScript.copy(noteContent);
@@ -279,14 +48,17 @@ const noteActions = () => {
 };
 
 const getNotes = async () => {
-  if (defaultScript.isLocked) return;
+  if (defaultScript.isLocked) {
+    document.querySelector('#btn-unlock-float').classList.remove('d-none');
+    return;
+  }
   const sort = localStorage.getItem('sort_notes');
   document.querySelector(`input[name="sort-notes"][value="${sort}"]`).checked = true;
   document.querySelectorAll('#list-notes *').forEach((e) => e.remove());
   document.querySelectorAll('.note').forEach((e) => e.remove());
   const folders = document.querySelector('#folders');
   for (let i = folders.options.length - 1; i >= 0; i -= 1) {
-    if (folders.options[i].value !== '') folders.remove(i);
+    if (folders.options[i].value) folders.remove(i);
   }
 
   try {
@@ -306,46 +78,31 @@ const getNotes = async () => {
     document.querySelector('#storage-usage').textContent = `0 kB / ${maxDataByteSize / 1000000} MB`;
     const notesJSON = await res.json();
 
-    if (notesJSON.length === 0) {
-      const numberOfNotesElement = document.createElement('h2');
-      if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = 'Notizen (0)';
-      else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = 'Notas (0)';
-      else numberOfNotesElement.textContent = 'Notes (0)';
-      document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
-      return;
-    }
+    if (notesJSON.length === 0) return;
 
-    if (sort === '1') {
-      notesJSON.sort((a, b) => {
-        if (a.pinned === 1 && b.pinned === 0) return -1;
-        if (a.pinned === 0 && b.pinned === 1) return 1;
-        return b.date.localeCompare(a.date);
-      });
-    } else if (sort === '2') {
-      notesJSON.sort((a, b) => {
-        if (a.pinned === 1 && b.pinned === 0) return -1;
-        if (a.pinned === 0 && b.pinned === 1) return 1;
-        return a.date.localeCompare(b.date);
-      });
-    } else if (sort === '3') {
-      notesJSON.sort((a, b) => {
-        if (a.pinned === 1 && b.pinned === 0) return -1;
-        if (a.pinned === 0 && b.pinned === 1) return 1;
-        return a.title.localeCompare(b.title);
-      });
-    } else if (sort === '4') {
-      notesJSON.sort((a, b) => {
-        if (a.pinned === 1 && b.pinned === 0) return -1;
-        if (a.pinned === 0 && b.pinned === 1) return 1;
-        return b.title.localeCompare(a.title);
-      });
-    }
+    notesJSON.sort((a, b) => {
+      if (a.pinned === 1 && b.pinned === 0) return -1;
+      if (a.pinned === 0 && b.pinned === 1) return 1;
+
+      switch (sort) {
+        case '1':
+          return b.date.localeCompare(a.date);
+        case '2':
+          return a.date.localeCompare(b.date);
+        case '3':
+          return a.title.localeCompare(b.title);
+        case '4':
+          return b.title.localeCompare(a.title);
+        default:
+          break;
+      }
+    });
 
     const numberOfNotesElement = document.createElement('h2');
-    if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
-    else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
+    if (defaultScript.lang === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`;
+    else if (defaultScript.lang === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`;
     else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`;
-    document.querySelector('#sidebar #list-notes').appendChild(numberOfNotesElement);
+    document.querySelector('#list-notes').appendChild(numberOfNotesElement);
 
     const fragment = document.createDocumentFragment();
     const allFolders = new Set();
@@ -364,20 +121,13 @@ const getNotes = async () => {
 
       const paragraph = document.createElement('p');
 
-      if (folder) {
-        allFolders.add(folder);
-        paragraph.setAttribute('data-folder', folder);
-      }
-
       const noteElement = document.createElement('div');
       noteElement.classList.add('note', color);
       noteElement.setAttribute('data-note-id', id);
       noteElement.setAttribute('data-note-title', title);
       noteElement.setAttribute('data-note-content', content);
       noteElement.setAttribute('data-note-color', color);
-      noteElement.setAttribute('data-note-hidden', hidden);
       noteElement.setAttribute('data-note-category', category);
-      noteElement.setAttribute('data-note-folder', folder || '');
 
       const titleElement = document.createElement('h2');
       titleElement.classList.add('title');
@@ -385,8 +135,8 @@ const getNotes = async () => {
 
       const contentElement = document.createElement('div');
       contentElement.classList.add('details-content');
-      if (hidden === 0) contentElement.innerHTML = marked.parse(content);
-      else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      if (hidden) contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      else contentElement.innerHTML = marked.parse(content);
 
       const detailsElement = document.createElement('div');
       detailsElement.classList.add('details');
@@ -409,7 +159,7 @@ const getNotes = async () => {
       pinElement.setAttribute('aria-label', 'Pin note');
       bottomContentElement.appendChild(pinElement);
 
-      if (link === null) {
+      if (!link) {
         const trashIconElement = document.createElement('i');
         trashIconElement.classList.add('fa-solid', 'fa-trash-can', 'note-action', 'delete-note');
         trashIconElement.tabIndex = 0;
@@ -418,15 +168,15 @@ const getNotes = async () => {
         bottomContentElement.appendChild(trashIconElement);
       } else {
         noteElement.setAttribute('data-note-link', link);
-        const categoryElement = document.createElement('span');
-        categoryElement.classList.add('custom-check');
+        const linkElement = document.createElement('span');
+        linkElement.classList.add('custom-check');
         const iconLink = document.createElement('i');
         iconLink.classList.add('fa-solid', 'fa-link');
-        categoryElement.appendChild(iconLink);
-        paragraph.appendChild(categoryElement);
+        linkElement.appendChild(iconLink);
+        paragraph.appendChild(linkElement);
       }
 
-      if (hidden === 0 && content !== '') {
+      if (!hidden && content) {
         const clipboardIconElement = document.createElement('i');
         clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action', 'copy-note');
         clipboardIconElement.tabIndex = 0;
@@ -476,51 +226,61 @@ const getNotes = async () => {
         minute: '2-digit',
       });
 
-      if (pinned === 1) {
-        noteElement.classList.add('pinned');
-        const categoryElement = document.createElement('span');
-        categoryElement.classList.add('custom-check');
-        const iconPin = document.createElement('i');
-        iconPin.classList.add('fa-solid', 'fa-thumbtack');
-        categoryElement.appendChild(iconPin);
-        paragraph.appendChild(categoryElement);
+      if (folder) {
+        noteElement.setAttribute('data-note-folder', folder);
+        allFolders.add(folder);
+        paragraph.setAttribute('data-folder', folder);
       }
 
-      if (category !== 0) {
+      if (pinned) {
+        noteElement.classList.add('pinned');
+        const pinnedElement = document.createElement('span');
+        pinnedElement.classList.add('custom-check');
+        const iconPin = document.createElement('i');
+        iconPin.classList.add('fa-solid', 'fa-thumbtack');
+        pinnedElement.appendChild(iconPin);
+        paragraph.appendChild(pinnedElement);
+      }
+
+      if (category) {
         const categoryElement = document.createElement('span');
         categoryElement.classList.add('custom-check');
         categoryElement.textContent = document.querySelector(`input[name="category"][value="${category}"]`).parentElement.textContent;
         paragraph.appendChild(categoryElement);
       }
 
-      if (hidden !== 0) {
-        const categoryElement = document.createElement('span');
-        categoryElement.classList.add('custom-check');
+      if (hidden) {
+        noteElement.setAttribute('data-note-hidden', hidden);
+        const hiddenElement = document.createElement('span');
+        hiddenElement.classList.add('custom-check');
         const iconEye = document.createElement('i');
         iconEye.classList.add('fa-solid', 'fa-eye-slash');
-        categoryElement.appendChild(iconEye);
-        paragraph.appendChild(categoryElement);
+        hiddenElement.appendChild(iconEye);
+        paragraph.appendChild(hiddenElement);
       }
 
       fragment.appendChild(noteElement);
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
-      document.querySelector('#sidebar #list-notes').appendChild(paragraph);
+      if (!folder) document.querySelector('#list-notes').appendChild(paragraph);
+      else {
+        const folderDetails = document.querySelector(`details[data-folder="${folder}"]`);
+        if (!folderDetails) {
+          const newFolderDetails = document.createElement('details');
+          newFolderDetails.setAttribute('open', 'open');
+          newFolderDetails.setAttribute('data-folder', folder);
+          const summary = document.createElement('summary');
+          summary.textContent = folder;
+          newFolderDetails.appendChild(summary);
+          newFolderDetails.appendChild(paragraph);
+          document.querySelector('#list-notes').appendChild(newFolderDetails);
+        } else {
+          folderDetails.appendChild(paragraph);
+        }
+      }
     });
 
     for (const folder of allFolders) {
-      const folderDetails = document.createElement('details');
-      folderDetails.setAttribute('open', 'open');
-      const summary = document.createElement('summary');
-      summary.textContent = folder;
-      folderDetails.appendChild(summary);
-      const notesForFolder = document.querySelectorAll('#sidebar #list-notes p');
-      notesForFolder.forEach((note) => {
-        if (note.getAttribute('data-folder') === folder) {
-          folderDetails.appendChild(note);
-        }
-      });
-      document.querySelector('#sidebar #list-notes').appendChild(folderDetails);
       const option = document.createElement('option');
       option.value = folder;
       option.textContent = folder;
@@ -538,6 +298,7 @@ const getNotes = async () => {
 };
 
 const fetchDelete = async (noteId) => {
+  if (!noteId) return;
   try {
     const data = new URLSearchParams({ noteId, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/deleteNote.php', {
@@ -580,15 +341,15 @@ const updateNote = (noteId, title, content, color, hidden, category, folder, lin
   document.querySelector('#id-note').value = noteId;
   document.querySelector('#note-popup-box #title').value = title;
   document.querySelector('#note-popup-box #content').value = content;
-  document.querySelector('#note-popup-box #folders').value = folder;
+  document.querySelector('#note-popup-box #folders').value = folder || '';
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
   });
-  document.querySelector(`input[name="category"][value="${category}"]`).checked = true;
-  if (link === null) {
+  document.querySelector(`input[name="category"][value="${category || '0'}"]`).checked = true;
+  if (!link) {
     document.querySelector('#check-hidden').disabled = false;
-    if (parseInt(hidden, 10) === 1) document.querySelector('#check-hidden').checked = true;
+    if (hidden) document.querySelector('#check-hidden').checked = true;
   } else document.querySelector('#check-hidden').disabled = true;
   const noteLength = document.querySelector('#note-popup-box #content').value.length;
   document.querySelector('#textarea-length').textContent = `${noteLength}/${defaultScript.maxNoteContent}`;
@@ -596,6 +357,7 @@ const updateNote = (noteId, title, content, color, hidden, category, folder, lin
 };
 
 const pin = async (noteId) => {
+  if (!noteId) return;
   try {
     const data = new URLSearchParams({ noteId, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/pinNote.php', {
@@ -617,10 +379,11 @@ const pin = async (noteId) => {
 };
 
 const deleteNote = (noteId) => {
+  if (!noteId) return;
   let message = '';
-  if (localStorage.getItem('lang') === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
-  else if (localStorage.getItem('lang') === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
-  else if (localStorage.getItem('lang') === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
+  if (defaultScript.lang === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
+  else if (defaultScript.lang === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
+  else if (defaultScript.lang === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
   else message = 'Do you really want to delete this note?';
   if (window.confirm(message)) fetchDelete(noteId);
 };
@@ -639,10 +402,9 @@ document.querySelector('#log-out').addEventListener('click', () => fetchLogout()
 
 document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
-    if (e.value === '1' || e.value === '2' || e.value === '3' || e.value === '4') {
-      localStorage.setItem('sort_notes', e.value);
-      await getNotes();
-    }
+    if (!['1', '2', '3', '4'].includes(e.value)) return;
+    localStorage.setItem('sort_notes', e.value);
+    await getNotes();
   });
 });
 
@@ -678,9 +440,6 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const category = document.querySelector('input[name="category"]:checked').value;
     const folder = document.querySelector('#note-popup-box #folders').value;
-    const link = noteId ? document.querySelector(`.note[data-note-id="${noteId}"]`).getAttribute('data-note-link') : null;
-
-    if (hidden === 1 && link !== null) return;
 
     if (!title || title.length > 30 || folder.length > 18 || content.length > defaultScript.maxNoteContent || !color) return;
     if (isUpdate && !noteId) return;
@@ -855,6 +614,7 @@ document.querySelector('#public-note').addEventListener('submit', async () => {
 document.addEventListener('DOMContentLoaded', async () => {
   await defaultScript.getLockApp();
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
-  changeLanguage(localStorage.getItem('lang') || 'en');
+  defaultScript.changeLanguage(defaultScript.lang || 'en', true);
+  defaultScript.loadTheme();
   await getNotes();
 });

@@ -28,7 +28,7 @@ This website is a PWA (Progressive Web App), the user can install it as an appli
 The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
 
 ## Security
-The website follows the OWASP security recommendations.
+The website follows the [OWASP security recommendations](https://cheatsheetseries.owasp.org/).
 
 The user's connection is maintained by a secure cookie. Passwords are hashed and all notes, local or cloud, are encrypted with ``AES-256-GCM``.
 
@@ -42,7 +42,7 @@ The user can use biometrics (fingerprint, Windows Hello, etc) to unlock app. Bio
 *   Refractor project with Node.js or Laravel?
 
 ## Community
-If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any suggestions to improve this project, feel free to [discuss](https://github.com/seguinleo/Bloc-notes/discussions)!
+If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any [suggestions](https://github.com/seguinleo/Bloc-notes/discussions) to improve this project, feel free to discuss!
 
 ## Self-hosting
 ``docker-compose up --build -d`` to build the Docker container
