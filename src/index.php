@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?= $csrf_token ?>">
     <meta name="theme-color" content="#121212" class="theme-color">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#121212" class="theme-color">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com/; form-action 'self'; img-src http:; manifest-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' https://cdnjs.cloudflare.com/; style-src-attr 'none'; worker-src 'self'">
@@ -343,10 +344,13 @@
                     <div class="row">
                         <div id="accent-colors">
                             <span class="accent1-span" tabindex="0" role="button" aria-label="Blue"></span>
-                            <span class="accent2-span" tabindex="0" role="button" aria-label="Green"></span>
+                            <span class="accent7-span" tabindex="0" role="button" aria-label="Green"></span>
+                            <span class="accent2-span" tabindex="0" role="button" aria-label="Lime"></span>
                             <span class="accent3-span" tabindex="0" role="button" aria-label="Yellow"></span>
-                            <span class="accent4-span" tabindex="0" role="button" aria-label="Pink"></span>
+                            <span class="accent6-span" tabindex="0" role="button" aria-label="Orange"></span>
                             <span class="accent5-span" tabindex="0" role="button" aria-label="Red"></span>
+                            <span class="accent4-span" tabindex="0" role="button" aria-label="Pink"></span>
+                            <span class="accent8-span" tabindex="0" role="button" aria-label="Purple"></span>
                         </div>
                     </div>
                     <div id="spellcheck-slider" class="row div-slider">
@@ -379,7 +383,7 @@
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.8.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.9.1</a>
                         </p>
                     </div>
                 </div>

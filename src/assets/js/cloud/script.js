@@ -542,7 +542,7 @@ document.querySelector('#change-psswd').addEventListener('submit', async () => {
 document.querySelector('#delete-account').addEventListener('submit', async () => {
   if (defaultScript.isLocked) return;
   const psswd = document.querySelector('#delete-psswd').value;
-  if (!psswd || psswd.length < 8 || psswd.length > 64) return;
+  if (!psswd || psswd.length < 10 || psswd.length > 64) return;
   try {
     const data = new URLSearchParams({ psswd, csrf_token: defaultScript.csrfToken });
     const res = await fetch('./assets/php/deleteAccount.php', {

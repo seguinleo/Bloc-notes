@@ -204,26 +204,32 @@ if (localStorage.getItem('spellcheck') === 'false') {
 }
 
 const accentColor = localStorage.getItem('accent_color');
+const accentColors = [
+  'accent1',
+  'accent2',
+  'accent3',
+  'accent4',
+  'accent5',
+  'accent6',
+  'accent7',
+  'accent8',
+];
+
 switch (accentColor) {
-  case '5':
-    document.querySelector('body').classList = 'accent5';
-    document.querySelector('#accent-colors .accent5-span').classList.add('selected');
-    break;
-  case '4':
-    document.querySelector('body').classList = 'accent4';
-    document.querySelector('#accent-colors .accent4-span').classList.add('selected');
-    break;
-  case '3':
-    document.querySelector('body').classList = 'accent3';
-    document.querySelector('#accent-colors .accent3-span').classList.add('selected');
-    break;
+  case '1':
   case '2':
-    document.querySelector('body').classList = 'accent2';
-    document.querySelector('#accent-colors .accent2-span').classList.add('selected');
+  case '3':
+  case '4':
+  case '5':
+  case '6':
+  case '7':
+  case '8':
+    document.body.classList = accentColors[accentColor - 1];
+    document.querySelector(`#accent-colors .accent${accentColor}-span`).classList.add('selected');
     break;
   default:
     localStorage.setItem('accent_color', '1');
-    document.querySelector('body').classList = 'accent1';
+    document.body.classList = 'accent1';
     document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
 
@@ -360,10 +366,9 @@ document.querySelectorAll('#accent-colors span').forEach((span) => {
   span.addEventListener('click', (event) => {
     document.querySelectorAll('#accent-colors span').forEach((e) => e.classList.remove('selected'));
     event.target.classList.add('selected');
-    const accentClasses = ['accent1', 'accent2', 'accent3', 'accent4', 'accent5'];
     const selectedAccent = span.classList[0].replace('-span', '');
-    document.querySelector('body').classList = selectedAccent;
-    localStorage.setItem('accent_color', accentClasses.indexOf(selectedAccent) + 1 || '1');
+    document.body.classList = selectedAccent;
+    localStorage.setItem('accent_color', accentColors.indexOf(selectedAccent) + 1 || '1');
   });
   span.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') span.click();

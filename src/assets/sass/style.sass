@@ -582,6 +582,7 @@ dialog
 
   span
     cursor: pointer
+    margin: 3px 0
     padding: 4px 8px
     border-radius: 24px
 
@@ -847,7 +848,8 @@ dialog
     textarea
       resize: none
 
-  #colors
+  #colors,
+  #accent-colors
     justify-content: space-between
 
 html
@@ -856,7 +858,7 @@ html
   &.leaf .accent1,
   &.carrot .accent1
     accent-color: #8ab4f8
-    color: #afbbcc
+    color: #cadeff
 
     \::selection,
     button,
@@ -866,14 +868,14 @@ html
       background: #8ab4f8
 
     progress
-      background: #afbbcc
+      background: #cadeff
 
     input,
     textarea,
     select,
     .popup .content,
     #btn-theme
-      color: #afbbcc
+      color: #cadeff
     a,
     .link
       color: #8ab4f8
@@ -883,167 +885,284 @@ html
 
     .switch
       input:disabled + .slider
-        background: #afbbcc
+        background: #cadeff
 
       .slider
         &:before
-          background: #afbbcc
+          background: #cadeff
 
   &.dark .accent2,
   &.dusk .accent2,
   &.leaf .accent2,
   &.carrot .accent2
-    accent-color: #b7fe9d
-    color: #b7ccaf
+    accent-color: #bcf88a
+    color: #deffc3
 
     \::selection,
     button,
     .custom-check input[type=radio]:checked + span,
     .custom-check input[type=checkbox]:checked + span,
     .switch input:checked + .slider
-      background: #b7fe9d
+      background: #bcf88a
 
     progress
-      background: #b7ccaf
+      background: #deffc3
 
     input,
     textarea,
     select,
     .popup .content,
     #btn-theme
-      color: #b7ccaf
+      color: #deffc3
 
     a,
     .link
-      color: #b7fe9d
+      color: #bcf88a
 
     .plugin.active
-      outline: 2px solid #b7fe9d
+      outline: 2px solid #bcf88a
     
     .switch
       input:disabled + .slider
-        background: #b7ccaf
+        background: #deffc3
 
       .slider
         &:before
-          background: #b7ccaf
+          background: #deffc3
 
   &.dark .accent3,
   &.dusk .accent3,
   &.leaf .accent3,
   &.carrot .accent3
-    accent-color: #f2e76c
-    color: #ccccaf
+    accent-color: #f3f88a
+    color: #fcffc7
 
     \::selection,
     button,
     .custom-check input[type=radio]:checked + span,
     .custom-check input[type=checkbox]:checked + span,
     .switch input:checked + .slider
-      background: #f2e76c
+      background: #f3f88a
 
     progress
-      background: #ccccaf
+      background: #fcffc7
 
     input,
     textarea,
     select,
     .popup .content,
     #btn-theme
-      color: #ccccaf
+      color: #fcffc7
 
     a,
     .link
-      color: #f2e76c
+      color: #f3f88a
 
     .plugin.active
-      outline: 2px solid #f2e76c
+      outline: 2px solid #f3f88a
 
     .switch
       input:disabled + .slider
-        background: #ccccaf
+        background: #fcffc7
 
       .slider
         &:before
-          background: #ccccaf
+          background: #fcffc7
 
   &.dark .accent4,
   &.dusk .accent4,
   &.leaf .accent4,
   &.carrot .accent4
-    accent-color: #e59afb
-    color: #c7afcc
+    accent-color: #ff9bf8
+    color: #ffcafb
 
     \::selection,
     button,
     .custom-check input[type=radio]:checked + span,
     .custom-check input[type=checkbox]:checked + span,
     .switch input:checked + .slider
-      background: #e59afb
+      background: #ff9bf8
 
     progress
-      background: #c7afcc
+      background: #ffcafb
 
     input,
     textarea,
     select,
     .popup .content,
     #btn-theme
-      color: #c7afcc
+      color: #ffcafb
 
     a,
     .link
-      color: #e59afb
+      color: #ff9bf8
 
     .plugin.active
-      outline: 2px solid #e59afb
+      outline: 2px solid #ff9bf8
 
     .switch
       input:disabled + .slider
-        background: #c7afcc
+        background: #ffcafb
 
       .slider
         &:before
-          background: #c7afcc
+          background: #ffcafb
 
   &.dark .accent5,
   &.dusk .accent5,
   &.leaf .accent5,
   &.carrot .accent5
-    accent-color: #ff7070
-    color: #ccafaf
+    accent-color: #ff9b9b
+    color: #ffcdcd
 
     \::selection,
     button,
     .custom-check input[type=radio]:checked + span,
     .custom-check input[type=checkbox]:checked + span,
     .switch input:checked + .slider
-      background: #ff7070
+      background: #ff9b9b
 
     progress
-      background: #ccafaf
+      background: #ffcdcd
 
     input,
     textarea,
     select,
     .popup .content,
     #btn-theme
-      color: #ccafaf
+      color: #ffcdcd
 
     a,
     .link
-      color: #ff7070
+      color: #ff9b9b
 
     .plugin.active
-      outline: 2px solid #ff7070
+      outline: 2px solid #ff9b9b
 
     .switch
       input:disabled + .slider
-        background: #ccafaf
+        background: #ffcdcd
 
       .slider
         &:before
-          background: #ccafaf
+          background: #ffcdcd
+
+  &.dark .accent6,
+  &.dusk .accent6,
+  &.leaf .accent6,
+  &.carrot .accent6
+    accent-color: #ffc89b
+    color: #ffe3cd
+
+    \::selection,
+    button,
+    .custom-check input[type=radio]:checked + span,
+    .custom-check input[type=checkbox]:checked + span,
+    .switch input:checked + .slider
+      background: #ffc89b
+
+    progress
+      background: #ffe3cd
+
+    input,
+    textarea,
+    select,
+    .popup .content,
+    #btn-theme
+      color: #ffe3cd
+
+    a,
+    .link
+      color: #ffc89b
+
+    .plugin.active
+      outline: 2px solid #ffc89b
+
+    .switch
+      input:disabled + .slider
+        background: #ffe3cd
+
+      .slider
+        &:before
+          background: #ffe3cd
+
+  &.dark .accent7,
+  &.dusk .accent7,
+  &.leaf .accent7,
+  &.carrot .accent7
+    accent-color: #8af8a7
+    color: #c7ffd6
+
+    \::selection,
+    button,
+    .custom-check input[type=radio]:checked + span,
+    .custom-check input[type=checkbox]:checked + span,
+    .switch input:checked + .slider
+      background: #8af8a7
+
+    progress
+      background: #c7ffd6
+
+    input,
+    textarea,
+    select,
+    .popup .content,
+    #btn-theme
+      color: #c7ffd6
+
+    a,
+    .link
+      color: #8af8a7
+
+    .plugin.active
+      outline: 2px solid #8af8a7
+
+    .switch
+      input:disabled + .slider
+        background: #c7ffd6
+
+      .slider
+        &:before
+          background: #c7ffd6
+
+  &.dark .accent8,
+  &.dusk .accent8,
+  &.leaf .accent8,
+  &.carrot .accent8
+    accent-color: #d29bff
+    color: #eacfff
+
+    \::selection,
+    button,
+    .custom-check input[type=radio]:checked + span,
+    .custom-check input[type=checkbox]:checked + span,
+    .switch input:checked + .slider
+      background: #d29bff
+
+    progress
+      background: #eacfff
+
+    input,
+    textarea,
+    select,
+    .popup .content,
+    #btn-theme
+      color: #eacfff
+
+    a,
+    .link
+      color: #d29bff
+
+    .plugin.active
+      outline: 2px solid #d29bff
+
+    .switch
+      input:disabled + .slider
+        background: #eacfff
+
+      .slider
+        &:before
+          background: #eacfff
 
   &.dark,
   &.dusk,
@@ -1056,16 +1175,25 @@ html
       background: #8ab4f8
 
     .accent2-span
-      background: #b7fe9d
+      background: #bcf88a
 
     .accent3-span
-      background: #f2e76c
+      background: #f3f88a
 
     .accent4-span
-      background: #e59afb
+      background: #ff9bf8
 
     .accent5-span
-      background: #ff7070
+      background: #ff9b9b
+
+    .accent6-span
+      background: #ffc89b
+
+    .accent7-span
+      background: #8af8a7
+
+    .accent8-span
+      background: #d29bff
 
     dialog
       background: rgba(0, 0, 0, 0.5)
@@ -1344,103 +1472,175 @@ html
         border: 2px solid #2b5790
 
     .accent2
-      accent-color: #087422
+      accent-color: #4e902b
 
       \::selection
-        background: #087422
+        background: #4e902b
         color: #fff
 
       a,
       .link
-        color: #087422
+        color: #4e902b
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #087422
+        background: #4e902b
         color: #fff
 
       .plugin.active
-        border: 2px solid #087422
+        border: 2px solid #4e902b
 
     .accent3
-      accent-color: #ab6100
+      accent-color: #bfaa22
 
       \::selection
-        background: #ab6100
+        background: #bfaa22
         color: #fff
 
       a,
       .link
-        color: #ab6100
+        color: #bfaa22
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #ab6100
+        background: #bfaa22
         color: #fff
 
       .plugin.active
-        border: 2px solid #ab6100
+        border: 2px solid #bfaa22
 
     .accent4
-      accent-color: #942796
+      accent-color: #902b7c
 
       \::selection
-        background: #942796
+        background: #902b7c
         color: #fff
 
       a,
       .link
-        color: #942796
+        color: #902b7c
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #942796
+        background: #902b7c
         color: #fff
 
       .plugin.active
-        border: 2px solid #942796
+        border: 2px solid #902b7c
 
     .accent5
-      accent-color: #a93b3b
+      accent-color: #902b2b
 
       \::selection
-        background: #a93b3b
+        background: #902b2b
         color: #fff
 
       a,
       .link
-        color: #a93b3b
+        color: #902b2b
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #a93b3b
+        background: #902b2b
         color: #fff
 
       .plugin.active
-        border: 2px solid #a93b3b
+        border: 2px solid #902b2b
+
+    .accent6
+      accent-color: #90552b
+
+      \::selection
+        background: #90552b
+        color: #fff
+
+      a,
+      .link
+        color: #90552b
+
+      button,
+      .custom-check input[type=radio]:checked + span,
+      .custom-check input[type=checkbox]:checked + span,
+      .switch input:checked + .slider
+        background: #90552b
+        color: #fff
+
+      .plugin.active
+        border: 2px solid #90552b
+
+    .accent7
+      accent-color: #2b9061
+
+      \::selection
+        background: #2b9061
+        color: #fff
+
+      a,
+      .link
+        color: #2b9061
+
+      button,
+      .custom-check input[type=radio]:checked + span,
+      .custom-check input[type=checkbox]:checked + span,
+      .switch input:checked + .slider
+        background: #2b9061
+        color: #fff
+
+      .plugin.active
+        border: 2px solid #2b9061
+
+    .accent8
+      accent-color: #6b2b90
+
+      \::selection
+        background: #6b2b90
+        color: #fff
+
+      a,
+      .link
+        color: #6b2b90
+
+      button,
+      .custom-check input[type=radio]:checked + span,
+      .custom-check input[type=checkbox]:checked + span,
+      .switch input:checked + .slider
+        background: #6b2b90
+        color: #fff
+
+      .plugin.active
+        border: 2px solid #6b2b90
 
     .accent1-span
       background: #2b5790
 
     .accent2-span
-      background: #087422
+      background: #4e902b
 
     .accent3-span
-      background: #ab6100
+      background: #bfaa22
 
     .accent4-span
-      background: #942796
+      background: #902b7c
 
     .accent5-span
-      background: #a93b3b
+      background: #902b2b
+
+    .accent6-span
+      background: #90552b
+
+    .accent7-span
+      background: #2b9061
+
+    .accent8-span
+      background: #6b2b90
 
     \::placeholder,
     input,
@@ -1499,7 +1699,7 @@ html
 
     .error-notification
       color: #fff
-      background: #a93b3b
+      background: #902b2b
 
     #btn-theme
       background: #fff
@@ -1515,7 +1715,7 @@ html
   background: #fdf488
 
 .bg-green
-  background: #d6fe9d
+  background: #bcf88a
 
 .bg-cyan
   background: #bbfdec

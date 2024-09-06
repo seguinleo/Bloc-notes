@@ -13,6 +13,9 @@ const allAccentColors = [
   'accent3',
   'accent4',
   'accent5',
+  'accent6',
+  'accent7',
+  'accent8',
 ];
 
 document.body.classList.add(allAccentColors[Math.floor(Math.random() * allAccentColors.length)]);
