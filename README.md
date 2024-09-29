@@ -39,7 +39,6 @@ The user can use biometrics (fingerprint, Windows Hello, etc) to unlock app. Bio
 ## Todo
 *   2FA login
 *   Markdown plugins
-*   Refractor project with Node.js or Laravel?
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any [suggestions](https://github.com/seguinleo/Bloc-notes/discussions) to improve this project, feel free to discuss!

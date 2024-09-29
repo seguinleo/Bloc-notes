@@ -16,13 +16,13 @@ CREATE TABLE `notes` (
   `id` varchar(63) NOT NULL,
   `title` text NOT NULL,
   `content` longtext,
-  `color` varchar(63) NOT NULL,
-  `dateNote` datetime NOT NULL,
+  `color` varchar(63) NOT NULL DEFAULT 'bg-default',
+  `dateNote` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `hiddenNote` tinyint NOT NULL DEFAULT '0',
   `pinnedNote` tinyint NOT NULL DEFAULT '0',
-  `category` tinyint NOT NULL DEFAULT '0',
-  `link` varchar(63) DEFAULT NULL,
   `folder` varchar(63) DEFAULT NULL,
+  `category` varchar(63) DEFAULT NULL,
+  `link` varchar(63) DEFAULT NULL,
   `user` varchar(63) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -36,7 +36,8 @@ CREATE TABLE `users` (
   `id` varchar(63) NOT NULL,
   `name` varchar(63) NOT NULL,
   `psswd` varchar(255) NOT NULL,
-  `oneKey` varchar(255) NOT NULL
+  `oneKey` varchar(255) NOT NULL,
+  `lastLogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

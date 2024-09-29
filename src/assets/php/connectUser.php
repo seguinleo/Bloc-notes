@@ -40,12 +40,22 @@ try {
 }
 
 $query->closeCursor();
-$PDO = null;
 
 if (!password_verify($psswdConnect, $row['psswd'])) {
     throw new Exception('Connection failed');
     return;
 }
+
+try {
+    $query = $PDO->prepare("UPDATE users SET lastLogin=NOW() WHERE name=:NameConnect");
+    $query->execute([':NameConnect' => $nameConnect]);
+} catch (Exception $e) {
+    throw new Exception('Connection failed');
+    return;
+}
+
+$query->closeCursor();
+$PDO = null;
 
 session_unset();
 session_destroy();

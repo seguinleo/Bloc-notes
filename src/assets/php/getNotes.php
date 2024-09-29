@@ -1,5 +1,5 @@
 <?php
-global $PDO, $name, $key;
+global $PDO, $name, $key, $lastLogin;
 require_once __DIR__ . '/getKey.php';
 require_once __DIR__ . '/class/Encryption.php';
 
@@ -17,11 +17,11 @@ try {
             'content'   => $encryption->decryptData($row['content'], $key),
             'color'     => $row['color'],
             'date'      => $row['dateNote'],
-            'category'  => filter_var($row['category'], FILTER_VALIDATE_INT),
+            'folder'    => $row['folder'] ?? null,
+            'category'  => $row['category'] ?? null,
+            'link'      => $row['link'] ?? null,
             'hidden'    => filter_var($row['hiddenNote'], FILTER_VALIDATE_INT),
             'pinned'    => filter_var($row['pinnedNote'], FILTER_VALIDATE_INT),
-            'link'      => $row['link'] ?? null,
-            'folder'    => $row['folder'] ?? null
         ];
     }
 } catch (Exception $e) {
@@ -33,4 +33,4 @@ $query->closeCursor();
 $PDO = null;
 
 header('Content-Type: application/json');
-print_r(json_encode($notes));
+print_r(json_encode(['notes' => $notes, 'lastLogin' => $lastLogin]));

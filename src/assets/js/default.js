@@ -79,6 +79,7 @@ export function toggleFullscreen (noteId) {
   if (!noteId) return;
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   note.classList.toggle('fullscreen');
+  if (!note.querySelector('.bottom-content .expand-note')) return;
   note.querySelector('.bottom-content .expand-note').classList.toggle('fa-expand');
   note.querySelector('.bottom-content .expand-note').classList.toggle('fa-compress');
 }
@@ -167,6 +168,7 @@ export const verifyFingerprint = async () => {
 };
 
 export function openSidebar() {
+  if (isLocked) return;
   sidebar.classList.add('show');
 }
 
@@ -186,11 +188,6 @@ export function loadTheme() {
     e.content = currentTheme.color;
   });
   buttonTheme.className = `fa-solid ${currentTheme.icon}`;
-}
-
-if (localStorage.getItem('compact') === 'true') {
-  document.querySelector('#check-compact').checked = true;
-  document.querySelector('main').classList.add('compact');
 }
 
 if (localStorage.getItem('hide-sidebar') === 'true') {
@@ -284,14 +281,9 @@ document.querySelector('#note-popup-box #content').addEventListener('input', (e)
   document.querySelector('#textarea-length').textContent = `${length}/${maxNoteContent}`;
 });
 
-document.querySelector('#settings').addEventListener('click', () => {
+document.querySelector('#btn-settings').addEventListener('click', () => {
   closeSidebar();
   document.querySelector('#settings-popup-box').showModal();
-});
-
-document.querySelector('#plugins').addEventListener('click', () => {
-  closeSidebar();
-  document.querySelector('#plugins-popup-box').showModal();
 });
 
 document.querySelector('#copy-password-btn').addEventListener('click', () => {
@@ -301,16 +293,6 @@ document.querySelector('#copy-password-btn').addEventListener('click', () => {
 
 document.querySelector('#sidebar-indicator').addEventListener('click', () => {
   openSidebar();
-});
-
-document.querySelector('#check-compact').addEventListener('change', (e) => {
-  if (e.target.checked) {
-    localStorage.setItem('compact', 'true');
-    document.querySelector('main').classList.add('compact');
-  } else {
-    localStorage.removeItem('compact');
-    document.querySelector('main').classList.remove('compact');
-  }
 });
 
 document.querySelector('#check-hide-sidebar').addEventListener('change', (e) => {
@@ -333,12 +315,17 @@ document.querySelector('#btn-add-folder').addEventListener('click', () => {
   document.querySelector('#folder-popup-box').showModal();
 });
 
+document.querySelector('#btn-add-category').addEventListener('click', () => {
+  closeSidebar();
+  document.querySelector('#category-popup-box').showModal();
+});
+
 document.querySelector('#btn-filter').addEventListener('click', () => {
   closeSidebar();
   document.querySelector('#filter-popup-box').showModal();
 });
 
-document.querySelector('#folder-popup-box button').addEventListener('click', async () => {
+document.querySelector('#folder-popup-box button').addEventListener('click', () => {
   const folderName = document.querySelector('#name-folder').value.trim();
   const select = document.querySelector('#folders');
   if (!folderName || folderName.length > 18) return;
@@ -349,6 +336,19 @@ document.querySelector('#folder-popup-box button').addEventListener('click', asy
   select.appendChild(option);
   select.value = folderName;
   document.querySelector('#folder-popup-box').close();
+});
+
+document.querySelector('#category-popup-box button').addEventListener('click', () => {
+  const categoryName = document.querySelector('#name-category').value.trim();
+  const select = document.querySelector('#categories');
+  if (!categoryName || categoryName.length > 18) return;
+  if (Array.from(select.options).some((option) => option.value === categoryName)) return;
+  const option = document.createElement('option');
+  option.value = categoryName;
+  option.textContent = categoryName;
+  select.appendChild(option);
+  select.value = categoryName;
+  document.querySelector('#category-popup-box').close();
 });
 
 document.querySelectorAll('#colors span').forEach((span, index) => {
@@ -383,6 +383,7 @@ document.querySelectorAll('.fa-xmark').forEach((e) => {
 
 document.querySelectorAll('dialog').forEach((dialog) => {
   if (dialog.id === 'folder-popup-box') return;
+  if (dialog.id === 'category-popup-box') return;
   dialog.addEventListener('close', () => {
     forms.forEach((form) => form.reset());
     document.querySelectorAll('input[type="hidden"]').forEach((input) => input.value = '');
@@ -465,6 +466,7 @@ document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    document.querySelector('#download-popup-box').close();
   });
 });
 
@@ -499,18 +501,6 @@ document.querySelector('#check-lock-app').addEventListener('change', async (e) =
   }
 });
 
-document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
-  e.addEventListener('change', () => {
-    const categories = [];
-    document.querySelectorAll('input[name="filter-notes"]:checked').forEach((t) => categories.push(t.value));
-    document.querySelectorAll('.note').forEach((note) => {
-      const category = note.getAttribute('data-note-category');
-      if (categories.includes(category)) note.classList.remove('d-none');
-      else note.classList.add('d-none');
-    });
-  });
-});
-
 document.querySelector('#btn-theme').addEventListener('click', () => {
   const currentThemeIndex = Object.keys(themes).indexOf(theme);
   const nextTheme = Object.keys(themes)[(currentThemeIndex + 1) % Object.keys(themes).length];
@@ -524,6 +514,9 @@ document.querySelector('#btn-theme').addEventListener('click', () => {
   localStorage.setItem('theme', nextTheme);
 });
 
+const today = new Date();
+if (today.getMonth() === 11) document.querySelector('.christmas').classList.remove('d-none');
+
 export function changeLanguage(language, cloud) {
   if (language === 'fr') {
     document.documentElement.setAttribute('lang', 'fr-FR');
@@ -535,38 +528,20 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes3-span').textContent = 'Titre';
     document.querySelector('#sort-notes4-span').textContent = 'Titre (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Aucune catégorie';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Perso';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Travail';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Voyage';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tâches';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Rappel';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Idées';
-    });
+    document.querySelector('#download-popup-box legend').textContent = 'Type d\'export';
     document.querySelector('#spellcheck-slider span').textContent = 'Vérif. ortho.';
-    document.querySelector('#compact-slider span').textContent = 'Mode compact';
     document.querySelector('#hide-sidebar-slider span').textContent = 'Masquer bouton sidebar';
     document.querySelector('#lock-app-slider span').textContent = 'Vérouiller app';
     document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
     document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choisir un dossier';
+    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Choisir une catégorie';
     document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Enregistrer';
     document.querySelector('#folder-popup-box button').textContent = 'Créer';
     document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nom du dossier');
+    document.querySelector('#category-popup-box button').textContent = 'Créer';
+    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Nom de la catégorie');
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     
@@ -605,38 +580,20 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes3-span').textContent = 'Titel';
     document.querySelector('#sort-notes4-span').textContent = 'Titel (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Keine Kategorie';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Persönlich';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Arbeit';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Reise';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Aufgaben';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Erinnerung';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideen';
-    });
+    document.querySelector('#download-popup-box legend').textContent = 'Exporttyp';
     document.querySelector('#spellcheck-slider span').textContent = 'Rechtschreibprüfung';
-    document.querySelector('#compact-slider span').textContent = 'Kompaktmodus';
     document.querySelector('#hide-sidebar-slider span').textContent = 'Seitenleiste ausblenden';
     document.querySelector('#lock-app-slider span').textContent = 'App sperren';
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
     document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Ordner auswählen';
+    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Kategorie auswählen';
     document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Speichern';
     document.querySelector('#folder-popup-box button').textContent = 'Erstellen';
     document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Ordnername');
+    document.querySelector('#category-popup-box button').textContent = 'Erstellen';
+    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Kategoriename');
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     
@@ -675,38 +632,20 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes3-span').textContent = 'Título';
     document.querySelector('#sort-notes4-span').textContent = 'Título (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'Sin categoría';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Personal';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Trabajo';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Viaje';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tareas';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Recordatorio';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideas';
-    });
+    document.querySelector('#download-popup-box legend').textContent = 'Tipo de exportación';
     document.querySelector('#spellcheck-slider span').textContent = 'Corrector ortográfico';
-    document.querySelector('#compact-slider span').textContent = 'Modo compacto';
     document.querySelector('#hide-sidebar-slider span').textContent = 'Ocultar barra lateral';
     document.querySelector('#lock-app-slider span').textContent = 'Bloquear aplicación';
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
     document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Elegir una carpeta';
+    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Elegir una categoría';
     document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Guardar';
     document.querySelector('#folder-popup-box button').textContent = 'Crear';
     document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nombre de la carpeta');
+    document.querySelector('#category-popup-box button').textContent = 'Crear';
+    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Nombre de la categoría');
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     
@@ -745,38 +684,20 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes3-span').textContent = 'Title';
     document.querySelector('#sort-notes4-span').textContent = 'Title (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
-    document.querySelectorAll('.no-cat-filter-span').forEach((e) => {
-      e.textContent = 'No category';
-    });
-    document.querySelectorAll('.cat-perso-filter-span').forEach((e) => {
-      e.textContent = 'Personal';
-    });
-    document.querySelectorAll('.cat-pro-filter-span').forEach((e) => {
-      e.textContent = 'Work';
-    });
-    document.querySelectorAll('.cat-voyage-filter-span').forEach((e) => {
-      e.textContent = 'Travel';
-    });
-    document.querySelectorAll('.cat-task-filter-span').forEach((e) => {
-      e.textContent = 'Tasks';
-    });
-    document.querySelectorAll('.cat-rappel-filter-span').forEach((e) => {
-      e.textContent = 'Reminder';
-    });
-    document.querySelectorAll('.cat-idees-filter-span').forEach((e) => {
-      e.textContent = 'Ideas';
-    });
+    document.querySelector('#download-popup-box legend').textContent = 'Export type';
     document.querySelector('#spellcheck-slider span').textContent = 'Spell check';
-    document.querySelector('#compact-slider span').textContent = 'Compact mode';
     document.querySelector('#hide-sidebar-slider span').textContent = 'Hide sidebar button';
     document.querySelector('#lock-app-slider span').textContent = 'Lock app';
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
     document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choose a folder';
+    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Choose a category';
     document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Save';
     document.querySelector('#folder-popup-box button').textContent = 'Create';
     document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Folder name');
+    document.querySelector('#category-popup-box button').textContent = 'Create';
+    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Category name');
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     

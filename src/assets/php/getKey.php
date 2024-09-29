@@ -1,5 +1,5 @@
 <?php
-session_name('secureNotes');
+session_name('__Secure-Notes');
 session_start();
 
 $name = $_SESSION['name'];
@@ -23,17 +23,19 @@ if ($PDO === null) {
 }
 
 try {
-    $query = $PDO->prepare("SELECT oneKey FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");
+    $query = $PDO->prepare("SELECT oneKey,lastLogin FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");
     $query->execute(
         [
             ':CurrentUser' => $name,
             ':UserId'      => $userId
         ]
     );
+    $row = $query->fetch();
 } catch (Exception $e) {
     throw new Exception('Key retrieval failed');
     return;
 }
 
-$key = $query->fetch()['oneKey'];
+$lastLogin = $row['lastLogin'];
+$key = $row['oneKey'];
 $query->closeCursor();

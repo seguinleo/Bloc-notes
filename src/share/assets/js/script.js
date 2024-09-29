@@ -1,7 +1,11 @@
-/* global marked */
+/* global marked, DOMPurify */
 
 import '../../../assets/js/marked.min.js';
 import '../../../assets/js/purify.min.js';
+
+marked.use({
+  breaks: true
+});
 
 let stop = false;
 const notesContainer = document.querySelector('#main');
@@ -66,7 +70,7 @@ const showSharedNote = async () => {
 
   const contentHtml = marked.parse(cleanContent);
   const noteElement = document.createElement('div');
-  noteElement.classList.add('shared-note', 'bg-default');
+  noteElement.classList.add('shared-note');
   noteElement.tabIndex = 0;
 
   const detailsElement = document.createElement('div');

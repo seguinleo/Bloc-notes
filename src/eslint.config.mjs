@@ -7,11 +7,4 @@ export default [
   {
     ignores: ["**/*.min.js", "**/*.mjs"],
   },
-  {
-    rules: {
-      "import/extensions": "off",
-      "no-alert": "off",
-      "no-use-before-define": "off",
-    },
-  },
 ];

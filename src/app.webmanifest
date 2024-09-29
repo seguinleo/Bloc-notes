@@ -8,19 +8,6 @@
 	"orientation": "portrait-primary",
 	"lang": "en",
 	"scope": "./",
-	"screenshots": [
-		{
-			"src": "./assets/img/desktop.png",
-			"type": "image/png",
-			"sizes": "1361x899",
-			"form_factor": "wide"
-		},
-		{
-			"src": "./assets/img/mobile.png",
-			"type": "image/png",
-			"sizes": "398x796"
-		}
-	],
 	"description": "A fast, private and secure notebook with Markdown support.",
 	"icons": [
 		{

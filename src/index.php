@@ -25,6 +25,7 @@
             <p id="noscript">You must enable JavaScript to use Bloc-notes.</p>
         </noscript>
         <div id="welcome">
+            <img src="./assets/img/christmas.png" alt="christmas" class="christmas d-none" width="36" height="29">
             <?php if (isset($name) === true) { ?>
                 <span id="manage-account" class="link" tabindex="0" role="button" aria-label="Manage account">
                     <i class="fa-solid fa-circle-user"></i>
@@ -48,7 +49,7 @@
     </header>
     <div id="sidebar">
         <nav>
-            <div class="row">
+            <div class="row nav-buttons">
                 <button type="button" class="btn-add-note d-none" aria-label="Add a note">
                     <i class="fa-solid fa-plus"></i>
                 </button>
@@ -61,31 +62,12 @@
                 <button type="button" id="btn-download-all" class="d-none" aria-label="Download all notes">
                     <i class="fa-solid fa-download"></i>
                 </button>
+                <button type="button" id="btn-settings" class="d-none" aria-label="Download all notes">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
             </div>
             <div id="list-notes"></div>
         </nav>
-        <footer>
-            <div class="row">
-                <select id="language" aria-label="Language">
-                    <option value="fr">FR</option>
-                    <option value="en" selected>EN</option>
-                    <option value="de">DE</option>
-                    <option value="es">ES</option>
-                </select>
-                <span id="plugins" class="link" tabindex="0" role="button" aria-label="Plugins">
-                    <i class="fa-solid fa-puzzle-piece"></i>
-                </span>
-                <span id="settings" class="link" tabindex="0" role="button" aria-label="Settings">
-                    <i class="fa-solid fa-gear"></i>
-                </span>
-            </div>
-            <div id="legal" class="row">
-                <a href="https://leoseguin.fr/mentionslegales/"></a>
-            </div>
-            <div id="license">
-                GPL-3.0 &copy;
-            </div>
-        </footer>
     </div>
     <main>
         <button type="button" class="btn-add-note btn-add-note-float d-none" aria-label="Add a note">
@@ -111,20 +93,14 @@
                                 <input type="radio" name="sort-notes" value="1" id="sort-notes1" checked>
                                 <span id="sort-notes1-span"></span>
                             </label>
-                        </div>
-                        <div class="row">
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="2" id="sort-notes2">
                                 <span id="sort-notes2-span"></span>
                             </label>
-                        </div>
-                        <div class="row">
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="3" id="sort-notes3">
                                 <span id="sort-notes3-span"></span>
                             </label>
-                        </div>
-                        <div class="row">
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="4" id="sort-notes4">
                                 <span id="sort-notes4-span"></span>
@@ -142,48 +118,7 @@
                     </div>
                     <fieldset>
                         <legend></legend>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="0" id="no-cat-filter" checked>
-                                <span class="no-cat-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="1" id="cat-perso-filter" checked>
-                                <span class="cat-perso-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="2" id="cat-pro-filter" checked>
-                                <span class="cat-pro-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="3" id="cat-voyage-filter" checked>
-                                <span class="cat-voyage-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="4" id="cat-task-filter" checked>
-                                <span class="cat-task-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="5" id="cat-rappel-filter" checked>
-                                <span class="cat-rappel-filter-span"></span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="checkbox" name="filter-notes" value="6" id="cat-idees-filter" checked>
-                                <span class="cat-idees-filter-span"></span>
-                            </label>
-                        </div>
+                        <div class="row filter-categories"></div>
                     </fieldset>
                 </div>
             </div>
@@ -194,21 +129,24 @@
                     <div class="close">
                         <i class="fa-solid fa-xmark"></i>
                     </div>
-                    <input id="id-note-download" type="hidden">
-                    <div class="row">
-                        <label class="custom-check">
-                            <input type="radio" name="download-notes" value="1" id="txt-download">
-                            <span>.TXT</span>
-                        </label>
-                        <label class="custom-check">
-                            <input type="radio" name="download-notes" value="2" id="md-download">
-                            <span>.MD</span>
-                        </label>
-                        <label class="custom-check">
-                            <input type="radio" name="download-notes" value="3" id="html-download">
-                            <span>.HTML</span>
-                        </label>
-                    </div>
+                    <fieldset>
+                        <legend></legend>
+                        <input id="id-note-download" type="hidden">
+                        <div class="row">
+                            <label class="custom-check">
+                                <input type="radio" name="download-notes" value="1" id="txt-download">
+                                <span>.TXT</span>
+                            </label>
+                            <label class="custom-check">
+                                <input type="radio" name="download-notes" value="2" id="md-download">
+                                <span>.MD</span>
+                            </label>
+                            <label class="custom-check">
+                                <input type="radio" name="download-notes" value="3" id="html-download">
+                                <span>.HTML</span>
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </dialog>
@@ -224,6 +162,24 @@
                         </div>
                         <div class="row">
                             <input type="text" id="name-folder" maxlength="18" aria-label="Name" required>
+                        </div>
+                        <button type="submit"></button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="category-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <form id="add-category" autocomplete="off">
+                        <div class="row">
+                            <div class="error-notification d-none"></div>
+                        </div>
+                        <div class="row">
+                            <input type="text" id="name-category" maxlength="18" aria-label="Name" required>
                         </div>
                         <button type="submit"></button>
                     </form>
@@ -270,42 +226,20 @@
                                 <span class="bg-pink" tabindex="0" role="button" aria-label="Pink"></span>
                             </div>
                         </div>
-                        <div class="row">
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="no-cat" value="0" checked>
-                                <span class="no-cat-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-perso" value="1">
-                                <span class="cat-perso-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-pro" value="2">
-                                <span class="cat-pro-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-voyage" value="3">
-                                <span class="cat-voyage-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-task" value="4">
-                                <span class="cat-task-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-rappel" value="5">
-                                <span class="cat-rappel-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
-                                <input type="radio" name="category" id="cat-idees" value="6">
-                                <span class="cat-idees-filter-span" tabindex="0" role="button"></span>
-                            </label>
-                        </div>
                         <div class="row div-folder">
                             <select id="folders" aria-label="Folders">
                                 <option value="" selected>Choose a folder</option>
                             </select>
                             <button type="button" id="btn-add-folder" aria-label="Add a folder">
                                 <i class="fa-solid fa-folder-plus"></i>
+                            </button>
+                        </div>
+                        <div class="row div-categories">
+                            <select id="categories" aria-label="Categories">
+                                <option value="" selected>Choose a category</option>
+                            </select>
+                            <button type="button" id="btn-add-category" aria-label="Add a category">
+                                <i class="fa-solid fa-square-plus"></i>
                             </button>
                         </div>
                         <div class="row div-slider">
@@ -328,6 +262,17 @@
                     </div>
                     <div class="row">
                         <div class="error-notification d-none"></div>
+                    </div>
+                    <div class="row">
+                        <select id="language" aria-label="Language">
+                            <option value="fr">FR</option>
+                            <option value="en" selected>EN</option>
+                            <option value="de">DE</option>
+                            <option value="es">ES</option>
+                        </select>
+                    </div>
+                    <div id="legal" class="row">
+                        <a href="https://leoseguin.fr/mentionslegales/"></a>
                     </div>
                     <div class="row">
                         <span class="link">
@@ -360,13 +305,6 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div id="compact-slider" class="row div-slider">
-                        <span></span>
-                        <label class="switch">
-                            <input type="checkbox" id="check-compact" aria-hidden="true" tabindex="-1">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
                     <div id="hide-sidebar-slider" class="row div-slider">
                         <span></span>
                         <label class="switch">
@@ -383,44 +321,9 @@
                     </div>
                     <div class="row">
                         <p class="version">
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.9.1</a>
+                            GPL-3.0 &copy;
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.10.1</a>
                         </p>
-                    </div>
-                </div>
-            </div>
-        </dialog>
-        <dialog id="plugins-popup-box">
-            <div class="popup">
-                <div class="content">
-                    <div class="close">
-                        <i class="fa-solid fa-xmark"></i>
-                    </div>
-                    <div class="row bold">
-                        Plugins (coming soon)
-                    </div>
-                    <div id="plugin-markdown" class="plugin installed">
-                        <div>
-                            <p class="bold">Marked</p>
-                            <p>Write with basic Markdown</p>
-                        </div>
-                    </div>
-                    <div id="plugin-math" class="plugin">
-                        <div>
-                            <p class="bold">Math</p>
-                            <p>Write math formulas with Markdown</p>
-                        </div>
-                        <button type="button" aria-label="Math" disabled>
-                            Install
-                        </button>
-                    </div>
-                    <div id="plugin-highlight" class="plugin">
-                        <div>
-                            <p class="bold">Highlight</p>
-                            <p>Write code with syntax highlighting</p>
-                        </div>
-                        <button type="button" aria-label="Math" disabled>
-                            Install
-                        </button>
                     </div>
                 </div>
             </div>
@@ -434,6 +337,9 @@
                         </div>
                         <div class="row bold">
                             <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>
+                        </div>
+                        <div class="row bold">
+                            <span id="last-login"></span>
                         </div>
                         <div class="row">
                             <span id="storage-usage"></span>

@@ -153,13 +153,16 @@ header
   justify-content: center
   padding: 10px 2rem
   gap: 2rem
-  z-index: 1
   -webkit-user-select: none
   user-select: none
 
   div
     display: inline-flex
     align-items: center
+
+  .christmas
+    position: absolute
+    top: 0
 
   #log-in,
   #manage-account
@@ -194,7 +197,7 @@ main
   display: flex
   justify-content: center
   align-items: center
-  margin: 60px 1rem 1rem 380px
+  margin: 60px 1rem 1rem 370px
   flex-wrap: wrap
   gap: 1rem
 
@@ -277,66 +280,66 @@ input
   position: fixed
   display: flex
   flex-direction: column
-  left: 0
   top: 70px
   bottom: 0
-  width: 360px
 
-  nav,
-  footer
+  nav
+    -webkit-user-select: none
+    user-select: none
     display: flex
     flex-direction: column
     padding: 1rem
-
-  nav
-    flex-grow: 1
     overflow-y: auto
+    width: 350px
 
-  #list-notes
-    overflow-y: auto
+    .nav-buttons
+      display: flex
+      justify-content: space-between
 
-    h2
-      margin-bottom: 10px
+    #list-notes
+      overflow-y: auto
 
-    details
-      background: rgba(150, 150, 150, 0.2)
-      border-radius: 4px
+      h2
+        margin-bottom: 10px
 
-    p
-      cursor: pointer
-      padding: 4px 0
-      border-radius: 0 1rem 1rem 0
-      font-size: .9rem
-      font-weight: 700
-      overflow: hidden
-      transition: .1s
-      min-height: 2rem
+      details
+        background: rgba(150, 150, 150, 0.2)
+        border-radius: 4px
 
-      &:hover,
-      &:focus
-        outline: none
-        background: rgba(150, 150, 150, 0.4)
+      p
+        cursor: pointer
+        padding: 4px 0
+        border-radius: 0 1rem 1rem 0
+        font-size: .9rem
+        font-weight: 700
+        overflow: hidden
+        transition: .1s
+        min-height: 2rem
 
-      &:hover .title-list,
-      &:focus .title-list
-        display: none
+        &:hover,
+        &:focus
+          outline: none
+          background: rgba(150, 150, 150, 0.4)
 
-      &:hover .date-list,
-      &:focus .date-list
-        display: inline-flex
+        &:hover .title-list,
+        &:focus .title-list
+          display: none
 
-      .custom-check
-        padding: 4px 8px
-        margin-right: 4px
-        border-radius: 24px
+        &:hover .date-list,
+        &:focus .date-list
+          display: inline-flex
 
-      .title-list
-        display: inline-flex
-        align-items: baseline
-        white-space: nowrap
+        .custom-check
+          padding: 4px 8px
+          border-radius: 24px
 
-      .date-list
-        display: none
+        .title-list
+          display: inline-flex
+          align-items: baseline
+          white-space: nowrap
+
+        .date-list
+          display: none
 
 #sidebar-indicator
   position: fixed
@@ -404,7 +407,7 @@ input
     transition: opacity .1s
 
   &:not(.fullscreen)
-    max-width: 50%
+    max-width: calc(50% - 1rem)
 
   &:hover
     .bottom-content
@@ -412,15 +415,12 @@ input
       opacity: 1
 
 .shared-note
-  position: relative
   display: flex
   flex-direction: column
   justify-content: space-between
-  background: #121212
-  border-radius: 1rem
   width: fit-content
   max-width: 100%
-  margin: 1rem auto
+  margin: 0 auto
   line-height: 2
   padding: 10px 1rem
 
@@ -512,14 +512,13 @@ input
       height: 28px
 
 dialog
-  position: fixed
-  top: 0
-  left: 0
   z-index: 2
-  min-height: 100lvh
-  max-height: 100lvh
+  padding: 0
+  min-height: 100dvh
+  max-height: 100dvh
   min-width: 100vw
   max-width: 100vw
+  align-content: center
   overflow-x: hidden
   -webkit-backdrop-filter: blur(5px)
   backdrop-filter: blur(5px)
@@ -527,27 +526,23 @@ dialog
   .popup
     -webkit-user-select: none
     user-select: none
-    position: absolute
-    top: 50svh
-    left: 50%
-    z-index: 2
-    max-height: 100svh
+    margin: auto
+    max-height: 100dvh
+    max-width: 500px
     overflow-y: auto
-    transform: translate(-50%, -50%)
 
-.content
-  width: 500px
-  max-width: 100vw
-  padding: 4px 1rem
-  border-radius: 1rem
+    .content
+      min-width: 100%
+      padding: 4px 1rem
+      border-radius: 1rem
 
 #note-popup-box
   font-size: .9rem
 
-  .content
-    width: 80vw
+  .popup
     max-width: 1300px
-
+  
+  .content
     input,
     textarea
       padding: 0
@@ -556,7 +551,7 @@ dialog
       outline: none
 
     textarea
-      height: 38svh
+      height: calc(100svh - 425px)
       overscroll-behavior: none
 
 .row
@@ -579,10 +574,11 @@ dialog
 .custom-check
   display: inline-flex
   font-size: .9rem
+  margin-right: 4px
 
   span
     cursor: pointer
-    margin: 3px 0
+    margin: 4px 0
     padding: 4px 8px
     border-radius: 24px
 
@@ -668,23 +664,6 @@ dialog
   cursor: pointer
   font-weight: 700
 
-#settings,
-#plugins
-  display: inline-flex
-  align-items: center
-  justify-content: center
-  font-size: 1.5rem
-  text-align: center
-  vertical-align: middle
-  margin-left: 1rem
-  width: 30px
-  height: 30px
-  border-radius: 50%
-
-#plugins
-  display: none
-
-#legal,
 #license
   font-size: .9rem
 
@@ -699,6 +678,10 @@ dialog
   padding: 10px
   border-radius: 4px
   z-index: 3
+
+#folders,
+#categories
+  min-width: 200px
 
 #copy-note-link,
 #psswd-gen
@@ -716,6 +699,7 @@ dialog
 #copy-note-link-btn,
 #copy-password-btn,
 #btn-add-folder,
+#btn-add-category,
 #submit-gen-psswd
   display: inline-flex
   width: 36px
@@ -739,7 +723,6 @@ dialog
   display: inline-flex
   justify-content: center
   align-items: center
-  margin-right: 1rem
   font-size: 1.2rem
   width: 36px
   height: 36px
@@ -762,7 +745,6 @@ dialog
 @media (min-width: 901px)
   .btn-add-note-float,
   #sidebar-indicator,
-  #compact-slider,
   #hide-sidebar-slider
     display: none
 
@@ -775,8 +757,8 @@ dialog
       display: none
 
   main
-    margin: 60px 0 92px
-    gap: 4px
+    margin: 45px 0 92px
+    gap: 2px
 
   #sidebar
     display: none
@@ -784,6 +766,9 @@ dialog
     margin: 0
     top: 0
     animation: slide-right .3s ease-in-out
+
+    nav
+      width: 100vw
 
     &.show
       display: flex
@@ -807,11 +792,6 @@ dialog
     border-radius: 48px
     z-index: 1
 
-  .note:not(.fullscreen)
-    min-width: 98vw
-    max-width: 98vw
-    max-height: 350px
-
   .note
     .bottom-content
       display: flex
@@ -819,19 +799,23 @@ dialog
       visibility: visible
       opacity: 1
 
+      i.expand-note
+        display: none
+
     .details
       overflow: hidden
 
-  .compact
-    .note:not(.fullscreen)
-      min-width: 48vw
-      max-width: 48vw
-      max-height: 280px
-      padding: 4px 10px
+    &:not(.fullscreen)
+      min-width: 100vw
+      max-width: 100vw
+      border-radius: 0
+      max-height: 120px
 
-      .fa-clipboard,
-      .fa-download,
-      .fa-link
+      .details-content
+        opacity: .5
+        pointer-events: none
+
+      .bottom-content
         display: none
 
   .fullscreen
@@ -842,11 +826,8 @@ dialog
       width: 100%
       margin: 0
 
-  #note-popup-box .content
-    width: 100vw
-
-    textarea
-      resize: none
+  textarea
+    resize: none
 
   #colors,
   #accent-colors

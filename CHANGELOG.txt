@@ -1,3 +1,9 @@
+#----v24.10.1----# !! DATABASE CHANGED !!
+-Add last login date
+-Improve categories system
+-New mobile UI/UX
+-Bug fixes
+
 #----v24.9.1----#
 -Improve accent color system
 -Improve UI/UX
