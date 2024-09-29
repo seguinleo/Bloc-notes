@@ -1,5 +1,5 @@
 <?php
-session_name('__Secure-Notes');
+session_name('secureNotes');
 session_start();
 
 $name = $_SESSION['name'];
