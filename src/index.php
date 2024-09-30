@@ -25,7 +25,7 @@
             <p id="noscript">You must enable JavaScript to use Bloc-notes.</p>
         </noscript>
         <div id="welcome">
-            <img src="./assets/img/christmas.png" alt="christmas" class="christmas d-none" width="36" height="29">
+            <img src="./assets/img/christmas.png" alt="christmas" class="christmas d-none" width="36" height="29" loading="lazy">
             <?php if (isset($name) === true) { ?>
                 <span id="manage-account" class="link" tabindex="0" role="button" aria-label="Manage account">
                     <i class="fa-solid fa-circle-user"></i>
@@ -342,6 +342,9 @@
                             <span id="last-login"></span>
                         </div>
                         <div class="row">
+                            <span id="log-out" class="link" tabindex="0" role="button"></span>
+                        </div>
+                        <div class="row">
                             <span id="storage-usage"></span>
                             <progress id="storage" max="1000000" value="0"></progress>
                         </div>
@@ -384,9 +387,6 @@
                                 <button type="submit"></button>
                             </form>
                         </details>
-                        <div class="row">
-                            <span id="log-out" class="link" tabindex="0" role="button"></span>
-                        </div>
                     </div>
                 </div>
             </dialog>

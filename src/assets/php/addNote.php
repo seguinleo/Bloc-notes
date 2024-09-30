@@ -28,7 +28,7 @@ $allColors = [
 if (in_array($color, $allColors) === false) $color = 'bg-default';
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (id,title,content,dateNote,color,hiddenNote,category,folder,user) VALUES (:NoteId,:Title,:Content,:DateNote,:Color,:HiddenNote,:Folder,:Category,:User)");
+    $query = $PDO->prepare("INSERT INTO notes (id,title,content,dateNote,color,hiddenNote,folder,category,user) VALUES (:NoteId,:Title,:Content,:DateNote,:Color,:HiddenNote,:Folder,:Category,:User)");
     $query->execute(
         [
             ':NoteId'       => $noteId,
