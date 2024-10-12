@@ -79,9 +79,6 @@ export function toggleFullscreen (noteId) {
   if (!noteId) return;
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   note.classList.toggle('fullscreen');
-  if (!note.querySelector('.bottom-content .expand-note')) return;
-  note.querySelector('.bottom-content .expand-note').classList.toggle('fa-expand');
-  note.querySelector('.bottom-content .expand-note').classList.toggle('fa-compress');
 }
 
 export function searchSidebar() {
@@ -423,10 +420,10 @@ document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
     if (allNotes.length === 0) return;
     const a = document.createElement('a');
     let blob, url, filename;
-    if (event.target.value === '3') {
-      let allNotesHTML = [];
+    let allNotesContent = [];
+    if (event.target.value === 'html' || event.target.value === 'pdf') {
       if (document.querySelector('#id-note-download').value === '') {
-        allNotesHTML = Array.from(allNotes).map((note) => {
+        allNotesContent = Array.from(allNotes).map((note) => {
           const title = note.querySelector('.title').textContent;
           const content = note.querySelector('.details-content').innerHTML;
           return `<h2>${title}</h2>${content}`;
@@ -436,12 +433,20 @@ document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
         const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
         const title = note.querySelector('.title').textContent;
         const content = note.querySelector('.details-content').innerHTML;
-        allNotesHTML = [`<h2>${title}</h2>${content}`];
+        allNotesContent = [`<h2>${title}</h2>${content}`];
         filename = `${title}.html`;
       }
-      blob = new Blob([allNotesHTML.join('')], { type: 'text/html;charset=utf-8' });
+      blob = new Blob([allNotesContent.join('')], { type: 'text/html;charset=utf-8' });
+      
+      if (event.target.value === 'pdf') {
+        const printWindow = window.open();
+        printWindow.document.open();
+        printWindow.document.write(allNotesContent.join(''));
+        printWindow.document.close();
+        printWindow.print();
+        return;
+      }
     } else {
-      let allNotesContent = [];
       if (document.querySelector('#id-note-download').value === '') {
         allNotesContent = Array.from(allNotes).map((note) => {
           const title = note.getAttribute('data-note-title');
@@ -547,6 +552,7 @@ export function changeLanguage(language, cloud) {
     
     if (cloud) {
       document.querySelector('#log-out').textContent = 'Déconnexion';
+      document.querySelector('#last-login').textContent = 'Dernière connexion:';
       document.querySelector('#old-psswd').setAttribute('placeholder', 'Ancien mot de passe');
       document.querySelector('#new-psswd').setAttribute('placeholder', 'Nouveau mot de passe');
       document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmer le mot de passe');
@@ -599,6 +605,7 @@ export function changeLanguage(language, cloud) {
     
     if (cloud) {
       document.querySelector('#log-out').textContent = 'Abmelden';
+      document.querySelector('#last-login').textContent = 'Letzter Login:';
       document.querySelector('#old-psswd').setAttribute('placeholder', 'Altes Passwort');
       document.querySelector('#new-psswd').setAttribute('placeholder', 'Neues Passwort');
       document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Passwort bestätigen');
@@ -651,6 +658,7 @@ export function changeLanguage(language, cloud) {
     
     if (cloud) {
       document.querySelector('#log-out').textContent = 'Cerrar sesión';
+      document.querySelector('#last-login').textContent = 'Último inicio de sesión:';
       document.querySelector('#old-psswd').setAttribute('placeholder', 'Contraseña antigua');
       document.querySelector('#new-psswd').setAttribute('placeholder', 'Nueva contraseña');
       document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirmar contraseña');
@@ -703,6 +711,7 @@ export function changeLanguage(language, cloud) {
     
     if (cloud) {
       document.querySelector('#log-out').textContent = 'Log out';
+      document.querySelector('#last-login').textContent = 'Last login:';
       document.querySelector('#old-psswd').setAttribute('placeholder', 'Old password');
       document.querySelector('#new-psswd').setAttribute('placeholder', 'New password');
       document.querySelector('#new-psswd-valid').setAttribute('placeholder', 'Confirm password');

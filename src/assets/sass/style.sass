@@ -267,7 +267,6 @@ input
   &[type=checkbox]
     margin-right: 10px
     vertical-align: middle
-    pointer-events: none
 
   &:disabled
     cursor: not-allowed
@@ -357,7 +356,6 @@ input
   .title
     text-align: right
     font-weight: 700
-    margin: 0 10px
 
   .details
     overflow-x: hidden
@@ -371,6 +369,7 @@ input
     user-select: none
     text-align: center
     margin-top: 10px
+    margin-bottom: 4px
 
     i
       cursor: pointer
@@ -423,8 +422,6 @@ input
 
   .title
     text-align: center
-    font-weight: 700
-    margin: 0 10px
 
   .bottom-content
     -webkit-user-select: none
@@ -792,9 +789,6 @@ dialog
       justify-content: space-evenly
       visibility: visible
       opacity: 1
-
-      i.expand-note
-        display: none
 
     .details
       overflow: hidden
@@ -1717,6 +1711,9 @@ html
 .bg-purple,
 .bg-pink
   color: #121212
+
+.pointer-events-none
+  pointer-events: none
 
 .txt-red
   color: #ff0000

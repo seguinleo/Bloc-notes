@@ -134,16 +134,20 @@
                         <input id="id-note-download" type="hidden">
                         <div class="row">
                             <label class="custom-check">
-                                <input type="radio" name="download-notes" value="1" id="txt-download">
+                                <input type="radio" name="download-notes" value="txt" id="txt-download">
                                 <span>.TXT</span>
                             </label>
                             <label class="custom-check">
-                                <input type="radio" name="download-notes" value="2" id="md-download">
+                                <input type="radio" name="download-notes" value="md" id="md-download">
                                 <span>.MD</span>
                             </label>
                             <label class="custom-check">
-                                <input type="radio" name="download-notes" value="3" id="html-download">
+                                <input type="radio" name="download-notes" value="html" id="html-download">
                                 <span>.HTML</span>
+                            </label>
+                            <label class="custom-check">
+                                <input type="radio" name="download-notes" value="pdf" id="pdf-download">
+                                <span>.PDF</span>
                             </label>
                         </div>
                     </fieldset>
@@ -340,6 +344,7 @@
                         </div>
                         <div class="row bold">
                             <span id="last-login"></span>
+                            <span id="last-login-date"></span>
                         </div>
                         <div class="row">
                             <span id="log-out" class="link" tabindex="0" role="button"></span>

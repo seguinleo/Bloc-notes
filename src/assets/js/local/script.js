@@ -27,7 +27,6 @@ const noteActions = () => {
       else if (target.classList.contains('pin-note')) pin(noteId);
       else if (target.classList.contains('copy-note')) defaultScript.copy(noteContent);
       else if (target.classList.contains('delete-note')) deleteNote(noteId);
-      else if (target.classList.contains('expand-note')) defaultScript.toggleFullscreen(noteId);
       else if (target.classList.contains('download-note')) defaultScript.downloadNote(noteId);
     });
     e.addEventListener('keydown', (event) => {
@@ -221,13 +220,6 @@ const getNotes = async () => {
         downloadIconElement.setAttribute('role', 'button');
         downloadIconElement.setAttribute('aria-label', 'Download note');
         bottomContentElement.appendChild(downloadIconElement);
-
-        const expandIconElement = document.createElement('i');
-        expandIconElement.classList.add('fa-solid', 'fa-expand', 'note-action', 'expand-note');
-        expandIconElement.tabIndex = 0;
-        expandIconElement.setAttribute('role', 'button');
-        expandIconElement.setAttribute('aria-label', 'Fullscreen note');
-        bottomContentElement.appendChild(expandIconElement);
       }
 
       noteElement.appendChild(detailsElement);
@@ -295,7 +287,7 @@ const getNotes = async () => {
         if (!folderDetails) {
           const newFolderDetails = document.createElement('details');
           newFolderDetails.setAttribute('open', 'open');
-          newFolderDetails.setAttribute('data-folder', folder);
+          newFolderDetails.setAttribute('data-folder', encodeURIComponent(folder));
           const summary = document.createElement('summary');
           summary.textContent = folder;
           newFolderDetails.appendChild(summary);
@@ -345,10 +337,9 @@ const getNotes = async () => {
     noteActions();
     document.querySelectorAll('.note').forEach((e) => {
       e.addEventListener('click', (event) => {
-        if (!event.target.classList.contains('title') &&
-            !event.target.classList.contains('details') &&
-            !event.target.classList.contains('fullscreen')
-        ) return;
+        if (event.target.parentElement.classList.contains('bottom-content') || event.target.classList.contains('bottom-content')) return;
+        if (event.target.tabIndex > -1) return;
+        if (document.getSelection().toString()) return;
         defaultScript.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'));
       });
     });

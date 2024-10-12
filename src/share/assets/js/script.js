@@ -98,35 +98,11 @@ const showSharedNote = async () => {
     minute: '2-digit',
   });
   bottomContentElement.appendChild(dateElement);
-
-  const clipboardIconElement = document.createElement('i');
-  clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action');
-  clipboardIconElement.tabIndex = 0;
-  clipboardIconElement.setAttribute('data-note-content', cleanContent);
-  clipboardIconElement.setAttribute('role', 'button');
-  clipboardIconElement.setAttribute('aria-label', 'Copy note to clipboard');
-  bottomContentElement.appendChild(clipboardIconElement);
   noteElement.appendChild(detailsElement);
   noteElement.appendChild(bottomContentElement);
   notesContainer.textContent = '';
   notesContainer.appendChild(noteElement);
 };
-
-const copy = (content) => navigator.clipboard.writeText(content);
-
-notesContainer.addEventListener('click', (event) => {
-  const { target } = event;
-  if (target.classList.contains('note-action')) {
-    const noteContent = target.getAttribute('data-note-content');
-    if (target.classList.contains('fa-clipboard')) copy(noteContent);
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    if (document.activeElement.classList.contains('fa-clipboard')) document.activeElement.click();
-  }
-});
 
 document.addEventListener('DOMContentLoaded', async () => {
   await showSharedNote();
