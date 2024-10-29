@@ -1,3 +1,7 @@
+#----v24.11.1----#
+-Improve UI/UX
+-Bug/Security fixes
+
 #----v24.10.1----# !! DATABASE CHANGED !!
 -Add last login date
 -Improve categories system

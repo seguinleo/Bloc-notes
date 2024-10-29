@@ -65,7 +65,7 @@ const showSharedNote = async () => {
   const cleanContent = DOMPurify.sanitize(content, {
     SANITIZE_NAMED_PROPS: true,
     ALLOW_DATA_ATTR: false,
-    FORBID_TAGS: ['footer', 'form', 'header', 'main', 'nav', 'style'],
+    FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style'],
   });
 
   const contentHtml = marked.parse(cleanContent);

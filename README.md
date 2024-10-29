@@ -4,7 +4,7 @@
 <h1 align="center">Bloc-notes</h1>
 
 <p align="center">
-<b>Bloc-notes</b> is a fast, private and secure notebook.
+A fast, private and secure web notebook.
 </p>
 
 <p align="center">
@@ -19,26 +19,27 @@
 *   [Self-hosting](#self-hosting)
 
 ## Features
-The user can use Markdown and HTML. The user can create tasks lists, tables, links, code blocks, etc. The user can also search for notes, sort them or filter them by category and create folders to organize them.
+Users can create task lists, tables, links, and code blocks using Markdown and HTML. They can add online images, audio, or videos via URL. Notes can be searched, sorted by category, or organized into folders.
 
-The user can also sign in to sync all notes between their devices in a secure database. The user can also make a note public and share it via a random URL. No email is required, only a username and a strong password.
+Users can sync notes across devices in a secure database after signing in without needing an email address, only a username and strong password. Public notes can be shared via random URLs.
 
-This website is a PWA (Progressive Web App), the user can install it as an application. Service Worker has automatic updates.
+This website is a Progressive Web App (PWA) that can be installed as an application. Automatic updates are handled by the Service Worker. Design is responsive and optimized for all mobile devices or macOS/Windows.
 
-The website is also accessible for people with disabilities thanks to high-contrast colors, ARIA modules and focusable elements. A light/dark mode is also available and the user can choose the accent color of the entire page.
+The site is accessible to users with disabilities through high-contrast colors, ARIA modules, and focusable elements. Users can choose between light/dark modes and select the page's accent color.
 
 ## Security
-The website follows the [OWASP security recommendations](https://cheatsheetseries.owasp.org/).
+The website follows [OWASP security recommendations](https://cheatsheetseries.owasp.org/).
 
-The user's connection is maintained by a secure cookie. Passwords are hashed and all notes, local or cloud, are encrypted with ``AES-256-GCM``.
+User's connections are managed with secure cookies and tokens.
 
-Each user has their own randomly generated 32-byte encryption key and salt. Once logged in, the user can change their password or delete their account.
+All notes are sanitized and validated through the DOMPurify library. All notes are encrypted with AES-256-GCM. Each user has a unique 32-byte randomly generated encryption key generated after signing up.
 
-The user can use biometrics (fingerprint, Windows Hello, etc) to unlock app. Biometrics are never sent to the server.
+Users can lock the app using biometrics (fingerprints, face, etc.). These biometric data are never sent to the server.
 
 ## Todo
 *   2FA login
 *   Markdown plugins
+*   Reminders with calendar
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any [suggestions](https://github.com/seguinleo/Bloc-notes/discussions) to improve this project, feel free to discuss!

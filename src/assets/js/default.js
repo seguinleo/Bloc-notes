@@ -6,11 +6,11 @@ const sidebar = document.querySelector('#sidebar');
 const metaTheme = document.querySelectorAll('.theme-color');
 const buttonTheme = document.querySelector('#icon-theme');
 const themes = {
-  carrot: { className: 'carrot', color: '#331500', icon: 'fa-carrot' },
-  dark: { className: 'dark', color: '#121212', icon: 'fa-moon' },
+  carrot: { className: 'carrot', color: '#1f0b00', icon: 'fa-carrot' },
+  dark: { className: 'dark', color: '#000', icon: 'fa-moon' },
   dusk: { className: 'dusk', color: '#1c1936', icon: 'fa-star' },
   leaf: { className: 'leaf', color: '#001b1e', icon: 'fa-leaf' },
-  light: { className: 'light', color: '#f3f3f3', icon: 'fa-lightbulb' },
+  light: { className: 'light', color: '#fff', icon: 'fa-lightbulb' },
 };
 export let isLocked = true;
 export const maxNoteContent = 20000;
@@ -65,7 +65,7 @@ export function showError(message) {
 export function downloadNote(noteId) {
   if (!noteId) return;
   document.querySelector('#id-note-download').value = noteId;
-  document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
+  document.querySelectorAll('#download-popup-box input[name="download-notes"]').forEach((e) => {
     e.checked = false;
   });
   document.querySelector('#download-popup-box').showModal();
@@ -78,22 +78,8 @@ export function copy(content) {
 export function toggleFullscreen (noteId) {
   if (!noteId) return;
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
+  note.querySelector('.details').scrollTop = 0;
   note.classList.toggle('fullscreen');
-}
-
-export function searchSidebar() {
-  sidebar.querySelectorAll('#list-notes p').forEach((e) => {
-    e.addEventListener('click', () => {
-      const titleList = e.querySelector('.title-list').textContent;
-      document.querySelectorAll('.note').forEach((note) => {
-        const title = note.querySelector('.title').textContent;
-        if (title === titleList) note.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-      });
-    });
-    e.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') e.click();
-    });
-  });
 }
 
 export const getLockApp = async () => {
@@ -115,7 +101,7 @@ export const getLockApp = async () => {
     if (!serverLocked.lockApp) {
       isLocked = false;
       document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'));
-      document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.remove('d-none'));
+      document.querySelector('#btn-add-note').classList.remove('d-none');
       document.querySelector('#lock-app-slider').classList.remove('d-none');
       document.querySelector('#check-lock-app').checked = false;
     }
@@ -144,6 +130,10 @@ export const verifyFingerprint = async () => {
             type: 'public-key',
             alg: -7,
           },
+          {
+            type: 'public-key',
+            alg: -257,
+          }
         ],
         authenticatorSelection: {
           authenticatorAttachment: 'platform',
@@ -156,7 +146,7 @@ export const verifyFingerprint = async () => {
     isLocked = false;
     document.querySelector('#btn-unlock-float').classList.add('d-none');
     document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'));
-    document.querySelectorAll('.btn-add-note').forEach((e) => e.classList.remove('d-none'));
+    document.querySelector('#btn-add-note').classList.remove('d-none');
     document.querySelector('#lock-app-slider').classList.remove('d-none');
   } catch (error) {
     showError(`An error occurred - ${error}`);
@@ -164,18 +154,12 @@ export const verifyFingerprint = async () => {
   }
 };
 
-export function openSidebar() {
-  if (isLocked) return;
-  sidebar.classList.add('show');
-}
-
-export function closeSidebar() {
-  sidebar.classList.remove('show');
+export function toggleSidebar() {
+  sidebar.classList.toggle('show');
 }
 
 export function handleGesture() {
-  if (touchendX - touchstartX > 75 && !sidebar.classList.contains('show')) openSidebar();
-  else if (touchendX - touchstartX < -75 && sidebar.classList.contains('show')) closeSidebar();
+  if ((touchendX - touchstartX > 75) || (touchendX - touchstartX < -75)) toggleSidebar();
 }
 
 export function loadTheme() {
@@ -187,13 +171,8 @@ export function loadTheme() {
   buttonTheme.className = `fa-solid ${currentTheme.icon}`;
 }
 
-if (localStorage.getItem('hide-sidebar') === 'true') {
-  document.querySelector('#check-hide-sidebar').checked = true;
-  document.querySelector('#sidebar-indicator').classList.add('d-none');
-}
-
 if (localStorage.getItem('spellcheck') === 'false') {
-  document.querySelector('#spellcheck').checked = false;
+  document.querySelector('#check-spellcheck').checked = false;
   document.querySelector('#content').setAttribute('spellcheck', 'false');
 }
 
@@ -222,14 +201,9 @@ switch (accentColor) {
     document.querySelector(`#accent-colors .accent${accentColor}-span`).classList.add('selected');
     break;
   default:
-    localStorage.setItem('accent_color', '1');
     document.body.classList = 'accent1';
     document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
-
-const sortNotes = localStorage.getItem('sort_notes');
-if (!['1', '2', '3', '4'].includes(sortNotes)) localStorage.setItem('sort_notes', '1');
-if (!['fr', 'de', 'es', 'en'].includes(lang)) localStorage.setItem('lang', 'en');
 
 document.addEventListener('touchstart', (e) => {
   touchstartX = e.changedTouches[0].screenX;
@@ -279,7 +253,6 @@ document.querySelector('#note-popup-box #content').addEventListener('input', (e)
 });
 
 document.querySelector('#btn-settings').addEventListener('click', () => {
-  closeSidebar();
   document.querySelector('#settings-popup-box').showModal();
 });
 
@@ -289,63 +262,69 @@ document.querySelector('#copy-password-btn').addEventListener('click', () => {
 });
 
 document.querySelector('#sidebar-indicator').addEventListener('click', () => {
-  openSidebar();
-});
-
-document.querySelector('#check-hide-sidebar').addEventListener('change', (e) => {
-  if (e.target.checked) {
-    localStorage.setItem('hide-sidebar', 'true');
-    document.querySelector('#sidebar-indicator').classList.add('d-none');
-  } else {
-    localStorage.removeItem('hide-sidebar');
-    document.querySelector('#sidebar-indicator').classList.remove('d-none');
-  }
+  toggleSidebar();
 });
 
 document.querySelector('#btn-sort').addEventListener('click', () => {
-  closeSidebar();
   document.querySelector('#sort-popup-box').showModal();
 });
 
 document.querySelector('#btn-add-folder').addEventListener('click', () => {
-  closeSidebar();
   document.querySelector('#folder-popup-box').showModal();
 });
 
 document.querySelector('#btn-add-category').addEventListener('click', () => {
-  closeSidebar();
   document.querySelector('#category-popup-box').showModal();
 });
 
 document.querySelector('#btn-filter').addEventListener('click', () => {
-  closeSidebar();
   document.querySelector('#filter-popup-box').showModal();
 });
 
 document.querySelector('#folder-popup-box button').addEventListener('click', () => {
   const folderName = document.querySelector('#name-folder').value.trim();
-  const select = document.querySelector('#folders');
+  const folders = document.querySelector('#folders .list');
   if (!folderName || folderName.length > 18) return;
-  if (Array.from(select.options).some((option) => option.value === folderName)) return;
-  const option = document.createElement('option');
-  option.value = folderName;
-  option.textContent = folderName;
-  select.appendChild(option);
-  select.value = folderName;
-  document.querySelector('#folder-popup-box').close();
+  if (Array.from(folders.children).some((e) => e.querySelector('span').textContent === folderName)) return;
+  const input = document.createElement('input');
+  input.type = 'radio';
+  input.name = 'add-folder';
+  input.value = folderName;
+  input.id = `${folderName}-folder-add-span`;
+  input.checked = true;
+  const label = document.createElement('label');
+  label.classList.add('custom-check');
+  const span = document.createElement('span');
+  span.textContent = folderName;
+  span.tabIndex = 0;
+  span.role = 'button';
+  label.appendChild(input);
+  label.appendChild(span);
+  folders.appendChild(label);
+  document.querySelector('#name-folder').value = '';
 });
 
 document.querySelector('#category-popup-box button').addEventListener('click', () => {
   const categoryName = document.querySelector('#name-category').value.trim();
-  const select = document.querySelector('#categories');
+  const categories = document.querySelector('#categories .list');
   if (!categoryName || categoryName.length > 18) return;
-  if (Array.from(select.options).some((option) => option.value === categoryName)) return;
-  const option = document.createElement('option');
-  option.value = categoryName;
-  option.textContent = categoryName;
-  select.appendChild(option);
-  select.value = categoryName;
-  document.querySelector('#category-popup-box').close();
+  if (Array.from(categories.children).some((e) => e.querySelector('span').textContent === categoryName)) return;
+  const input = document.createElement('input');
+  input.type = 'radio';
+  input.name = 'add-cat';
+  input.value = categoryName;
+  input.id = `${categoryName}-cat-add-span`;
+  input.checked = true;
+  const label = document.createElement('label');
+  label.classList.add('custom-check');
+  const span = document.createElement('span');
+  span.textContent = categoryName;
+  span.tabIndex = 0;
+  span.role = 'button';
+  label.appendChild(input);
+  label.appendChild(span);
+  categories.appendChild(label);
+  document.querySelector('#name-category').value = '';
 });
 
 document.querySelectorAll('#colors span').forEach((span, index) => {
@@ -372,7 +351,7 @@ document.querySelectorAll('#accent-colors span').forEach((span) => {
   });
 });
 
-document.querySelectorAll('.fa-xmark').forEach((e) => {
+document.querySelectorAll('.close i').forEach((e) => {
   e.addEventListener('click', () => {
     e.closest('dialog').close();
   });
@@ -400,6 +379,7 @@ forms.forEach((e) => e.addEventListener('submit', (event) => event.preventDefaul
 document.querySelector('#search-input').addEventListener('input', (e) => {
   const searchValue = e.target.value.trim().toLowerCase();
   document.querySelectorAll('.note').forEach((note) => {
+    if (!note.querySelector('.title')) return;
     const title = note.querySelector('.title').textContent.toLowerCase();
     const content = note.querySelector('.details-content').textContent.toLowerCase();
     if (title.includes(searchValue) || content.includes(searchValue)) note.classList.remove('d-none');
@@ -408,7 +388,7 @@ document.querySelector('#search-input').addEventListener('input', (e) => {
 });
 
 document.querySelector('#btn-download-all').addEventListener('click', () => {
-  document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
+  document.querySelectorAll('#download-popup-box input[name="download-notes"]').forEach((e) => {
     e.checked = false;
   });
   document.querySelector('#download-popup-box').showModal();
@@ -419,51 +399,24 @@ document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
     const allNotes = document.querySelectorAll('.note');
     if (allNotes.length === 0) return;
     const a = document.createElement('a');
-    let blob, url, filename;
+    let filename = '';
     let allNotesContent = [];
-    if (event.target.value === 'html' || event.target.value === 'pdf') {
-      if (document.querySelector('#id-note-download').value === '') {
-        allNotesContent = Array.from(allNotes).map((note) => {
-          const title = note.querySelector('.title').textContent;
-          const content = note.querySelector('.details-content').innerHTML;
-          return `<h2>${title}</h2>${content}`;
-        });
-        filename = 'all-notes.html';
-      } else {
-        const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
-        const title = note.querySelector('.title').textContent;
-        const content = note.querySelector('.details-content').innerHTML;
-        allNotesContent = [`<h2>${title}</h2>${content}`];
-        filename = `${title}.html`;
-      }
-      blob = new Blob([allNotesContent.join('')], { type: 'text/html;charset=utf-8' });
-      
-      if (event.target.value === 'pdf') {
-        const printWindow = window.open();
-        printWindow.document.open();
-        printWindow.document.write(allNotesContent.join(''));
-        printWindow.document.close();
-        printWindow.print();
-        return;
-      }
-    } else {
-      if (document.querySelector('#id-note-download').value === '') {
-        allNotesContent = Array.from(allNotes).map((note) => {
-          const title = note.getAttribute('data-note-title');
-          const content = note.getAttribute('data-note-content');
-          return `# ${title}\n${content}`;
-        });
-        filename = event.target.value === '1' ? 'all-notes.txt' : 'all-notes.md';
-      } else {
-        const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
+    if (document.querySelector('#id-note-download').value === '') {
+      allNotesContent = Array.from(allNotes).map((note) => {
         const title = note.getAttribute('data-note-title');
         const content = note.getAttribute('data-note-content');
-        allNotesContent = [`# ${title}\n${content}`];
-        filename = event.target.value === '1' ? `${title}.txt` : `${title}.md`;
-      }
-      blob = new Blob([allNotesContent.join('\n\n')], { type: 'text/plain;charset=utf-8' });
+        return `# ${title}\n${content}`;
+      });
+      filename = event.target.value === 'txt' ? 'all-notes.txt' : 'all-notes.md';
+    } else {
+      const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`);
+      const title = note.getAttribute('data-note-title');
+      const content = note.getAttribute('data-note-content');
+      allNotesContent = [`# ${title}\n${content}`];
+      filename = event.target.value === 'txt' ? `${title}.txt` : `${title}.md`;
     }
-    url = URL.createObjectURL(blob);
+    const blob = new Blob([allNotesContent.join('\n\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     a.href = url;
     a.download = filename;
     a.style.display = 'none';
@@ -535,18 +488,14 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelector('#download-popup-box legend').textContent = 'Type d\'export';
     document.querySelector('#spellcheck-slider span').textContent = 'Vérif. ortho.';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Masquer bouton sidebar';
     document.querySelector('#lock-app-slider span').textContent = 'Vérouiller app';
-    document.querySelector('#hide-infos').textContent = 'Masquer le contenu';
+    document.querySelector('#hide-infos').textContent = 'Masquer contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choisir un dossier';
-    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Choisir une catégorie';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Enregistrer';
     document.querySelector('#folder-popup-box button').textContent = 'Créer';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nom du dossier');
+    document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Nom du dossier');
     document.querySelector('#category-popup-box button').textContent = 'Créer';
-    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Nom de la catégorie');
+    document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Nom de la catégorie');
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
     
@@ -588,18 +537,14 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelector('#download-popup-box legend').textContent = 'Exporttyp';
     document.querySelector('#spellcheck-slider span').textContent = 'Rechtschreibprüfung';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Seitenleiste ausblenden';
     document.querySelector('#lock-app-slider span').textContent = 'App sperren';
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Ordner auswählen';
-    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Kategorie auswählen';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Speichern';
     document.querySelector('#folder-popup-box button').textContent = 'Erstellen';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Ordnername');
+    document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Ordnername');
     document.querySelector('#category-popup-box button').textContent = 'Erstellen';
-    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Kategoriename');
+    document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Kategoriename');
     document.querySelector('#link-markdown').textContent = 'Markdown-Anleitung';
     document.querySelector('#link-help').textContent = 'Hilfe und Diskussionen';
     
@@ -641,18 +586,14 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelector('#download-popup-box legend').textContent = 'Tipo de exportación';
     document.querySelector('#spellcheck-slider span').textContent = 'Corrector ortográfico';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Ocultar barra lateral';
     document.querySelector('#lock-app-slider span').textContent = 'Bloquear aplicación';
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Elegir una carpeta';
-    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Elegir una categoría';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Guardar';
     document.querySelector('#folder-popup-box button').textContent = 'Crear';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Nombre de la carpeta');
+    document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Nombre de la carpeta');
     document.querySelector('#category-popup-box button').textContent = 'Crear';
-    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Nombre de la categoría');
+    document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Nombre de la categoría');
     document.querySelector('#link-markdown').textContent = 'Guía de Markdown';
     document.querySelector('#link-help').textContent = 'Ayuda y discusiones';
     
@@ -694,18 +635,14 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelector('#download-popup-box legend').textContent = 'Export type';
     document.querySelector('#spellcheck-slider span').textContent = 'Spell check';
-    document.querySelector('#hide-sidebar-slider span').textContent = 'Hide sidebar button';
     document.querySelector('#lock-app-slider span').textContent = 'Lock app';
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
-    document.querySelector('#note-popup-box #folders option[value=""]').textContent = 'Choose a folder';
-    document.querySelector('#note-popup-box #categories option[value=""]').textContent = 'Choose a category';
-    document.querySelector('#note-popup-box button[type="submit"]').textContent = 'Save';
     document.querySelector('#folder-popup-box button').textContent = 'Create';
-    document.querySelector('#folder-popup-box input').setAttribute('placeholder', 'Folder name');
+    document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Folder name');
     document.querySelector('#category-popup-box button').textContent = 'Create';
-    document.querySelector('#category-popup-box input').setAttribute('placeholder', 'Category name');
+    document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Category name');
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';
     

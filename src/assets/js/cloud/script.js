@@ -35,8 +35,8 @@ const noteActions = () => {
       const noteContent = target.closest('.note').getAttribute('data-note-content');
       const noteColor = target.closest('.note').getAttribute('data-note-color');
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
-      const noteFolder = target.closest('.note').getAttribute('data-note-folder');
-      const noteCategory = target.closest('.note').getAttribute('data-note-category');
+      const noteFolder = target.closest('.note').getAttribute('data-note-folder') || '';
+      const noteCategory = target.closest('.note').getAttribute('data-note-category') || '';
       const noteLink = target.closest('.note').getAttribute('data-note-link');
       if (target.classList.contains('edit-note')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteFolder, noteCategory, noteLink);
       else if (target.classList.contains('pin-note')) pin(noteId);
@@ -56,19 +56,13 @@ const getNotes = async () => {
     document.querySelector('#btn-unlock-float').classList.remove('d-none');
     return;
   }
-  const sort = localStorage.getItem('sort_notes');
-  document.querySelector(`input[name="sort-notes"][value="${encodeURIComponent(sort)}"]`).checked = true;
+  const sort = localStorage.getItem('sort_notes') || '1';
+  document.querySelector(`#sort-popup-box input[name="sort-notes"][value="${encodeURIComponent(sort)}"]`).checked = true;
   document.querySelector('#list-notes').textContent = '';
-  document.querySelector('.filter-categories').textContent = '';
+  document.querySelector('#filter-categories').textContent = '';
+  document.querySelector('#folders .list').textContent = '';
+  document.querySelector('#categories .list').textContent = '';
   document.querySelectorAll('.note').forEach((e) => e.remove());
-  const folders = document.querySelector('#folders');
-  for (let i = folders.options.length - 1; i >= 0; i -= 1) {
-    if (folders.options[i].value) folders.remove(i);
-  }
-  const categories = document.querySelector('#categories');
-  for (let i = categories.options.length - 1; i >= 0; i -= 1) {
-    if (categories.options[i].value) categories.remove(i);
-  }
 
   try {
     const data = new URLSearchParams({ csrf_token: defaultScript.csrfToken });
@@ -213,8 +207,6 @@ const getNotes = async () => {
 
       noteElement.appendChild(detailsElement);
       noteElement.appendChild(bottomContentElement);
-      paragraph.setAttribute('tabindex', '0');
-      paragraph.setAttribute('role', 'button');
 
       const titleSpan = document.createElement('span');
       titleSpan.classList.add('title-list');
@@ -289,38 +281,58 @@ const getNotes = async () => {
     });
 
     for (const folder of allFolders) {
-      const option = document.createElement('option');
-      option.value = folder;
-      option.textContent = folder;
-      document.querySelector('#folders').appendChild(option);
-    }
-
-    for (const category of allCategories) {
-      const option = document.createElement('option');
-      option.value = category;
-      option.textContent = category;
-      document.querySelector('#categories').appendChild(option);
-
-      const categories = document.querySelector('.filter-categories');
+      const folders = document.querySelector('#folders .list');
       const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.name = 'filter-notes';
-      input.value = category;
-      input.id = category;
+      input.type = 'radio';
+      input.name = 'add-folder';
+      input.value = folder;
+      input.id = `${folder}-folder-add-span`;
       const label = document.createElement('label');
       label.classList.add('custom-check');
       const span = document.createElement('span');
-      span.classList.add(`${category}-filter-span`);
+      span.textContent = folder;
+      span.tabIndex = 0;
+      span.role = 'button';
+      label.appendChild(input);
+      label.appendChild(span);
+      folders.appendChild(label);
+    }
+
+    for (const category of allCategories) {
+      const categories = document.querySelector('#categories .list');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'add-cat';
+      input.value = category;
+      input.id = `${category}-cat-add-span`;
+      const label = document.createElement('label');
+      label.classList.add('custom-check');
+      const span = document.createElement('span');
       span.textContent = category;
       span.tabIndex = 0;
       span.role = 'button';
       label.appendChild(input);
       label.appendChild(span);
       categories.appendChild(label);
+
+      const sortCategories = document.querySelector('#filter-categories');
+      const sortInput = document.createElement('input');
+      sortInput.type = 'checkbox';
+      sortInput.name = 'filter-notes';
+      sortInput.value = category;
+      sortInput.id = `${category}-filter-span`;
+      const sortLabel = document.createElement('label');
+      sortLabel.classList.add('custom-check');
+      const sortSpan = document.createElement('span');
+      sortSpan.textContent = category;
+      sortSpan.tabIndex = 0;
+      sortSpan.role = 'button';
+      sortLabel.appendChild(sortInput);
+      sortLabel.appendChild(sortSpan);
+      sortCategories.appendChild(sortLabel);
     }
 
     document.querySelector('main').appendChild(fragment);
-    defaultScript.searchSidebar();
     noteActions();
     document.querySelector('#storage').value = dataByteSize;
     document.querySelector('#storage-usage').textContent = `${(dataByteSize * 0.001).toFixed(2)} kB / ${maxDataByteSize / 1000000} MB`;
@@ -332,10 +344,10 @@ const getNotes = async () => {
         defaultScript.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'));
       });
     });
-    document.querySelectorAll('input[name="filter-notes"]').forEach((e) => {
+    document.querySelectorAll('#filter-popup-box input[name="filter-notes"]').forEach((e) => {
       e.addEventListener('change', () => {
         const selectedCategories = [];
-        const checkedCategories = document.querySelectorAll('input[name="filter-notes"]:checked');
+        const checkedCategories = document.querySelectorAll('#filter-popup-box input[name="filter-notes"]:checked');
         if (checkedCategories.length === 0) {
           document.querySelectorAll('.note').forEach((note) => note.classList.remove('d-none'));
           return;
@@ -396,8 +408,8 @@ const updateNote = (noteId, title, content, color, hidden, folder, category, lin
   document.querySelector('#id-note').value = noteId;
   document.querySelector('#note-popup-box #title').value = title;
   document.querySelector('#note-popup-box #content').value = content;
-  document.querySelector('#note-popup-box #folders').value = folder || '';
-  document.querySelector('#note-popup-box #categories').value = category || '';
+  document.querySelector(`#folders input[name="add-folder"][value="${folder}"]`).checked = true;
+  document.querySelector(`#categories input[name="add-cat"][value="${category}"]`).checked = true;
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
@@ -455,7 +467,7 @@ document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
 
 document.querySelector('#log-out').addEventListener('click', () => fetchLogout());
 
-document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
+document.querySelectorAll('#sort-popup-box input[name="sort-notes"]').forEach(async (e) => {
   e.addEventListener('change', async () => {
     if (!['1', '2', '3', '4'].includes(e.value)) return;
     localStorage.setItem('sort_notes', e.value);
@@ -463,17 +475,17 @@ document.querySelectorAll('input[name="sort-notes"]').forEach(async (e) => {
   });
 });
 
-document.querySelectorAll('.btn-add-note').forEach((e) => {
-  e.addEventListener('click', () => {
-    isUpdate = false;
-    document.querySelector('#note-popup-box').showModal();
-    document.querySelectorAll('#colors span').forEach((e) => {
-      e.classList.remove('selected');
-    });
-    document.querySelector('#colors span').classList.add('selected');
-    document.querySelector('#textarea-length').textContent = `0/${defaultScript.maxNoteContent}`;
-    document.querySelector('#check-hidden').disabled = false;
+document.querySelector('#btn-add-note').addEventListener('click', () => {
+  isUpdate = false;
+  document.querySelector('#note-popup-box').showModal();
+  document.querySelectorAll('#colors span').forEach((e) => {
+    e.classList.remove('selected');
   });
+  document.querySelector('#colors span').classList.add('selected');
+  document.querySelector('#textarea-length').textContent = `0/${defaultScript.maxNoteContent}`;
+  document.querySelector('#check-hidden').disabled = false;
+  document.querySelector('#folders input[name="add-folder"][value=""').checked = true;
+  document.querySelector('#categories input[name="add-cat"][value=""').checked = true;
 });
 
 document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
@@ -493,17 +505,17 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const content = document.querySelector('#note-popup-box #content').value.trim();
     const color = document.querySelector('#colors .selected').classList[0];
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
-    const folder = document.querySelector('#note-popup-box #folders').value;
-    const category = document.querySelector('#note-popup-box #categories').value;
+    const folder = document.querySelector('#folders input[name="add-folder"]:checked').value;
+    const category = document.querySelector('#categories input[name="add-cat"]:checked').value;
 
-    if (!title || title.length > 30 || folder.length > 18 || category.length > 18 || content.length > defaultScript.maxNoteContent || !color) return;
+    if (!title || title.length > 30  || content.length > defaultScript.maxNoteContent || !color) return;
     if (isUpdate && !noteId) return;
     if (noteId && !/^[a-zA-Z0-9]+$/.test(noteId)) return;
 
     const cleanContent = DOMPurify.sanitize(content, {
       SANITIZE_NAMED_PROPS: true,
       ALLOW_DATA_ATTR: false,
-      FORBID_TAGS: ['footer', 'form', 'header', 'main', 'nav', 'style'],
+      FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style'],
     });
 
     const data = new URLSearchParams({

@@ -1,17 +1,3 @@
-@keyframes slide-left
-  0%
-    transform: translateX(-100%)
-
-  100%
-    transform: translateX(0)
-
-@keyframes slide-right
-  0%
-    transform: translateX(100%)
-
-  100%
-    transform: translateX(0)
-
 @font-face
   font-family: OpenSans
   font-style: normal
@@ -29,7 +15,7 @@
 html
   scroll-behavior: smooth
   -webkit-tap-highlight-color: transparent
-  scrollbar-color: rgba(150, 150, 150, 0.4) transparent
+  scrollbar-color: rgba(150, 150, 150, 0.1) transparent
   font-family: OpenSans,sans-serif
 
 *
@@ -37,7 +23,7 @@ html
   box-sizing: border-box
 
 \::-webkit-scrollbar-thumb
-  background: rgba(150, 150, 150, 0.4)
+  background: rgba(150, 150, 150, 0.1)
 
 \::-webkit-scrollbar
   width: 4px
@@ -47,48 +33,45 @@ html
   opacity: .7
 
 h1
-  font-size: 1.2rem
+  font-size: 1.3rem
 
 h2
-  font-size: 1.1rem
+  font-size: 1.2rem
 
 h3
-  font-size: 1rem
+  font-size: 1.1rem
 
 table
   border-collapse: collapse
   text-align: center
-  border: 2px solid rgba(150, 150, 150, 0.4)
+  border: 2px solid rgba(150, 150, 150, 0.1)
   margin: 10px 0
 
   thead
-    background: rgba(150, 150, 150, 0.4)
+    background: rgba(150, 150, 150, 0.1)
 
   th,
   td
     padding: 4px 8px
-    border: 2px solid rgba(150, 150, 150, 0.4)
+    border: 2px solid rgba(150, 150, 150, 0.1)
 
-a
-  font-weight: 700
-
-  &:hover
-    text-decoration: none
+a:hover
+  text-decoration: none
 
 kbd
   border-radius: 4px
   margin-right: 4px
   font-weight: 700
   padding: 2px 4px
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1)
 
 hr
   border: none
-  border-top: 2px solid rgba(150, 150, 150, 0.4)
+  border-top: 2px solid rgba(150, 150, 150, 0.1)
   margin: 10px
 
 fieldset
-  border: 2px solid rgba(150, 150, 150, 0.4)
+  border: 2px solid rgba(150, 150, 150, 0.1)
   border-radius: 10px
   padding: 10px
   margin: 10px 0
@@ -97,7 +80,7 @@ fieldset
     font-weight: 700
 
 blockquote
-  border-left: 3px solid rgba(150, 150, 150, 0.4)
+  border-left: 3px solid rgba(150, 150, 150, 0.1)
   margin: 10px auto
   padding-left: 1rem
 
@@ -117,7 +100,7 @@ progress
 pre
   padding: 4px 8px
   margin: 10px auto
-  background: rgba(150, 150, 150, 0.2)
+  background: rgba(150, 150, 150, 0.1)
   border-radius: 4px
   line-height: 1.5
   overflow-x: auto
@@ -128,7 +111,7 @@ pre
 
 code
   padding: 4px 8px
-  background: rgba(150, 150, 150, 0.2)
+  background: rgba(150, 150, 150, 0.1)
   border-radius: 4px
   overflow-x: auto
 
@@ -147,10 +130,11 @@ img
 header
   position: fixed
   top: 0
-  left: 0
+  left: 350px
   right: 0
   display: flex
   justify-content: center
+  align-items: center
   padding: 10px 2rem
   gap: 2rem
   -webkit-user-select: none
@@ -159,10 +143,6 @@ header
   div
     display: inline-flex
     align-items: center
-
-  .christmas
-    position: absolute
-    top: 0
 
   #log-in,
   #manage-account
@@ -175,13 +155,15 @@ header
 
   #div-search
     flex-grow: 1
-    max-width: 750px
-    height: 50px
-    border-radius: 10px
+    max-width: 300px
+    height: 36px
+    border-radius: 48px
     padding: 10px
+    background: rgba(150, 150, 150, 0.2)
+    backdrop-filter: blur(5px)
 
     &:focus-within
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
 
     i
       margin: 0 4px
@@ -192,6 +174,7 @@ header
       border: none
       border-radius: 0
       outline: none
+      background: none
 
 main
   display: flex
@@ -211,12 +194,13 @@ input
 select
   font-size: .9rem
   padding: 0
+  background: none
   border: none
 
 textarea
   font-size: .9rem
   width: 100%
-  min-height: 50px
+  min-height: 200px
   max-height: 1000px
   resize: vertical
   padding: 10px
@@ -242,7 +226,7 @@ select,
 span,
 .link
   &:focus-visible
-    outline: 3px dashed rgba(150, 150, 150, 0.4)
+    outline: 3px dashed rgba(150, 150, 150, 0.2)
 
 form
   margin: 10px 0
@@ -274,9 +258,10 @@ input
 
 #sidebar
   position: fixed
+  z-index: 2
   display: flex
   flex-direction: column
-  top: 70px
+  top: 0
   bottom: 0
 
   nav
@@ -287,6 +272,16 @@ input
     padding: 1rem
     overflow-y: auto
     width: 350px
+
+    .main-title
+      position: absolute
+      left: -100%
+
+    .christmas
+      position: absolute
+      top: 2px
+      left: 0
+      transform: rotate(-25deg)
 
     .nav-buttons
       display: flex
@@ -299,7 +294,7 @@ input
         margin-bottom: 10px
 
       details
-        background: rgba(150, 150, 150, 0.2)
+        background: rgba(150, 150, 150, 0.1)
         border-radius: 4px
 
       p
@@ -315,7 +310,7 @@ input
         &:hover,
         &:focus
           outline: none
-          background: rgba(150, 150, 150, 0.4)
+          background: rgba(150, 150, 150, 0.1)
 
         &:hover .title-list,
         &:focus .title-list
@@ -337,12 +332,6 @@ input
         .date-list
           display: none
 
-#sidebar-indicator
-  position: fixed
-  bottom: 1rem
-  left: 1rem
-  background: rgba(150, 150, 150, 0.4)
-
 #noscript
   position: fixed
   top: 0
@@ -362,7 +351,6 @@ input
     overflow-wrap: break-word
     word-break: break-word
     font-size: .9rem
-    font-weight: 700
 
   .bottom-content
     -webkit-user-select: none
@@ -383,7 +371,29 @@ input
       transition: .1s
 
       &:hover
-        background: rgba(150, 150, 150, 0.4)
+        background: rgba(150, 150, 150, 0.1)
+
+#submit-note
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 50px
+  height: 50px
+  margin-top: 5px
+
+#btn-add-note
+  position: fixed
+  display: flex
+  justify-content: center
+  align-items: center
+  bottom: 2rem
+  right: 2rem
+  width: 60px
+  height: 60px
+  margin: 0
+  font-size: 1.5rem
+  border-radius: 48px
+  z-index: 1
 
 .note
   display: flex
@@ -440,7 +450,7 @@ input
       border-radius: 50%
 
       &:hover
-        background: rgba(150, 150, 150, 0.4)
+        background: rgba(150, 150, 150, 0.1)
 
     span
       font-size: .8rem
@@ -451,7 +461,7 @@ input
   justify-content: flex-end
   padding: 10px 0
 
-  .fa-xmark
+  i
     cursor: pointer
     display: inline-flex
     align-items: center
@@ -462,7 +472,7 @@ input
     transition: .1s
 
     &:hover
-      background: rgba(150, 150, 150, 0.4)
+      background: rgba(150, 150, 150, 0.1)
 
 .link
   cursor: pointer
@@ -470,7 +480,7 @@ input
 
 .fullscreen
   position: fixed
-  z-index: 2
+  z-index: 3
   border-radius: 0
   inset: 0
 
@@ -483,6 +493,7 @@ input
     max-height: 100%
     width: fit-content
     margin: auto
+    font-size: 1rem
 
 #colors,
 #accent-colors
@@ -503,7 +514,7 @@ input
       height: 28px
 
 dialog
-  z-index: 2
+  z-index: 4
   padding: 0
   min-height: 100dvh
   max-height: 100dvh
@@ -518,7 +529,6 @@ dialog
     -webkit-user-select: none
     user-select: none
     margin: auto
-    max-height: 100dvh
     max-width: 500px
     overflow-y: auto
 
@@ -542,7 +552,7 @@ dialog
       outline: none
 
     textarea
-      height: calc(100svh - 425px)
+      height: calc(100svh - 320px)
       overscroll-behavior: none
 
 .row
@@ -560,7 +570,7 @@ dialog
   transition: .1s
 
   &:hover
-    background: rgba(150, 150, 150, 0.4)
+    background: rgba(150, 150, 150, 0.1)
 
 .custom-check
   display: inline-flex
@@ -616,26 +626,9 @@ dialog
       left: 4px
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
 
-.plugin
-  display: flex
-  align-items: center
-  justify-content: space-between
-  margin: 10px auto
-  min-height: 50px
-  border-radius: 4px
-  padding: 4px
-  background: rgba(150, 150, 150, 0.2)
-
-  &.installed
-    background: rgba(124, 255, 117, 0.4)
-
-  p
-    font-size: .9rem
-    margin: 0 10px
-
-  button
-    max-width: 100px
-    margin: 4px
+.div-folder-cat div
+  display: inline-flex
+  margin-right: 10px
 
 .version
   text-align: right
@@ -668,11 +661,7 @@ dialog
   max-width: 320px
   padding: 10px
   border-radius: 4px
-  z-index: 3
-
-#folders,
-#categories
-  min-width: 200px
+  z-index: 5
 
 #copy-note-link,
 #psswd-gen
@@ -687,28 +676,14 @@ dialog
   font-weight: 700
   word-break: break-all
 
+#sidebar-indicator
+  background: rgba(150, 150, 150, 0.1)
+
 #copy-note-link-btn,
 #copy-password-btn,
 #btn-add-folder,
 #btn-add-category,
-#submit-gen-psswd
-  display: inline-flex
-  width: 36px
-  height: 36px
-  margin-right: 4px
-  border-radius: 48px
-  justify-content: center
-  align-items: center
-
-#btn-theme
-  display: flex
-  justify-content: center
-  align-items: center
-  font-size: 1.2rem
-  width: 36px
-  height: 36px
-  border-radius: 48px
-
+#submit-gen-psswd,
 #sidebar button,
 #sidebar-indicator
   display: inline-flex
@@ -720,7 +695,11 @@ dialog
   border-radius: 48px
 
   &:focus
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.2)
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
+
+#btn-add-folder,
+#btn-add-category
+  margin-right: 10px
 
 #btn-unlock-float
   position: fixed
@@ -734,54 +713,35 @@ dialog
   height: 75px
 
 @media (min-width: 901px)
-  .btn-add-note-float,
-  #sidebar-indicator,
-  #hide-sidebar-slider
+  #sidebar-indicator
     display: none
 
 @media (max-width: 900px)
   header
+    left: 0
     padding: 10px 1rem
     gap: 1rem
 
-    kbd
-      display: none
+    #div-search
+      max-width: 200px
+
+      kbd
+        display: none
 
   main
-    margin: 45px 0 92px
+    margin: 60px 0
     gap: 2px
 
   #sidebar
-    display: none
+    left: -100%
     width: 100vw
-    margin: 0
-    top: 0
-    animation: slide-right .3s ease-in-out
+    transition: .3s ease-in-out
 
     nav
       width: 100vw
 
     &.show
-      display: flex
-      z-index: 2
-      animation: slide-left .3s ease-in-out
-
-    .btn-add-note
-      display: none
-
-  .btn-add-note-float
-    position: fixed
-    display: flex
-    justify-content: center
-    align-items: center
-    bottom: 1rem
-    right: 1rem
-    width: 60px
-    height: 60px
-    margin: 0
-    font-size: 1.5rem
-    border-radius: 48px
-    z-index: 1
+      left: 0
 
   .note
     .bottom-content
@@ -845,12 +805,10 @@ html
     .popup .content,
     #btn-theme
       color: #cadeff
+
     a,
     .link
       color: #8ab4f8
-
-    .plugin.active
-      outline: 2px solid #8ab4f8
 
     .switch
       input:disabled + .slider
@@ -887,9 +845,6 @@ html
     a,
     .link
       color: #bcf88a
-
-    .plugin.active
-      outline: 2px solid #bcf88a
     
     .switch
       input:disabled + .slider
@@ -927,9 +882,6 @@ html
     .link
       color: #f3f88a
 
-    .plugin.active
-      outline: 2px solid #f3f88a
-
     .switch
       input:disabled + .slider
         background: #fcffc7
@@ -965,9 +917,6 @@ html
     a,
     .link
       color: #ff9bf8
-
-    .plugin.active
-      outline: 2px solid #ff9bf8
 
     .switch
       input:disabled + .slider
@@ -1005,9 +954,6 @@ html
     .link
       color: #ff9b9b
 
-    .plugin.active
-      outline: 2px solid #ff9b9b
-
     .switch
       input:disabled + .slider
         background: #ffcdcd
@@ -1043,9 +989,6 @@ html
     a,
     .link
       color: #ffc89b
-
-    .plugin.active
-      outline: 2px solid #ffc89b
 
     .switch
       input:disabled + .slider
@@ -1083,9 +1026,6 @@ html
     .link
       color: #8af8a7
 
-    .plugin.active
-      outline: 2px solid #8af8a7
-
     .switch
       input:disabled + .slider
         background: #c7ffd6
@@ -1122,9 +1062,6 @@ html
     .link
       color: #d29bff
 
-    .plugin.active
-      outline: 2px solid #d29bff
-
     .switch
       input:disabled + .slider
         background: #eacfff
@@ -1138,7 +1075,7 @@ html
   &.leaf,
   &.carrot
     \::selection
-      color: #121212
+      color: #111
 
     .accent1-span
       background: #8ab4f8
@@ -1169,27 +1106,24 @@ html
 
     #noscript
       background: #ff8787
-      color: #121212
+      color: #111
 
     #success-notification
-      color: #121212
+      color: #111
       background: #3fba41
 
     .error-notification
-      color: #121212
+      color: #111
       background: #ff8787
 
   &.dark
     background: #000
 
     kbd,
-    header,
     #sidebar,
     .bg-default
-      background: #121212
+      background: #111
 
-    #div-search,
-    #div-search input,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1202,7 +1136,7 @@ html
     input,
     textarea,
     select
-      background: #121212
+      background: #111
 
     #colors span,
     #accent-colors span
@@ -1218,7 +1152,7 @@ html
     .bg-blue a,
     .bg-purple a,
     .bg-pink a
-      color: #121212
+      color: #111
 
     .custom-check
       span
@@ -1226,7 +1160,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #121212
+        color: #111
 
     .switch
       .slider
@@ -1242,13 +1176,10 @@ html
     background: #1c1936
 
     kbd,
-    header,
     #sidebar,
     .bg-default
       background: #272342
 
-    #div-search,
-    #div-search input,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1285,7 +1216,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #121212
+        color: #111
 
     .switch
       .slider
@@ -1301,13 +1232,10 @@ html
     background: #001b1e
 
     kbd,
-    header,
     #sidebar,
     .bg-default
       background: #01262a
 
-    #div-search,
-    #div-search input,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1344,7 +1272,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #121212
+        color: #111
 
     .switch
       .slider
@@ -1360,13 +1288,10 @@ html
     background: #1f0b00
 
     kbd,
-    header,
     #sidebar,
     .bg-default
       background: #331500
     
-    #div-search,
-    #div-search input,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1403,7 +1328,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #121212
+        color: #111
       
     .switch
       .slider
@@ -1417,7 +1342,10 @@ html
   
   &.light
     background: #fff
-    color: #121212
+    color: #333
+
+    .popup .content
+      color: #333
 
     .accent1
       accent-color: #2b5790
@@ -1437,9 +1365,6 @@ html
         background: #2b5790
         color: #fff
 
-      .plugin.active
-        border: 2px solid #2b5790
-
     .accent2
       accent-color: #4e902b
 
@@ -1458,29 +1383,23 @@ html
         background: #4e902b
         color: #fff
 
-      .plugin.active
-        border: 2px solid #4e902b
-
     .accent3
-      accent-color: #bfaa22
+      accent-color: #dba709
 
       \::selection
-        background: #bfaa22
+        background: #dba709
         color: #fff
 
       a,
       .link
-        color: #bfaa22
+        color: #dba709
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #bfaa22
+        background: #dba709
         color: #fff
-
-      .plugin.active
-        border: 2px solid #bfaa22
 
     .accent4
       accent-color: #902b7c
@@ -1500,50 +1419,41 @@ html
         background: #902b7c
         color: #fff
 
-      .plugin.active
-        border: 2px solid #902b7c
-
     .accent5
-      accent-color: #902b2b
+      accent-color: #b02d19
 
       \::selection
-        background: #902b2b
+        background: #b02d19
         color: #fff
 
       a,
       .link
-        color: #902b2b
+        color: #b02d19
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #902b2b
+        background: #b02d19
         color: #fff
-
-      .plugin.active
-        border: 2px solid #902b2b
 
     .accent6
-      accent-color: #90552b
+      accent-color: #db7609
 
       \::selection
-        background: #90552b
+        background: #db7609
         color: #fff
 
       a,
       .link
-        color: #90552b
+        color: #db7609
 
       button,
       .custom-check input[type=radio]:checked + span,
       .custom-check input[type=checkbox]:checked + span,
       .switch input:checked + .slider
-        background: #90552b
+        background: #db7609
         color: #fff
-
-      .plugin.active
-        border: 2px solid #90552b
 
     .accent7
       accent-color: #2b9061
@@ -1563,9 +1473,6 @@ html
         background: #2b9061
         color: #fff
 
-      .plugin.active
-        border: 2px solid #2b9061
-
     .accent8
       accent-color: #6b2b90
 
@@ -1584,9 +1491,6 @@ html
         background: #6b2b90
         color: #fff
 
-      .plugin.active
-        border: 2px solid #6b2b90
-
     .accent1-span
       background: #2b5790
 
@@ -1594,16 +1498,16 @@ html
       background: #4e902b
 
     .accent3-span
-      background: #bfaa22
+      background: #dba709
 
     .accent4-span
       background: #902b7c
 
     .accent5-span
-      background: #902b2b
+      background: #b02d19
 
     .accent6-span
-      background: #90552b
+      background: #db7609
 
     .accent7-span
       background: #2b9061
@@ -1623,23 +1527,20 @@ html
     .bg-blue a,
     .bg-purple a,
     .bg-pink a
-      color: #121212
+      color: #333
 
     kbd,
-    header,
     #sidebar,
-    select,
     .custom-check span,
     .bg-default,
     #copy-note-link,
     #psswd-gen
-      background: #f3f3f3
+      background: #f8f8f8
 
     input
       border: 2px solid #c6c6c6
 
     .popup .content,
-    #div-search,
     #sidebar .custom-check,
     input,
     textarea
@@ -1651,16 +1552,16 @@ html
 
     .switch
       input:disabled + .slider
-        background: #f3f3f3
+        background: #f8f8f8
 
       .slider
         background: #c6c6c6
 
         &:before
-          background: #f3f3f3
+          background: #f8f8f8
 
     dialog
-      background: rgba(150, 150, 150, 0.4)
+      background: rgba(150, 150, 150, 0.1)
 
     #success-notification
       color: #fff
@@ -1668,11 +1569,11 @@ html
 
     .error-notification
       color: #fff
-      background: #902b2b
+      background: #b02d19
 
     #btn-theme
       background: #fff
-      color: #121212
+      color: #333
 
 .bg-red
   background: #ff8787
@@ -1710,7 +1611,7 @@ html
 .bg-blue,
 .bg-purple,
 .bg-pink
-  color: #121212
+  color: #111
 
 .pointer-events-none
   pointer-events: none
@@ -1777,6 +1678,9 @@ html
 
 .justify-content-center
   justify-content: center !important
+
+.justify-content-between
+  justify-content: space-between !important
 
 .align-items-center
   align-items: center !important
