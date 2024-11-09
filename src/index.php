@@ -491,6 +491,45 @@
                     </div>
                 </div>
             </dialog>
+            <div data-note-id="welcome" class="note bg-default d-none">
+                <div class="details">
+                    <h2 class="title">👋Bienvenue !</h2>
+                    <div class="details-content details-content-fr d-none">
+                        <p>
+                            Bloc-notes est un outil <span class="bold">rapide, privé et sécurisé</span> pour prendre des notes avec <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noopener noreferrer">Markdown</a>.
+                        </p>
+                        <p>
+                            Ajoutez une note avec <i class="fa-solid fa-plus"></i> en bas à droite et ajouter des listes de tâches, des liens, des images, etc.
+                        </p>
+                        <p>
+                            Vos notes sont <kbd>chiffrées</kbd> et stockées dans votre navigateur.
+                        </p>
+                        <p>
+                            Créez un compte avec <i class="fa-solid fa-circle-user"></i> pour synchroniser vos notes sur plusieurs appareils.
+                        </p>
+                        <p>
+                            Une fois connecté.e, vous pourrez partager des notes grâce à un lien public.
+                        </p>
+                    </div>
+                    <div class="details-content details-content-en">
+                        <p>
+                            Bloc-notes is a <span class="bold">fast, private, and secure</span> tool for taking notes with <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noopener noreferrer">Markdown</a>.
+                        </p>
+                        <p>
+                            Add a note with <i class="fa-solid fa-plus"></i> at the bottom right and add task lists, links, images, etc.
+                        </p>
+                        <p>
+                            Your notes are <kbd>encrypted</kbd> and stored in your browser.
+                        </p>
+                        <p>
+                            Create an account with <i class="fa-solid fa-circle-user"></i> to synchronize your notes across multiple devices.
+                        </p>
+                        <p>
+                            Once logged in, you will be able to share notes via a public link.
+                        </p> 
+                    </div>
+                </div>
+            </div>
         <?php } ?>
     </main>
     <?php if (isset($name) === true) { ?>

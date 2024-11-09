@@ -63,7 +63,7 @@ kbd
   margin-right: 4px
   font-weight: 700
   padding: 2px 4px
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1)
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
 
 hr
   border: none
@@ -118,9 +118,9 @@ code
 li
   margin-left: -1rem
 
-  &:has(> input[type=checkbox])
+  &:has(label)
     list-style: none
-    margin-left: -2rem
+    margin-left: -1.5rem
 
 img
   max-width: 100%
@@ -386,8 +386,8 @@ input
   display: flex
   justify-content: center
   align-items: center
-  bottom: 2rem
-  right: 2rem
+  bottom: 3rem
+  right: 3rem
   width: 60px
   height: 60px
   margin: 0
@@ -743,6 +743,10 @@ dialog
     &.show
       left: 0
 
+  #btn-add-note
+    bottom: 1rem
+    right: 1rem
+
   .note
     .bottom-content
       display: flex
@@ -1075,7 +1079,7 @@ html
   &.leaf,
   &.carrot
     \::selection
-      color: #111
+      color: #1a1a1a
 
     .accent1-span
       background: #8ab4f8
@@ -1106,14 +1110,14 @@ html
 
     #noscript
       background: #ff8787
-      color: #111
+      color: #1a1a1a
 
     #success-notification
-      color: #111
+      color: #1a1a1a
       background: #3fba41
 
     .error-notification
-      color: #111
+      color: #1a1a1a
       background: #ff8787
 
   &.dark
@@ -1122,8 +1126,9 @@ html
     kbd,
     #sidebar,
     .bg-default
-      background: #111
+      background: #1a1a1a
 
+    .fullscreen,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1136,7 +1141,7 @@ html
     input,
     textarea,
     select
-      background: #111
+      background: #1a1a1a
 
     #colors span,
     #accent-colors span
@@ -1152,7 +1157,7 @@ html
     .bg-blue a,
     .bg-purple a,
     .bg-pink a
-      color: #111
+      color: #1a1a1a
 
     .custom-check
       span
@@ -1160,7 +1165,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #111
+        color: #1a1a1a
 
     .switch
       .slider
@@ -1180,6 +1185,7 @@ html
     .bg-default
       background: #272342
 
+    .fullscreen,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1216,7 +1222,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #111
+        color: #1a1a1a
 
     .switch
       .slider
@@ -1236,6 +1242,7 @@ html
     .bg-default
       background: #01262a
 
+    .fullscreen,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1272,7 +1279,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #111
+        color: #1a1a1a
 
     .switch
       .slider
@@ -1292,6 +1299,7 @@ html
     .bg-default
       background: #331500
     
+    .fullscreen,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1328,7 +1336,7 @@ html
 
       input[type=radio]:checked + span,
       input[type=checkbox]:checked + span
-        color: #111
+        color: #1a1a1a
       
     .switch
       .slider
@@ -1342,10 +1350,10 @@ html
   
   &.light
     background: #fff
-    color: #333
+    color: #1a1a1a
 
     .popup .content
-      color: #333
+      color: #1a1a1a
 
     .accent1
       accent-color: #2b5790
@@ -1527,7 +1535,7 @@ html
     .bg-blue a,
     .bg-purple a,
     .bg-pink a
-      color: #333
+      color: #1a1a1a
 
     kbd,
     #sidebar,
@@ -1540,6 +1548,7 @@ html
     input
       border: 2px solid #c6c6c6
 
+    .fullscreen,
     .popup .content,
     #sidebar .custom-check,
     input,
@@ -1573,7 +1582,7 @@ html
 
     #btn-theme
       background: #fff
-      color: #333
+      color: #1a1a1a
 
 .bg-red
   background: #ff8787
@@ -1611,7 +1620,7 @@ html
 .bg-blue,
 .bg-purple,
 .bg-pink
-  color: #111
+  color: #1a1a1a
 
 .pointer-events-none
   pointer-events: none

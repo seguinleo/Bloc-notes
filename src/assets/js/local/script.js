@@ -92,7 +92,6 @@ const getNotes = async () => {
   document.querySelector('#filter-categories').textContent = '';
   document.querySelector('#folders .list').textContent = '';
   document.querySelector('#categories .list').textContent = '';
-  document.querySelectorAll('.note').forEach((e) => e.remove());
 
   try {
     const dbName = 'notes_db';
@@ -100,7 +99,18 @@ const getNotes = async () => {
     const db = await openIndexedDB(dbName, objectStoreName);
     const key = await getKeyFromDB(db, objectStoreName);
 
-    if (notesJSON.length === 0) return;
+    if (notesJSON.length === 0) {
+      if (!document.querySelector('.note[data-note-id="welcome"]')) return;
+      document.querySelector('.note[data-note-id="welcome"]').classList.remove('d-none');
+      document.querySelector('.note[data-note-id="welcome"]').addEventListener('click', (event) => {
+        if (event.target.parentElement.classList.contains('bottom-content') || event.target.classList.contains('bottom-content')) return;
+        if (event.target.tabIndex > -1) return;
+        if (document.getSelection().toString()) return;
+        defaultScript.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'));
+      });
+      return;
+    }
+    document.querySelectorAll('.note').forEach((e) => e.remove());
 
     notesJSON.sort((a, b) => {
       if (a.pinned === 1 && b.pinned === 0) return -1;
@@ -414,6 +424,7 @@ const deleteNote = async (noteId) => {
   if (window.confirm(message)) {
     notesJSON.splice(noteId, 1);
     localStorage.setItem('local_notes', JSON.stringify(notesJSON));
+    document.querySelector(`.note[data-note-id="${noteId}"]`).remove();
     await getNotes();
   }
 };
@@ -638,5 +649,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   defaultScript.changeLanguage(defaultScript.lang || 'en', false);
   defaultScript.loadTheme();
+  if (defaultScript.lang === 'fr') {
+    document.querySelector('.details-content-fr').classList.remove('d-none');
+    document.querySelector('.details-content-en').classList.add('d-none');
+  }
   await getNotes();
 });
