@@ -1,3 +1,9 @@
+#----v24.11.2----#
+-Add keyboard shortcuts
+-Improve UI/UX
+-Improve code structure
+-Bug/Security fixes
+
 #----v24.11.1----#
 -Improve UI/UX
 -Bug/Security fixes

@@ -446,14 +446,16 @@ const pin = async (noteId) => {
 };
 
 const deleteNote = (noteId) => {
-  if (!noteId) return;
-  let message = '';
-  if (defaultScript.lang === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
-  else if (defaultScript.lang === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
-  else if (defaultScript.lang === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
-  else message = 'Do you really want to delete this note?';
-  if (window.confirm(message)) fetchDelete(noteId);
+  document.querySelector('#delete-note-popup-box').showModal();
+  document.querySelector('#id-note-delete').value = noteId;
 };
+
+document.querySelector('#delete-note').addEventListener('submit', async () => {
+  const noteId = document.querySelector('#id-note-delete').value;
+  if (!noteId) return;
+  await fetchDelete(noteId);
+  document.querySelector('#delete-note-popup-box').close();
+});
 
 document.querySelector('#manage-account').addEventListener('click', () => {
   document.querySelector('#manage-popup-box').showModal();

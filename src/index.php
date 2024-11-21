@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accent1">
@@ -112,6 +112,25 @@
                         <legend></legend>
                         <div id="filter-categories" class="row"></div>
                     </fieldset>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="delete-note-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <form id="delete-note">
+                        <div class="error-notification d-none"></div>
+                        <div class="row">
+                            <span></span>
+                        </div>
+                        <input id="id-note-delete" type="hidden">
+                        <div class="row">
+                            <button type="submit" class="btn-cancel"></button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </dialog>
@@ -262,6 +281,9 @@
                         <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" id="link-markdown" rel="noopener noreferrer"></a>
                     </div>
                     <div class="row">
+                        <a href="https://github.com/seguinleo/Bloc-notes/wiki/Shortcuts" rel="noopener noreferrer">Shortcuts</a>
+                    </div>
+                    <div class="row">
                         <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="link-help" rel="noopener noreferrer"></a>
                     </div>
                     <div class="row">
@@ -305,7 +327,7 @@
                     <div class="row">
                         <p class="version">
                             GPL-3.0 &copy;
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.11.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.11.2</a>
                         </p>
                     </div>
                 </div>
@@ -364,7 +386,7 @@
                                 <div class="row">
                                     <input id="delete-psswd" type="password" minlength="10" maxlength="64" aria-label="Password" required>
                                 </div>
-                                <button type="submit"></button>
+                                <button type="submit" class="btn-cancel"></button>
                             </form>
                         </details>
                     </div>
@@ -409,7 +431,7 @@
                             <input id="id-note-private" type="hidden">
                             <input id="link-note-private" type="hidden">
                             <div class="row">
-                                <button type="submit"></button>
+                                <button type="submit" class="btn-cancel"></button>
                             </div>
                         </form>
                     </div>
@@ -421,9 +443,6 @@
                     <div class="content">
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
-                        </div>
-                        <div class="row">
-                            <span id="create-account" class="link" tabindex="0" role="button"></span>
                         </div>
                         <form id="connect-form" autocomplete="off">
                             <div class="error-notification d-none"></div>
@@ -442,7 +461,12 @@
                             <div class="row">
                                 <input id="psswd-connect" type="password" minlength="10" maxlength="64" aria-label="Password" required>
                             </div>
-                            <button type="submit"></button>
+                            <div class="row">
+                                <button type="submit"></button>
+                            </div>
+                            <div class="row align-center">
+                                <span id="create-account" class="link" tabindex="0" role="button"></span>
+                            </div>
                         </form>
                     </div>
                 </div>

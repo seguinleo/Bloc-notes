@@ -1,5 +1,6 @@
 -- !!!!!!!!!!!!!!!
 -- EDIT ALL TABLES NAMES FOR PRODUCTION
+-- To store user encryption keys, I recommend using a secure vault like AWS KMS, Azure Key Vault or a self-hosted solution instead of the database.
 -- !!!!!!!!!!!!!!!
 
 --

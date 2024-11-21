@@ -9,7 +9,7 @@ marked.use({
 });
 
 let isUpdate = false;
-const notesJSON = JSON.parse(localStorage.getItem('local_notes') || '[]');
+const notesJSON = JSON.parse(localStorage.getItem('local_notes')) || [];
 
 const noteActions = () => {
   document.querySelectorAll('.bottom-content i').forEach((e) => {
@@ -414,20 +414,20 @@ const pin = async (noteId) => {
   await getNotes();
 };
 
-const deleteNote = async (noteId) => {
-  if (!noteId) return;
-  let message = '';
-  if (defaultScript.lang === 'fr') message = 'Êtes-vous sûr de vouloir supprimer cette note ?';
-  else if (defaultScript.lang === 'de') message = 'Möchten Sie diese Notiz wirklich löschen?';
-  else if (defaultScript.lang === 'es') message = '¿Estás seguro que quieres eliminar esta nota?';
-  else message = 'Do you really want to delete this note?';
-  if (window.confirm(message)) {
-    notesJSON.splice(noteId, 1);
-    localStorage.setItem('local_notes', JSON.stringify(notesJSON));
-    document.querySelector(`.note[data-note-id="${noteId}"]`).remove();
-    await getNotes();
-  }
+const deleteNote = (noteId) => {
+  document.querySelector('#delete-note-popup-box').showModal();
+  document.querySelector('#id-note-delete').value = noteId;
 };
+
+document.querySelector('#delete-note').addEventListener('submit', async () => {
+  const noteId = document.querySelector('#id-note-delete').value;
+  if (!noteId) return;
+  notesJSON.splice(noteId, 1);
+  localStorage.setItem('local_notes', JSON.stringify(notesJSON));
+  document.querySelector(`.note[data-note-id="${noteId}"]`).remove();
+  await getNotes();
+  document.querySelector('#delete-note-popup-box').close();
+});
 
 document.querySelector('#log-in').addEventListener('click', () => {
   document.querySelector('#connect-box').showModal();
@@ -578,7 +578,7 @@ document.querySelector('#connect-form').addEventListener('submit', async () => {
 document.querySelector('#add-note').addEventListener('submit', async () => {
   try {
     if (defaultScript.isLocked) return;
-    const noteId = notesJSON.length;
+    const noteId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
     const title = document.querySelector('#note-popup-box #title').value.trim();
     const content = document.querySelector('#note-popup-box #content').value.trim();
     const color = document.querySelector('#colors .selected').classList[0];

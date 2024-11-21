@@ -32,7 +32,7 @@ The website follows [OWASP security recommendations](https://cheatsheetseries.ow
 
 User's connections are managed with secure cookies and tokens.
 
-All notes are sanitized and validated through the DOMPurify library. All notes are encrypted with AES-256-GCM. Each user has a unique 32-byte randomly generated encryption key generated after signing up.
+All notes are sanitized and validated through the DOMPurify library. All notes are encrypted with AES-256-GCM. Each user has a cryptographically secure key generated after signing up.
 
 Users can lock the app using biometrics (fingerprints, face, etc.). These biometric data are never sent to the server.
 
@@ -51,3 +51,5 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 > The website is available at localhost:8787, but if you want to deploy it on a server with a domain name or an IP address, you need to install a SSL certificate to use note encryption (Web Crypto API requires HTTPs). Edit all users, passwords and Docker configurations for production. To store user encryption keys, I recommend using a secure vault like AWS KMS, Azure Key Vault or a self-hosted solution instead of the database.
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
+
+A big thank you to [DOMPurify](https://github.com/cure53/DOMPurify) and [marked](https://github.com/markedjs/marked)!

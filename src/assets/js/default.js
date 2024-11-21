@@ -18,13 +18,13 @@ export const csrfToken = document.querySelector('meta[name="csrf-token"]').getAt
 export const forms = document.querySelectorAll('form');
 export const lang = localStorage.getItem('lang');
 
-export function generateRandomBytes(length) {
+function generateRandomBytes(length) {
   const array = new Uint8Array(length);
   window.crypto.getRandomValues(array);
   return array;
 }
 
-export function getPassword(length) {
+function getPassword(length) {
   const lowercase = 'abcdefghijklmnopqrstuvwxyz';
   const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const digits = '0123456789';
@@ -75,7 +75,7 @@ export function copy(content) {
   navigator.clipboard.writeText(content);
 }
 
-export function toggleFullscreen (noteId) {
+export function toggleFullscreen(noteId) {
   if (!noteId) return;
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   note.querySelector('.details').scrollTop = 0;
@@ -154,14 +154,6 @@ export const verifyFingerprint = async () => {
   }
 };
 
-export function toggleSidebar() {
-  sidebar.classList.toggle('show');
-}
-
-export function handleGesture() {
-  if ((touchendX - touchstartX > 75) || (touchendX - touchstartX < -75)) toggleSidebar();
-}
-
 export function loadTheme() {
   const currentTheme = themes[theme];
   document.querySelector('html').className = currentTheme.className;
@@ -210,8 +202,10 @@ document.addEventListener('touchstart', (e) => {
 }, false);
 
 document.addEventListener('touchend', (e) => {
+  if (isLocked) return;
   touchendX = e.changedTouches[0].screenX;
-  handleGesture();
+  if (touchendX - touchstartX > 75) sidebar.classList.add('show');
+  else if (touchstartX - touchendX > 75) sidebar.classList.remove('show');
 }, false);
 
 document.querySelector('#language').addEventListener('change', async (e) => {
@@ -262,7 +256,8 @@ document.querySelector('#copy-password-btn').addEventListener('click', () => {
 });
 
 document.querySelector('#sidebar-indicator').addEventListener('click', () => {
-  toggleSidebar();
+  if (isLocked) return;
+  sidebar.classList.toggle('show');
 });
 
 document.querySelector('#btn-sort').addEventListener('click', () => {
@@ -367,9 +362,18 @@ document.querySelectorAll('dialog').forEach((dialog) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'k') {
+  if (e.ctrlKey && e.key.toUpperCase() === 'K') {
     e.preventDefault();
     document.querySelector('#search-input').focus();
+  } else if (e.altKey && e.shiftKey && e.key.toUpperCase() === 'N') {
+    e.preventDefault();
+    document.querySelector('#btn-add-note').click();
+  } else if (e.altKey && e.shiftKey && e.key.toUpperCase() === 'S') {
+    e.preventDefault();
+    document.querySelector('#btn-settings').click();
+  } else if (e.altKey && e.shiftKey && e.key.toUpperCase() === 'T') {
+    e.preventDefault();
+    document.querySelector('#btn-theme').click();
   }
 });
 
@@ -492,6 +496,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#hide-infos').textContent = 'Masquer contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
+    document.querySelector('#delete-note-popup-box button').textContent = 'Supprimer la note';
+    document.querySelector('#delete-note-popup-box span').textContent = 'La suppression est définitive.';
     document.querySelector('#folder-popup-box button').textContent = 'Créer';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Nom du dossier');
     document.querySelector('#category-popup-box button').textContent = 'Créer';
@@ -541,6 +547,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
+    document.querySelector('#delete-note-popup-box button').textContent = 'Notiz löschen';
+    document.querySelector('#delete-note-popup-box span').textContent = 'Die Löschung ist endgültig.';
     document.querySelector('#folder-popup-box button').textContent = 'Erstellen';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Ordnername');
     document.querySelector('#category-popup-box button').textContent = 'Erstellen';
@@ -590,6 +598,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
+    document.querySelector('#delete-note-popup-box button').textContent = 'Eliminar nota';
+    document.querySelector('#delete-note-popup-box span').textContent = 'La eliminación es definitiva.';
     document.querySelector('#folder-popup-box button').textContent = 'Crear';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Nombre de la carpeta');
     document.querySelector('#category-popup-box button').textContent = 'Crear';
@@ -639,6 +649,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
+    document.querySelector('#delete-note-popup-box button').textContent = 'Delete note';
+    document.querySelector('#delete-note-popup-box span').textContent = 'Deletion is permanent.';
     document.querySelector('#folder-popup-box button').textContent = 'Create';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Folder name');
     document.querySelector('#category-popup-box button').textContent = 'Create';

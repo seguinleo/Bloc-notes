@@ -1,6 +1,16 @@
-.env
-.env.local
-.htaccess
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# build
+/build/
+/dist/
+/public/
+
+# dependencies
+/vendor/
 node_modules/
-vendor/
+npm-debug.log
+yarn-error.log
+
+# env
+.env*.local
+.htaccess

@@ -279,8 +279,8 @@ input
 
     .christmas
       position: absolute
-      top: 2px
-      left: 0
+      top: 10px
+      left: 8px
       transform: rotate(-25deg)
 
     .nav-buttons
@@ -377,9 +377,10 @@ input
   display: flex
   justify-content: center
   align-items: center
-  width: 50px
-  height: 50px
+  width: 48px
+  height: 48px
   margin-top: 5px
+  border-radius: 10px
 
 #btn-add-note
   position: fixed
@@ -432,6 +433,9 @@ input
 
   .title
     text-align: center
+
+  .details
+    font-size: 1rem
 
   .bottom-content
     -webkit-user-select: none
@@ -486,14 +490,16 @@ input
 
   .title
     text-align: center
-    margin-bottom: 1rem
 
   .details
     flex-grow: 1
     max-height: 100%
-    width: fit-content
-    margin: auto
+    width: 100%
     font-size: 1rem
+
+    .details-content
+      width: fit-content
+      margin: auto
 
 #colors,
 #accent-colors
@@ -662,6 +668,9 @@ dialog
   padding: 10px
   border-radius: 4px
   z-index: 5
+
+#copy-password-btn
+  margin-right: 4px
 
 #copy-note-link,
 #psswd-gen
@@ -1081,6 +1090,36 @@ html
     \::selection
       color: #1a1a1a
 
+    .btn-cancel
+      background: #ff9b9b !important
+
+    .bg-red
+      background: #5e140c
+
+    .bg-orange
+      background: #5e310c
+
+    .bg-yellow
+      background: #625c24
+
+    .bg-green
+      background: #1d4008
+
+    .bg-cyan
+      background: #0a4034
+
+    .bg-light-blue
+      background: #0a3940
+
+    .bg-blue
+      background: #0a2f40
+
+    .bg-purple
+      background: #342f59
+
+    .bg-pink
+      background: #512f59
+
     .accent1-span
       background: #8ab4f8
 
@@ -1147,16 +1186,7 @@ html
     #accent-colors span
       border: 2px solid #000
 
-    button,
-    .bg-red a,
-    .bg-orange a,
-    .bg-yellow a,
-    .bg-green a,
-    .bg-cyan a,
-    .bg-light-blue a,
-    .bg-blue a,
-    .bg-purple a,
-    .bg-pink a
+    button
       color: #1a1a1a
 
     .custom-check
@@ -1204,16 +1234,7 @@ html
     #accent-colors span
       border: 2px solid #1c1936
 
-    button,
-    .bg-red a,
-    .bg-orange a,
-    .bg-yellow a,
-    .bg-green a,
-    .bg-cyan a,
-    .bg-light-blue a,
-    .bg-blue a,
-    .bg-purple a,
-    .bg-pink a
+    button
       color: #1c1936
 
     .custom-check
@@ -1261,16 +1282,7 @@ html
     #accent-colors span
       border: 2px solid #001b1e
 
-    button,
-    .bg-red a,
-    .bg-orange a,
-    .bg-yellow a,
-    .bg-green a,
-    .bg-cyan a,
-    .bg-light-blue a,
-    .bg-blue a,
-    .bg-purple a,
-    .bg-pink a
+    button
       color: #001b1e
 
     .custom-check
@@ -1318,16 +1330,7 @@ html
     #accent-colors span
       border: 2px solid #1f0b00
 
-    button,
-    .bg-red a,
-    .bg-orange a,
-    .bg-yellow a,
-    .bg-green a,
-    .bg-cyan a,
-    .bg-light-blue a,
-    .bg-blue a,
-    .bg-purple a,
-    .bg-pink a
+    button
       color: #1f0b00
 
     .custom-check
@@ -1351,6 +1354,9 @@ html
   &.light
     background: #fff
     color: #1a1a1a
+
+    .btn-cancel
+      background: #b02d19 !important
 
     .popup .content
       color: #1a1a1a
@@ -1525,16 +1531,7 @@ html
 
     \::placeholder,
     input,
-    select,
-    .bg-red a,
-    .bg-orange a,
-    .bg-yellow a,
-    .bg-green a,
-    .bg-cyan a,
-    .bg-light-blue a,
-    .bg-blue a,
-    .bg-purple a,
-    .bg-pink a
+    select
       color: #1a1a1a
 
     kbd,
@@ -1554,6 +1551,33 @@ html
     input,
     textarea
       background: #fff
+
+    .bg-red
+      background: #ff8787
+
+    .bg-orange
+      background: #ffc65c
+
+    .bg-yellow
+      background: #fdf488
+
+    .bg-green
+      background: #bcf88a
+
+    .bg-cyan
+      background: #bbfdec
+
+    .bg-light-blue
+      background: #d2eff7
+
+    .bg-blue
+      background: #b4caf6
+
+    .bg-purple
+      background: #d1acff
+
+    .bg-pink
+      background: #fdd0e7
 
     #colors span,
     #accent-colors span
@@ -1583,44 +1607,6 @@ html
     #btn-theme
       background: #fff
       color: #1a1a1a
-
-.bg-red
-  background: #ff8787
-
-.bg-orange
-  background: #ffc65c
-
-.bg-yellow
-  background: #fdf488
-
-.bg-green
-  background: #bcf88a
-
-.bg-cyan
-  background: #bbfdec
-
-.bg-light-blue
-  background: #d2eff7
-
-.bg-blue
-  background: #b4caf6
-
-.bg-purple
-  background: #d1acff
-
-.bg-pink
-  background: #fdd0e7
-
-.bg-red,
-.bg-orange,
-.bg-yellow,
-.bg-green,
-.bg-cyan,
-.bg-light-blue,
-.bg-blue,
-.bg-purple,
-.bg-pink
-  color: #1a1a1a
 
 .pointer-events-none
   pointer-events: none
