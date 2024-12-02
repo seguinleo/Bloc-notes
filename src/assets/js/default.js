@@ -110,10 +110,36 @@ export const getLockApp = async () => {
   }
 }
 
-export const verifyFingerprint = async () => {
+export const getFingerprint = async () => {
   try {
-    const challenge = generateRandomBytes(16);
-    const userId = generateRandomBytes(8);
+    const challenge = generateRandomBytes(32);
+    const publicKeyOptions = {
+      challenge,
+      rp: {
+        name: 'Bloc-notes',
+      },
+      allowCredentials: [],
+      userVerification: "preferred",
+      timeout: 60000,
+    };
+    const credential = await navigator.credentials.get({ publicKey: publicKeyOptions });
+    if (credential) {
+      isLocked = false;
+      document.querySelector('#btn-unlock-float').classList.add('d-none');
+      document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'));
+      document.querySelector('#btn-add-note').classList.remove('d-none');
+      document.querySelector('#lock-app-slider').classList.remove('d-none');
+    } else showError('An error occurred - No credential');
+  } catch (error) {
+    showError(`An error occurred - ${error}`);
+  }
+};
+
+export const createFingerprint = async () => {
+  try {
+    const challenge = generateRandomBytes(32);
+    const username = document.querySelector('#user-name').textContent;
+    const userId = new TextEncoder().encode(username);
     await navigator.credentials.create({
       publicKey: {
         challenge,
@@ -139,6 +165,10 @@ export const verifyFingerprint = async () => {
           authenticatorAttachment: 'platform',
           userVerification: 'preferred',
         },
+        excludeCredentials: [{
+          type: 'public-key',
+          id: userId
+        }],
         timeout: 60000,
         attestation: 'none',
       },
@@ -446,7 +476,7 @@ document.querySelectorAll('.custom-check').forEach((e) => {
 
 document.querySelector('#check-lock-app').addEventListener('change', async (e) => {
   if (isLocked) return;
-  if (e.target.checked) await verifyFingerprint();
+  if (e.target.checked) await createFingerprint();
   try {
     const data = new URLSearchParams({ csrf_token: csrfToken, lock_app: e.target.checked });
     const res = await fetch('./assets/php/lockApp.php', {

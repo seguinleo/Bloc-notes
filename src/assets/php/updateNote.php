@@ -25,6 +25,14 @@ $allColors = [
     'bg-pink',
 ];
 
+if (iconv_strlen($title) > 30) {
+    throw new Exception('Update failed');
+    return;
+}
+if (iconv_strlen($content) > 20000) {
+    throw new Exception('Update failed');
+    return;
+}
 if (in_array($color, $allColors) === false) $color = 'bg-default';
 
 try {

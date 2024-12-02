@@ -460,7 +460,7 @@ document.querySelector('#btn-add-note').addEventListener('click', () => {
 });
 
 document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
-  await defaultScript.verifyFingerprint();
+  await defaultScript.getFingerprint();
   await getNotes();
 });
 

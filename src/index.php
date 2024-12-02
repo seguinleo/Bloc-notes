@@ -340,7 +340,7 @@
                         <div class="close">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
-                        <div class="row bold">
+                        <div id="user-name" class="row bold">
                             <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>
                         </div>
                         <div class="row">
