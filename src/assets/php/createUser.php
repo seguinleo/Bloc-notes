@@ -24,6 +24,12 @@ require_once __DIR__ . '/config/config.php';
 
 $id = bin2hex(random_bytes(12));
 $psswdCreateHash = password_hash($psswdCreate, PASSWORD_DEFAULT);
+
+/**
+ * 
+ * Store key in sql database or, use a secure vault like AWS KMS, Azure Key Vault or a self-hosted solution.
+ *
+ */
 $key = bin2hex(random_bytes(32));
 
 try {

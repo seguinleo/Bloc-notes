@@ -16,7 +16,7 @@ html
   scroll-behavior: smooth
   -webkit-tap-highlight-color: transparent
   scrollbar-color: rgba(150, 150, 150, 0.1) transparent
-  font-family: OpenSans,sans-serif
+  font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
 
 *
   margin: 0
@@ -189,7 +189,7 @@ option,
 textarea,
 button,
 input
-  font-family: OpenSans,sans-serif
+  font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
 
 select
   font-size: .9rem
@@ -222,10 +222,11 @@ input,
 textarea,
 button,
 select,
+summary,
 span,
 .link
   &:focus-visible
-    outline: 3px dashed rgba(150, 150, 150, 0.2)
+    outline: 3px dashed rgba(150, 150, 150, 0.5)
 
 form
   margin: 10px 0
@@ -237,7 +238,8 @@ input
   &[type=password],
   &[type=search],
   &[type=number],
-  &[type=date]
+  &[type=date],
+  &[type=datetime-local]
     height: 36px
     width: 100%
     font-size: 1rem
@@ -296,7 +298,13 @@ input
         background: rgba(150, 150, 150, 0.1)
         border-radius: 4px
 
+        summary
+          i
+            margin-right: 4px
+
       p
+        display: flex
+        align-items: center
         cursor: pointer
         padding: 4px 0
         border-radius: 0 1rem 1rem 0
@@ -324,8 +332,6 @@ input
           border-radius: 24px
 
         .title-list
-          display: inline-flex
-          align-items: baseline
           white-space: nowrap
 
         .date-list
@@ -342,7 +348,9 @@ input
 .note,
 .shared-note
   .title
-    text-align: right
+    display: flex
+    justify-content: end
+    align-items: center
     font-weight: 700
 
   .details
@@ -351,12 +359,15 @@ input
     word-break: break-word
     font-size: .9rem
 
+  .date
+    font-size: .8rem
+    text-align: center
+
   .bottom-content
     -webkit-user-select: none
     user-select: none
     text-align: center
-    margin-top: 10px
-    margin-bottom: 5px
+    margin-bottom: 8px
 
     i
       cursor: pointer
@@ -373,23 +384,13 @@ input
       &:hover
         background: rgba(150, 150, 150, 0.1)
 
-#submit-note
-  display: flex
-  justify-content: center
-  align-items: center
-  font-size: 1.1rem
-  width: 48px
-  height: 48px
-  margin-top: 5px
-  border-radius: 10px
-
 #btn-add-note
   position: fixed
   display: flex
   justify-content: center
   align-items: center
-  bottom: 3rem
-  right: 3rem
+  bottom: 3.5rem
+  right: 3.5rem
   width: 60px
   height: 60px
   margin: 0
@@ -409,6 +410,7 @@ input
     max-height: 420px
     overflow-y: auto
 
+  .date,
   .bottom-content
     opacity: 0
     visibility: hidden
@@ -418,6 +420,7 @@ input
     max-width: calc(50% - 1rem)
 
   &:hover
+    .date,
     .bottom-content
       visibility: visible
       opacity: 1
@@ -433,7 +436,7 @@ input
   padding: 10px 1rem
 
   .title
-    text-align: center
+    justify-content: center
 
   .details
     font-size: 1rem
@@ -461,10 +464,19 @@ input
       font-size: .8rem
       margin: 0 10px
 
+.popup-header
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.done,
 .close
   display: flex
   justify-content: flex-end
   padding: 10px 0
+
+  button
+    height: 30px
 
   i
     cursor: pointer
@@ -491,11 +503,11 @@ input
   inset: 0
 
   .title
-    text-align: center
+    justify-content: center
 
   .details
     flex-grow: 1
-    max-height: 100%
+    max-height: 100dvh
     width: 100%
     font-size: 1rem
 
@@ -593,6 +605,21 @@ dialog
   input[type=checkbox]
     display: none
 
+.reminder-date
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  font-size: .9rem
+  margin-left: 5px
+  padding: 4px 8px
+  border-radius: 24px
+
+  i
+    margin-right: 4px
+
+  input
+    display: none
+
 .div-slider span
   vertical-align: middle
 
@@ -657,6 +684,20 @@ dialog
 #license
   font-size: .9rem
 
+#js-disabled,
+#offline
+  position: fixed
+  z-index: 3
+  bottom: 0
+  left: 0
+  right: 0
+  text-align: center
+  padding: 4px 4px 1.5rem
+  border-radius: 10px 10px 0 0
+  color: #1a1a1a
+  backdrop-filter: blur(5px)
+  background: #ff8787C0
+
 #success-notification,
 .error-notification
   position: fixed
@@ -692,6 +733,7 @@ dialog
 #copy-password-btn,
 #btn-add-folder,
 #btn-add-category,
+#btn-add-reminder,
 #submit-gen-psswd,
 #sidebar button,
 #sidebar-indicator
@@ -707,7 +749,8 @@ dialog
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
 
 #btn-add-folder,
-#btn-add-category
+#btn-add-category,
+#btn-add-reminder
   margin-right: 10px
 
 #btn-unlock-float
@@ -742,9 +785,10 @@ dialog
     gap: 2px
 
   #sidebar
+    z-index: 5
     left: -100%
     width: 100vw
-    transition: .3s ease-in-out
+    transition: .2s
 
     nav
       width: 100vw
@@ -753,10 +797,11 @@ dialog
       left: 0
 
   #btn-add-note
-    bottom: 1rem
-    right: 1rem
+    bottom: 1.5rem
+    right: 1.5rem
 
   .note
+    .date,
     .bottom-content
       display: flex
       justify-content: space-evenly
@@ -776,6 +821,7 @@ dialog
         opacity: .7
         pointer-events: none
 
+      .date,
       .bottom-content
         display: none
 
@@ -1168,6 +1214,7 @@ html
       background: #1a1a1a
 
     .fullscreen,
+    .reminder-date,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1216,6 +1263,7 @@ html
       background: #272342
 
     .fullscreen,
+    .reminder-date,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1264,6 +1312,7 @@ html
       background: #01262a
 
     .fullscreen,
+    .reminder-date,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1312,6 +1361,7 @@ html
       background: #331500
     
     .fullscreen,
+    .reminder-date,
     #sidebar .custom-check,
     #copy-note-link,
     #psswd-gen
@@ -1547,6 +1597,7 @@ html
 
     .fullscreen,
     .popup .content,
+    .reminder-date,
     #sidebar .custom-check,
     input,
     textarea

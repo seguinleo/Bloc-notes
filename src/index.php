@@ -15,10 +15,18 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="icon" href="./favicon.ico">
     <link rel="stylesheet" href="./assets/css/style.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
 <body class="accent1">
+    <noscript>
+        <div id="js-disabled">
+            <p class="bold">JavaScript is disabled</p>
+        </div>
+    </noscript>
+    <div id="offline" class="d-none">
+        <p class="bold">You are offline</p>
+    </div>
     <header>
         <div id="sidebar-indicator">
             <i class="fa-solid fa-bars"></i>
@@ -83,19 +91,19 @@
                         <div class="row">
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="1" id="sort-notes1" checked>
-                                <span id="sort-notes1-span"></span>
+                                <span id="sort-notes1-span" tabindex="0" role="button"></span>
                             </label>
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="2" id="sort-notes2">
-                                <span id="sort-notes2-span"></span>
+                                <span id="sort-notes2-span" tabindex="0" role="button"></span>
                             </label>
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="3" id="sort-notes3">
-                                <span id="sort-notes3-span"></span>
+                                <span id="sort-notes3-span" tabindex="0" role="button"></span>
                             </label>
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="4" id="sort-notes4">
-                                <span id="sort-notes4-span"></span>
+                                <span id="sort-notes4-span" tabindex="0" role="button"></span>
                             </label>
                         </div>
                     </fieldset>
@@ -146,11 +154,11 @@
                         <div class="row">
                             <label class="custom-check">
                                 <input type="radio" name="download-notes" value="txt" id="txt-download">
-                                <span>.TXT</span>
+                                <span tabindex="0" role="button">.TXT</span>
                             </label>
                             <label class="custom-check">
                                 <input type="radio" name="download-notes" value="md" id="md-download">
-                                <span>.MD</span>
+                                <span tabindex="0" role="button">.MD</span>
                             </label>
                         </div>
                     </fieldset>
@@ -207,11 +215,30 @@
                 </div>
             </div>
         </dialog>
-        <dialog id="note-popup-box">
+        <dialog id="reminder-popup-box">
             <div class="popup">
                 <div class="content">
                     <div class="close">
-                        <i class="fa-solid fa-xmark"></i>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </div>
+                    <div class="row">
+                        <input type="datetime-local" id="date-reminder-input" aria-label="Date">
+                    </div>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="note-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="popup-header">
+                        <div id="submit-note" class="done">
+                            <button type="submit" form="add-note" aria-label="Save note">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </div>
+                        <div class="close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
                     </div>
                     <form id="add-note" autocomplete="off">
                         <input id="id-note" type="hidden">
@@ -236,6 +263,9 @@
                             <button type="button" id="btn-add-category" aria-label="Add a category">
                                 <i class="fa-solid fa-tags"></i>
                             </button>
+                            <button type="button" id="btn-add-reminder" aria-label="Add a reminder">
+                                <i class="fa-solid fa-bell"></i>
+                            </button>
                         </div>
                         <div class="row">
                             <div id="colors">
@@ -259,9 +289,6 @@
                                     <span class="slider"></span>
                                 </span>
                             </label>
-                            <button type="submit" id="submit-note">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
                         </div>
                     </form>
                 </div>
@@ -293,6 +320,12 @@
                             <option value="de">DE</option>
                             <option value="es">ES</option>
                         </select>
+                    </div>
+                    <div class="row">
+                        <button type="button" id="btn-plugins" aria-label="Manage plugins" disabled>
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                            Plugins
+                        </button>
                     </div>
                     <div class="row">
                         <div id="accent-colors">
@@ -327,7 +360,7 @@
                     <div class="row">
                         <p class="version">
                             GPL-3.0 &copy;
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v24.11.2</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v25.1.1</a>
                         </p>
                     </div>
                 </div>
@@ -519,38 +552,54 @@
                 <div class="details">
                     <h2 class="title">👋Bienvenue !</h2>
                     <div class="details-content details-content-fr d-none">
-                        <p>
-                            Bloc-notes est un outil <span class="bold">rapide, privé et sécurisé</span> pour prendre des notes avec <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noopener noreferrer">Markdown</a>.
-                        </p>
-                        <p>
-                            Ajoutez une note avec <i class="fa-solid fa-plus"></i> en bas à droite et ajouter des listes de tâches, des liens, des images, etc.
-                        </p>
-                        <p>
-                            Vos notes sont <kbd>chiffrées</kbd> et stockées dans votre navigateur.
-                        </p>
-                        <p>
-                            Créez un compte avec <i class="fa-solid fa-circle-user"></i> pour synchroniser vos notes sur plusieurs appareils.
-                        </p>
-                        <p>
-                            Une fois connecté.e, vous pourrez partager des notes grâce à un lien public.
-                        </p>
+                        <div>
+                            Bloc-notes est un outil <span class="bold">rapide, privé et sécurisé</span><br>pour prendre des notes en <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noopener noreferrer">Markdown ou HTML</a>.
+                        </div>
+                        <div>
+                            Créez une note avec <i class="fa-solid fa-plus"></i> en bas à droite et ajoutez
+                            <ul>
+                                <li>des listes de tâches,</li>
+                                <li>des rappels,</li>
+                                <li>des liens,</li>
+                                <li>des images,</li>
+                                <li>etc.</li>
+                            </ul>
+                            Vous pouvez également créer des dossiers et des catégories. 
+                        </div>
+                        <div>
+                            Connectez-vous avec <i class="fa-solid fa-circle-user"></i> pour synchroniser vos notes sur tous vos appareils.
+                        </div>
+                        <div>
+                            Toutes vos notes sont <kbd>chiffrées</kbd> dans votre navigateur <span class="bold">et</span> dans le cloud.
+                        </div>
+                        <div>
+                            Une fois connecté.e, vous pouvez partager des notes grâce à un lien public.
+                        </div>
                     </div>
                     <div class="details-content details-content-en">
-                        <p>
-                            Bloc-notes is a <span class="bold">fast, private, and secure</span> tool for taking notes with <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown" rel="noopener noreferrer">Markdown</a>.
-                        </p>
-                        <p>
-                            Add a note with <i class="fa-solid fa-plus"></i> at the bottom right and add task lists, links, images, etc.
-                        </p>
-                        <p>
-                            Your notes are <kbd>encrypted</kbd> and stored in your browser.
-                        </p>
-                        <p>
-                            Create an account with <i class="fa-solid fa-circle-user"></i> to synchronize your notes across multiple devices.
-                        </p>
-                        <p>
-                            Once logged in, you will be able to share notes via a public link.
-                        </p> 
+                        <div>
+                            Bloc-notes is a <span class="bold">fast, private and secure</span><br>tool for taking notes in <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown " rel="noopener noreferrer">Markdown or HTML</a>.
+                        </div>
+                        <div>
+                            Create a note with <i class="fa-solid fa-plus"></i> at the bottom right and add
+                            <ul>
+                                <li>to-do lists,</li>
+                                <li>reminders,</li>
+                                <li>links,</li>
+                                <li>images,</li>
+                                <li>etc.</li>
+                            </ul>   
+                            You can also create folders and categories. 
+                        </div>
+                        <div>
+                            Log in with <i class="fa-solid fa-circle-user"></i> to sync your notes across all your devices.
+                        </div>
+                        <div>
+                            All your notes are <kbd>encrypted</kbd> in your browser <span class="bold">and</span> in the cloud.
+                        </div>
+                        <div>
+                            Once logged in, you can share notes using a public link.
+                        </div>
                     </div>
                 </div>
             </div>

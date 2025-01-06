@@ -77,6 +77,10 @@ export function copy(content) {
 
 export function toggleFullscreen(noteId) {
   if (!noteId) return;
+  document.querySelectorAll('.note').forEach((note) => {
+    if (note.getAttribute('data-note-id') !== noteId) note.classList.remove('fullscreen');
+  });
+  sidebar.classList.remove('show');
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   note.querySelector('.details').scrollTop = 0;
   note.classList.toggle('fullscreen');
@@ -138,7 +142,7 @@ export const getFingerprint = async () => {
 export const createFingerprint = async () => {
   try {
     const challenge = generateRandomBytes(32);
-    const username = document.querySelector('#user-name').textContent;
+    const username = document.querySelector('#user-name') ? document.querySelector('#user-name').textContent : 'local';
     const userId = new TextEncoder().encode(username);
     await navigator.credentials.create({
       publicKey: {
@@ -302,6 +306,10 @@ document.querySelector('#btn-add-category').addEventListener('click', () => {
   document.querySelector('#category-popup-box').showModal();
 });
 
+document.querySelector('#btn-add-reminder').addEventListener('click', () => {
+  document.querySelector('#reminder-popup-box').showModal();
+});
+
 document.querySelector('#btn-filter').addEventListener('click', () => {
   document.querySelector('#filter-popup-box').showModal();
 });
@@ -327,6 +335,7 @@ document.querySelector('#folder-popup-box button').addEventListener('click', () 
   label.appendChild(span);
   folders.appendChild(label);
   document.querySelector('#name-folder').value = '';
+  document.querySelector('#folder-popup-box').close();
 });
 
 document.querySelector('#category-popup-box button').addEventListener('click', () => {
@@ -350,6 +359,7 @@ document.querySelector('#category-popup-box button').addEventListener('click', (
   label.appendChild(span);
   categories.appendChild(label);
   document.querySelector('#name-category').value = '';
+  document.querySelector('#category-popup-box').close();
 });
 
 document.querySelectorAll('#colors span').forEach((span, index) => {
@@ -385,6 +395,7 @@ document.querySelectorAll('.close i').forEach((e) => {
 document.querySelectorAll('dialog').forEach((dialog) => {
   if (dialog.id === 'folder-popup-box') return;
   if (dialog.id === 'category-popup-box') return;
+  if (dialog.id === 'reminder-popup-box') return;
   dialog.addEventListener('close', () => {
     forms.forEach((form) => form.reset());
     document.querySelectorAll('input[type="hidden"]').forEach((input) => input.value = '');
@@ -528,9 +539,9 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
     document.querySelector('#delete-note-popup-box button').textContent = 'Supprimer la note';
     document.querySelector('#delete-note-popup-box span').textContent = 'La suppression est définitive.';
-    document.querySelector('#folder-popup-box button').textContent = 'Créer';
+    document.querySelector('#folder-popup-box button').textContent = 'Créer le dossier';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Nom du dossier');
-    document.querySelector('#category-popup-box button').textContent = 'Créer';
+    document.querySelector('#category-popup-box button').textContent = 'Créer la catégorie';
     document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Nom de la catégorie');
     document.querySelector('#link-markdown').textContent = 'Guide Markdown';
     document.querySelector('#link-help').textContent = 'Aide et discussions';
@@ -681,9 +692,9 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');
     document.querySelector('#delete-note-popup-box button').textContent = 'Delete note';
     document.querySelector('#delete-note-popup-box span').textContent = 'Deletion is permanent.';
-    document.querySelector('#folder-popup-box button').textContent = 'Create';
+    document.querySelector('#folder-popup-box button').textContent = 'Create folder';
     document.querySelector('#folder-popup-box #name-folder').setAttribute('placeholder', 'Folder name');
-    document.querySelector('#category-popup-box button').textContent = 'Create';
+    document.querySelector('#category-popup-box button').textContent = 'Create category';
     document.querySelector('#category-popup-box #name-category').setAttribute('placeholder', 'Category name');
     document.querySelector('#link-markdown').textContent = 'Markdown guide';
     document.querySelector('#link-help').textContent = 'Help and discussions';

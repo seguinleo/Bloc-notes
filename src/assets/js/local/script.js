@@ -23,7 +23,8 @@ const noteActions = () => {
       const noteHidden = target.closest('.note').getAttribute('data-note-hidden');
       const noteFolder = target.closest('.note').getAttribute('data-note-folder') || '';
       const noteCategory = target.closest('.note').getAttribute('data-note-category') || '';
-      if (target.classList.contains('edit-note')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteFolder, noteCategory);
+      const noteReminder = target.closest('.note').getAttribute('data-note-reminder');
+      if (target.classList.contains('edit-note')) updateNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteFolder, noteCategory, noteReminder);
       else if (target.classList.contains('pin-note')) pin(noteId);
       else if (target.classList.contains('copy-note')) defaultScript.copy(noteContent);
       else if (target.classList.contains('delete-note')) deleteNote(noteId);
@@ -142,7 +143,7 @@ const getNotes = async () => {
 
     const promises = notesJSON.map(async (row, id) => {
       const {
-        title, content, color, date, hidden, pinned, folder, category
+        title, content, color, date, hidden, pinned, folder, category, reminder
       } = row;
 
       if (!title || !color || !date) return;
@@ -165,6 +166,10 @@ const getNotes = async () => {
       bottomContentElement.classList.add('bottom-content');
 
       const paragraph = document.createElement('p');
+      paragraph.classList.add('p-note-list');
+      paragraph.tabIndex = 0;
+      paragraph.setAttribute('role', 'button');
+      paragraph.setAttribute('data-note-id', id);
 
       const noteElement = document.createElement('div');
       noteElement.classList.add('note', color);
@@ -179,13 +184,15 @@ const getNotes = async () => {
 
       const contentElement = document.createElement('div');
       contentElement.classList.add('details-content');
-      if (hidden === 0) contentElement.innerHTML = marked.parse(deContentString);
-      else contentElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
       const detailsElement = document.createElement('div');
       detailsElement.classList.add('details');
       detailsElement.appendChild(titleElement);
       detailsElement.appendChild(contentElement);
+
+      const dateElement = document.createElement('div');
+      dateElement.classList.add('date');
+      dateElement.textContent += new Date(date).toLocaleDateString();
 
       const editIconElement = document.createElement('i');
       editIconElement.classList.add('fa-solid', 'fa-pen', 'note-action', 'edit-note');
@@ -196,8 +203,6 @@ const getNotes = async () => {
 
       const pinElement = document.createElement('i');
       pinElement.classList.add('fa-solid', 'note-action', 'pin-note');
-      if (pinned) pinElement.classList.add('fa-thumbtack-slash');
-      else pinElement.classList.add('fa-thumbtack');
       pinElement.tabIndex = 0;
       pinElement.setAttribute('role', 'button');
       pinElement.setAttribute('aria-label', 'Pin note');
@@ -210,40 +215,6 @@ const getNotes = async () => {
       trashIconElement.setAttribute('aria-label', 'Delete note');
       bottomContentElement.appendChild(trashIconElement);
 
-      if (!hidden && deContentString) {
-        const clipboardIconElement = document.createElement('i');
-        clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action', 'copy-note');
-        clipboardIconElement.tabIndex = 0;
-        clipboardIconElement.setAttribute('role', 'button');
-        clipboardIconElement.setAttribute('aria-label', 'Copy note content');
-        bottomContentElement.appendChild(clipboardIconElement);
-
-        const downloadIconElement = document.createElement('i');
-        downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action', 'download-note');
-        downloadIconElement.tabIndex = 0;
-        downloadIconElement.setAttribute('role', 'button');
-        downloadIconElement.setAttribute('aria-label', 'Download note');
-        bottomContentElement.appendChild(downloadIconElement);
-      }
-
-      noteElement.appendChild(detailsElement);
-      noteElement.appendChild(bottomContentElement);
-
-      const titleSpan = document.createElement('span');
-      titleSpan.classList.add('title-list');
-      titleSpan.textContent = deTitleString;
-
-      const dateSpan = document.createElement('span');
-      dateSpan.classList.add('date-list');
-      dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
-        weekday: 'short',
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-
       if (pinned) {
         noteElement.classList.add('pinned');
         const pinnedElement = document.createElement('span');
@@ -252,16 +223,65 @@ const getNotes = async () => {
         iconPin.classList.add('fa-solid', 'fa-thumbtack');
         pinnedElement.appendChild(iconPin);
         paragraph.appendChild(pinnedElement);
+        pinElement.classList.add('fa-thumbtack-slash');
+      } else pinElement.classList.add('fa-thumbtack');
+
+      if (reminder) {
+        noteElement.setAttribute('data-note-reminder', reminder);
+        const reminderElement = document.createElement('span');
+        reminderElement.classList.add('custom-check');
+        const iconReminder = document.createElement('i');
+        iconReminder.classList.add('fa-solid', 'fa-bell');
+        reminderElement.appendChild(iconReminder);
+        paragraph.appendChild(reminderElement);
+
+        const reminderElementTitle = document.createElement('span');
+        reminderElementTitle.classList.add('reminder-date');
+        const reminderIcon = document.createElement('i');
+        reminderIcon.classList.add('fa-solid', 'fa-bell');
+        reminderElementTitle.appendChild(reminderIcon);
+        const reminderSpan = document.createElement('span');
+        reminderSpan.textContent = new Date(reminder).toLocaleDateString(undefined, {
+          weekday: 'short',
+          year: '2-digit',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+        reminderElementTitle.appendChild(reminderSpan);
+        titleElement.appendChild(reminderElementTitle);
       }
 
       if (hidden) {
         noteElement.setAttribute('data-note-hidden', hidden);
         const hiddenElement = document.createElement('span');
         hiddenElement.classList.add('custom-check');
+        const eyeIconElement = document.createElement('i');
+        eyeIconElement.classList.add('fa-solid', 'fa-eye-slash');
         const iconEye = document.createElement('i');
         iconEye.classList.add('fa-solid', 'fa-eye-slash');
         hiddenElement.appendChild(iconEye);
         paragraph.appendChild(hiddenElement);
+        contentElement.appendChild(eyeIconElement);
+      } else {
+        if (deContentString) {
+          const clipboardIconElement = document.createElement('i');
+          clipboardIconElement.classList.add('fa-solid', 'fa-clipboard', 'note-action', 'copy-note');
+          clipboardIconElement.tabIndex = 0;
+          clipboardIconElement.setAttribute('role', 'button');
+          clipboardIconElement.setAttribute('aria-label', 'Copy note content');
+          bottomContentElement.appendChild(clipboardIconElement);
+  
+          const downloadIconElement = document.createElement('i');
+          downloadIconElement.classList.add('fa-solid', 'fa-download', 'note-action', 'download-note');
+          downloadIconElement.tabIndex = 0;
+          downloadIconElement.setAttribute('role', 'button');
+          downloadIconElement.setAttribute('aria-label', 'Download note');
+          bottomContentElement.appendChild(downloadIconElement);
+
+          contentElement.innerHTML = marked.parse(deContentString);
+        }
       }
 
       if (folder) {
@@ -280,6 +300,25 @@ const getNotes = async () => {
         paragraph.appendChild(categoryElement);
       }
 
+      noteElement.appendChild(detailsElement);
+      noteElement.appendChild(dateElement);
+      noteElement.appendChild(bottomContentElement);
+
+      const titleSpan = document.createElement('span');
+      titleSpan.classList.add('title-list');
+      titleSpan.textContent = deTitleString;
+
+      const dateSpan = document.createElement('span');
+      dateSpan.classList.add('date-list');
+      dateSpan.textContent = new Date(date).toLocaleDateString(undefined, {
+        weekday: 'short',
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
       fragment.appendChild(noteElement);
       paragraph.appendChild(titleSpan);
       paragraph.appendChild(dateSpan);
@@ -291,7 +330,12 @@ const getNotes = async () => {
           newFolderDetails.setAttribute('open', 'open');
           newFolderDetails.setAttribute('data-folder', encodeURIComponent(folder));
           const summary = document.createElement('summary');
-          summary.textContent = folder;
+          const folderIcon = document.createElement('i');
+          folderIcon.classList.add('fa-solid', 'fa-folder');
+          summary.appendChild(folderIcon);
+          const folderSpan = document.createElement('span');
+          folderSpan.textContent = folder;
+          summary.appendChild(folderSpan);
           newFolderDetails.appendChild(summary);
           newFolderDetails.appendChild(paragraph);
           document.querySelector('#list-notes').appendChild(newFolderDetails);
@@ -380,12 +424,17 @@ const getNotes = async () => {
         });
       });
     });
+    document.querySelectorAll('.p-note-list').forEach((e) => {
+      e.addEventListener('click', (event) => {
+        defaultScript.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'));
+      });
+    });
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);
   }
 };
 
-const updateNote = (noteId, title, content, color, hidden, folder, category) => {
+const updateNote = (noteId, title, content, color, hidden, folder, category, reminder) => {
   isUpdate = true;
   document.querySelector('#note-popup-box').showModal();
   document.querySelector('#id-note').value = noteId;
@@ -393,6 +442,7 @@ const updateNote = (noteId, title, content, color, hidden, folder, category) => 
   document.querySelector('#note-popup-box #content').value = content;
   document.querySelector(`#folders input[name="add-folder"][value="${folder}"]`).checked = true;
   document.querySelector(`#categories input[name="add-cat"][value="${category}"]`).checked = true;
+  document.querySelector('#date-reminder-input').value = reminder;
   document.querySelectorAll('#colors span').forEach((e) => {
     if (e.classList.contains(color)) e.classList.add('selected');
     else e.classList.remove('selected');
@@ -462,6 +512,14 @@ document.querySelector('#btn-add-note').addEventListener('click', () => {
 document.querySelector('#btn-unlock-float').addEventListener('click', async () => {
   await defaultScript.getFingerprint();
   await getNotes();
+});
+
+window.addEventListener('offline', () => {
+  document.querySelector('#offline').classList.remove('d-none');
+});
+
+window.addEventListener('online', () => {
+  document.querySelector('#offline').classList.add('d-none');
 });
 
 document.querySelector('#create-form').addEventListener('submit', async () => {
@@ -586,6 +644,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
     const hidden = document.querySelector('#check-hidden').checked ? 1 : 0;
     const folder = document.querySelector('#folders input[name="add-folder"]:checked').value;
     const category = document.querySelector('#categories input[name="add-cat"]:checked').value;
+    const reminder = document.querySelector('#date-reminder-input').value;
 
     if (!title || title.length > 30 || content.length > defaultScript.maxNoteContent || !color) return;
 
@@ -630,6 +689,7 @@ document.querySelector('#add-note').addEventListener('submit', async () => {
       hidden,
       folder,
       category,
+      reminder,
       pinned: 0,
     };
 
@@ -653,5 +713,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.details-content-fr').classList.remove('d-none');
     document.querySelector('.details-content-en').classList.add('d-none');
   }
+  if (navigator.onLine) document.querySelector('#offline').classList.add('d-none');
+  else document.querySelector('#offline').classList.remove('d-none');
   await getNotes();
 });

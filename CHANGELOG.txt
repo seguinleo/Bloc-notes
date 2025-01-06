@@ -1,3 +1,11 @@
+#----v25.1.1----# !! DATABASE CHANGED !!
+-Add reminders
+-Add offline mode for local notes
+-Improve sidebar controls
+-Improve UI/UX
+-Improve code structure
+-Bug fixes
+
 #----v24.11.2----#
 -Add keyboard shortcuts
 -Improve UI/UX

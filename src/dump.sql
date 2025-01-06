@@ -24,6 +24,7 @@ CREATE TABLE `notes` (
   `folder` varchar(63) DEFAULT NULL,
   `category` varchar(63) DEFAULT NULL,
   `link` varchar(63) DEFAULT NULL,
+  `reminder` varchar(63) DEFAULT NULL,
   `user` varchar(63) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

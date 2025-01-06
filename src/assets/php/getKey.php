@@ -22,6 +22,11 @@ if ($PDO === null) {
     return;
 }
 
+/**
+ * 
+ * Get key from sql database or, using a secure vault like AWS KMS, Azure Key Vault or a self-hosted solution.
+ *
+ */
 try {
     $query = $PDO->prepare("SELECT oneKey,lastLogin FROM users WHERE name=:CurrentUser AND id=:UserId LIMIT 1");
     $query->execute(

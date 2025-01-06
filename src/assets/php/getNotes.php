@@ -6,7 +6,7 @@ require_once __DIR__ . '/class/Encryption.php';
 $encryption = new Encryption\Encryption();
 
 try {
-    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,folder,pinnedNote,link FROM notes WHERE user=:CurrentUser");
+    $query = $PDO->prepare("SELECT id,title,content,color,dateNote,hiddenNote,category,folder,pinnedNote,link,reminder FROM notes WHERE user=:CurrentUser");
     $query->execute([':CurrentUser' => $name]);
     $notes = [];
 
@@ -22,6 +22,7 @@ try {
             'link'      => $row['link'] ?? null,
             'hidden'    => filter_var($row['hiddenNote'], FILTER_VALIDATE_INT),
             'pinned'    => filter_var($row['pinnedNote'], FILTER_VALIDATE_INT),
+            'reminder'  => $row['reminder'] ?? null,
         ];
     }
 } catch (Exception $e) {

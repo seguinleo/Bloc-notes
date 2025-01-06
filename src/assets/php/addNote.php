@@ -12,6 +12,11 @@ $dateNote = date('Y-m-d H:i:s');
 $hidden = filter_input(INPUT_POST, 'hidden', FILTER_SANITIZE_NUMBER_INT);
 $folder = filter_input(INPUT_POST, 'folder', FILTER_DEFAULT) ?? null;
 $category = filter_input(INPUT_POST, 'category', FILTER_DEFAULT) ?? null;
+$reminder = filter_input(INPUT_POST, 'reminder', FILTER_DEFAULT) ?? null;
+
+if ($reminder) $reminder = date('Y-m-d H:i:s', strtotime($reminder));
+else $reminder = null;
+
 $allColors = [
     'bg-default',
     'bg-red',
@@ -36,7 +41,7 @@ if (iconv_strlen($content) > 20000) {
 if (in_array($color, $allColors) === false) $color = 'bg-default';
 
 try {
-    $query = $PDO->prepare("INSERT INTO notes (id,title,content,dateNote,color,hiddenNote,folder,category,user) VALUES (:NoteId,:Title,:Content,:DateNote,:Color,:HiddenNote,:Folder,:Category,:User)");
+    $query = $PDO->prepare("INSERT INTO notes (id,title,content,dateNote,color,hiddenNote,folder,category,reminder,user) VALUES (:NoteId,:Title,:Content,:DateNote,:Color,:HiddenNote,:Folder,:Category,:Reminder,:User)");
     $query->execute(
         [
             ':NoteId'       => $noteId,
@@ -47,6 +52,7 @@ try {
             ':HiddenNote'   => $hidden,
             ':Folder'       => $folder,
             ':Category'     => $category,
+            ':Reminder'     => $reminder,
             ':User'         => $name,
         ]
     );
