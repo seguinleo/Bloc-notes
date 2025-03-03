@@ -348,7 +348,7 @@
                     <div class="row">
                         <p class="version">
                             GPL-3.0 &copy;
-                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v25.1.1</a>
+                            <a href="https://github.com/seguinleo/Bloc-notes/" rel="noopener noreferrer">v25.3.1</a>
                         </p>
                     </div>
                 </div>
