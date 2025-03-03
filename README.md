@@ -53,4 +53,4 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 
 ![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
 
-A big thank you to [DOMPurify](https://github.com/cure53/DOMPurify) and [marked](https://github.com/markedjs/marked)!
+A big thank you to [DOMPurify](https://github.com/cure53/DOMPurify), [marked](https://github.com/markedjs/marked) and [Iro](https://github.com/jaames/iro.js)

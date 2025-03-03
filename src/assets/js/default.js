@@ -1,17 +1,9 @@
+/* global iro */
+
 let touchstartX = 0;
 let touchendX = 0;
 let timeoutNotification = null;
-let theme = localStorage.getItem('theme') || 'dark';
 const sidebar = document.querySelector('#sidebar');
-const metaTheme = document.querySelectorAll('.theme-color');
-const buttonTheme = document.querySelector('#icon-theme');
-const themes = {
-  carrot: { className: 'carrot', color: '#1f0b00', icon: 'fa-carrot' },
-  dark: { className: 'dark', color: '#000', icon: 'fa-moon' },
-  dusk: { className: 'dusk', color: '#1c1936', icon: 'fa-star' },
-  leaf: { className: 'leaf', color: '#001b1e', icon: 'fa-leaf' },
-  light: { className: 'light', color: '#fff', icon: 'fa-lightbulb' },
-};
 export let isLocked = true;
 export const maxNoteContent = 20000;
 export const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -188,47 +180,9 @@ export const createFingerprint = async () => {
   }
 };
 
-export function loadTheme() {
-  const currentTheme = themes[theme];
-  document.querySelector('html').className = currentTheme.className;
-  metaTheme.forEach((e) => {
-    e.content = currentTheme.color;
-  });
-  buttonTheme.className = `fa-solid ${currentTheme.icon}`;
-}
-
 if (localStorage.getItem('spellcheck') === 'false') {
   document.querySelector('#check-spellcheck').checked = false;
   document.querySelector('#content').setAttribute('spellcheck', 'false');
-}
-
-const accentColor = localStorage.getItem('accent_color');
-const accentColors = [
-  'accent1',
-  'accent2',
-  'accent3',
-  'accent4',
-  'accent5',
-  'accent6',
-  'accent7',
-  'accent8',
-];
-
-switch (accentColor) {
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-    document.body.classList = accentColors[accentColor - 1];
-    document.querySelector(`#accent-colors .accent${accentColor}-span`).classList.add('selected');
-    break;
-  default:
-    document.body.classList = 'accent1';
-    document.querySelector('#accent-colors .accent1-span').classList.add('selected');
 }
 
 document.addEventListener('touchstart', (e) => {
@@ -282,6 +236,11 @@ document.querySelector('#note-popup-box #content').addEventListener('input', (e)
 
 document.querySelector('#btn-settings').addEventListener('click', () => {
   document.querySelector('#settings-popup-box').showModal();
+});
+
+document.querySelector('#btn-colorpicker').addEventListener('click', () => {
+  document.querySelector('#settings-popup-box').close();
+  document.querySelector('#colorpicker-popup-box').showModal();
 });
 
 document.querySelector('#copy-password-btn').addEventListener('click', () => {
@@ -373,19 +332,6 @@ document.querySelectorAll('#colors span').forEach((span, index) => {
   if (index === 0) span.classList.add('selected');
 });
 
-document.querySelectorAll('#accent-colors span').forEach((span) => {
-  span.addEventListener('click', (event) => {
-    document.querySelectorAll('#accent-colors span').forEach((e) => e.classList.remove('selected'));
-    event.target.classList.add('selected');
-    const selectedAccent = span.classList[0].replace('-span', '');
-    document.body.classList = selectedAccent;
-    localStorage.setItem('accent_color', accentColors.indexOf(selectedAccent) + 1 || '1');
-  });
-  span.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') span.click();
-  });
-});
-
 document.querySelectorAll('.close i').forEach((e) => {
   e.addEventListener('click', () => {
     e.closest('dialog').close();
@@ -412,9 +358,6 @@ document.addEventListener('keydown', (e) => {
   } else if (e.altKey && e.shiftKey && e.key.toUpperCase() === 'S') {
     e.preventDefault();
     document.querySelector('#btn-settings').click();
-  } else if (e.altKey && e.shiftKey && e.key.toUpperCase() === 'T') {
-    e.preventDefault();
-    document.querySelector('#btn-theme').click();
   }
 });
 
@@ -504,21 +447,50 @@ document.querySelector('#check-lock-app').addEventListener('change', async (e) =
   }
 });
 
-document.querySelector('#btn-theme').addEventListener('click', () => {
-  const currentThemeIndex = Object.keys(themes).indexOf(theme);
-  const nextTheme = Object.keys(themes)[(currentThemeIndex + 1) % Object.keys(themes).length];
-  const nextThemeData = themes[nextTheme];
-  document.querySelector('html').className = nextThemeData.className;
-  theme = nextTheme;
-  metaTheme.forEach((e) => {
-    e.content = nextThemeData.color;
-  });
-  buttonTheme.className = `fa-solid ${nextThemeData.icon}`;
-  localStorage.setItem('theme', nextTheme);
-});
-
 const today = new Date();
 if (today.getMonth() === 11) document.querySelector('.christmas').classList.remove('d-none');
+
+const colorPicker = new iro.ColorPicker('#colorPicker', {
+  color: localStorage.getItem('accent_color') || '#151e15',
+  width: 320,
+  borderWidth: 2,
+  borderColor: '#fff',
+  layout: [
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'hue'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'saturation'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value'
+      }
+    },
+  ]
+});
+
+colorPicker.on(['color:init', 'input:change'], (color) => {
+  document.body.style.backgroundColor = color.hexString;
+  document.querySelectorAll('.theme-color').forEach((element) => {
+    element.content = color.hexString;
+  });
+  if (color.hsl.l >= 45) {
+    document.querySelector('html').classList.add('light');
+    document.querySelector('html').classList.remove('dark');
+  } else {
+    document.querySelector('html').classList.add('dark');
+    document.querySelector('html').classList.remove('light');
+  }
+  localStorage.setItem('accent_color', color.hexString);
+})
 
 export function changeLanguage(language, cloud) {
   if (language === 'fr') {

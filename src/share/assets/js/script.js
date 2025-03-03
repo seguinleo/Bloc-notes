@@ -11,18 +11,8 @@ let stop = false;
 const notesContainer = document.querySelector('#main');
 const urlParams = new URLSearchParams(window.location.search);
 const noteLink = urlParams.get('link');
-const allAccentColors = [
-  'accent1',
-  'accent2',
-  'accent3',
-  'accent4',
-  'accent5',
-  'accent6',
-  'accent7',
-  'accent8',
-];
 
-document.body.classList.add(allAccentColors[Math.floor(Math.random() * allAccentColors.length)]);
+document.body.style.backgroundColor = '#151e15';
 
 const showSharedNote = async () => {
   if (!noteLink) {

@@ -1,3 +1,6 @@
+#----v25.3.1----#
+-Add full theme customization
+
 #----v25.1.1----# !! DATABASE CHANGED !!
 -Add reminders
 -Add offline mode for local notes

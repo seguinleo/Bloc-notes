@@ -708,7 +708,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await defaultScript.getLockApp();
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   defaultScript.changeLanguage(defaultScript.lang || 'en', false);
-  defaultScript.loadTheme();
   if (defaultScript.lang === 'fr') {
     document.querySelector('.details-content-fr').classList.remove('d-none');
     document.querySelector('.details-content-en').classList.add('d-none');

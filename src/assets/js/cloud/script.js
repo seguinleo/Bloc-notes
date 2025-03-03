@@ -746,7 +746,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await defaultScript.getLockApp();
   if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js');
   defaultScript.changeLanguage(defaultScript.lang || 'en', true);
-  defaultScript.loadTheme();
   if (navigator.onLine) document.querySelector('#offline').classList.add('d-none');
   else document.querySelector('#offline').classList.remove('d-none');
   await getNotes();

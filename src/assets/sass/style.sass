@@ -15,15 +15,16 @@
 html
   scroll-behavior: smooth
   -webkit-tap-highlight-color: transparent
-  scrollbar-color: rgba(150, 150, 150, 0.1) transparent
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent
   font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
 
 *
+  color: inherit
   margin: 0
   box-sizing: border-box
 
 \::-webkit-scrollbar-thumb
-  background: rgba(150, 150, 150, 0.1)
+  background: rgba(255, 255, 255, 0.1)
 
 \::-webkit-scrollbar
   width: 4px
@@ -44,16 +45,16 @@ h3
 table
   border-collapse: collapse
   text-align: center
-  border: 2px solid rgba(150, 150, 150, 0.1)
+  border: 2px solid rgba(255, 255, 255, 0.1)
   margin: 10px 0
 
   thead
-    background: rgba(150, 150, 150, 0.1)
+    background: rgba(255, 255, 255, 0.1)
 
   th,
   td
     padding: 4px 8px
-    border: 2px solid rgba(150, 150, 150, 0.1)
+    border: 2px solid rgba(255, 255, 255, 0.1)
 
 a:hover
   text-decoration: none
@@ -63,15 +64,15 @@ kbd
   margin-right: 4px
   font-weight: 700
   padding: 2px 4px
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
 
 hr
   border: none
-  border-top: 2px solid rgba(150, 150, 150, 0.1)
+  border-top: 2px solid rgba(255, 255, 255, 0.1)
   margin: 10px
 
 fieldset
-  border: 2px solid rgba(150, 150, 150, 0.1)
+  border: 2px solid rgba(255, 255, 255, 0.1)
   border-radius: 10px
   padding: 10px
   margin: 10px 0
@@ -80,7 +81,7 @@ fieldset
     font-weight: 700
 
 blockquote
-  border-left: 3px solid rgba(150, 150, 150, 0.1)
+  border-left: 3px solid rgba(255, 255, 255, 0.1)
   margin: 10px auto
   padding-left: 1rem
 
@@ -100,7 +101,7 @@ progress
 pre
   padding: 4px 8px
   margin: 10px auto
-  background: rgba(150, 150, 150, 0.1)
+  background: rgba(255, 255, 255, 0.1)
   border-radius: 4px
   line-height: 1.5
   overflow-x: auto
@@ -111,7 +112,7 @@ pre
 
 code
   padding: 4px 8px
-  background: rgba(150, 150, 150, 0.1)
+  background: rgba(255, 255, 255, 0.1)
   border-radius: 4px
   overflow-x: auto
 
@@ -121,6 +122,10 @@ li
   &:has(label)
     list-style: none
     margin-left: -1.5rem
+
+  label
+    display: flex
+    align-items: center
 
 img
   max-width: 100%
@@ -144,22 +149,13 @@ header
     display: inline-flex
     align-items: center
 
-  #log-in,
-  #manage-account
-    font-size: 36px
-    display: inline-flex
-    align-items: center
-    justify-content: center
-    border-radius: 50%
-    transition: .1s
-
   #div-search
     flex-grow: 1
     max-width: 300px
     height: 36px
     border-radius: 48px
     padding: 10px
-    background: rgba(150, 150, 150, 0.2)
+    background: rgba(255, 255, 255, 0.2)
     backdrop-filter: blur(5px)
 
     &:focus-within
@@ -180,7 +176,7 @@ main
   display: flex
   justify-content: center
   align-items: center
-  margin: 60px 1rem 1rem 370px
+  padding: 60px 1rem 1rem 370px
   flex-wrap: wrap
   gap: 1rem
 
@@ -190,6 +186,10 @@ textarea,
 button,
 input
   font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
+  background: none
+
+input
+  border: 2px solid rgba(255, 255, 255, 0.2)
 
 select
   font-size: .9rem
@@ -226,7 +226,7 @@ summary,
 span,
 .link
   &:focus-visible
-    outline: 3px dashed rgba(150, 150, 150, 0.5)
+    outline: 3px dashed rgba(255, 255, 255, 0.5)
 
 form
   margin: 10px 0
@@ -250,8 +250,29 @@ input
     vertical-align: middle
 
   &[type=checkbox]
+    display: flex
+    justify-content: center
+    align-items: center
+    appearance: none
     margin-right: 10px
     vertical-align: middle
+    width: 1.2rem
+    height: 1.2rem
+    border-radius: 10px
+    border: none
+    background: rgba(255, 255, 255, 0.2)
+
+    &::before
+      content: ""
+      width: 10px
+      height: 10px
+      transform: scale(0)
+      transform-origin: bottom left
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%)
+      box-shadow: inset 1em 1em currentColor
+
+    &:checked::before
+      transform: scale(1)
 
   &:disabled
     cursor: not-allowed
@@ -264,6 +285,7 @@ input
   flex-direction: column
   top: 0
   bottom: 0
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
 
   nav
     -webkit-user-select: none
@@ -295,7 +317,7 @@ input
         margin-bottom: 10px
 
       details
-        background: rgba(150, 150, 150, 0.1)
+        background: rgba(255, 255, 255, 0.1)
         border-radius: 4px
 
         summary
@@ -317,7 +339,7 @@ input
         &:hover,
         &:focus
           outline: none
-          background: rgba(150, 150, 150, 0.1)
+          background: rgba(255, 255, 255, 0.1)
 
         &:hover .title-list,
         &:focus .title-list
@@ -330,6 +352,7 @@ input
         .custom-check
           padding: 4px 8px
           border-radius: 24px
+          background: rgba(255, 255, 255, 0.2)
 
         .title-list
           white-space: nowrap
@@ -382,7 +405,7 @@ input
       transition: .1s
 
       &:hover
-        background: rgba(150, 150, 150, 0.1)
+        background: rgba(255, 255, 255, 0.1)
 
 #btn-add-note
   position: fixed
@@ -404,6 +427,7 @@ input
   border-radius: 1rem
   line-height: 2
   padding: 10px 1rem
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
 
   .details
     min-height: 100px
@@ -458,7 +482,7 @@ input
       border-radius: 50%
 
       &:hover
-        background: rgba(150, 150, 150, 0.1)
+        background: rgba(255, 255, 255, 0.1)
 
     span
       font-size: .8rem
@@ -489,9 +513,6 @@ input
     border-radius: 50%
     transition: .1s
 
-    &:hover
-      background: rgba(150, 150, 150, 0.1)
-
 .link
   cursor: pointer
   font-weight: 700
@@ -515,8 +536,7 @@ input
       width: fit-content
       margin: auto
 
-#colors,
-#accent-colors
+#colors
   display: flex
   align-items: center
   min-height: 30px
@@ -528,6 +548,7 @@ input
     border-radius: 50%
     margin-right: 10px
     transition: .1s
+    border: 2px solid rgba(255, 255, 255, 0.2)
 
     &.selected
       width: 28px
@@ -536,6 +557,7 @@ input
 dialog
   z-index: 4
   padding: 0
+  border: none
   min-height: 100dvh
   max-height: 100dvh
   min-width: 100vw
@@ -588,7 +610,7 @@ dialog
   transition: .1s
 
   &:hover
-    background: rgba(150, 150, 150, 0.1)
+    background: rgba(255, 255, 255, 0.1)
 
 .custom-check
   display: inline-flex
@@ -600,6 +622,10 @@ dialog
     margin: 4px 0
     padding: 4px 8px
     border-radius: 24px
+    background: rgba(255, 255, 255, 0.2)
+
+  input:checked + span
+    background: rgba(255, 255, 255, 0.4)
 
   input[type=radio],
   input[type=checkbox]
@@ -609,10 +635,11 @@ dialog
   display: inline-flex
   align-items: center
   justify-content: center
-  font-size: .9rem
+  font-size: .8rem
   margin-left: 5px
   padding: 4px 8px
   border-radius: 24px
+  background: rgba(255, 255, 255, 0.2)
 
   i
     margin-right: 4px
@@ -648,6 +675,7 @@ dialog
     position: absolute
     border-radius: 2rem
     inset: 0
+    background: rgba(255, 255, 255, 0.2)
 
     &:before
       position: absolute
@@ -657,7 +685,14 @@ dialog
       width: 1.5rem
       top: 4px
       left: 4px
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2)
+      background: #ffffff95
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1)
+
+  input:checked + .slider
+    background: #ffffff95
+
+.IroSlider
+  margin: auto
 
 .div-folder-cat div
   display: inline-flex
@@ -676,10 +711,6 @@ dialog
 
 #textarea-length
   font-size: .8rem
-
-.delete-account
-  cursor: pointer
-  font-weight: 700
 
 #license
   font-size: .9rem
@@ -727,7 +758,7 @@ dialog
   word-break: break-all
 
 #sidebar-indicator
-  background: rgba(150, 150, 150, 0.1)
+  background: rgba(255, 255, 255, 0.1)
 
 #copy-note-link-btn,
 #copy-password-btn,
@@ -740,7 +771,6 @@ dialog
   display: inline-flex
   justify-content: center
   align-items: center
-  font-size: 1.2rem
   width: 36px
   height: 36px
   border-radius: 48px
@@ -781,7 +811,7 @@ dialog
         display: none
 
   main
-    margin: 60px 0
+    padding: 60px 0
     gap: 2px
 
   #sidebar
@@ -836,308 +866,15 @@ dialog
   textarea
     resize: none
 
-  #colors,
-  #accent-colors
+  #colors
     justify-content: space-between
 
 html
-  &.dark .accent1,
-  &.dusk .accent1,
-  &.leaf .accent1,
-  &.carrot .accent1
-    accent-color: #8ab4f8
-    color: #cadeff
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #8ab4f8
-
-    progress
-      background: #cadeff
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #cadeff
-
-    a,
-    .link
-      color: #8ab4f8
-
-    .switch
-      input:disabled + .slider
-        background: #cadeff
-
-      .slider
-        &:before
-          background: #cadeff
-
-  &.dark .accent2,
-  &.dusk .accent2,
-  &.leaf .accent2,
-  &.carrot .accent2
-    accent-color: #bcf88a
-    color: #deffc3
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #bcf88a
-
-    progress
-      background: #deffc3
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #deffc3
-
-    a,
-    .link
-      color: #bcf88a
-    
-    .switch
-      input:disabled + .slider
-        background: #deffc3
-
-      .slider
-        &:before
-          background: #deffc3
-
-  &.dark .accent3,
-  &.dusk .accent3,
-  &.leaf .accent3,
-  &.carrot .accent3
-    accent-color: #f3f88a
-    color: #fcffc7
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #f3f88a
-
-    progress
-      background: #fcffc7
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #fcffc7
-
-    a,
-    .link
-      color: #f3f88a
-
-    .switch
-      input:disabled + .slider
-        background: #fcffc7
-
-      .slider
-        &:before
-          background: #fcffc7
-
-  &.dark .accent4,
-  &.dusk .accent4,
-  &.leaf .accent4,
-  &.carrot .accent4
-    accent-color: #ff9bf8
-    color: #ffcafb
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #ff9bf8
-
-    progress
-      background: #ffcafb
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #ffcafb
-
-    a,
-    .link
-      color: #ff9bf8
-
-    .switch
-      input:disabled + .slider
-        background: #ffcafb
-
-      .slider
-        &:before
-          background: #ffcafb
-
-  &.dark .accent5,
-  &.dusk .accent5,
-  &.leaf .accent5,
-  &.carrot .accent5
-    accent-color: #ff9b9b
-    color: #ffcdcd
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #ff9b9b
-
-    progress
-      background: #ffcdcd
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #ffcdcd
-
-    a,
-    .link
-      color: #ff9b9b
-
-    .switch
-      input:disabled + .slider
-        background: #ffcdcd
-
-      .slider
-        &:before
-          background: #ffcdcd
-
-  &.dark .accent6,
-  &.dusk .accent6,
-  &.leaf .accent6,
-  &.carrot .accent6
-    accent-color: #ffc89b
-    color: #ffe3cd
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #ffc89b
-
-    progress
-      background: #ffe3cd
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #ffe3cd
-
-    a,
-    .link
-      color: #ffc89b
-
-    .switch
-      input:disabled + .slider
-        background: #ffe3cd
-
-      .slider
-        &:before
-          background: #ffe3cd
-
-  &.dark .accent7,
-  &.dusk .accent7,
-  &.leaf .accent7,
-  &.carrot .accent7
-    accent-color: #8af8a7
-    color: #c7ffd6
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #8af8a7
-
-    progress
-      background: #c7ffd6
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #c7ffd6
-
-    a,
-    .link
-      color: #8af8a7
-
-    .switch
-      input:disabled + .slider
-        background: #c7ffd6
-
-      .slider
-        &:before
-          background: #c7ffd6
-
-  &.dark .accent8,
-  &.dusk .accent8,
-  &.leaf .accent8,
-  &.carrot .accent8
-    accent-color: #d29bff
-    color: #eacfff
-
-    \::selection,
-    button,
-    .custom-check input[type=radio]:checked + span,
-    .custom-check input[type=checkbox]:checked + span,
-    .switch input:checked + .slider
-      background: #d29bff
-
-    progress
-      background: #eacfff
-
-    input,
-    textarea,
-    select,
-    .popup .content,
-    #btn-theme
-      color: #eacfff
-
-    a,
-    .link
-      color: #d29bff
-
-    .switch
-      input:disabled + .slider
-        background: #eacfff
-
-      .slider
-        &:before
-          background: #eacfff
-
-  &.dark,
-  &.dusk,
-  &.leaf,
-  &.carrot
-    \::selection
-      color: #1a1a1a
+  &.dark
+    color: rgba(255, 255, 255, 0.7)
 
     .btn-cancel
-      background: #ff9b9b !important
+      background: #b02d19
 
     .bg-red
       background: #5e140c
@@ -1166,30 +903,6 @@ html
     .bg-pink
       background: #512f59
 
-    .accent1-span
-      background: #8ab4f8
-
-    .accent2-span
-      background: #bcf88a
-
-    .accent3-span
-      background: #f3f88a
-
-    .accent4-span
-      background: #ff9bf8
-
-    .accent5-span
-      background: #ff9b9b
-
-    .accent6-span
-      background: #ffc89b
-
-    .accent7-span
-      background: #8af8a7
-
-    .accent8-span
-      background: #d29bff
-
     dialog
       background: rgba(0, 0, 0, 0.5)
 
@@ -1205,403 +918,27 @@ html
       color: #1a1a1a
       background: #ff8787
 
-  &.dark
-    background: #000
-
-    kbd,
     #sidebar,
-    .bg-default
-      background: #1a1a1a
-
     .fullscreen,
-    .reminder-date,
-    #sidebar .custom-check,
-    #copy-note-link,
-    #psswd-gen
-      background: #000
-
-    input
-      border: 2px solid #000
-
-    .popup .content,
-    input,
-    textarea,
-    select
-      background: #1a1a1a
-
-    #colors span,
-    #accent-colors span
-      border: 2px solid #000
-
-    button
-      color: #1a1a1a
-
-    .custom-check
-      span
-        background: #000
-
-      input[type=radio]:checked + span,
-      input[type=checkbox]:checked + span
-        color: #1a1a1a
-
-    .switch
-      .slider
-        background: #000
-
-      input:checked + .slider:before
-        background: #000
-
-    #btn-theme
-      background: #000
-
-  &.dusk
-    background: #1c1936
-
-    kbd,
-    #sidebar,
     .bg-default
-      background: #272342
-
-    .fullscreen,
-    .reminder-date,
-    #sidebar .custom-check,
-    #copy-note-link,
-    #psswd-gen
-      background: #1c1936
-
-    input
-      border: 2px solid #1c1936
-
-    .popup .content,
-    input,
-    textarea,
-    select
-      background: #272342
-
-    #colors span,
-    #accent-colors span
-      border: 2px solid #1c1936
-
-    button
-      color: #1c1936
-
-    .custom-check
-      span
-        background: #1c1936
-
-      input[type=radio]:checked + span,
-      input[type=checkbox]:checked + span
-        color: #1a1a1a
-
-    .switch
-      .slider
-        background: #1c1936
-
-      input:checked + .slider:before
-        background: #272342
-
-    #btn-theme
-      background: #1c1936
-
-  &.leaf
-    background: #001b1e
-
-    kbd,
-    #sidebar,
-    .bg-default
-      background: #01262a
-
-    .fullscreen,
-    .reminder-date,
-    #sidebar .custom-check,
-    #copy-note-link,
-    #psswd-gen
-      background: #001b1e
-
-    input
-      border: 2px solid #001b1e
-
-    .popup .content,
-    input,
-    textarea,
-    select
-      background: #01262a
-
-    #colors span,
-    #accent-colors span
-      border: 2px solid #001b1e
-
-    button
-      color: #001b1e
-
-    .custom-check
-      span
-        background: #001b1e
-
-      input[type=radio]:checked + span,
-      input[type=checkbox]:checked + span
-        color: #1a1a1a
-
-    .switch
-      .slider
-        background: #001b1e
-
-      input:checked + .slider:before
-        background: #01262a
-
-    #btn-theme
-      background: #001b1e
-
-  &.carrot
-    background: #1f0b00
-
-    kbd,
-    #sidebar,
-    .bg-default
-      background: #331500
-    
-    .fullscreen,
-    .reminder-date,
-    #sidebar .custom-check,
-    #copy-note-link,
-    #psswd-gen
-      background: #1f0b00
-
-    input
-      border: 2px solid #1f0b00
-    
-    .popup .content,
-    input,
-    textarea,
-    select
-      background: #331500
-
-    #colors span,
-    #accent-colors span
-      border: 2px solid #1f0b00
-
-    button
-      color: #1f0b00
-
-    .custom-check
-      span
-        background: #1f0b00
-
-      input[type=radio]:checked + span,
-      input[type=checkbox]:checked + span
-        color: #1a1a1a
-      
-    .switch
-      .slider
-        background: #1f0b00
-
-      input:checked + .slider:before
-        background: #331500
-    
-    #btn-theme
-      background: #1f0b00
-  
-  &.light
-    background: #fff
-    color: #1a1a1a
-
-    .btn-cancel
-      background: #b02d19 !important
+      background: rgba(0, 0, 0, 0.1)
+      backdrop-filter: blur(15px)
 
     .popup .content
-      color: #1a1a1a
+      background: rgba(0, 0, 0, 0.5)
+      backdrop-filter: blur(15px)
 
-    .accent1
-      accent-color: #2b5790
-
-      \::selection
-        background: #2b5790
-        color: #fff
-
-      a,
-      .link
-        color: #2b5790
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #2b5790
-        color: #fff
-
-    .accent2
-      accent-color: #4e902b
-
-      \::selection
-        background: #4e902b
-        color: #fff
-
-      a,
-      .link
-        color: #4e902b
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #4e902b
-        color: #fff
-
-    .accent3
-      accent-color: #dba709
-
-      \::selection
-        background: #dba709
-        color: #fff
-
-      a,
-      .link
-        color: #dba709
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #dba709
-        color: #fff
-
-    .accent4
-      accent-color: #902b7c
-
-      \::selection
-        background: #902b7c
-        color: #fff
-
-      a,
-      .link
-        color: #902b7c
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #902b7c
-        color: #fff
-
-    .accent5
-      accent-color: #b02d19
-
-      \::selection
-        background: #b02d19
-        color: #fff
-
-      a,
-      .link
-        color: #b02d19
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #b02d19
-        color: #fff
-
-    .accent6
-      accent-color: #db7609
-
-      \::selection
-        background: #db7609
-        color: #fff
-
-      a,
-      .link
-        color: #db7609
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #db7609
-        color: #fff
-
-    .accent7
-      accent-color: #2b9061
-
-      \::selection
-        background: #2b9061
-        color: #fff
-
-      a,
-      .link
-        color: #2b9061
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #2b9061
-        color: #fff
-
-    .accent8
-      accent-color: #6b2b90
-
-      \::selection
-        background: #6b2b90
-        color: #fff
-
-      a,
-      .link
-        color: #6b2b90
-
-      button,
-      .custom-check input[type=radio]:checked + span,
-      .custom-check input[type=checkbox]:checked + span,
-      .switch input:checked + .slider
-        background: #6b2b90
-        color: #fff
-
-    .accent1-span
-      background: #2b5790
-
-    .accent2-span
-      background: #4e902b
-
-    .accent3-span
-      background: #dba709
-
-    .accent4-span
-      background: #902b7c
-
-    .accent5-span
-      background: #b02d19
-
-    .accent6-span
-      background: #db7609
-
-    .accent7-span
-      background: #2b9061
-
-    .accent8-span
-      background: #6b2b90
-
-    \::placeholder,
-    input,
-    select
-      color: #1a1a1a
-
-    kbd,
-    #sidebar,
-    .custom-check span,
-    .bg-default,
+    button,
     #copy-note-link,
     #psswd-gen
-      background: #f8f8f8
+      background: rgba(255, 255, 255, 0.2)
+      color: rgba(255, 255, 255, 0.7)
 
-    input
-      border: 2px solid #c6c6c6
+  &.light
+    color: rgba(0, 0, 0, 0.7)
 
-    .fullscreen,
-    .popup .content,
-    .reminder-date,
-    #sidebar .custom-check,
-    input,
-    textarea
-      background: #fff
+    .btn-cancel
+      background: #ff9b9b
 
     .bg-red
       background: #ff8787
@@ -1630,22 +967,8 @@ html
     .bg-pink
       background: #fdd0e7
 
-    #colors span,
-    #accent-colors span
-      border: 2px solid #c6c6c6
-
-    .switch
-      input:disabled + .slider
-        background: #f8f8f8
-
-      .slider
-        background: #c6c6c6
-
-        &:before
-          background: #f8f8f8
-
     dialog
-      background: rgba(150, 150, 150, 0.1)
+      background: rgba(255, 255, 255, 0.1)
 
     #success-notification
       color: #fff
@@ -1655,9 +978,24 @@ html
       color: #fff
       background: #b02d19
 
-    #btn-theme
-      background: #fff
-      color: #1a1a1a
+    #sidebar nav #list-notes .custom-check,
+    #sidebar nav #list-notes details,
+    #sidebar,
+    header #div-search,
+    .fullscreen,
+    .bg-default
+      background: rgba(255, 255, 255, 0.1)
+      backdrop-filter: blur(15px)
+
+    .popup .content
+      background: rgba(255, 255, 255, 0.5)
+      backdrop-filter: blur(15px)
+
+    button,
+    #copy-note-link,
+    #psswd-gen
+      background: rgba(255, 255, 255, 0.7)
+      color: rgba(0, 0, 0, 0.7)
 
 .pointer-events-none
   pointer-events: none

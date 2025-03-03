@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="manifest" href="./app.webmanifest">
 </head>
-<body class="accent1">
+<body>
     <noscript>
         <div id="js-disabled">
             <p class="bold">JavaScript is disabled</p>
@@ -65,8 +65,8 @@
                 <button type="button" id="btn-settings" class="d-none" aria-label="Settings">
                     <i class="fa-solid fa-gear"></i>
                 </button>
-                <button type="button" id="btn-theme" aria-label="Theme">
-                    <i id="icon-theme" class="fa-solid fa-moon"></i>
+                <button type="button" id="btn-colorpicker" aria-label="Change app color">
+                    <i class="fa-solid fa-palette"></i>
                 </button>
             </div>
             <div id="list-notes"></div>
@@ -92,16 +92,13 @@
                             <label class="custom-check">
                                 <input type="radio" name="sort-notes" value="1" id="sort-notes1" checked>
                                 <span id="sort-notes1-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
+                            </label><label class="custom-check">
                                 <input type="radio" name="sort-notes" value="2" id="sort-notes2">
                                 <span id="sort-notes2-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
+                            </label><label class="custom-check">
                                 <input type="radio" name="sort-notes" value="3" id="sort-notes3">
                                 <span id="sort-notes3-span" tabindex="0" role="button"></span>
-                            </label>
-                            <label class="custom-check">
+                            </label><label class="custom-check">
                                 <input type="radio" name="sort-notes" value="4" id="sort-notes4">
                                 <span id="sort-notes4-span" tabindex="0" role="button"></span>
                             </label>
@@ -155,8 +152,7 @@
                             <label class="custom-check">
                                 <input type="radio" name="download-notes" value="txt" id="txt-download">
                                 <span tabindex="0" role="button">.TXT</span>
-                            </label>
-                            <label class="custom-check">
+                            </label><label class="custom-check">
                                 <input type="radio" name="download-notes" value="md" id="md-download">
                                 <span tabindex="0" role="button">.MD</span>
                             </label>
@@ -294,6 +290,16 @@
                 </div>
             </div>
         </dialog>
+        <dialog id="colorpicker-popup-box">
+            <div class="popup">
+                <div class="content">
+                    <div class="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <div id="colorPicker" class="row"></div>
+                </div>
+            </div>
+        </dialog>
         <dialog id="settings-popup-box">
             <div class="popup">
                 <div class="content">
@@ -320,24 +326,6 @@
                             <option value="de">DE</option>
                             <option value="es">ES</option>
                         </select>
-                    </div>
-                    <div class="row">
-                        <button type="button" id="btn-plugins" aria-label="Manage plugins" disabled>
-                            <i class="fa-solid fa-puzzle-piece"></i>
-                            Plugins
-                        </button>
-                    </div>
-                    <div class="row">
-                        <div id="accent-colors">
-                            <span class="accent1-span" tabindex="0" role="button" aria-label="Blue"></span>
-                            <span class="accent7-span" tabindex="0" role="button" aria-label="Green"></span>
-                            <span class="accent2-span" tabindex="0" role="button" aria-label="Lime"></span>
-                            <span class="accent3-span" tabindex="0" role="button" aria-label="Yellow"></span>
-                            <span class="accent6-span" tabindex="0" role="button" aria-label="Orange"></span>
-                            <span class="accent5-span" tabindex="0" role="button" aria-label="Red"></span>
-                            <span class="accent4-span" tabindex="0" role="button" aria-label="Pink"></span>
-                            <span class="accent8-span" tabindex="0" role="button" aria-label="Purple"></span>
-                        </div>
                     </div>
                     <div class="row">
                         <label id="spellcheck-slider" class="div-slider">
@@ -605,6 +593,7 @@
             </div>
         <?php } ?>
     </main>
+    <script src="./assets/js/iro.min.js"></script>
     <?php if (isset($name) === true) { ?>
         <script type="module" src="./assets/js/cloud/script.js"></script>
     <?php } else { ?>
