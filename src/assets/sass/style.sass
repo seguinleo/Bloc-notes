@@ -230,10 +230,6 @@ li
     list-style: none
     margin-left: -1.5rem
 
-  label
-    display: flex
-    align-items: center
-
 img
   max-width: 100%
   height: auto
@@ -347,7 +343,7 @@ input
     vertical-align: middle
 
   &[type=checkbox]
-    display: flex
+    display: inline-flex
     justify-content: center
     align-items: center
     appearance: none
@@ -987,6 +983,9 @@ dialog
 
 .pointer-events-none
   pointer-events: none
+
+  a
+    pointer-events: auto
 
 .txt-red
   color: #ff0000
