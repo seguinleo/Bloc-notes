@@ -81,9 +81,9 @@ html
     #success-notification
       background: #78db62
 
-    .error-notification
-      background: #ff9b9b
-
+    #offline,
+    #noscript,
+    .error-notification,
     .btn-cancel
       background: #ff9b9b
 
@@ -240,6 +240,7 @@ header
   top: 0
   left: 350px
   right: 0
+  z-index: 1
   display: flex
   justify-content: center
   align-items: center
@@ -800,9 +801,8 @@ dialog
   text-align: center
   padding: 4px 4px 1.5rem
   border-radius: 10px 10px 0 0
-  color: #1a1a1a
   backdrop-filter: blur(25px)
-  background: #ff8787C0
+  background: #b02d19
 
 #success-notification,
 .error-notification
