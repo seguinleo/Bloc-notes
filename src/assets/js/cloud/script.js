@@ -407,6 +407,9 @@ const getNotes = async () => {
       e.addEventListener('click', (event) => {
         defaultScript.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'));
       });
+      e.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') e.click();
+      });
     });
   } catch (error) {
     defaultScript.showError(`An error occurred - ${error}`);

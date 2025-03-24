@@ -10,9 +10,9 @@
     "sass": "sass --watch assets/sass/style.sass assets/css/style.min.css --style compressed"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
-    "eslint": "^9.21.0",
+    "@eslint/js": "^9.23.0",
+    "eslint": "^9.23.0",
     "globals": "^16.0.0",
-    "sass": "^1.85.1"
+    "sass": "^1.86.0"
   }
 }

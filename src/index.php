@@ -239,7 +239,7 @@
                     <form id="add-note" autocomplete="off">
                         <input id="id-note" type="hidden">
                         <div class="error-notification d-none"></div>
-                        <input type="text" id="title" maxlength="30" aria-label="Title" required>
+                        <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
                         <textarea
                             id="content"
                             maxlength="20000"
@@ -269,6 +269,7 @@
                                 <span class="bg-red" tabindex="0" role="button" aria-label="Red"></span>
                                 <span class="bg-orange" tabindex="0" role="button" aria-label="Orange"></span>
                                 <span class="bg-yellow" tabindex="0" role="button" aria-label="Yellow"></span>
+                                <span class="bg-lime" tabindex="0" role="button" aria-label="Lime"></span>
                                 <span class="bg-green" tabindex="0" role="button" aria-label="Green"></span>
                                 <span class="bg-cyan" tabindex="0" role="button" aria-label="Cyan"></span>
                                 <span class="bg-light-blue" tabindex="0" role="button" aria-label="Light blue"></span>
@@ -277,12 +278,13 @@
                                 <span class="bg-pink" tabindex="0" role="button" aria-label="Pink"></span>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <label class="div-slider">
-                                <span id="hide-infos"></span>
-                                <span class="switch">
-                                    <input type="checkbox" id="check-hidden">
-                                    <span class="slider"></span>
+                        <div class="row d-flex align-items-center">
+                            <span id="hide-infos"></span>
+                            <label class="switch">
+                                <input type="checkbox" class="checkbox" id="check-hidden">
+                                <span class="toggle-thumb">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="off"><rect x="12" y="6" width="1" height="12"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="on"><circle cx="12" cy="12" r="5" stroke-width="1" fill="none"/></svg>
                                 </span>
                             </label>
                         </div>
@@ -327,21 +329,23 @@
                             <option value="es">ES</option>
                         </select>
                     </div>
-                    <div class="row">
-                        <label id="spellcheck-slider" class="div-slider">
-                            <span></span>
-                            <span class="switch">
-                                <input type="checkbox" id="check-spellcheck" checked>
-                                <span class="slider"></span>
+                    <div class="row d-flex align-items-center">
+                        <span id="spellcheck-slider-info"></span>
+                        <label id="spellcheck-slider" class="switch">
+                            <input type="checkbox" id="check-spellcheck" class="checkbox" checked>
+                            <span class="toggle-thumb">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="off"><rect x="12" y="6" width="1" height="12"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="on"><circle cx="12" cy="12" r="5" stroke-width="1" fill="none"/></svg>
                             </span>
                         </label>
                     </div>
-                    <div class="row">
-                        <label id="lock-app-slider" class="row div-slider d-none">
-                            <span></span>
-                            <span class="switch">
-                                <input type="checkbox" id="check-lock-app" checked>
-                                <span class="slider"></span>
+                    <div class="row d-flex align-items-center">
+                        <span id="lock-app-slider-info"></span>
+                        <label id="lock-app-slider" class="switch d-none">
+                            <input type="checkbox" id="check-lock-app" class="checkbox" checked>
+                            <span class="toggle-thumb">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="off"><rect x="12" y="6" width="1" height="12"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="on"><circle cx="12" cy="12" r="5" stroke-width="1" fill="none"/></svg>
                             </span>
                         </label>
                     </div>
@@ -369,7 +373,7 @@
                             <span id="last-login-date"></span>
                         </div>
                         <div class="row">
-                            <span id="log-out" class="link" tabindex="0" role="button"></span>
+                            <button type="button" id="log-out"></button>
                         </div>
                         <div class="row">
                             <span id="storage-usage"></span>
@@ -486,7 +490,7 @@
                                 <button type="submit"></button>
                             </div>
                             <div class="row align-center">
-                                <span id="create-account" class="link" tabindex="0" role="button"></span>
+                                <button type="button" id="create-account"></button>
                             </div>
                         </form>
                     </div>

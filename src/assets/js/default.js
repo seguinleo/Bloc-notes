@@ -1,5 +1,3 @@
-/* global iro */
-
 let touchstartX = 0;
 let touchendX = 0;
 let timeoutNotification = null;
@@ -30,6 +28,16 @@ function getPassword(length) {
     password += allChars[randomIndex];
   }
   document.querySelector('#psswd-gen').textContent = password;
+}
+
+function preventBodyScrolling(bool) {
+  if (bool) {
+    document.body.style.overflowY = 'hidden';
+    document.body.style.position = 'fixed';
+  } else {
+    document.body.style.overflowY = 'auto';
+    document.body.style.position = 'relative'
+  }
 }
 
 export function showSuccess(message) {
@@ -76,6 +84,7 @@ export function toggleFullscreen(noteId) {
   const note = document.querySelector(`.note[data-note-id="${noteId}"]`);
   note.querySelector('.details').scrollTop = 0;
   note.classList.toggle('fullscreen');
+  preventBodyScrolling(false)
 }
 
 export const getLockApp = async () => {
@@ -192,8 +201,14 @@ document.addEventListener('touchstart', (e) => {
 document.addEventListener('touchend', (e) => {
   if (isLocked) return;
   touchendX = e.changedTouches[0].screenX;
-  if (touchendX - touchstartX > 75) sidebar.classList.add('show');
-  else if (touchstartX - touchendX > 75) sidebar.classList.remove('show');
+  if (touchendX - touchstartX > 75) {
+    sidebar.classList.add('show');
+    preventBodyScrolling(true)
+  }
+  else if (touchstartX - touchendX > 75) {
+    sidebar.classList.remove('show');
+    preventBodyScrolling(false)
+  }
 }, false);
 
 document.querySelector('#language').addEventListener('change', async (e) => {
@@ -250,7 +265,13 @@ document.querySelector('#copy-password-btn').addEventListener('click', () => {
 
 document.querySelector('#sidebar-indicator').addEventListener('click', () => {
   if (isLocked) return;
-  sidebar.classList.toggle('show');
+  if (sidebar.classList.contains('show')) {
+    preventBodyScrolling(false)
+    sidebar.classList.remove('show');
+  } else {
+    preventBodyScrolling(true)
+    sidebar.classList.add('show');
+  }
 });
 
 document.querySelector('#btn-sort').addEventListener('click', () => {
@@ -504,8 +525,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes4-span').textContent = 'Titre (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrer les notes par catégorie';
     document.querySelector('#download-popup-box legend').textContent = 'Type d\'export';
-    document.querySelector('#spellcheck-slider span').textContent = 'Vérif. ortho.';
-    document.querySelector('#lock-app-slider span').textContent = 'Vérouiller app';
+    document.querySelector('#spellcheck-slider-info').textContent = 'Vérif. ortho.';
+    document.querySelector('#lock-app-slider-info').textContent = 'Vérouiller app';
     document.querySelector('#hide-infos').textContent = 'Masquer contenu';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titre');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenu (Texte brut, Markdown ou HTML)');
@@ -555,8 +576,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes4-span').textContent = 'Titel (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Notizen filtern nach Kategorie';
     document.querySelector('#download-popup-box legend').textContent = 'Exporttyp';
-    document.querySelector('#spellcheck-slider span').textContent = 'Rechtschreibprüfung';
-    document.querySelector('#lock-app-slider span').textContent = 'App sperren';
+    document.querySelector('#spellcheck-slider-info').textContent = 'Rechtschreibprüfung';
+    document.querySelector('#lock-app-slider-info').textContent = 'App sperren';
     document.querySelector('#hide-infos').textContent = 'Inhalt ausblenden';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Titel');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Inhalt (Rohtext, Markdown oder HTML)');
@@ -606,8 +627,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes4-span').textContent = 'Título (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filtrar notas por categoría';
     document.querySelector('#download-popup-box legend').textContent = 'Tipo de exportación';
-    document.querySelector('#spellcheck-slider span').textContent = 'Corrector ortográfico';
-    document.querySelector('#lock-app-slider span').textContent = 'Bloquear aplicación';
+    document.querySelector('#spellcheck-slider-info').textContent = 'Corrector ortográfico';
+    document.querySelector('#lock-app-slider-info').textContent = 'Bloquear aplicación';
     document.querySelector('#hide-infos').textContent = 'Ocultar contenido';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Título');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Contenido (Texto sin formato, Markdown o HTML)');
@@ -657,8 +678,8 @@ export function changeLanguage(language, cloud) {
     document.querySelector('#sort-notes4-span').textContent = 'Title (Z-A)';
     document.querySelector('#filter-popup-box legend').textContent = 'Filter notes by category';
     document.querySelector('#download-popup-box legend').textContent = 'Export type';
-    document.querySelector('#spellcheck-slider span').textContent = 'Spell check';
-    document.querySelector('#lock-app-slider span').textContent = 'Lock app';
+    document.querySelector('#spellcheck-slider-info').textContent = 'Spell check';
+    document.querySelector('#lock-app-slider-info').textContent = 'Lock app';
     document.querySelector('#hide-infos').textContent = 'Hide content';
     document.querySelector('#note-popup-box #title').setAttribute('placeholder', 'Title');
     document.querySelector('#note-popup-box textarea').setAttribute('placeholder', 'Content (Raw text, Markdown or HTML)');

@@ -13,11 +13,15 @@
   src: url("../fonts/OpenSans-700.woff2") format("woff2")
 
 html
+  position: relative
   color: rgba(255, 255, 255, .8)
   scroll-behavior: smooth
   -webkit-tap-highlight-color: transparent
   scrollbar-color: rgba(255, 255, 255, .1) transparent
   font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
+
+  body
+    position: relative
 
   &.light
     color: rgba(0, 0, 0, .8)
@@ -25,7 +29,7 @@ html
 
     *
       &:focus-visible
-        outline: 2px dashed rgba(255, 255, 255, .05)
+        outline: 2px dashed rgba(0, 0, 0, .15)
 
     .bg-red
       background: #ff8787
@@ -36,8 +40,11 @@ html
     .bg-yellow
       background: #fdf488
 
-    .bg-green
+    .bg-lime
       background: #bcf88a
+
+    .bg-green
+      background: #80e47a
 
     .bg-cyan
       background: #bbfdec
@@ -75,6 +82,9 @@ html
     fieldset
       border: 2px solid rgba(0, 0, 0, .05)
 
+    #colors span.selected
+      border: 2px solid rgba(0, 0, 0, .35)
+
     blockquote
       border-left: 3px solid rgba(0, 0, 0, .05)
 
@@ -98,19 +108,18 @@ html
     #sidebar nav #list-notes details,
     #copy-note-link,
     #psswd-gen,
-    .fullscreen,
     .bg-default,
-    .custom-check span,
-    .switch .slider
+    .custom-check span
       background: rgba(0, 0, 0, .05)
 
-    .custom-check input:checked + span,
-    .switch input:checked + .slider,
-    .switch .slider:before
+    .fullscreen
+      background: rgba(255, 255, 255, .05) !important
+
+    .custom-check input:checked + span
       background: rgba(0, 0, 0, .15)
 
     .popup .content
-      background: rgba(255, 255, 255, .6)
+      background: #fff
 
     button,
     #sidebar #list-notes p,
@@ -379,8 +388,9 @@ input
   flex-direction: column
   top: 0
   bottom: 0
-  background: rgba(0, 0, 0, .1)
+  background: rgba(255, 255, 255, .05)
   backdrop-filter: blur(25px)
+  overscroll-behavior: contain
 
   nav
     -webkit-user-select: none
@@ -413,7 +423,7 @@ input
 
       details
         background: rgba(255, 255, 255, .1)
-        border-radius: 4px
+        border-radius: 10px
 
         summary
           i
@@ -509,6 +519,7 @@ input
   font-size: 1.6rem
   border-radius: 48px
   z-index: 1
+  backdrop-filter: blur(25px)
 
 .note
   display: flex
@@ -586,10 +597,6 @@ button,
   &:hover
     background: rgba(255, 255, 255, .2)
 
-.link
-  cursor: pointer
-  font-weight: 700
-
 .fullscreen
   position: fixed
   z-index: 3
@@ -606,6 +613,7 @@ button,
     max-height: 100dvh
     width: 100%
     font-size: 1rem
+    overscroll-behavior: contain
 
     .details-content
       width: fit-content
@@ -626,10 +634,10 @@ button,
     border: 2px solid rgba(255, 255, 255, .1)
 
     &.selected
-      border-radius: 5px
+      border: 2px solid rgba(255, 255, 255, .4)
 
 .bg-default
-  background: rgba(0, 0, 0, .1)
+  background: rgba(255, 255, 255, .05)
   backdrop-filter: blur(25px)
 
 dialog
@@ -642,7 +650,7 @@ dialog
   max-width: 100vw
   align-content: center
   overflow-x: hidden
-  background: rgba(0, 0, 0, .1)
+  background: rgba(100, 100, 100, .1)
   backdrop-filter: blur(25px)
 
   .popup
@@ -655,11 +663,11 @@ dialog
     .content
       padding: 4px 1rem
       border-radius: 1rem
-      background: rgba(0, 0, 0, .6)
+      background: #000
 
 #note-popup-box
   .popup
-    max-width: 1300px
+    max-width: 1200px
   
   .content
     input,
@@ -723,49 +731,50 @@ dialog
   input
     display: none
 
-.div-slider span
-  vertical-align: middle
-
 .switch
+  width: 60px
+  height: 34px
+  margin-left: 10px
   position: relative
-  display: inline-flex
-  vertical-align: middle
-  width: 3.5rem
-  height: 2rem
-  margin: 0 4px
 
-  input
-    opacity: 0
-    width: 0
-    height: 0
+  .off
+    fill: #ffffff
 
-    &:checked + .slider:before
-      left: auto
-      right: 4px
+  .on
+    stroke: #ffffff
 
-    &:disabled + .slider
-      cursor: not-allowed
-
-  .slider
-    cursor: pointer
+  .toggle-thumb
     position: absolute
-    border-radius: 2rem
-    inset: 0
-    background: rgba(255, 255, 255, .1)
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    display: flex
+    justify-content: space-between
+    align-items: center
+    background-color: #c2c2c2
+    border-radius: 40px
+    cursor: pointer
 
     &:before
-      position: absolute
       content: ""
-      border-radius: 50%
-      height: 1.5rem
-      width: 1.5rem
-      top: 4px
+      height: 26px
+      width: 26px
+      position: absolute
       left: 4px
-      background: rgba(255, 255, 255, .2)
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 2px 6px 0 rgba(0, 0, 0, .1)
+      bottom: 4px
+      border-radius: 50%
+      background-color: #ffffff
+      transition: .3s all ease
 
-  input:checked + .slider
-    background: rgba(255, 255, 255, .2)
+  input[type=checkbox]
+    display: none
+
+    &:checked + .toggle-thumb:before
+      transform: translateX(26px)
+
+    &:checked + .toggle-thumb
+      background-color: #6fd869
 
 .IroSlider
   margin: auto
@@ -841,6 +850,7 @@ dialog
 
 #sidebar-indicator
   background: rgba(255, 255, 255, .1)
+  backdrop-filter: blur(25px)
 
 #copy-note-link-btn,
 #copy-password-btn,
@@ -888,8 +898,11 @@ dialog
 .bg-yellow
   background: #625c24
 
-.bg-green
+.bg-lime
   background: #1d4008
+
+.bg-green
+  background: #08400a
 
 .bg-cyan
   background: #0a4034
@@ -924,13 +937,14 @@ dialog
 
   main
     padding: 60px 0
-    gap: 2px
+    gap: 1px
 
   #sidebar
     z-index: 5
     left: -100%
     width: 100vw
     transition: .2s
+    background: inherit !important
 
     nav
       width: 100vw
@@ -941,6 +955,13 @@ dialog
   #btn-add-note
     bottom: 1.5rem
     right: 1.5rem
+
+  #note-popup-box
+    align-content: flex-end
+
+    .popup .content
+      border-radius: 1rem 1rem 0 0
+      padding-bottom: 1rem
 
   .note
     .date,

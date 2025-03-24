@@ -12,7 +12,7 @@ const notesContainer = document.querySelector('#main');
 const urlParams = new URLSearchParams(window.location.search);
 const noteLink = urlParams.get('link');
 
-document.body.style.backgroundColor = '#151e15';
+document.body.style.backgroundColor = '#000000';
 
 const showSharedNote = async () => {
   if (!noteLink) {
@@ -79,6 +79,7 @@ const showSharedNote = async () => {
   bottomContentElement.classList.add('bottom-content');
 
   const dateElement = document.createElement('span');
+  dateElement.classList.add('date');
   dateElement.textContent = new Date(date).toLocaleDateString(undefined, {
     weekday: 'short',
     year: '2-digit',
