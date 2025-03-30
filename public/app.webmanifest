@@ -1,0 +1,55 @@
+{
+	"name": "Bloc-notes \u2013 Léo SEGUIN",
+	"short_name": "Bloc-notes",
+	"start_url": "./",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#000000",
+	"orientation": "portrait-primary",
+	"lang": "en",
+	"scope": "./",
+	"description": "A fast, private and secure notebook with Markdown support.",
+	"icons": [
+		{
+			"src": "pwa/icon48.png",
+			"sizes": "48x48",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon72.png",
+			"sizes": "72x72",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon96.png",
+			"sizes": "96x96",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon128.png",
+			"sizes": "128x128",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon144.png",
+			"sizes": "144x144",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon152.png",
+			"sizes": "152x152",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "pwa/icon512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	]
+}

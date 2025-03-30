@@ -1,3 +1,12 @@
+#----v25.4.1----#
+-Refractor client code in Vue.js 3
+    -Better dependencies management
+    -Better code structure
+    -Better dev environnement
+-Add katex support for math expressions
+-UI/UX and accessibility fixes
+-Change shared notes url
+
 #----v25.3.1----#
 -Add full theme customization
 

@@ -1,5 +1,13 @@
 # Security Policy
 
+## Node version
+
+| Version | Supported          |
+|---------|--------------------|
+| 22.x    | :white_check_mark: |
+| 21.x    | :white_check_mark: |
+| < 20    | :x:                |
+
 ## PHP version
 
 | Version | Supported          |

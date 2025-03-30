@@ -19,7 +19,7 @@ A fast, private and secure web notebook.
 *   [Self-hosting](#self-hosting)
 
 ## Features
-Users can create task lists, reminders, tables, links, and code blocks using Markdown and HTML. They can add online images, audio, or videos via URL. Notes can be searched, sorted by category, or organized into folders.
+Users can create task lists, reminders, tables, links, math expressions or code blocks using Markdown and HTML. They can add online images, audio, or videos via URL. Notes can be searched, sorted by category, or organized into folders.
 
 Users can sync notes across devices in a secure database after signing in without needing an email address, only a username and strong password. Public notes can be shared via random URLs.
 
@@ -38,9 +38,9 @@ Users can lock the app using biometrics (fingerprints, face, etc.). These biomet
 
 ## Todo
 *   2FA login (may refractor backend to Node.js)
-*   Markdown plugins (may add security or slowness issues)
 *   WEB Notification for reminders
 *   Calendar for reminders (have to find a light and fast library)
+*   Offline mode for cloud notes (security problems)
 
 ## Community
 If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabilities](https://github.com/seguinleo/Bloc-notes/security) or if you have any [suggestions](https://github.com/seguinleo/Bloc-notes/discussions) to improve this project, feel free to discuss!

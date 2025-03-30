@@ -17,7 +17,7 @@ html
   color: rgba(255, 255, 255, .8)
   scroll-behavior: smooth
   -webkit-tap-highlight-color: transparent
-  scrollbar-color: rgba(255, 255, 255, .1) transparent
+  scrollbar-color: rgba(150, 150, 150, .3) transparent
   font-family: OpenSans, Helvetica Neue, Helvetica, Arial, sans-serif
 
   body
@@ -25,7 +25,6 @@ html
 
   &.light
     color: rgba(0, 0, 0, .8)
-    scrollbar-color: rgba(0, 0, 0, .05) transparent
 
     *
       &:focus-visible
@@ -64,23 +63,14 @@ html
     dialog
       background: rgba(255, 255, 255, .05)
 
-    table
-      border: 2px solid rgba(0, 0, 0, .05)
-
-      thead
-        background: rgba(0, 0, 0, .05)
-
-      th,
-      td
-        border: 2px solid rgba(0, 0, 0, .05)
-
-    hr
-      border-top: 2px solid rgba(0, 0, 0, .05)
-
     input,
     #colors span,
     fieldset
       border: 2px solid rgba(0, 0, 0, .05)
+
+    select,
+    option
+      background: #fff
 
     #colors span.selected
       border: 2px solid rgba(0, 0, 0, .35)
@@ -138,10 +128,10 @@ html
     outline: 2px dashed rgba(255, 255, 255, .1)
 
 ::selection
-  background: rgba(255, 255, 255, .1)
+  background: rgba(150, 150, 150, .3)
 
 \::-webkit-scrollbar-thumb
-  background: rgba(255, 255, 255, .1)
+  background: rgba(150, 150, 150, .3)
 
 \::-webkit-scrollbar
   width: 4px
@@ -162,16 +152,15 @@ h3
 table
   border-collapse: collapse
   text-align: center
-  border: 2px solid rgba(255, 255, 255, .1)
   margin: 10px 0
 
   thead
-    background: rgba(255, 255, 255, .1)
+    background: rgba(150, 150, 150, .1)
 
   th,
   td
     padding: 4px 8px
-    border: 2px solid rgba(255, 255, 255, .1)
+    border: 1px solid rgb(150, 150, 150)
 
 a:hover
   text-decoration: none
@@ -185,7 +174,7 @@ kbd
 
 hr
   border: none
-  border-top: 2px solid rgba(255, 255, 255, .1)
+  border-top: 2px solid rgba(150, 150, 150, .1)
   margin: 10px
 
 fieldset
@@ -199,8 +188,7 @@ fieldset
 
 blockquote
   border-left: 3px solid rgba(255, 255, 255, .1)
-  margin: 10px auto
-  padding-left: 1rem
+  padding-left: 10px
 
 details
   margin: 10px auto
@@ -293,6 +281,9 @@ main
   flex-wrap: wrap
   gap: 1rem
 
+main.shared
+  padding: 0
+
 select,
 option,
 textarea,
@@ -304,10 +295,11 @@ input
 input
   border: 2px solid rgba(255, 255, 255, .1)
 
-select
+select,
+option
   font-size: .9rem
   padding: 0
-  background: none
+  background: #000
   border: none
 
 textarea
@@ -362,7 +354,7 @@ input
     width: 1.2rem
     height: 1.2rem
     border-radius: 10px
-    border: none
+    border: none !important
     background: rgba(255, 255, 255, .1)
 
     &::before
@@ -807,6 +799,7 @@ dialog
   bottom: 0
   left: 0
   right: 0
+  font-size: .9rem
   text-align: center
   padding: 4px 4px 1.5rem
   border-radius: 10px 10px 0 0
