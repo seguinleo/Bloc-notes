@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/seguinleo/Bloc-notes/main/src/assets/icons/icon192.png" alt="Logo" width="72" height="72">
+<img src="https://raw.githubusercontent.com/seguinleo/Bloc-notes/main/public/pwa/icon192.png" alt="Logo" width="72" height="72">
 </p>
 <h1 align="center">Bloc-notes</h1>
 
