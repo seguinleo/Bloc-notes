@@ -51,6 +51,4 @@ If you find [issues](https://github.com/seguinleo/Bloc-notes/issues), [vulnerabi
 > [!IMPORTANT]
 > The website is available at localhost:8787, but if you want to deploy it on a server with a domain name or an IP address, you need to install a SSL certificate to use note encryption (Web Crypto API requires HTTPs). Edit all users, passwords and Docker configurations for production. To store user encryption keys, I recommend using a secure vault like AWS KMS, Azure Key Vault or a self-hosted solution instead of the database.
 
-![Desktop preview](https://github.com/seguinleo/Bloc-notes/blob/main/src/assets/img/desktop.png)
-
 A big thank you to [DOMPurify](https://github.com/cure53/DOMPurify), [marked](https://github.com/markedjs/marked) and [Iro](https://github.com/jaames/iro.js)
