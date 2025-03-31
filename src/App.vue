@@ -1639,7 +1639,12 @@ export default {
       document.querySelectorAll('.note').forEach((e) => e.remove())
 
       marked.use({
-        breaks: true
+        breaks: true,
+        renderer: {
+          link({href, text}) {
+            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
+          },
+        },
       })
       const options = {
         throwOnError: false,
@@ -2059,7 +2064,12 @@ export default {
       document.querySelector('#categories .list').textContent = ''
 
       marked.use({
-        breaks: true
+        breaks: true,
+        renderer: {
+          link({href, text}) {
+            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
+          },
+        },
       })
       const options = {
         throwOnError: false,
@@ -2426,7 +2436,12 @@ export default {
       const note = await res.json()
 
       marked.use({
-        breaks: true
+        breaks: true,
+        renderer: {
+          link({href, text}) {
+            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
+          },
+        },
       })
       const options = {
         throwOnError: false,

@@ -223,9 +223,12 @@ code
 li
   margin-left: -1rem
 
-  &:has(label)
+  &:has(input[type=checkbox])
     list-style: none
     margin-left: -1.5rem
+
+  &:has(input[type=checkbox]:checked)
+    text-decoration: line-through
 
 img
   max-width: 100%

@@ -1,11 +1,13 @@
 #----v25.4.1----#
--Refractor client code in Vue.js 3
+-Refactor client code in Vue.js 3
     -Better dependencies management
     -Better code structure
     -Better dev environnement
+    -Better cache management
 -Add katex support for math expressions
 -UI/UX and accessibility fixes
 -Change shared notes url
+-Bug fixes
 
 #----v25.3.1----#
 -Add full theme customization
@@ -117,7 +119,7 @@
 -Better self-hosting
 -Improve code structure
 -Improve UI/UX
--Refractor SCSS to SASS
+-Refactor SCSS to SASS
 -Bug fixes
 
 #----v24.3.1----#
@@ -165,7 +167,7 @@
 
 #----v23.12.2----#
 -Add fingerprint auth for cloud notes
--Refractor database and code structure
+-Refactor database and code structure
 
 #----v23.12.1----#
 -Add Spanish support
