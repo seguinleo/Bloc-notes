@@ -16,31 +16,32 @@
   <div id="sidebar" class="d-none">
     <nav>
       <div class="row">
-        <img src="./assets/img/christmas.png" alt="christmas" class="christmas d-none" width="36" height="29"
-          loading="lazy">
+        <img v-if="new Date().getMonth() === 11" src="./assets/img/christmas.png" alt="christmas" class="christmas"
+          width="36" height="29" loading="lazy">
         <h1 class="main-title">Bloc-notes</h1>
       </div>
       <div class="row nav-buttons">
-        <button v-if="name" id="manage-account" type="button" class="d-none" aria-label="Manage account">
+        <button v-if="name && !isLocked" id="manage-account" type="button" aria-label="Manage account"
+          @click="showManageAccountPopup()">
           <i class="fa-solid fa-circle-user"></i>
         </button>
-        <button v-else id="log-in" type="button" class="d-none" aria-label="Log in">
+        <button v-if="!name && !isLocked" id="log-in" type="button" aria-label="Log in" @click="showLoginPopup()">
           <i class="fa-solid fa-circle-user"></i>
         </button>
-        <button type="button" id="btn-sort" class="d-none" aria-label="Sort notes">
+        <button v-if="!isLocked" type="button" id="btn-sort" aria-label="Sort notes" @click="showSortPopup()">
           <i class="fa-solid fa-arrow-up-wide-short"></i>
         </button>
-        <button type="button" id="btn-filter" class="d-none" aria-label="Filter notes">
+        <button v-if="!isLocked" type="button" id="btn-filter" aria-label="Filter notes" @click="showFilterPopup()">
           <i class="fa-solid fa-filter"></i>
         </button>
-        <button type="button" id="btn-download-all" class="d-none" aria-label="Download all notes"
+        <button v-if="!isLocked" type="button" id="btn-download-all" aria-label="Download all notes"
           @click="downloadAllNotes()">
           <i class="fa-solid fa-download"></i>
         </button>
-        <button type="button" id="btn-settings" class="d-none" aria-label="Settings">
+        <button v-if="!isLocked" type="button" id="btn-settings" aria-label="Settings" @click="showSettingsPopup()">
           <i class="fa-solid fa-gear"></i>
         </button>
-        <button type="button" id="btn-colorpicker" aria-label="Change app color">
+        <button type="button" id="btn-colorpicker" aria-label="Change app color" @click="showColorPickerPopup()">
           <i class="fa-solid fa-palette"></i>
         </button>
       </div>
@@ -48,11 +49,11 @@
     </nav>
   </div>
   <main>
-    <button type="button" id="btn-add-note" class="d-none" aria-label="Add a note">
-      <i class="fa-solid fa-plus"></i>
-    </button>
-    <button id="btn-unlock-float" class="d-none" type="button" aria-label="Unlock app" @click="unlockApp()">
+    <button v-if="isLocked" id="btn-unlock-float" type="button" aria-label="Unlock app" @click="unlockApp()">
       <i class="fa-solid fa-lock"></i>
+    </button>
+    <button v-else type="button" id="btn-add-note" aria-label="Add a note" @click="showAddNotePopup()">
+      <i class="fa-solid fa-plus"></i>
     </button>
     <div id="success-notification" class="d-none"></div>
     <dialog id="sort-popup-box">
@@ -215,22 +216,25 @@
             <input id="id-note" type="hidden">
             <div class="error-notification d-none"></div>
             <input type="text" id="title" maxlength="30" aria-label="Title" autofocus required>
-            <textarea id="content" maxlength="20000" spellcheck="true" aria-label="Content"></textarea>
+            <textarea id="content" maxlength="20000" spellcheck="true" aria-label="Content"
+              @input="updateNoteContentLength()"></textarea>
             <div class="row">
-              <span id="textarea-length"></span>
+              <span id="textarea-length">
+                {{ noteContentLength }}/{{ maxNoteContentLength }}
+              </span>
               <span class="editor-control">
                 <i class="fa-solid fa-broom" tabindex="0" role="button" aria-label="Clear content"
-                  @click=clearNoteContent()></i>
+                  @click="clearNoteContent()"></i>
               </span>
             </div>
             <div class="row">
-              <button type="button" id="btn-add-folder" aria-label="Add a folder">
+              <button type="button" id="btn-add-folder" aria-label="Add a folder" @click="showFolderPopup()">
                 <i class="fa-solid fa-folder"></i>
               </button>
-              <button type="button" id="btn-add-category" aria-label="Add a category">
+              <button type="button" id="btn-add-category" aria-label="Add a category" @click="showCatPopup()">
                 <i class="fa-solid fa-tags"></i>
               </button>
-              <button type="button" id="btn-add-reminder" aria-label="Add a reminder">
+              <button type="button" id="btn-add-reminder" aria-label="Add a reminder" @click="showReminderPopup()">
                 <i class="fa-solid fa-bell"></i>
               </button>
             </div>
@@ -291,9 +295,9 @@
             <a href="https://github.com/seguinleo/Bloc-notes/discussions" id="link-help" rel="noopener noreferrer"></a>
           </div>
           <div class="row">
-            <select v-model="lang" id="language" aria-label="Language" @change="toggleLang()">
+            <select id="language" aria-label="Language" @change="toggleLang($event.target.value)">
               <option value="fr">FR</option>
-              <option value="en" selected>EN</option>
+              <option value="en">EN</option>
               <option value="de">DE</option>
               <option value="es">ES</option>
             </select>
@@ -315,8 +319,8 @@
           </div>
           <div class="row d-flex align-items-center">
             <span id="lock-app-slider-info"></span>
-            <label id="lock-app-slider" class="switch d-none">
-              <input type="checkbox" id="check-lock-app" class="checkbox" checked>
+            <label class="switch">
+              <input type="checkbox" id="toggle-lock-app" class="checkbox" checked @click="toggleLockApp()">
               <span class="toggle-thumb">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" class="off">
                   <rect x="12" y="6" width="1" height="12" />
@@ -375,10 +379,10 @@
                 </div>
                 <div class="row d-flex">
                   <p id="psswd-gen"></p>
-                  <button type="button" id="copy-password-btn" aria-label="Copy password">
+                  <button type="button" id="copy-password-btn" aria-label="Copy password" @click="copyPassword()">
                     <i class="fa-solid fa-clipboard"></i>
                   </button>
-                  <button type="button" id="submit-gen-psswd" aria-label="Generate password">
+                  <button type="button" id="submit-gen-psswd" aria-label="Generate password" @click="getPassword(20)">
                     <i class="fa-solid fa-arrow-rotate-right"></i>
                   </button>
                 </div>
@@ -445,7 +449,7 @@
       </dialog>
     </template>
     <template v-else>
-      <dialog id="connect-box">
+      <dialog id="login-popup-box">
         <div class="popup">
           <div class="content">
             <div class="close">
@@ -491,7 +495,7 @@
               </div>
               <div class="row d-flex">
                 <p id="psswd-gen"></p>
-                <button type="button" id="copy-password-btn" aria-label="Copy password">
+                <button type="button" id="copy-password-btn" aria-label="Copy password" @click="copyPassword()">
                   <i class="fa-solid fa-clipboard"></i>
                 </button>
                 <button type="button" id="submit-gen-psswd" aria-label="Generate password">
@@ -541,8 +545,8 @@
           </div>
           <div class="details-content details-content-en">
             <div>
-              Bloc-notes is a <span class="bold">fast, private and secure</span><br>tool for taking notes in <a
-                href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown " rel="noopener noreferrer">Markdown or
+              Bloc-notes is a <span class="bold">fast, private and secure</span><br>tool for taking notes in
+              <a href="https://github.com/seguinleo/Bloc-notes/wiki/Markdown " rel="noopener noreferrer">Markdown or
                 HTML</a>.
             </div>
             <div>
@@ -583,21 +587,41 @@ export default {
   data() {
     return {
       name: '',
-      today: new Date(),
-      lang: 'en',
       spellcheck: true,
       touchstartX: 0,
       touchendX: 0,
       timeoutNotification: null,
+      fingerprintEnabled: true,
       isLocked: true,
       isUpdate: false,
       dataByteSize: 0,
+      noteContentLength: 0,
       maxNoteContentLength: 20000,
       maxDataByteSize: 1000000,
       searchValue: '',
       notesJSON: [],
       noteLink: '',
-      urlParams: ''
+      urlParams: '',
+      markedConfig: {
+        breaks: true,
+        renderer: {
+          link({ href, text }) {
+            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`
+          },
+          image({ href, title, text }) {
+            return `<img src="${encodeURI(href)}" alt="${text}" title="${title}" crossorigin>`
+          }
+        }
+      },
+      purifyConfig: {
+        SANITIZE_NAMED_PROPS: true,
+        ALLOW_DATA_ATTR: false,
+        FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style']
+      },
+      katexConfig: {
+        throwOnError: false,
+        nonStandard: true
+      }
     }
   },
   components: {
@@ -605,7 +629,7 @@ export default {
   },
   async mounted() {
     this.urlParams = new URLSearchParams(window.location.search)
-    if (window.location.search) {
+    if (this.urlParams.get('link')) {
       await this.showSharedNote()
       return
     }
@@ -613,9 +637,10 @@ export default {
     await this.getLockApp()
     document.querySelector('header').classList.remove('d-none')
     document.querySelector('#sidebar').classList.remove('d-none')
-    if ('serviceWorker' in navigator) await navigator.serviceWorker.register('sw.js')
+    if ('serviceWorker' in navigator) await navigator.serviceWorker.register('./sw.js')
     this.changeLanguage(localStorage.getItem('lang') || 'en')
-    if (!this.name && localStorage.getItem('lang') === 'fr' && document.querySelector('.details-content-fr')) {
+    if (!this.name && localStorage.getItem('lang') === 'fr' &&
+      document.querySelector('.details-content-fr')) {
       document.querySelector('.details-content-fr').classList.remove('d-none')
       document.querySelector('.details-content-en').classList.add('d-none')
     }
@@ -628,8 +653,6 @@ export default {
       document.querySelector('#check-spellcheck').checked = false
       document.querySelector('#content').setAttribute('spellcheck', 'false')
     }
-
-    if (this.today.getMonth() === 11) document.querySelector('.christmas').classList.remove('d-none')
 
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.key.toUpperCase() === 'K') {
@@ -646,7 +669,7 @@ export default {
 
     document.addEventListener('touchstart', (e) => {
       this.touchstartX = e.changedTouches[0].screenX
-    }, false)
+    }, { passive: true })
 
     document.addEventListener('touchend', (e) => {
       if (this.isLocked) return
@@ -658,46 +681,7 @@ export default {
         document.querySelector('#sidebar').classList.remove('show')
         this.preventBodyScrolling(false)
       }
-    }, false)
-
-    document.querySelector('#note-popup-box #content').addEventListener('input', (e) => {
-      const length = e.target.value.length
-      document.querySelector('#textarea-length').textContent = `${length}/${this.maxNoteContentLength}`
-    })
-
-    document.querySelector('#btn-settings').addEventListener('click', () => {
-      document.querySelector('#settings-popup-box').showModal()
-    })
-
-    document.querySelector('#btn-colorpicker').addEventListener('click', () => {
-      document.querySelector('#settings-popup-box').close()
-      document.querySelector('#colorpicker-popup-box').showModal()
-    })
-
-    document.querySelector('#copy-password-btn').addEventListener('click', () => {
-      const psswd = document.querySelector('#psswd-gen').textContent
-      navigator.clipboard.writeText(psswd)
-    })
-
-    document.querySelector('#btn-sort').addEventListener('click', () => {
-      document.querySelector('#sort-popup-box').showModal()
-    })
-
-    document.querySelector('#btn-add-folder').addEventListener('click', () => {
-      document.querySelector('#folder-popup-box').showModal()
-    })
-
-    document.querySelector('#btn-add-category').addEventListener('click', () => {
-      document.querySelector('#category-popup-box').showModal()
-    })
-
-    document.querySelector('#btn-add-reminder').addEventListener('click', () => {
-      document.querySelector('#reminder-popup-box').showModal()
-    })
-
-    document.querySelector('#btn-filter').addEventListener('click', () => {
-      document.querySelector('#filter-popup-box').showModal()
-    })
+    }, { passive: true })
 
     document.querySelectorAll('#colors span').forEach((span, index) => {
       span.addEventListener('click', (event) => {
@@ -726,11 +710,14 @@ export default {
       })
     })
 
-    document.querySelector('#submit-gen-psswd').addEventListener('click', () => this.getPassword(20))
     document.querySelectorAll('form').forEach((e) => e.addEventListener('submit', (event) => event.preventDefault()))
 
     document.querySelectorAll('input[name="download-notes"]').forEach((e) => {
-      e.addEventListener('change', (event) => {
+      e.addEventListener('change', async (event) => {
+        if (this.fingerprintEnabled) {
+          const res = await this.verifyFingerprint()
+          if (!res) return
+        }
         const allNotes = document.querySelectorAll('.note')
         if (allNotes.length === 0) return
         const a = document.createElement('a')
@@ -769,25 +756,6 @@ export default {
       })
     })
 
-    document.querySelector('#check-lock-app').addEventListener('change', async (e) => {
-      if (this.isLocked) return
-      if (e.target.checked) await this.createFingerprint()
-      try {
-        const data = new URLSearchParams({ lock_app: e.target.checked })
-        const res = await fetch('api/lockApp.php', {
-          method: 'POST',
-          mode: 'same-origin',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: data,
-        })
-        if (!res.ok) this.showError(`An error occurred - ${res.status}`)
-      } catch (error) {
-        this.showError(`An error occurred - ${error}`)
-      }
-    })
-
     document.querySelectorAll('#sort-popup-box input[name="sort-notes"]').forEach(async (e) => {
       e.addEventListener('change', async () => {
         if (!['1', '2', '3', '4'].includes(e.value)) return
@@ -796,19 +764,6 @@ export default {
         if (this.name) await this.getCloudNotes()
         else await this.getLocalNotes()
       })
-    })
-
-    document.querySelector('#btn-add-note').addEventListener('click', () => {
-      this.isUpdate = false
-      document.querySelector('#note-popup-box').showModal()
-      document.querySelectorAll('#colors span').forEach((e) => {
-        e.classList.remove('selected')
-      })
-      document.querySelector('#colors span').classList.add('selected')
-      document.querySelector('#textarea-length').textContent = `0/${this.maxNoteContentLength}`
-      document.querySelector('#check-hidden').disabled = false
-      document.querySelector('#folders input[name="add-folder"][value=""').checked = true
-      document.querySelector('#categories input[name="add-cat"][value=""').checked = true
     })
 
     if (this.name) {
@@ -832,11 +787,7 @@ export default {
           if (this.isUpdate && !noteId) return
           if (noteId && !/^[a-zA-Z0-9]+$/.test(noteId)) return
 
-          const cleanContent = DOMPurify.sanitize(content, {
-            SANITIZE_NAMED_PROPS: true,
-            ALLOW_DATA_ATTR: false,
-            FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style'],
-          })
+          const cleanContent = DOMPurify.sanitize(content, this.purifyConfig)
 
           const data = new URLSearchParams({
             title,
@@ -864,6 +815,8 @@ export default {
             return
           }
           document.querySelector('#note-popup-box').close()
+          document.querySelector('#note-popup-box form').reset()
+          this.noteContentLength = 0
           await this.getCloudNotes()
         } catch (error) {
           this.showError(`An error occurred - ${error}`)
@@ -874,9 +827,6 @@ export default {
         if (!noteId) return
         await this.fetchDelete(noteId)
         document.querySelector('#delete-note-popup-box').close()
-      })
-      document.querySelector('#manage-account').addEventListener('click', () => {
-        document.querySelector('#manage-popup-box').showModal()
       })
       document.querySelector('#copy-note-link-btn').addEventListener('click', () => {
         const link = document.querySelector('#copy-note-link').textContent
@@ -937,7 +887,6 @@ export default {
           document.querySelectorAll('form').forEach((form) => form.reset())
         }
       })
-
       document.querySelector('#delete-account').addEventListener('submit', async () => {
         if (this.isLocked) return
         const psswd = document.querySelector('#delete-psswd').value
@@ -963,7 +912,6 @@ export default {
           document.querySelectorAll('form').forEach((form) => form.reset())
         }
       })
-
       document.querySelector('#private-note').addEventListener('submit', async () => {
         const noteId = document.querySelector('#id-note-private').value
         const link = document.querySelector('#link-note-private').value
@@ -988,7 +936,6 @@ export default {
           this.showError(`An error occurred - ${error}`)
         }
       })
-
       document.querySelector('#public-note').addEventListener('submit', async () => {
         const noteId = document.querySelector('#id-note-public').value
         if (!noteId) return
@@ -1029,11 +976,7 @@ export default {
 
           if (!title || title.length > 30 || content.length > this.maxNoteContentLength || !color) return
 
-          const mdContent = DOMPurify.sanitize(content, {
-            SANITIZE_NAMED_PROPS: true,
-            ALLOW_DATA_ATTR: false,
-            FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style'],
-          })
+          const mdContent = DOMPurify.sanitize(content, this.purifyConfig)
 
           const dbName = 'notes_db'
           const objectStoreName = 'key'
@@ -1079,6 +1022,8 @@ export default {
 
           localStorage.setItem('local_notes', JSON.stringify(this.notesJSON))
           document.querySelector('#note-popup-box').close()
+          document.querySelector('#note-popup-box form').reset()
+          this.noteContentLength = 0
           await this.getLocalNotes()
         } catch (error) {
           this.showError(`An error occurred - ${error}`)
@@ -1093,11 +1038,8 @@ export default {
         await this.getLocalNotes()
         document.querySelector('#delete-note-popup-box').close()
       })
-      document.querySelector('#log-in').addEventListener('click', () => {
-        document.querySelector('#connect-box').showModal()
-      })
       document.querySelector('#create-account').addEventListener('click', () => {
-        document.querySelector('#connect-box').close()
+        document.querySelector('#login-popup-box').close()
         document.querySelector('#create-box').showModal()
       })
       document.querySelector('#create-form').addEventListener('submit', async () => {
@@ -1168,7 +1110,6 @@ export default {
           document.querySelectorAll('form').forEach((form) => form.reset())
         }
       })
-
       document.querySelector('#connect-form').addEventListener('submit', async () => {
         if (this.isLocked) return
         const e = document.querySelector('#name-connect').value.trim()
@@ -1218,7 +1159,7 @@ export default {
 
     window.addEventListener('online', async () => {
       document.querySelector('#offline').classList.add('d-none')
-      if (!this.dataByteSize) await this.getCloudNotes()
+      await this.getCloudNotes()
     })
   },
   methods: {
@@ -1283,25 +1224,186 @@ export default {
       }
       document.querySelector('#psswd-gen').textContent = password
     },
-    async unlockApp() {
-      await this.getFingerprint()
-      if (this.name) await this.getCloudNotes()
-      else await this.getLocalNotes()
+    copyPassword() {
+      const psswd = document.querySelector('#psswd-gen').textContent
+      navigator.clipboard.writeText(psswd)
     },
-    async toggleLang() {
-      switch (this.lang) {
-        case 'fr':
-          localStorage.setItem('lang', 'fr')
-          break
-        case 'de':
-          localStorage.setItem('lang', 'de')
-          break
-        case 'es':
-          localStorage.setItem('lang', 'es')
-          break
-        default:
-          localStorage.removeItem('lang')
+    async getLockApp() {
+      try {
+        const res = await fetch('api/getLockApp.php', {
+          method: 'POST',
+          mode: 'same-origin',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        })
+        if (!res.ok) {
+          this.showError(`An error occurred - ${res.status}`)
+          return
+        }
+        const serverLocked = await res.json()
+        if (!serverLocked.lockApp) {
+          this.fingerprintEnabled = false
+          this.isLocked = false
+          document.querySelector('#toggle-lock-app').checked = false
+        }
+      } catch (error) {
+        this.showError(`An error occurred - ${error}`)
       }
+    },
+    async verifyFingerprint() {
+      try {
+        const challenge = this.generateRandomBytes(32)
+        const publicKeyOptions = {
+          challenge,
+          rp: {
+            name: 'Bloc-notes',
+          },
+          allowCredentials: [],
+          userVerification: "preferred",
+          timeout: 60000,
+        }
+        const credential = await navigator.credentials.get({ publicKey: publicKeyOptions })
+        if (credential) return 1
+        else {
+          this.showError('An error occurred - No credential')
+          return 0
+        }
+      } catch (error) {
+        this.showError(`An error occurred - ${error}`)
+        return 0
+      }
+    },
+    async createFingerprint() {
+      try {
+        const challenge = this.generateRandomBytes(32)
+        const username = document.querySelector('#user-name') ? document.querySelector('#user-name').textContent : 'local'
+        const userId = new TextEncoder().encode(username)
+        await navigator.credentials.create({
+          publicKey: {
+            challenge,
+            rp: {
+              name: 'Bloc-notes',
+            },
+            user: {
+              id: userId,
+              name: 'Bloc-notes',
+              displayName: 'Bloc-notes',
+            },
+            pubKeyCredParams: [
+              {
+                type: 'public-key',
+                alg: -7,
+              },
+              {
+                type: 'public-key',
+                alg: -257,
+              }
+            ],
+            authenticatorSelection: {
+              authenticatorAttachment: 'platform',
+              userVerification: 'preferred',
+            },
+            excludeCredentials: [{
+              type: 'public-key',
+              id: userId
+            }],
+            timeout: 60000,
+            attestation: 'none',
+          },
+        })
+        this.fingerprintEnabled = true
+        this.isLocked = false
+        return 1
+      } catch (error) {
+        document.querySelector('#toggle-lock-app').checked = false
+        this.showError(`An error occurred - ${error}`)
+        return 0
+      }
+    },
+    async toggleLockApp() {
+      if (this.isLocked) return
+      if (this.fingerprintEnabled) {
+        const res = await this.verifyFingerprint()
+        if (!res) {
+          document.querySelector('#toggle-lock-app').checked = true
+          return
+        }
+      } else {
+        const res = await this.createFingerprint()
+        if (!res) {
+          document.querySelector('#toggle-lock-app').checked = false
+          return
+        }
+      }
+      try {
+        const data = new URLSearchParams({ lock_app: document.querySelector('#toggle-lock-app').checked })
+        const res = await fetch('api/lockApp.php', {
+          method: 'POST',
+          mode: 'same-origin',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data,
+        })
+        if (!res.ok) {
+          this.showError(`An error occurred - ${res.status}`)
+        }
+      } catch (error) {
+        this.showError(`An error occurred - ${error}`)
+      }
+    },
+    async unlockApp() {
+      await this.verifyFingerprint().then(async (res) => {
+        if (!res) return
+        this.isLocked = false
+        if (this.name) await this.getCloudNotes()
+        else await this.getLocalNotes()
+      })
+    },
+    showManageAccountPopup() {
+      document.querySelector('#manage-popup-box').showModal()
+    },
+    showLoginPopup() {
+      document.querySelector('#login-popup-box').showModal()
+    },
+    showSettingsPopup() {
+      document.querySelector('#settings-popup-box').showModal()
+    },
+    showSortPopup() {
+      document.querySelector('#sort-popup-box').showModal()
+    },
+    showFilterPopup() {
+      document.querySelector('#filter-popup-box').showModal()
+    },
+    showColorPickerPopup() {
+      document.querySelector('#settings-popup-box').close()
+      document.querySelector('#colorpicker-popup-box').showModal()
+    },
+    showAddNotePopup() {
+      this.isUpdate = false
+      document.querySelector('#note-popup-box').showModal()
+      document.querySelectorAll('#colors span').forEach((e) => {
+        e.classList.remove('selected')
+      })
+      document.querySelector('#colors span').classList.add('selected')
+      document.querySelector('#check-hidden').disabled = false
+      document.querySelector('#folders input[name="add-folder"][value=""').checked = true
+      document.querySelector('#categories input[name="add-cat"][value=""').checked = true
+    },
+    showFolderPopup() {
+      document.querySelector('#folder-popup-box').showModal()
+    },
+    showCatPopup() {
+      document.querySelector('#category-popup-box').showModal()
+    },
+    showReminderPopup() {
+      document.querySelector('#reminder-popup-box').showModal()
+    },
+    async toggleLang(lang) {
+      const validLanguages = ['fr', 'de', 'es']
+      if (validLanguages.includes(lang)) localStorage.setItem('lang', lang)
+      else localStorage.removeItem('lang')
       this.changeLanguage(localStorage.getItem('lang') || 'en')
       if (this.name) await this.getCloudNotes()
       else await this.getLocalNotes()
@@ -1384,7 +1486,7 @@ export default {
     },
     clearNoteContent() {
       document.querySelector('#note-popup-box #content').value = ''
-      document.querySelector('#textarea-length').textContent = `0/${this.maxNoteContentLength}`
+      this.noteContentLength = 0
     },
     preventBodyScrolling(bool) {
       if (bool) {
@@ -1394,6 +1496,10 @@ export default {
         document.body.style.overflowY = 'auto'
         document.body.style.position = 'relative'
       }
+    },
+    updateNoteContentLength() {
+      const content = document.querySelector('#note-popup-box #content').value
+      this.noteContentLength = content.length
     },
     showSuccess(message) {
       if (this.timeoutNotification) clearTimeout(this.timeoutNotification)
@@ -1437,103 +1543,6 @@ export default {
       note.classList.toggle('fullscreen')
       this.preventBodyScrolling(false)
     },
-    async getLockApp() {
-      try {
-        const res = await fetch('api/getLockApp.php', {
-          method: 'POST',
-          mode: 'same-origin',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          }
-        })
-        if (!res.ok) {
-          this.showError(`An error occurred - ${res.status}`)
-          return
-        }
-        const serverLocked = await res.json()
-        if (!serverLocked.lockApp) {
-          this.isLocked = false
-          document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'))
-          document.querySelector('#btn-add-note').classList.remove('d-none')
-          document.querySelector('#lock-app-slider').classList.remove('d-none')
-          document.querySelector('#check-lock-app').checked = false
-        }
-      } catch (error) {
-        this.showError(`An error occurred - ${error}`)
-      }
-    },
-    async getFingerprint() {
-      try {
-        const challenge = this.generateRandomBytes(32)
-        const publicKeyOptions = {
-          challenge,
-          rp: {
-            name: 'Bloc-notes',
-          },
-          allowCredentials: [],
-          userVerification: "preferred",
-          timeout: 60000,
-        }
-        const credential = await navigator.credentials.get({ publicKey: publicKeyOptions })
-        if (credential) {
-          this.isLocked = false
-          document.querySelector('#btn-unlock-float').classList.add('d-none')
-          document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'))
-          document.querySelector('#btn-add-note').classList.remove('d-none')
-          document.querySelector('#lock-app-slider').classList.remove('d-none')
-        } else this.showError('An error occurred - No credential')
-      } catch (error) {
-        this.showError(`An error occurred - ${error}`)
-      }
-    },
-    async createFingerprint() {
-      try {
-        const challenge = this.generateRandomBytes(32)
-        const username = document.querySelector('#user-name') ? document.querySelector('#user-name').textContent : 'local'
-        const userId = new TextEncoder().encode(username)
-        await navigator.credentials.create({
-          publicKey: {
-            challenge,
-            rp: {
-              name: 'Bloc-notes',
-            },
-            user: {
-              id: userId,
-              name: 'Bloc-notes',
-              displayName: 'Bloc-notes',
-            },
-            pubKeyCredParams: [
-              {
-                type: 'public-key',
-                alg: -7,
-              },
-              {
-                type: 'public-key',
-                alg: -257,
-              }
-            ],
-            authenticatorSelection: {
-              authenticatorAttachment: 'platform',
-              userVerification: 'preferred',
-            },
-            excludeCredentials: [{
-              type: 'public-key',
-              id: userId
-            }],
-            timeout: 60000,
-            attestation: 'none',
-          },
-        })
-        this.isLocked = false
-        document.querySelector('#btn-unlock-float').classList.add('d-none')
-        document.querySelectorAll('#sidebar button').forEach((e) => e.classList.remove('d-none'))
-        document.querySelector('#btn-add-note').classList.remove('d-none')
-        document.querySelector('#lock-app-slider').classList.remove('d-none')
-      } catch (error) {
-        this.showError(`An error occurred - ${error}`)
-        document.querySelector('#check-lock-app').checked = !document.querySelector('#check-lock-app').checked
-      }
-    },
     shareNote(noteId, link) {
       if (!noteId) return
       if (link) {
@@ -1560,7 +1569,27 @@ export default {
           const noteCategory = target.closest('.note').getAttribute('data-note-category') || ''
           const noteLink = target.closest('.note').getAttribute('data-note-link')
           const noteReminder = target.closest('.note').getAttribute('data-note-reminder')
-          if (target.classList.contains('edit-note')) this.name ? this.updateCloudNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteFolder, noteCategory, noteLink, noteReminder) : this.updateLocalNote(noteId, noteTitle, noteContent, noteColor, noteHidden, noteFolder, noteCategory, noteLink, noteReminder)
+          if (target.classList.contains('edit-note')) this.name ? this.updateCloudNote(
+            noteId,
+            noteTitle,
+            noteContent,
+            noteColor,
+            noteHidden,
+            noteFolder,
+            noteCategory,
+            noteLink,
+            noteReminder
+          ) : this.updateLocalNote(
+            noteId,
+            noteTitle,
+            noteContent,
+            noteColor,
+            noteHidden,
+            noteFolder,
+            noteCategory,
+            noteLink,
+            noteReminder
+          )
           else if (target.classList.contains('pin-note')) this.name ? this.pinCloudNote(noteId) : this.pinLocalNote(noteId)
           else if (target.classList.contains('copy-note')) this.copy(noteContent)
           else if (target.classList.contains('delete-note')) this.name ? this.deleteCloudNote(noteId) : this.deleteLocalNote(noteId)
@@ -1590,7 +1619,6 @@ export default {
         label.appendChild(span)
         folders.appendChild(label)
       }
-
       for (const category of allCategories) {
         const categories = document.querySelector('#categories .list')
         const input = document.createElement('input')
@@ -1626,10 +1654,7 @@ export default {
       }
     },
     async getCloudNotes() {
-      if (this.isLocked) {
-        document.querySelector('#btn-unlock-float').classList.remove('d-none')
-        return
-      }
+      if (this.isLocked) return
       const sort = localStorage.getItem('sort_notes') || '1'
       document.querySelector(`#sort-popup-box input[name="sort-notes"][value="${encodeURIComponent(sort)}"]`).checked = true
       document.querySelector('#list-notes').textContent = ''
@@ -1638,19 +1663,8 @@ export default {
       document.querySelector('#categories .list').textContent = ''
       document.querySelectorAll('.note').forEach((e) => e.remove())
 
-      marked.use({
-        breaks: true,
-        renderer: {
-          link({href, text}) {
-            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
-          },
-        },
-      })
-      const options = {
-        throwOnError: false,
-        nonStandard: true
-      };
-      marked.use(markedKatex(options));
+      marked.use(this.markedConfig)
+      marked.use(markedKatex(this.katexConfig))
 
       try {
         const res = await fetch('api/getNotes.php', {
@@ -1840,8 +1854,8 @@ export default {
               linkIconElement.setAttribute('role', 'button')
               linkIconElement.setAttribute('aria-label', 'Share note')
               bottomContentElement.appendChild(linkIconElement)
-
-              contentElement.innerHTML = marked.parse(content)
+              const parsedContent = marked.parse(content)
+              contentElement.innerHTML = parsedContent
             }
           }
 
@@ -1900,14 +1914,11 @@ export default {
               newFolderDetails.appendChild(summary)
               newFolderDetails.appendChild(paragraph)
               document.querySelector('#list-notes').appendChild(newFolderDetails)
-            } else {
-              folderDetails.appendChild(paragraph)
-            }
+            } else folderDetails.appendChild(paragraph)
           }
         })
 
         this.noteFolderOrCategories(allFolders, allCategories)
-
         document.querySelector('main').appendChild(fragment)
         this.noteActions()
         document.querySelector('#storage').value = this.dataByteSize
@@ -1997,6 +2008,7 @@ export default {
     },
     updateCloudNote(noteId, title, content, color, hidden, folder, category, link, reminder) {
       this.isUpdate = true
+      this.noteContentLength = content.length
       document.querySelector('#note-popup-box').showModal()
       document.querySelector('#id-note').value = noteId
       document.querySelector('#note-popup-box #title').value = title
@@ -2008,12 +2020,9 @@ export default {
         if (e.classList.contains(color)) e.classList.add('selected')
         else e.classList.remove('selected')
       })
-      if (!link) {
-        document.querySelector('#check-hidden').disabled = false
-        if (hidden) document.querySelector('#check-hidden').checked = true
-      } else document.querySelector('#check-hidden').disabled = true
-      const noteLength = document.querySelector('#note-popup-box #content').value.length
-      document.querySelector('#textarea-length').textContent = `${noteLength}/${this.maxNoteContentLength}`
+      document.querySelector('#check-hidden').checked = hidden
+      if (!link) document.querySelector('#check-hidden').disabled = false
+      else document.querySelector('#check-hidden').disabled = true
       document.querySelector('#note-popup-box #content').focus()
     },
     async pinLocalNote(noteId) {
@@ -2052,10 +2061,7 @@ export default {
       document.querySelector('#id-note-delete').value = noteId
     },
     async getLocalNotes() {
-      if (this.isLocked) {
-        document.querySelector('#btn-unlock-float').classList.remove('d-none')
-        return
-      }
+      if (this.isLocked) return
       const sort = localStorage.getItem('sort_notes') || '1'
       document.querySelector(`#sort-popup-box input[name="sort-notes"][value="${encodeURIComponent(sort)}"]`).checked = true
       document.querySelector('#list-notes').textContent = ''
@@ -2063,19 +2069,8 @@ export default {
       document.querySelector('#folders .list').textContent = ''
       document.querySelector('#categories .list').textContent = ''
 
-      marked.use({
-        breaks: true,
-        renderer: {
-          link({href, text}) {
-            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
-          },
-        },
-      })
-      const options = {
-        throwOnError: false,
-        nonStandard: true
-      };
-      marked.use(markedKatex(options));
+      marked.use(this.markedConfig)
+      marked.use(markedKatex(this.katexConfig))
 
       try {
         const dbName = 'notes_db'
@@ -2265,7 +2260,8 @@ export default {
               downloadIconElement.setAttribute('aria-label', 'Download note')
               bottomContentElement.appendChild(downloadIconElement)
 
-              contentElement.innerHTML = marked.parse(deContentString)
+              const parsedContent = marked.parse(deContentString)
+              contentElement.innerHTML = parsedContent
             }
           }
 
@@ -2329,7 +2325,6 @@ export default {
             }
           }
         })
-
         await Promise.all(promises)
 
         this.noteFolderOrCategories(allFolders, allCategories)
@@ -2371,8 +2366,9 @@ export default {
         this.showError(`An error occurred - ${error}`)
       }
     },
-    updateLocalNote(noteId, title, content, color, hidden, folder, category, reminder) {
+    async updateLocalNote(noteId, title, content, color, hidden, folder, category, reminder) {
       this.isUpdate = true
+      this.noteContentLength = content.length
       document.querySelector('#note-popup-box').showModal()
       document.querySelector('#id-note').value = noteId
       document.querySelector('#note-popup-box #title').value = title
@@ -2384,9 +2380,7 @@ export default {
         if (e.classList.contains(color)) e.classList.add('selected')
         else e.classList.remove('selected')
       })
-      if (hidden) document.querySelector('#check-hidden').checked = true
-      const noteLength = document.querySelector('#note-popup-box #content').value.length
-      document.querySelector('#textarea-length').textContent = `${noteLength}/${this.maxNoteContentLength}`
+      document.querySelector('#check-hidden').checked = hidden
       document.querySelector('#note-popup-box #content').focus()
     },
     async pin(noteId) {
@@ -2435,19 +2429,8 @@ export default {
 
       const note = await res.json()
 
-      marked.use({
-        breaks: true,
-        renderer: {
-          link({href, text}) {
-            return `<a rel="noreferrer noopener" href="${href}">${text}</a>`;
-          },
-        },
-      })
-      const options = {
-        throwOnError: false,
-        nonStandard: true
-      };
-      marked.use(markedKatex(options));
+      marked.use(this.markedConfig)
+      marked.use(markedKatex(this.katexConfig))
 
       const {
         title, content, date,
@@ -2455,11 +2438,7 @@ export default {
 
       document.title = title
 
-      const cleanContent = DOMPurify.sanitize(content, {
-        SANITIZE_NAMED_PROPS: true,
-        ALLOW_DATA_ATTR: false,
-        FORBID_TAGS: ['dialog', 'footer', 'form', 'header', 'main', 'nav', 'style'],
-      })
+      const cleanContent = DOMPurify.sanitize(content, this.purifyConfig)
 
       const contentHtml = marked.parse(cleanContent)
       const noteElement = document.createElement('div')
@@ -2475,6 +2454,7 @@ export default {
 
       const contentElement = document.createElement('span')
       contentElement.innerHTML = contentHtml
+
       detailsElement.appendChild(titleElement)
       detailsElement.appendChild(contentElement)
 
