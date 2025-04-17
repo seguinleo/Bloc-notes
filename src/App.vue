@@ -9,7 +9,7 @@
     <div id="div-search" role="search">
       <i class="fa-solid fa-magnifying-glass" role="none"></i>
       <input v-model="searchValue" type="search" id="search-input" maxlength="30" aria-label="Search" autocomplete="off"
-        @change="searchNotes()">
+        @input="searchNotes()">
       <kbd>CTRL</kbd><kbd>K</kbd>
     </div>
   </header>
@@ -600,6 +600,9 @@ export default {
       maxDataByteSize: 1000000,
       searchValue: '',
       notesJSON: [],
+      localDbName: 'notes_db',
+      localDbKeyName: 'key',
+      localDbKey: null,
       noteLink: '',
       urlParams: '',
       markedConfig: {
@@ -633,8 +636,8 @@ export default {
       await this.showSharedNote()
       return
     }
-    await this.fetchAccount()
     await this.getLockApp()
+    await this.fetchAccount()
     document.querySelector('header').classList.remove('d-none')
     document.querySelector('#sidebar').classList.remove('d-none')
     if ('serviceWorker' in navigator) await navigator.serviceWorker.register('./sw.js')
@@ -718,22 +721,35 @@ export default {
           const res = await this.verifyFingerprint()
           if (!res) return
         }
-        const allNotes = document.querySelectorAll('.note')
-        if (allNotes.length === 0) return
+        if (this.notesJSON.length === 0) return
         const a = document.createElement('a')
         let filename = ''
         let allNotesContent = []
+        const allNotes = document.querySelectorAll('.note')
         if (document.querySelector('#id-note-download').value === '') {
-          allNotesContent = Array.from(allNotes).map((note) => {
-            const title = note.getAttribute('data-note-title')
-            const content = note.getAttribute('data-note-content')
-            return `# ${title}\n${content}`
-          })
-          filename = event.target.value === 'txt' ? 'all-notes.txt' : 'all-notes.md'
+          const notesPromises = Array.from(allNotes).map(async (note) => {
+            const noteId = note.getAttribute('data-note-id');
+            const noteData = this.notesJSON.find((note) => note.id === noteId);
+            const title = this.name
+              ? noteData.title
+              : await this.decryptLocalNotes(this.localDbKey, noteData.title);
+            const content = this.name
+              ? noteData.content
+              : await this.decryptLocalNotes(this.localDbKey, noteData.content);
+            return `# ${title}\n${content}`;
+          });
+
+          allNotesContent = await Promise.all(notesPromises);
+          filename = event.target.value === 'txt' ? 'all-notes.txt' : 'all-notes.md';
         } else {
           const note = document.querySelector(`.note[data-note-id="${document.querySelector('#id-note-download').value}"]`)
-          const title = note.getAttribute('data-note-title')
-          const content = note.getAttribute('data-note-content')
+          const noteId = note.getAttribute('data-note-id')
+          const title = this.name
+            ? this.notesJSON.find((note) => note.id === noteId).title
+            : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).title)
+          const content = this.name
+            ? this.notesJSON.find((note) => note.id === noteId).content
+            : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).content)
           allNotesContent = [`# ${title}\n${content}`]
           filename = event.target.value === 'txt' ? `${title}.txt` : `${title}.md`
         }
@@ -1017,8 +1033,21 @@ export default {
             pinned: 0,
           }
 
-          if (this.isUpdate) this.notesJSON[document.querySelector('#id-note').value] = note
-          else this.notesJSON.push(note)
+          if (this.isUpdate) {
+            const noteIdToUpdate = document.querySelector('#id-note').value;
+            const noteToUpdate = this.notesJSON.find((note) => note.id === noteIdToUpdate);
+
+            if (!noteToUpdate) return
+            noteToUpdate.title = note.title;
+            noteToUpdate.content = note.content;
+            noteToUpdate.color = note.color;
+            noteToUpdate.date = note.date;
+            noteToUpdate.hidden = note.hidden;
+            noteToUpdate.folder = note.folder;
+            noteToUpdate.category = note.category;
+            noteToUpdate.reminder = note.reminder;
+            noteToUpdate.pinned = note.pinned;
+          } else this.notesJSON.push(note)
 
           localStorage.setItem('local_notes', JSON.stringify(this.notesJSON))
           document.querySelector('#note-popup-box').close()
@@ -1203,6 +1232,14 @@ export default {
         transaction.oncomplete = () => resolve()
         transaction.onerror = (event) => reject(event.target.error)
       })
+    },
+    async decryptLocalNotes(key, data) {
+      const deData = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(12) },
+        key,
+        this.base64ToArrayBuffer(data),
+      )
+      return JSON.parse(new TextDecoder().decode(deData))
     },
     generateRandomBytes(length) {
       const array = new Uint8Array(length)
@@ -1415,11 +1452,15 @@ export default {
     },
     searchNotes() {
       const searchValue = this.searchValue.trim().toLowerCase()
-      document.querySelectorAll('.note').forEach((note) => {
-        if (!note.querySelector('.title')) return
-        const title = note.querySelector('.title').textContent.toLowerCase()
-        const content = note.querySelector('.details-content').textContent.toLowerCase()
-        if (title.includes(searchValue) || content.includes(searchValue)) note.classList.remove('d-none')
+      document.querySelectorAll('.note').forEach(async (note) => {
+        const noteId = note.getAttribute('data-note-id')
+        const noteTitle = this.name
+          ? this.notesJSON.find((note) => note.id === noteId).title
+          : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).title)
+        const noteContent = this.name
+          ? this.notesJSON.find((note) => note.id === noteId).content
+          : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).content)
+        if (noteTitle.includes(searchValue) || noteContent.includes(searchValue)) note.classList.remove('d-none')
         else note.classList.add('d-none')
       })
     },
@@ -1557,18 +1598,22 @@ export default {
     },
     noteActions() {
       document.querySelectorAll('.bottom-content i').forEach((e) => {
-        e.addEventListener('click', (event) => {
+        e.addEventListener('click', async (event) => {
           const { target } = event
           const noteId = target.closest('.note').getAttribute('data-note-id')
           if (!noteId) return
-          const noteTitle = target.closest('.note').getAttribute('data-note-title')
-          const noteContent = target.closest('.note').getAttribute('data-note-content')
-          const noteColor = target.closest('.note').getAttribute('data-note-color')
-          const noteHidden = target.closest('.note').getAttribute('data-note-hidden')
-          const noteFolder = target.closest('.note').getAttribute('data-note-folder') || ''
-          const noteCategory = target.closest('.note').getAttribute('data-note-category') || ''
-          const noteLink = target.closest('.note').getAttribute('data-note-link')
-          const noteReminder = target.closest('.note').getAttribute('data-note-reminder')
+          const noteTitle = this.name
+            ? this.notesJSON.find((note) => note.id === noteId).title
+            : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).title)
+          const noteContent = this.name
+            ? this.notesJSON.find((note) => note.id === noteId).content
+            : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).content)
+          const noteColor = this.notesJSON.find((note) => note.id === noteId).color
+          const noteHidden = this.notesJSON.find((note) => note.id === noteId).hidden
+          const noteFolder = this.notesJSON.find((note) => note.id === noteId).folder || ''
+          const noteCategory = this.notesJSON.find((note) => note.id === noteId).category || ''
+          const noteLink = this.notesJSON.find((note) => note.id === noteId).link
+          const noteReminder = this.notesJSON.find((note) => note.id === noteId).reminder
           if (target.classList.contains('edit-note')) this.name ? this.updateCloudNote(
             noteId,
             noteTitle,
@@ -1595,6 +1640,39 @@ export default {
           else if (target.classList.contains('delete-note')) this.name ? this.deleteCloudNote(noteId) : this.deleteLocalNote(noteId)
           else if (target.classList.contains('download-note')) this.downloadNote(noteId)
           else if (target.classList.contains('share-note')) this.shareNote(noteId, noteLink, noteTitle, noteContent)
+        })
+        e.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') e.click()
+        })
+      })
+      document.querySelectorAll('.note').forEach((e) => {
+        e.addEventListener('click', (event) => {
+          if (event.target.parentElement.classList.contains('bottom-content') || event.target.classList.contains('bottom-content')) return
+          if (event.target.tabIndex > -1) return
+          if (document.getSelection().toString()) return
+          this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
+        })
+      })
+      document.querySelectorAll('#filter-popup-box input[name="filter-notes"]').forEach((e) => {
+        e.addEventListener('change', () => {
+          const selectedCategories = []
+          const checkedCategories = document.querySelectorAll('#filter-popup-box input[name="filter-notes"]:checked')
+          if (checkedCategories.length === 0) {
+            document.querySelectorAll('.note').forEach((note) => note.classList.remove('d-none'))
+            return
+          }
+          checkedCategories.forEach((category) => selectedCategories.push(category.value))
+          document.querySelectorAll('.note').forEach((note) => {
+            const noteId = note.getAttribute('data-note-id')
+            const noteCategory = this.notesJSON.find((note) => note.id === noteId).category || ''
+            if (selectedCategories.includes(noteCategory)) note.classList.remove('d-none')
+            else note.classList.add('d-none')
+          })
+        })
+      })
+      document.querySelectorAll('.p-note-list').forEach((e) => {
+        e.addEventListener('click', (event) => {
+          this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
         })
         e.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') e.click()
@@ -1677,13 +1755,13 @@ export default {
         this.dataByteSize = 0
         document.querySelector('#storage-usage').textContent = `0 kB / ${this.maxDataByteSize / 1000000} MB`
         const response = await res.json()
-        const notesJSON = response.notes
+        this.notesJSON = response.notes
 
         document.querySelector('#last-login-date').textContent = `${response.lastLogin}GMT`
 
-        if (notesJSON.length === 0) return
+        if (this.notesJSON.length === 0) return
 
-        notesJSON.sort((a, b) => {
+        this.notesJSON.sort((a, b) => {
           if (a.pinned === 1 && b.pinned === 0) return -1
           if (a.pinned === 0 && b.pinned === 1) return 1
 
@@ -1702,16 +1780,16 @@ export default {
         })
 
         const numberOfNotesElement = document.createElement('h2')
-        if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = `Notizen (${notesJSON.length})`
-        else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = `Notas (${notesJSON.length})`
-        else numberOfNotesElement.textContent = `Notes (${notesJSON.length})`
+        if (localStorage.getItem('lang') === 'de') numberOfNotesElement.textContent = `Notizen (${this.notesJSON.length})`
+        else if (localStorage.getItem('lang') === 'es') numberOfNotesElement.textContent = `Notas (${this.notesJSON.length})`
+        else numberOfNotesElement.textContent = `Notes (${this.notesJSON.length})`
         document.querySelector('#list-notes').appendChild(numberOfNotesElement)
 
         const fragment = document.createDocumentFragment()
         const allFolders = new Set()
         const allCategories = new Set()
 
-        notesJSON.forEach((row) => {
+        this.notesJSON.forEach((row) => {
           const {
             id, title, content, color, date, hidden, folder, category, pinned, link, reminder
           } = row
@@ -1732,9 +1810,6 @@ export default {
           const noteElement = document.createElement('div')
           noteElement.classList.add('note', color)
           noteElement.setAttribute('data-note-id', id)
-          noteElement.setAttribute('data-note-title', title)
-          noteElement.setAttribute('data-note-content', content)
-          noteElement.setAttribute('data-note-color', color)
 
           const titleElement = document.createElement('h2')
           titleElement.classList.add('title')
@@ -1778,7 +1853,6 @@ export default {
           } else pinElement.classList.add('fa-thumbtack')
 
           if (link) {
-            noteElement.setAttribute('data-note-link', link)
             const linkElement = document.createElement('span')
             linkElement.classList.add('custom-check')
             const iconLink = document.createElement('i')
@@ -1795,7 +1869,6 @@ export default {
           }
 
           if (reminder) {
-            noteElement.setAttribute('data-note-reminder', reminder)
             const reminderElement = document.createElement('span')
             reminderElement.classList.add('custom-check')
             const iconReminder = document.createElement('i')
@@ -1822,7 +1895,6 @@ export default {
           }
 
           if (hidden) {
-            noteElement.setAttribute('data-note-hidden', hidden)
             const hiddenElement = document.createElement('span')
             hiddenElement.classList.add('custom-check')
             const eyeIconElement = document.createElement('i')
@@ -1861,13 +1933,11 @@ export default {
 
           if (folder) {
             allFolders.add(folder)
-            noteElement.setAttribute('data-note-folder', folder)
             paragraph.setAttribute('data-folder', folder)
           }
 
           if (category) {
             allCategories.add(category)
-            noteElement.setAttribute('data-note-category', category)
             paragraph.setAttribute('data-category', category)
             const categoryElement = document.createElement('span')
             categoryElement.classList.add('custom-check')
@@ -1919,41 +1989,11 @@ export default {
         })
 
         this.noteFolderOrCategories(allFolders, allCategories)
+
         document.querySelector('main').appendChild(fragment)
-        this.noteActions()
         document.querySelector('#storage').value = this.dataByteSize
         document.querySelector('#storage-usage').textContent = `${(this.dataByteSize * 0.001).toFixed(2)} kB / ${this.maxDataByteSize / 1000000} MB`
-        document.querySelectorAll('.note').forEach((e) => {
-          e.addEventListener('click', (event) => {
-            if (event.target.parentElement.classList.contains('bottom-content') || event.target.classList.contains('bottom-content')) return
-            if (event.target.tabIndex > -1) return
-            if (document.getSelection().toString()) return
-            this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
-          })
-        })
-        document.querySelectorAll('#filter-popup-box input[name="filter-notes"]').forEach((e) => {
-          e.addEventListener('change', () => {
-            const selectedCategories = []
-            const checkedCategories = document.querySelectorAll('#filter-popup-box input[name="filter-notes"]:checked')
-            if (checkedCategories.length === 0) {
-              document.querySelectorAll('.note').forEach((note) => note.classList.remove('d-none'))
-              return
-            }
-            checkedCategories.forEach((category) => selectedCategories.push(category.value))
-            document.querySelectorAll('.note').forEach((note) => {
-              if (selectedCategories.includes(note.getAttribute('data-note-category'))) note.classList.remove('d-none')
-              else note.classList.add('d-none')
-            })
-          })
-        })
-        document.querySelectorAll('.p-note-list').forEach((e) => {
-          e.addEventListener('click', (event) => {
-            this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
-          })
-          e.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') e.click()
-          })
-        })
+        this.noteActions()
       } catch (error) {
         this.showError(`An error occurred - ${error}`)
       }
@@ -2006,7 +2046,11 @@ export default {
         this.showError(`An error occurred - ${error}`)
       }
     },
-    updateCloudNote(noteId, title, content, color, hidden, folder, category, link, reminder) {
+    async updateCloudNote(noteId, title, content, color, hidden, folder, category, link, reminder) {
+      if (hidden && this.fingerprintEnabled) {
+        const res = await this.verifyFingerprint()
+        if (!res) return
+      }
       this.isUpdate = true
       this.noteContentLength = content.length
       document.querySelector('#note-popup-box').showModal()
@@ -2031,7 +2075,7 @@ export default {
       const pinned = note.classList.contains('pinned')
       if (pinned) note.classList.add('pinned')
       else note.classList.remove('pinned')
-      this.notesJSON[parseInt(noteId, 10)].pinned = pinned ? 0 : 1
+      this.notesJSON.find((note) => note.id === noteId).pinned = pinned ? 0 : 1
       localStorage.setItem('local_notes', JSON.stringify(this.notesJSON))
       await this.getLocalNotes()
     },
@@ -2073,11 +2117,6 @@ export default {
       marked.use(markedKatex(this.katexConfig))
 
       try {
-        const dbName = 'notes_db'
-        const objectStoreName = 'key'
-        const db = await this.openIndexedDB(dbName, objectStoreName)
-        const key = await this.getKeyFromDB(db, objectStoreName)
-
         this.notesJSON = JSON.parse(localStorage.getItem('local_notes')) || []
 
         if (this.notesJSON.length === 0) {
@@ -2092,6 +2131,9 @@ export default {
           return
         }
         document.querySelectorAll('.note').forEach((e) => e.remove())
+
+        const db = await this.openIndexedDB(this.localDbName, this.localDbKeyName)
+        this.localDbKey = await this.getKeyFromDB(db, this.localDbKeyName)
 
         this.notesJSON.sort((a, b) => {
           if (a.pinned === 1 && b.pinned === 0) return -1
@@ -2121,27 +2163,13 @@ export default {
         const allFolders = new Set()
         const allCategories = new Set()
 
-        const promises = this.notesJSON.map(async (row, id) => {
+        const promises = this.notesJSON.map(async (row) => {
           const {
-            title, content, color, date, hidden, pinned, folder, category, reminder
+            id, title, content, color, date, hidden, pinned, folder, category, reminder
           } = row
-
           if (!title || !color || !date) return
-
-          const deTitle = await window.crypto.subtle.decrypt(
-            { name: 'AES-GCM', iv: new Uint8Array(12) },
-            key,
-            this.base64ToArrayBuffer(title),
-          )
-
-          const deContent = await window.crypto.subtle.decrypt(
-            { name: 'AES-GCM', iv: new Uint8Array(12) },
-            key,
-            this.base64ToArrayBuffer(content),
-          )
-
-          const deTitleString = JSON.parse(new TextDecoder().decode(deTitle))
-          const deContentString = JSON.parse(new TextDecoder().decode(deContent))
+          const deTitleString = await this.decryptLocalNotes(this.localDbKey, title)
+          const deContentString = await this.decryptLocalNotes(this.localDbKey, content)
           const bottomContentElement = document.createElement('div')
           bottomContentElement.classList.add('bottom-content')
 
@@ -2154,9 +2182,6 @@ export default {
           const noteElement = document.createElement('div')
           noteElement.classList.add('note', color)
           noteElement.setAttribute('data-note-id', id)
-          noteElement.setAttribute('data-note-title', deTitleString)
-          noteElement.setAttribute('data-note-content', deContentString)
-          noteElement.setAttribute('data-note-color', color)
 
           const titleElement = document.createElement('h2')
           titleElement.classList.add('title')
@@ -2207,7 +2232,6 @@ export default {
           } else pinElement.classList.add('fa-thumbtack')
 
           if (reminder) {
-            noteElement.setAttribute('data-note-reminder', reminder)
             const reminderElement = document.createElement('span')
             reminderElement.classList.add('custom-check')
             const iconReminder = document.createElement('i')
@@ -2234,7 +2258,6 @@ export default {
           }
 
           if (hidden) {
-            noteElement.setAttribute('data-note-hidden', hidden)
             const hiddenElement = document.createElement('span')
             hiddenElement.classList.add('custom-check')
             const eyeIconElement = document.createElement('i')
@@ -2266,14 +2289,12 @@ export default {
           }
 
           if (folder) {
-            noteElement.setAttribute('data-note-folder', folder)
             allFolders.add(folder)
             paragraph.setAttribute('data-folder', folder)
           }
 
           if (category) {
             allCategories.add(category)
-            noteElement.setAttribute('data-note-category', category)
             paragraph.setAttribute('data-category', category)
             const categoryElement = document.createElement('span')
             categoryElement.classList.add('custom-check')
@@ -2331,42 +2352,15 @@ export default {
 
         document.querySelector('main').appendChild(fragment)
         this.noteActions()
-        document.querySelectorAll('.note').forEach((e) => {
-          e.addEventListener('click', (event) => {
-            if (event.target.parentElement.classList.contains('bottom-content') || event.target.classList.contains('bottom-content')) return
-            if (event.target.tabIndex > -1) return
-            if (document.getSelection().toString()) return
-            this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
-          })
-        })
-        document.querySelectorAll('#filter-popup-box input[name="filter-notes"]').forEach((e) => {
-          e.addEventListener('change', () => {
-            const selectedCategories = []
-            const checkedCategories = document.querySelectorAll('#filter-popup-box input[name="filter-notes"]:checked')
-            if (checkedCategories.length === 0) {
-              document.querySelectorAll('.note').forEach((note) => note.classList.remove('d-none'))
-              return
-            }
-            checkedCategories.forEach((category) => selectedCategories.push(category.value))
-            document.querySelectorAll('.note').forEach((note) => {
-              if (selectedCategories.includes(note.getAttribute('data-note-category'))) note.classList.remove('d-none')
-              else note.classList.add('d-none')
-            })
-          })
-        })
-        document.querySelectorAll('.p-note-list').forEach((e) => {
-          e.addEventListener('click', (event) => {
-            this.toggleFullscreen(event.currentTarget.getAttribute('data-note-id'))
-          })
-          e.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') e.click()
-          })
-        })
       } catch (error) {
         this.showError(`An error occurred - ${error}`)
       }
     },
     async updateLocalNote(noteId, title, content, color, hidden, folder, category, reminder) {
+      if (hidden && this.fingerprintEnabled) {
+        const res = await this.verifyFingerprint()
+        if (!res) return
+      }
       this.isUpdate = true
       this.noteContentLength = content.length
       document.querySelector('#note-popup-box').showModal()
@@ -2389,7 +2383,7 @@ export default {
       const pinned = note.classList.contains('pinned')
       if (pinned) note.classList.add('pinned')
       else note.classList.remove('pinned')
-      this.notesJSON[parseInt(noteId, 10)].pinned = pinned ? 0 : 1
+      this.notesJSON.find((note) => note.id === noteId).pinned = pinned ? 0 : 1
       localStorage.setItem('local_notes', JSON.stringify(this.notesJSON))
       await this.getLocalNotes()
     },

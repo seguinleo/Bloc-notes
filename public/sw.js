@@ -1,6 +1,14 @@
 const cacheName = 'cache-v1'
 
-self.addEventListener('install', {})
+self.addEventListener('install', e => {
+  e.waitUntil((async () => {
+    const cache = await caches.open(cacheName)
+    await cache.addAll([
+      './',
+      './index.html',
+    ])
+  })())
+})
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
