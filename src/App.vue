@@ -1452,6 +1452,7 @@ export default {
     },
     searchNotes() {
       const searchValue = this.searchValue.trim().toLowerCase()
+      if (!this.notesJSON.length) return
       document.querySelectorAll('.note').forEach(async (note) => {
         const noteId = note.getAttribute('data-note-id')
         const noteTitle = this.name
@@ -1460,8 +1461,9 @@ export default {
         const noteContent = this.name
           ? this.notesJSON.find((note) => note.id === noteId).content
           : await this.decryptLocalNotes(this.localDbKey, this.notesJSON.find((note) => note.id === noteId).content)
-        if (noteTitle.includes(searchValue) || noteContent.includes(searchValue)) note.classList.remove('d-none')
-        else note.classList.add('d-none')
+        if (noteTitle.toLowerCase().includes(searchValue) || noteContent.toLowerCase().includes(searchValue)) {
+          note.classList.remove('d-none')
+        } else note.classList.add('d-none')
       })
     },
     createFolder() {
